@@ -1,5 +1,10 @@
+'use strict'
+
 const path = require('path')
 const url = require('url')
+const querystring = require('querystring')
+
+const request = require('request-promise')
 
 const electron = require('electron')
 const {app, BrowserWindow} = electron
