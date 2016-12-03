@@ -1,0 +1,9 @@
+{
+  "name": "monzoo",
+  "version": "0.0.1",
+  "description": "Monzo for Desktop",
+  "main": "app.js",
+  "repository": "https://github.com/robjtede/monzoo",
+  "author": "robjtede",
+  "license": "GPL"
+}
