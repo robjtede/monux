@@ -12,13 +12,15 @@ const {app, BrowserWindow} = electron
 let mainWindow
 
 const createWindow = () => {
-  mainWindow = new BrowserWindow({width: 800, height: 600})
+  mainWindow = new BrowserWindow({width: 1280, height: 800})
 
   mainWindow.loadURL(url.format({
     pathname: path.resolve('index.html'),
     protocol: 'file:',
     slashes: true
   }))
+
+  mainWindow.webContents.openDevTools()
 
   mainWindow.on('closed', () => mainWindow = null)
 }
