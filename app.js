@@ -57,10 +57,11 @@ const createWindow = () => {
   })
 
   mainWindow = new BrowserWindow({
-    'x': mainWindowState.x,
-    'y': mainWindowState.y,
-    'width': mainWindowState.width,
-    'height': mainWindowState.height
+    x: mainWindowState.x,
+    y: mainWindowState.y,
+    width: mainWindowState.width,
+    height: mainWindowState.height,
+    titleBarStyle: 'hidden-inset'
   })
 
   mainWindow.loadURL(url.format({

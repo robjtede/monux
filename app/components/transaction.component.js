@@ -77,11 +77,15 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     get icon () {
-      if ('merchant' in this.transaction && this.transaction.merchant) {
-        return this.transaction.merchant.logo
-      } else {
-        return this.transaction.category
+      if ('is_topup' in this.transaction.metadata && this.transaction.metadata.is_topup) {
+        return './icons/topup.png'
       }
+
+      if ('merchant' in this.transaction && 'logo' in this.transaction.merchant && this.transaction.merchant.logo) {
+        return this.transaction.merchant.logo
+      }
+
+      return `./icons/${this.transaction.category}.png`
     }
 
     disconnectedCallback () {
