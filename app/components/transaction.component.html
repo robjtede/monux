@@ -1,31 +1,75 @@
 <template>
   <style>
     :host {
-      display: block;
-      padding: 20px;
-      margin: 10px;
+      display: flex;
+      flex-flow: row nowrap;
+      justify-content: space-between;
+      align-items: stretch;
 
-      background: #ddd;
+      padding: 10px;
+      width: 100%;
+      height: 80px;
+
+      border-bottom: 1px solid #ccc;
     }
 
-    h2 {
+    .icon-wrap {
+      display: flex;
+      flex-flow: row nowrap;
+      justify-content: center;
+      align-items: center;
+
+      flex: 1;
+      padding: 10px;
+    }
+
+    .icon {
+      max-height: 3.5em;
+      width: auto;
+      border-radius: 5px;
+
+      border-radius: 5px;
+    }
+
+    .info {
+      flex: 7;
+
+      display: flex;
+      flex-flow: column nowrap;
+      justify-content: center;
+      align-items: flex-start;
+    }
+
+    .description {
       margin: 0;
-      margin-bottom: 1em;
-
-      color: red;
-      font-size: 32px;
     }
 
-    p {
+    .notes {
       margin: 0;
-      margin-top: 1em;
-
-      font-size: 20px;
     }
+
+    .amount {
+      flex: 2;
+
+      display: flex;
+      flex-flow: row nowrap;
+      justify-content: flex-start;
+      align-items: center;
+    }
+
+    .amount.income {
+      color: green;
+    }
+
   </style>
 
-  <p class="index"></p>
-  <h2 class="description"></h2>
+  <div class="icon-wrap"><img class="icon"></div>
+
+  <div class="info">
+    <h3 class="description"></h3>
+    <p class="notes"></p>
+  </div>
+
   <p class="amount"></p>
 </template>
 

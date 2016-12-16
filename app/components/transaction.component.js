@@ -10,11 +10,10 @@ document.addEventListener('DOMContentLoaded', () => {
     constructor () {
       super()
 
-      this.debug = false
-      if (this.debug) console.log('constructing')
+      this.debug = true
+      if (this.debug) console.log(`constructing ${this.index}`)
 
-      this.description = 'untitled'
-      this.amount = 0
+      this.transaction = this.transaction || {}
 
       this.attachShadow({mode: 'open'})
       this.root = this.shadowRoot
@@ -24,36 +23,72 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     connectedCallback () {
-      if (this.debug) console.log('connected')
+      if (this.debug) console.log(`connected ${this.index}`)
 
-      this.render()
       window.ShadyCSS.applyStyle(this)
+      this.render()
     }
 
     render () {
-      if (this.debug) console.log('rendering')
+      if (this.debug) console.log(`rendering ${this.index}`)
+
       this.root.querySelector('.description').textContent = this.description
-      this.root.querySelector('.amount').textContent = (this.amount / 100).toFixed(2)
-      this.root.querySelector('.index').textContent = this.index
+      this.root.querySelector('.notes').textContent = this.transaction.notes
+
+      this.root.querySelector('.amount').textContent = this.amount
+      if (this.transaction.amount >= 0) this.root.querySelector('.amount').classList.add('income')
+
+      this.root.querySelector('.icon').src = this.icon
+    }
+
+    get description () {
+      if ('merchant' in this.transaction && this.transaction.merchant && this.transaction.merchant.name) {
+        return this.transaction.merchant.name
+      } else return this.transaction.description
+    }
+
+    get amount () {
+      let amount = this.transaction.amount / 100
+
+      if (amount < 0) amount = `${Math.abs(amount).toFixed(2)}`
+      else amount = `+${amount.toFixed(2)}`
+
+      return amount
+    }
+
+    formatCurrency (amount) {
+      const currencies = {
+        'GBP': '£',
+        'USD': '$',
+        'EUR': '€'
+      }
+
+      return `${currencies[this.transaction.currency] || ''}${amount}`
+    }
+
+    get icon () {
+      if ('merchant' in this.transaction && this.transaction.merchant) {
+        return this.transaction.merchant.logo
+      } else {
+        return this.transaction.category
+      }
     }
 
     disconnectedCallback () {
-      if (this.debug) console.log('disconnection')
+      if (this.debug) console.log(`disconnection ${this.index}`)
     }
 
     adpotedCallback () {
-      if (this.debug) console.log('adopted')
+      if (this.debug) console.log(`adopted ${this.index}`)
     }
 
     static get observedAttributes () {
-      return ['description', 'amount', 'index']
+      return ['index']
     }
 
     attributeChangedCallback (attrName, oldVal, newVal) {
-      if (this.debug) console.log('attribute changed')
+      if (this.debug) console.log(`attribute changed ${this.index}`)
       const changes = {
-        description: () => { this.description = newVal },
-        amount: () => { this.amount = newVal },
         index: () => { this.index = newVal }
       }
 

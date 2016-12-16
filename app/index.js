@@ -18,11 +18,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
       trs.reverse().forEach((tr, index) => {
         const trans = document.createElement('m-transaction')
+        trans.transaction = tr
         trans.setAttribute('index', index)
-        trans.setAttribute('description', tr.merchant ? tr.merchant.name : tr.description)
-        trans.setAttribute('amount', tr.amount)
 
-        document.body.appendChild(trans)
+        document.querySelector('.transactions').appendChild(trans)
       })
     })
 
