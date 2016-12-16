@@ -1,0 +1,96 @@
+<template>
+  <style>
+    :host {
+      display: block;
+      padding: 20px;
+      margin: 10px;
+
+      background: #ddd;
+    }
+
+    h2 {
+      margin: 0;
+      margin-bottom: 1em;
+
+      color: red;
+      font-size: 32px;
+    }
+
+    p {
+      margin: 0;
+      margin-top: 1em;
+
+      font-size: 20px;
+    }
+  </style>
+
+  <p class="index"></p>
+  <h2 class="description"></h2>
+  <p class="amount"></p>
+</template>
+
+<script>
+  const thisDoc = document.currentScript.ownerDocument
+
+  document.addEventListener('DOMContentLoaded', () => {
+    // scope styles
+    ShadyCSS.prepareTemplate(thisDoc.querySelector('template'), 'm-transaction')
+
+    window.customElements.define('m-transaction', class extends HTMLElement {
+      constructor () {
+        super()
+
+        this.debug = false
+        if (this.debug) console.log('constructing')
+
+        this.description = 'untitled'
+        this.amount = 0
+
+        this.attachShadow({mode: 'open'})
+        this.root = this.shadowRoot
+
+        const template = thisDoc.querySelector('template')
+        this.root.appendChild(template.content.cloneNode(true))
+      }
+
+      connectedCallback () {
+        if (this.debug) console.log('connected')
+
+        this.render()
+        ShadyCSS.applyStyle(this);
+      }
+
+      render () {
+        if (this.debug) console.log('rendering')
+        this.root.querySelector('.description').textContent = this.description
+        this.root.querySelector('.amount').textContent = (this.amount / 100).toFixed(2)
+        this.root.querySelector('.index').textContent = this.index
+      }
+
+      disconnectedCallback () {
+        if (this.debug) console.log('disconnection')
+      }
+
+      adpotedCallback () {
+        if (this.debug) console.log('adopted')
+      }
+
+      static get observedAttributes () {
+        return ['description', 'amount', 'index']
+      }
+
+      attributeChangedCallback (attrName, oldVal, newVal) {
+        if (this.debug) console.log('attribute changed')
+        const changes = {
+          description: () => { this.description = newVal },
+          amount: () => { this.amount = newVal },
+          index: () => { this.index = newVal }
+        }
+
+        if (attrName in changes) changes[attrName]()
+
+        this.render()
+      }
+    })
+  })
+</script>

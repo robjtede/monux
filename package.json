@@ -5,8 +5,17 @@
   "main": "app.js",
   "repository": "https://github.com/robjtede/monzoo",
   "author": "robjtede",
-  "license": "GPL",
+  "license": "GPL-3.0",
+  "scripts": {
+    "start:dev": "yarn electron .",
+    "start": "yarn build && ./Monzoo-darwin-x64/Monzoo.app/Contents/MacOS/Monzoo",
+    "build": "electron-packager . Monzoo --platform darwin --version 1.4.10 --protocol monzoo --protocol-name Monzoo --overwrite"
+  },
   "dependencies": {
+    "debug": "^2.4.4",
+    "electron": "^1.4.10",
+    "electron-config": "^0.2.1",
+    "electron-packager": "^8.4.0",
     "request": "^2.79.0",
     "request-promise": "^4.1.1"
   }
