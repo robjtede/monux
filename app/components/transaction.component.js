@@ -10,7 +10,7 @@ document.addEventListener('DOMContentLoaded', () => {
     constructor () {
       super()
 
-      this.debug = true
+      this.debug = false
       if (this.debug) console.log(`constructing ${this.index}`)
 
       this.transaction = this.transaction || {}
@@ -33,18 +33,28 @@ document.addEventListener('DOMContentLoaded', () => {
       if (this.debug) console.log(`rendering ${this.index}`)
 
       this.root.querySelector('.description').textContent = this.description
-      this.root.querySelector('.notes').textContent = this.transaction.notes
+
+      if (this.notes.trim() !== '') {
+        this.root.querySelector('.notes').classList.add('noted')
+        this.root.querySelector('.notes').textContent = this.notes
+      }
 
       this.root.querySelector('.amount').textContent = this.amount
       if (this.transaction.amount >= 0) this.root.querySelector('.amount').classList.add('income')
 
       this.root.querySelector('.icon').src = this.icon
+
+      if ('decline_reason' in this.transaction) this.classList.add('declined')
     }
 
     get description () {
       if ('merchant' in this.transaction && this.transaction.merchant && this.transaction.merchant.name) {
         return this.transaction.merchant.name
       } else return this.transaction.description
+    }
+
+    get notes () {
+      return this.transaction.notes.split('\n')[0]
     }
 
     get amount () {

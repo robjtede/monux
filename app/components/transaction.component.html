@@ -13,6 +13,18 @@
       border-bottom: 1px solid #ccc;
     }
 
+    :host:hover {
+      background: #f0f0f0;
+    }
+
+    :host.declined {
+      background: #fee;
+    }
+
+    :host.declined:hover {
+      background: #fdd;
+    }
+
     .icon-wrap {
       display: flex;
       flex-flow: row nowrap;
@@ -26,8 +38,8 @@
     .icon {
       max-height: 3.5em;
       width: auto;
-      border-radius: 5px;
 
+      border: 1px solid #ccc;
       border-radius: 5px;
     }
 
@@ -42,10 +54,21 @@
 
     .description {
       margin: 0;
+
+      font-size: 1.2em;
     }
 
     .notes {
+      display: none;
       margin: 0;
+      margin-top: 10px;
+
+      font-size: 0.9em;
+      color: #888;
+    }
+
+    .notes.noted {
+      display: initial;
     }
 
     .amount {
@@ -66,7 +89,7 @@
   <div class="icon-wrap"><img class="icon"></div>
 
   <div class="info">
-    <h3 class="description"></h3>
+    <p class="description"></p>
     <p class="notes"></p>
   </div>
 
