@@ -12,6 +12,8 @@ const {
 
 const rp = require('request-promise')
 const Config = require('electron-config')
+const windowState = require('electron-window-state')
+
 const config = new Config()
 const debug = new Debug('app:app.js')
 
@@ -49,7 +51,17 @@ const checkAuthTimeout = () => {
 const createWindow = () => {
   debug('createWindow')
 
-  mainWindow = new BrowserWindow({width: 1280, height: 800})
+  const mainWindowState = windowState({
+    defaultWidth: 1280,
+    defaultHeight: 800
+  })
+
+  mainWindow = new BrowserWindow({
+    'x': mainWindowState.x,
+    'y': mainWindowState.y,
+    'width': mainWindowState.width,
+    'height': mainWindowState.height
+  })
 
   mainWindow.loadURL(url.format({
     pathname: path.resolve(__dirname, 'app/index.html'),
@@ -57,6 +69,7 @@ const createWindow = () => {
     slashes: true
   }))
 
+  mainWindowState.manage(mainWindow)
   mainWindow.webContents.openDevTools()
 
   mainWindow.on('closed', () => { mainWindow = null })

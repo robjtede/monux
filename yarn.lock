@@ -247,17 +247,15 @@ dashdash@^1.12.0:
   dependencies:
     assert-plus "^1.0.0"
 
+date-fns@^1.21.0:
+  version "1.21.0"
+  resolved "https://registry.yarnpkg.com/date-fns/-/date-fns-1.21.0.tgz#7183c75dd0762e101f5db7fdbe3598b5a47c09e4"
+
 debug@0.7.4:
   version "0.7.4"
   resolved "https://registry.yarnpkg.com/debug/-/debug-0.7.4.tgz#06e1ea8082c2cb14e39806e22e2f6f757f92af39"
 
-debug@^2.1.3, debug@^2.2.0:
-  version "2.3.3"
-  resolved "https://registry.yarnpkg.com/debug/-/debug-2.3.3.tgz#40c453e67e6e13c901ddec317af8986cda9eff8c"
-  dependencies:
-    ms "0.7.2"
-
-debug@^2.4.4:
+debug@^2.1.3, debug@^2.2.0, debug@^2.4.4:
   version "2.4.4"
   resolved "https://registry.yarnpkg.com/debug/-/debug-2.4.4.tgz#c04d17a654e9202464803f096153f70a6f31f4be"
   dependencies:
@@ -278,6 +276,10 @@ decompress-zip@0.3.0:
     q "^1.1.2"
     readable-stream "^1.1.8"
     touch "0.0.3"
+
+deep-equal@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/deep-equal/-/deep-equal-1.0.1.tgz#f5d260292b660e084eff4cdbc9f08ad3247448b5"
 
 deep-extend@~0.4.0:
   version "0.4.1"
@@ -353,6 +355,14 @@ electron-packager@^8.4.0:
     run-series "^1.1.1"
     sanitize-filename "^1.6.0"
     semver "^5.3.0"
+
+electron-window-state@^4.0.0:
+  version "4.0.0"
+  resolved "https://registry.yarnpkg.com/electron-window-state/-/electron-window-state-4.0.0.tgz#ac24438162d4640506b4a36dd8363a1c3abd278f"
+  dependencies:
+    deep-equal "^1.0.1"
+    jsonfile "^2.2.3"
+    mkdirp "^0.5.1"
 
 electron@^1.4.10:
   version "1.4.10"
@@ -697,7 +707,7 @@ json-stringify-safe@~5.0.0, json-stringify-safe@~5.0.1:
   version "5.0.1"
   resolved "https://registry.yarnpkg.com/json-stringify-safe/-/json-stringify-safe-5.0.1.tgz#1296a2d58fd45f19a0f6ce01d65701e2c735b6eb"
 
-jsonfile@^2.1.0:
+jsonfile@^2.1.0, jsonfile@^2.2.3:
   version "2.4.0"
   resolved "https://registry.yarnpkg.com/jsonfile/-/jsonfile-2.4.0.tgz#3736a2b428b87bbda0cc83b53fa3d633a35c2ae8"
   optionalDependencies:
