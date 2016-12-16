@@ -3,34 +3,181 @@
 const path = require('path')
 const url = require('url')
 const querystring = require('querystring')
+const Debug = require('debug')
 
-const request = require('request-promise')
+const {
+  app,
+  BrowserWindow
+} = require('electron')
 
-const electron = require('electron')
-const {app, BrowserWindow} = electron
+const rp = require('request-promise')
+const Config = require('electron-config')
+const config = new Config()
+const debug = new Debug('app:app.js')
+
+const appInfo = {
+  client_id: 'oauthclient_00009Ez3BDGjcuMR9UWY89',
+  client_secret: 'ovDC3dsKYvUG9vqrx+JX5Ios4D1o5Ebe86w34uK5yk+EB7buGj5kGN7Hg3QoW3rGvhTEg4lHX8SPkELqJwki',
+  redirect_uri: 'monzoo://auth/',
+  response_type: 'code',
+  state: 'abc123'
+}
 
 let mainWindow
+let authWindow
+
+const checkAccess = () => {
+  debug('checkAccess')
+
+  if (!config.has('accessToken')) {
+    debug('=> no access token')
+    return false
+  }
+
+  if (config.has('authTime') && config.has('authExpires')) return checkAuthTimeout()
+}
+
+const checkAuthTimeout = () => {
+  debug('checkAuthTimeout')
+
+  const valid = config.get('authTime') + config.get('authExpires') > +new Date()
+
+  if (!valid) debug('=> access token expired')
+  return valid
+}
 
 const createWindow = () => {
+  debug('createWindow')
+
   mainWindow = new BrowserWindow({width: 1280, height: 800})
 
   mainWindow.loadURL(url.format({
-    pathname: path.resolve('index.html'),
+    pathname: path.resolve(__dirname, 'app/index.html'),
     protocol: 'file:',
     slashes: true
   }))
 
   mainWindow.webContents.openDevTools()
 
-  mainWindow.on('closed', () => mainWindow = null)
+  mainWindow.on('closed', () => { mainWindow = null })
 }
 
-app.on('ready', createWindow)
+const requestAuth = () => {
+  debug('requestAuth')
+
+  debug('clearing auth details')
+  config.clear()
+
+  authWindow = new BrowserWindow({width: 500, height: 700})
+
+  // get auth token
+  let url = 'https://auth.getmondo.co.uk/'
+  url += `?client_id=${appInfo.client_id}`
+  url += `&redirect_uri=${appInfo.redirect_uri}`
+  url += `&response_type=${appInfo.response_type}`
+  url += `&state=${appInfo.state}`
+
+  authWindow.loadURL(url)
+}
+
+const getAccessToken = () => {
+  debug('getAccessToken')
+
+  return rp({
+    uri: 'https://api.monzo.com/oauth2/token',
+    method: 'post',
+    form: {
+      grant_type: 'authorization_code',
+      client_id: appInfo.client_id,
+      client_secret: appInfo.client_secret,
+      redirect_uri: appInfo.redirect_uri,
+      code: config.get('authCode')
+    },
+    json: true
+  }).then(res => {
+    // debug response info
+    debug(`getAccessToken => ${typeof res}: ${res}`)
+
+    return res
+  }).catch(err => {
+    console.error(`getAccessToken => ${err.code}`)
+
+    throw err
+  })
+}
+
+const verifyAccess = () => {
+  debug(`verifyAccess with: ${config.get('accessToken')}`)
+
+  return rp({
+    uri: 'https://api.monzo.com/ping/whoami',
+    headers: {
+      'Authorization': `Bearer ${config.get('accessToken')}`
+    },
+    json: true
+  }).then(res => {
+    // debug response info
+    debug(`verifyAccess => ${typeof res}: ${res}`)
+
+    return res
+  }).catch(err => {
+    debug(`verifyAccess => ${err.message}`)
+
+    throw err
+  })
+}
+
+app.on('ready', () => {
+  debug('ready event')
+
+  if (!checkAccess()) {
+    requestAuth()
+  } else {
+    verifyAccess().then(res => {
+      if (res && 'authenticated' in res && res.authenticated) createWindow()
+      else requestAuth()
+    }).catch(err => {
+      console.error(err.message)
+    })
+  }
+})
+
+app.on('open-url', function (ev, forwardedUrl) {
+  debug('open-url event')
+
+  authWindow.close()
+
+  const query = url.parse(forwardedUrl).query
+  const authResponse = querystring.parse(query)
+
+  debug(`authResponse code => ${authResponse.code}`)
+
+  config.set('authCode', authResponse.code)
+
+  getAccessToken(authResponse)
+    .then(res => {
+      config.set({
+        accessToken: res.access_token,
+        authExpires: res.expires_in * 1000,
+        authTime: +new Date()
+      })
+    })
+    .then(verifyAccess)
+    .then(res => {
+      debug(`open-url event => verifyAccess.then => ${res}`)
+
+      createWindow()
+    })
+})
 
 app.on('window-all-closed', () => {
-  if (process.platform !== 'darwin') app.quit()
+  debug('window-all-closed event')
+
+  // conflicts with auth strategy
+  // if (process.platform !== 'darwin') app.quit()
 })
 
 app.on('activate', () => {
+  debug('activate event')
   if (!mainWindow) createWindow()
 })
