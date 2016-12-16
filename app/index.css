@@ -1,10 +1,50 @@
 body {
-  /*background: blue;*/
+  margin: 0;
 
   font-family: Helvetica, Arial, sans-serif;
   font-size: 20px;
 }
 
-p {
-  /*color: red;*/
+.balances {
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: space-between;
+  align-items: stretch;
+
+  position: sticky;
+  padding: 45px 20px 20px;
+
+  background: #15233C;
+
+  color: #f8f8f8;
+}
+
+.card-balance {
+  flex: 1;
+  text-align: left;
+}
+
+.spent-today {
+  flex: 1;
+  text-align: right;,
+}
+
+.card-balance h2,
+.spent-today h2 {
+  margin: 0;
+
+  font-weight: 300;
+  font-size: 1.5rem;
+}
+
+.card-balance h2 .major,
+.spent-today h2 .major {
+  font-size: 3rem;
+}
+
+.card-balance p,
+.spent-today p {
+  margin-top: 0.4em;
+
+  color: #ccc;
 }

@@ -45,6 +45,8 @@ document.addEventListener('DOMContentLoaded', () => {
       this.root.querySelector('.icon').src = this.icon
 
       if ('decline_reason' in this.transaction) this.classList.add('declined')
+
+      this.dataset.category = this.transaction.category
     }
 
     get description () {

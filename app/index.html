@@ -10,18 +10,25 @@
   <link rel="import" href="./components/transaction.component.html">
 
   <!-- Polyfills -->
-  <script src="./webcomponents-polyfill.js"></script>
-  <script src="./shadowdom-polyfill.js"></script>
-  <script src="./shadowcss-polyfill.js"></script>
+  <script src="./scripts/webcomponents-polyfill.js"></script>
+  <script src="./scripts/shadowdom-polyfill.js"></script>
+  <script src="./scripts/shadowcss-polyfill.js"></script>
+  <script src="./scripts/stickyfill.js"></script>
 
   <!-- Scripts -->
-  <script src="./index.js"></script>
+  <script src="./scripts/index.js"></script>
 
 </head>
 <body>
-  <div>
-    <h2 class="balance">Account Balance:</h2>
-    <p class="spend-today">Spend Today: </p>
+  <div class="balances fixable">
+    <div class="card-balance">
+      <h2></h2>
+      <p>Account Balance</p>
+    </div>
+    <div class="spent-today">
+      <h2></h2>
+      <p>Spent Today</p>
+    </div>
   </div>
   <div class="transactions"></div>
 </body>

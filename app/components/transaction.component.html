@@ -7,10 +7,11 @@
       align-items: stretch;
 
       padding: 10px;
-      width: 100%;
+      max-width: 100%;
       height: 80px;
 
       border-bottom: 1px solid #ccc;
+      border-left: 10px solid;
     }
 
     :host:hover {
@@ -24,6 +25,19 @@
     :host.declined:hover {
       background: #fdd;
     }
+
+    :host[data-category=groceries] { border-left-color: gold; }
+    :host[data-category=transport] { border-left-color: teal; }
+    :host[data-category=entertainment] { border-left-color: orangered; }
+    :host[data-category=eating_out] { border-left-color: crimson; }
+    :host[data-category=cash] { border-left-color: olivedrab; }
+    :host[data-category=mondo] { border-left-color: olivedrab; }
+    :host[data-category=monzo] { border-left-color: olivedrab; }
+    :host[data-category=general] { border-left-color: slategrey; }
+    :host[data-category=bills] { border-left-color: cornflowerblue; }
+    :host[data-category=holidays] { border-left-color: orchid; }
+    :host[data-category=shopping] { border-left-color: coral; }
+    :host[data-category=expenses] { border-left-color: darkkhaki; }
 
     .icon-wrap {
       display: flex;
@@ -79,6 +93,8 @@
       flex-flow: row nowrap;
       justify-content: flex-start;
       align-items: center;
+
+      font-size: 1.2em;
     }
 
     .amount.income {
