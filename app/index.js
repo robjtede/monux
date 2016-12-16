@@ -8,13 +8,13 @@ const config = new Config()
 const Monzo = require('../Monzo')
 
 const monzo = new Monzo(config.get('accessToken'))
-const debug = false
+const debug = true
 
 document.addEventListener('DOMContentLoaded', () => {
   monzo.accounts
     .then(accs => accs[0].transactions)
     .then(trs => {
-      console.log(trs)
+      if (debug) console.log(trs)
 
       trs.reverse().forEach((tr, index) => {
         const trans = document.createElement('m-transaction')
@@ -28,7 +28,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
   monzo.accounts
     .then(accs => accs[0].balance)
-    .then(tr => {
-      document.querySelector('p').textContent += `${tr.balance}`
+    .then(bal => {
+      if (debug) console.log(bal)
+
+      document.querySelector('.balance').textContent += `${bal.balance}`
+      document.querySelector('.spend-today').textContent += `${bal.spend_today}`
     })
 })
