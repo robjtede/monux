@@ -5,7 +5,7 @@
 const Config = require('electron-config')
 const config = new Config()
 
-const Monzo = require('../Monzo')
+const Monzo = require('../lib/monzo/Monzo')
 
 const monzo = new Monzo(config.get('accessToken'))
 const debug = true
