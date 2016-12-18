@@ -73,6 +73,15 @@
       font-size: 1.2em;
     }
 
+    :host.pending .description::after {
+      content: '\26A0';
+      padding-left: 0.5em;
+      position: relative;
+      top: 2px;
+
+      color: #f80;
+    }
+
     .notes {
       display: none;
       margin: 0;
