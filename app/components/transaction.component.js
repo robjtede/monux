@@ -13,7 +13,7 @@ document.addEventListener('DOMContentLoaded', () => {
       this.debug = false
       if (this.debug) console.log(`constructing ${this.index}`)
 
-      this.transaction = this.transaction || {}
+      this.tx = this.tx || {}
 
       this.attachShadow({mode: 'open'})
       this.root = this.shadowRoot
@@ -40,28 +40,28 @@ document.addEventListener('DOMContentLoaded', () => {
       }
 
       this.root.querySelector('.amount').textContent = this.amount
-      if (this.transaction.amount >= 0) this.root.querySelector('.amount').classList.add('income')
+      if (this.tx.amount >= 0) this.root.querySelector('.amount').classList.add('income')
 
       this.root.querySelector('.icon').src = this.icon
 
-      if ('decline_reason' in this.transaction) this.classList.add('declined')
-      if (!('settled' in this.transaction)) this.classList.add('pending')
+      if ('decline_reason' in this.tx) this.classList.add('declined')
+      if (!('settled' in this.tx)) this.classList.add('pending')
 
-      this.dataset.category = this.transaction.category
+      this.dataset.category = this.tx.category
     }
 
     get description () {
-      if ('merchant' in this.transaction && this.transaction.merchant && this.transaction.merchant.name) {
-        return this.transaction.merchant.name
-      } else return this.transaction.description
+      if ('merchant' in this.tx && this.tx.merchant && this.tx.merchant.name) {
+        return this.tx.merchant.name
+      } else return this.tx.description
     }
 
     get notes () {
-      return this.transaction.notes.split('\n')[0]
+      return this.tx.notes.split('\n')[0]
     }
 
     get amount () {
-      let amount = this.transaction.amount / 100
+      let amount = this.tx.amount / 100
 
       if (amount < 0) amount = `${Math.abs(amount).toFixed(2)}`
       else amount = `+${amount.toFixed(2)}`
@@ -76,19 +76,19 @@ document.addEventListener('DOMContentLoaded', () => {
         'EUR': '€'
       }
 
-      return `${currencies[this.transaction.currency] || ''}${amount}`
+      return `${currencies[this.tx.currency] || ''}${amount}`
     }
 
     get icon () {
-      if ('is_topup' in this.transaction.metadata && this.transaction.metadata.is_topup) {
+      if ('is_topup' in this.tx.metadata && this.tx.metadata.is_topup) {
         return './icons/topup.png'
       }
 
-      if ('merchant' in this.transaction && 'logo' in this.transaction.merchant && this.transaction.merchant.logo) {
-        return this.transaction.merchant.logo
+      if ('merchant' in this.tx && 'logo' in this.tx.merchant && this.tx.merchant.logo) {
+        return this.tx.merchant.logo
       }
 
-      return `./icons/${this.transaction.category}.png`
+      return `./icons/${this.tx.category}.png`
     }
 
     disconnectedCallback () {

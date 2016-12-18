@@ -17,15 +17,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
   monzo.accounts
     .then(accs => accs[0].transactions)
-    .then(trs => {
-      if (debug) console.log(trs)
+    .then(txs => {
+      if (debug) console.log(txs)
 
-      trs.reverse().forEach((tr, index) => {
-        const trans = document.createElement('m-transaction')
-        trans.transaction = tr
-        trans.setAttribute('index', index)
+      txs.reverse().forEach((tx, index) => {
+        const txel = document.createElement('m-transaction')
+        txel.tx = tx
+        txel.setAttribute('index', index)
 
-        document.querySelector('.transactions').appendChild(trans)
+        document.querySelector('.transactions').appendChild(txel)
       })
     })
 
