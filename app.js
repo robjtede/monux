@@ -17,12 +17,14 @@ const windowState = require('electron-window-state')
 const config = new Config()
 const debug = new Debug('app:app.js')
 
+const secretInfo = require('./config.js')
+
 const appInfo = {
-  client_id: 'oauthclient_00009Ez3BDGjcuMR9UWY89',
-  client_secret: 'ovDC3dsKYvUG9vqrx+JX5Ios4D1o5Ebe86w34uK5yk+EB7buGj5kGN7Hg3QoW3rGvhTEg4lHX8SPkELqJwki',
+  client_id: secretInfo.client_id,
+  client_secret: secretInfo.client_secret,
   redirect_uri: 'monzoo://auth/',
   response_type: 'code',
-  state: 'abc123'
+  state: secretInfo.state
 }
 
 let mainWindow

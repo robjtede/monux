@@ -45,6 +45,7 @@ document.addEventListener('DOMContentLoaded', () => {
       this.root.querySelector('.icon').src = this.icon
 
       if ('decline_reason' in this.transaction) this.classList.add('declined')
+      if (!('settled' in this.transaction)) this.classList.add('pending')
 
       this.dataset.category = this.transaction.category
     }

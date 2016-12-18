@@ -39,5 +39,8 @@ jspm_packages
 # macOS system files
 .DS_Store
 
+# app secret config file
+/config.js
+
 # electron build files
-Monzoo-*
+/Monzoo-*
