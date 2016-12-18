@@ -11,21 +11,22 @@ document.addEventListener('DOMContentLoaded', () => {
       super()
 
       this.debug = false
-      if (this.debug) console.log(`constructing ${this.index}`)
+      if (this.debug) console.log('constructing')
 
-      this.tx = this.tx || {}
-
-      this.attachShadow({mode: 'open'})
-      this.root = this.shadowRoot
-
-      const template = thisDoc.querySelector('template')
-      this.root.appendChild(template.content.cloneNode(true))
+      this.tx = {}
     }
 
     connectedCallback () {
       if (this.debug) console.log(`connected ${this.index}`)
 
+      this.attachShadow({mode: 'open'})
+      this.root = this.shadowRoot
+
+      const template = thisDoc.querySelector('template')
+      this.root.appendChild(document.importNode(template.content, true))
+
       window.ShadyCSS.applyStyle(this)
+
       this.render()
     }
 
@@ -48,6 +49,10 @@ document.addEventListener('DOMContentLoaded', () => {
       if (!('settled' in this.tx)) this.classList.add('pending')
 
       this.dataset.category = this.tx.category
+    }
+
+    get index () {
+      return this.dataset.index
     }
 
     get description () {
@@ -95,19 +100,17 @@ document.addEventListener('DOMContentLoaded', () => {
       if (this.debug) console.log(`disconnection ${this.index}`)
     }
 
-    adpotedCallback () {
+    adoptedCallback () {
       if (this.debug) console.log(`adopted ${this.index}`)
     }
 
     static get observedAttributes () {
-      return ['index']
+      return []
     }
 
     attributeChangedCallback (attrName, oldVal, newVal) {
-      if (this.debug) console.log(`attribute changed ${this.index}`)
-      const changes = {
-        index: () => { this.index = newVal }
-      }
+      if (this.debug) console.log(`attribute changed on ${this.index}: ${attrName}, ${oldVal} => ${newVal}`)
+      const changes = {}
 
       if (attrName in changes) changes[attrName]()
 

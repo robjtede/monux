@@ -66,3 +66,12 @@ body {
   text-transform: uppercase;
   color: #ccc;
 }
+
+.day-heading {
+  padding: 15px 20px;
+
+  border-bottom: 1px solid #ccc;
+  background: #f0f0f0;
+
+  text-transform: uppercase;
+}

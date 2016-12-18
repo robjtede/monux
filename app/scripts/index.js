@@ -1,6 +1,9 @@
 'use strict'
 
-// const {remote} = require('electron')
+const startOfDay = require('date-fns/start_of_day')
+const equalDate = require('date-fns/is_equal')
+const isToday = require('date-fns/is_today')
+const isYesterday = require('date-fns/is_yesterday')
 
 const Config = require('electron-config')
 const config = new Config()
@@ -20,12 +23,14 @@ document.addEventListener('DOMContentLoaded', () => {
     .then(txs => {
       if (debug) console.log(txs)
 
+      const txsel = document.querySelector('.transactions')
+
       txs.reverse().forEach((tx, index) => {
         const txel = document.createElement('m-transaction')
         txel.tx = tx
-        txel.setAttribute('index', index)
+        txel.dataset.index = index
 
-        document.querySelector('.transactions').appendChild(txel)
+        txsel.appendChild(txel)
       })
     })
 
