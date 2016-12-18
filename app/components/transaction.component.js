@@ -89,7 +89,11 @@ document.addEventListener('DOMContentLoaded', () => {
         return './icons/topup.png'
       }
 
-      if ('merchant' in this.tx && 'logo' in this.tx.merchant && this.tx.merchant.logo) {
+      if (this.tx.counterparty && 'user_id' in this.tx.counterparty) {
+        return './icons/peer.png'
+      }
+
+      if ('merchant' in this.tx && this.tx.merchant && 'logo' in this.tx.merchant && this.tx.merchant.logo) {
         return this.tx.merchant.logo
       }
 
