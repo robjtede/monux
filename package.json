@@ -5,7 +5,7 @@
   "main": "app.js",
   "repository": "https://github.com/robjtede/monzoo",
   "author": "robjtede",
-  "license": "GPL-3.0",
+  "license": "MIT",
   "scripts": {
     "start:dev": "yarn electron .",
     "start": "yarn build && ./Monzoo-darwin-x64/Monzoo.app/Contents/MacOS/Monzoo",
