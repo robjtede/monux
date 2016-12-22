@@ -27,6 +27,8 @@
         window.ShadyCSS.applyStyle(this)
 
         this.render()
+
+        this.addEventListener('click', this.clickCallback.bind(this))
       }
 
       render () {
@@ -45,7 +47,7 @@
         this.root.querySelector('.icon').src = this.icon
 
         if ('decline_reason' in this.tx) this.classList.add('declined')
-        if (!('settled' in this.tx)) this.classList.add('pending')
+        if (!('settled' in this.tx) || ('settled' in this.tx && this.tx.settled.trim() === '')) this.classList.add('pending')
 
         this.dataset.category = this.tx.category
       }
@@ -97,6 +99,15 @@
         }
 
         return `./icons/${this.tx.category}.png`
+      }
+
+      clickCallback () {
+        if (this.debug) console.log(`clicked ${this.index}`)
+        Array.from(document.querySelectorAll('m-transaction-detail')).forEach(item => {
+          item.classList.remove('show')
+        })
+
+        document.querySelector(`m-transaction-detail[data-index="${this.index}"]`).classList.add('show')
       }
 
       disconnectedCallback () {

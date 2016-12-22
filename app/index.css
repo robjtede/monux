@@ -17,6 +17,7 @@ body {
 
   position: sticky;
   padding: 45px 20px 20px;
+  z-index: 1;
 
   background: #15233C;
 
