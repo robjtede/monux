@@ -7,9 +7,9 @@
   "author": "robjtede",
   "license": "MIT",
   "scripts": {
-    "start:dev": "yarn electron .",
+    "start:dev": "$(yarn bin)/electron .",
     "start": "yarn build && ./Monzoo-darwin-x64/Monzoo.app/Contents/MacOS/Monzoo",
-    "build": "electron-packager . Monzoo --platform darwin --version 1.4.10 --protocol monzoo --protocol-name Monzoo --overwrite"
+    "build": "$(yarn bin)/electron-packager . Monzoo --platform darwin --version 1.4.10 --protocol monzoo --protocol-name Monzoo --overwrite"
   },
   "dependencies": {
     "date-fns": "^1.21.0",

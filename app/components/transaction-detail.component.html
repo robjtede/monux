@@ -1,0 +1,71 @@
+<template>
+  <style>
+    :host {
+      display: none;
+      overflow-x: scroll;
+      max-width: 100%;
+      padding: 10px 15px;
+
+      border-bottom: 1px solid #ccc;
+      border-left: 20px solid;
+    }
+
+    :host.show {
+      display: block;
+    }
+
+    :host[data-category=groceries] { border-left-color: gold; }
+    :host[data-category=transport] { border-left-color: teal; }
+    :host[data-category=entertainment] { border-left-color: orangered; }
+    :host[data-category=eating_out] { border-left-color: crimson; }
+    :host[data-category=cash] { border-left-color: olivedrab; }
+    :host[data-category=mondo] { border-left-color: olivedrab; }
+    :host[data-category=monzo] { border-left-color: olivedrab; }
+    :host[data-category=general] { border-left-color: slategrey; }
+    :host[data-category=bills] { border-left-color: cornflowerblue; }
+    :host[data-category=holidays] { border-left-color: orchid; }
+    :host[data-category=shopping] { border-left-color: coral; }
+    :host[data-category=expenses] { border-left-color: darkkhaki; }
+
+    .id::before {
+      content: 'Transaction ID:';
+      padding-right: 0.5em;
+    }
+
+    .notes {
+      white-space: pre-wrap;
+    }
+
+    .notes::before {
+      content: 'Notes:';
+      padding-right: 0.5em;
+    }
+
+    .location::before {
+      content: 'Location:';
+      padding-right: 0.5em;
+    }
+
+    .attachments img {
+      max-width: 400px;
+    }
+
+    .attachments::before {
+      content: 'Attachments:';
+      padding-right: 0.5em;
+    }
+
+    .description::before {
+      content: 'Description:';
+      padding-right: 0.5em;
+    }
+  </style>
+
+  <div class="id"></div>
+  <div class="notes"></div>
+  <div class="location"></div>
+  <div class="attachments"></div>
+  <div class="description"></div>
+</template>
+
+<script src="./transaction-detail.component.js" charset="utf-8"></script>

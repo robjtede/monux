@@ -54,7 +54,7 @@ const createWindow = () => {
   debug('createWindow')
 
   const mainWindowState = windowState({
-    defaultWidth: 1280,
+    defaultWidth: 550,
     defaultHeight: 800
   })
 
@@ -73,7 +73,6 @@ const createWindow = () => {
   }))
 
   mainWindowState.manage(mainWindow)
-  mainWindow.webContents.openDevTools()
 
   mainWindow.on('closed', () => { mainWindow = null })
 }
