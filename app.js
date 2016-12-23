@@ -7,6 +7,7 @@ const Debug = require('debug')
 
 const {
   app,
+  dialog,
   BrowserWindow
 } = require('electron')
 
@@ -24,14 +25,12 @@ const debug = new Debug('app:app.js')
 
 console.log(`starting ${app.getName()} version ${app.getVersion()}`)
 
-const secretInfo = require('./config.js')
-
 const appInfo = {
-  client_id: secretInfo.client_id,
-  client_secret: secretInfo.client_secret,
+  client_id: config.get('client_id'),
+  client_secret: config.get('client_secret'),
   redirect_uri: 'monzoo://auth/',
   response_type: 'code',
-  state: secretInfo.state
+  state: 'totally random state key for oauth purposes'
 }
 
 let mainWindow
@@ -88,7 +87,6 @@ const requestAuth = () => {
   debug('requestAuth')
 
   debug('clearing auth details')
-  config.clear()
 
   authWindow = new BrowserWindow({width: 500, height: 700})
 
@@ -149,19 +147,58 @@ const verifyAccess = () => {
   })
 }
 
-app.on('ready', () => {
-  debug('ready event')
+const clientDetails = () => {
+  let clientDetailsWindow = new BrowserWindow({
+    width: 400,
+    height: 600
+  })
 
-  if (!checkAccess()) {
-    requestAuth()
-  } else {
+  clientDetailsWindow.loadURL(url.format({
+    pathname: path.resolve(__dirname, 'app/get-client-info.html'),
+    protocol: 'file:',
+    slashes: true
+  }))
+
+  clientDetailsWindow.on('closed', () => {
+    clientDetailsWindow = null
+
+    appInfo.client_id = config.get('client_id')
+    appInfo.client_secret = config.get('client_secret')
+
+    if (!checkAccess()) {
+      requestAuth()
+      return
+    }
+
     verifyAccess().then(res => {
       if (res && 'authenticated' in res && res.authenticated) createWindow()
       else requestAuth()
     }).catch(err => {
       console.error(err.message)
     })
+  })
+}
+
+app.on('ready', () => {
+  debug('ready event')
+
+  if (!(config.has('client_id') && config.has('client_secret'))) {
+    config.clear()
+    clientDetails()
+    return
   }
+
+  if (!checkAccess()) {
+    requestAuth()
+    return
+  }
+
+  verifyAccess().then(res => {
+    if (res && 'authenticated' in res && res.authenticated) createWindow()
+    else requestAuth()
+  }).catch(err => {
+    console.error(err.message)
+  })
 })
 
 app.on('open-url', function (ev, forwardedUrl) {
