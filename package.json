@@ -1,6 +1,6 @@
 {
   "name": "Monzoo",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Unoffical Monzo Client for Desktop",
   "main": "app.js",
   "repository": "https://github.com/robjtede/monzoo",
