@@ -203,6 +203,7 @@ app.on('activate', () => {
   debug('activate event')
   if (!mainWindow) createWindow()
 })
+
 updater.check((err, status) => {
   if (!err && status) updater.download()
 })
