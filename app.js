@@ -13,14 +13,14 @@ const {
 const rp = require('request-promise')
 const Config = require('electron-config')
 const windowState = require('electron-window-state')
-const GHUpdater = require('electron-gh-releases')
+// const GHUpdater = require('electron-gh-releases')
 
 const config = new Config()
 const debug = new Debug('app:app.js')
-const updater = new GHUpdater({
-  repo: 'robjtede/monzoo',
-  currentVersion: app.getVersion()
-})
+// const updater = new GHUpdater({
+//   repo: 'robjtede/monzoo',
+//   currentVersion: app.getVersion()
+// })
 
 console.log(`starting ${app.getName()} version ${app.getVersion()}`)
 
@@ -204,10 +204,10 @@ app.on('activate', () => {
   if (!mainWindow) createWindow()
 })
 
-updater.check((err, status) => {
-  if (!err && status) updater.download()
-})
-
-updater.on('update-downloaded', info => {
-  updater.install()
-})
+// updater.check((err, status) => {
+//   if (!err && status) updater.download()
+// })
+//
+// updater.on('update-downloaded', info => {
+//   updater.install()
+// })
