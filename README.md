@@ -1,6 +1,8 @@
 # Monzoo
 Unofficial Monzo Client for Desktop
 
+**Monzoo is MacOS only for now.**
+
 ## Download
 [See releases →](https://github.com/robjtede/monzoo/releases)
 
@@ -9,3 +11,6 @@ Unofficial Monzo Client for Desktop
 - The `Redirect URLs` must be `monzoo://auth/` for the application to collect the auth tokens correctly.
 - Copy the `Client ID` and `Client secret` over to the input fields when launching.
 - Follow instructions and follow standard Monzo auth flow.
+
+## Screenshot
+![Preview](http://i.imgur.com/bQLfyWI.png)
