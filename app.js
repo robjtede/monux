@@ -36,22 +36,49 @@ const appInfo = {
 let mainWindow
 let authWindow
 
-const template = [{
-  label: 'Application',
-  submenu: [
-    { label: 'About Application', selector: 'orderFrontStandardAboutPanel:' },
-    { type: 'separator' },
-    { label: 'Quit', accelerator: 'Command+Q', click: function () { app.quit() }}
-  ]}, {
+const template = [
+  {
+    label: 'Application',
+    submenu: [
+      { role: 'about' },
+      { type: 'separator' },
+      { role: 'hide' },
+      { role: 'hideothers' },
+      { role: 'unhide' },
+      { role: 'quit' }
+    ]
+  }, {
     label: 'Edit',
     submenu: [
-      { label: 'Undo', accelerator: 'CmdOrCtrl+Z', selector: 'undo:' },
-      { label: 'Redo', accelerator: 'Shift+CmdOrCtrl+Z', selector: 'redo:' },
+      { role: 'undo' },
+      { role: 'redo' },
       { type: 'separator' },
-      { label: 'Cut', accelerator: 'CmdOrCtrl+X', selector: 'cut:' },
-      { label: 'Copy', accelerator: 'CmdOrCtrl+C', selector: 'copy:' },
-      { label: 'Paste', accelerator: 'CmdOrCtrl+V', selector: 'paste:' },
-      { label: 'Select All', accelerator: 'CmdOrCtrl+A', selector: 'selectAll:' }
+      { role: 'cut' },
+      { role: 'copy' },
+      { role: 'paste' },
+      { role: 'selectall' }
+    ]
+  }, {
+    label: 'View',
+    submenu: [
+      { role: 'reload' },
+      { role: 'toggledevtools' },
+      { type: 'separator' },
+      { role: 'zoomin' },
+      { role: 'zoomout' },
+      { role: 'resetzoom' }
+    ]
+  }, {
+    role: 'window',
+    submenu: [
+      { role: 'minimize' },
+      { role: 'close' }
+    ]
+  }, {
+    role: 'help',
+    submenu: [
+      { label: 'Monzoo GitHub Repo', click: () => require('electron').shell.openExternal('https://github.com/robjtede/monzoo') },
+      { label: 'Learn More About Electron', click: () => require('electron').shell.openExternal('http://electron.atom.io') }
     ]
   }
 ]
@@ -89,6 +116,8 @@ const createWindow = () => {
     y: mainWindowState.y,
     width: mainWindowState.width,
     height: mainWindowState.height,
+    minWidth: 450,
+    minHeight: 600,
     titleBarStyle: 'hidden-inset'
   })
 
