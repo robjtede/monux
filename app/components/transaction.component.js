@@ -34,104 +34,26 @@
       render () {
         if (this.debug) console.log(`rendering ${this.index}`)
 
-        this.root.querySelector('.merchant').textContent = this.merchantName
+        this.root.querySelector('.merchant').textContent = this.tx.merchantName
 
-        if (this.notes.trim() !== '') {
+        if (this.tx.notes.trim() !== '') {
           this.root.querySelector('.notes').classList.add('noted')
-          this.root.querySelector('.notes').textContent = this.notes
+          this.root.querySelector('.notes').textContent = this.tx.notes
         }
 
-        this.root.querySelector('.amount').textContent = this.amount
-        if (this.tx.amount >= 0) this.root.querySelector('.amount').classList.add('income')
+        this.root.querySelector('.amount').textContent = this.tx.amount
+        if (this.tx.tx.amount >= 0) this.root.querySelector('.amount').classList.add('income')
 
-        this.root.querySelector('.icon').src = this.icon
+        this.root.querySelector('.icon').src = this.tx.icon
 
-        if (this.declined) this.classList.add('declined')
-        if (this.pending) this.classList.add('pending')
+        if (this.tx.declined) this.classList.add('declined')
+        if (this.tx.pending) this.classList.add('pending')
 
         this.dataset.category = this.tx.category
       }
 
       get index () {
         return this.dataset.index
-      }
-
-      get merchantName () {
-        if ('merchant' in this.tx && this.tx.merchant && this.tx.merchant.name) {
-          return this.tx.merchant.name
-        } else return this.tx.description
-      }
-
-      get notes () {
-        return this.tx.notes.split('\n')[0]
-      }
-
-      get pending () {
-        // declined transactions are never pending
-        if (this.declined) return false
-
-        // cash is never pending
-        if (this.isCash) return false
-
-        // all income seems to be exempt?
-        if (this.tx.amount >= 0) return false
-
-        // if settled does not exists
-        if (!('settled' in this.tx)) return true
-
-        // or if settled field is empty
-        if ('settled' in this.tx && this.tx.settled.trim() === '') return true
-
-        // assume transaction is not pending
-        return false
-      }
-
-      get declined () {
-        return 'decline_reason' in this.tx
-      }
-
-      get isCash () {
-        return this.tx.category === 'cash'
-      }
-
-      get amount () {
-        let amount = this.tx.amount / 100
-
-        if (amount < 0) amount = `${Math.abs(amount).toFixed(2)}`
-        else amount = `+${amount.toFixed(2)}`
-
-        return amount
-      }
-
-      formatCurrency (amount) {
-        const currencies = {
-          'GBP': '£',
-          'USD': '$',
-          'EUR': '€'
-        }
-
-        return `${currencies[this.tx.currency] || ''}${amount}`
-      }
-
-      get icon () {
-        if ('is_topup' in this.tx.metadata && this.tx.metadata.is_topup) {
-          return './icons/topup.png'
-        }
-
-        if (this.tx.counterparty && 'user_id' in this.tx.counterparty) {
-          return './icons/peer.png'
-        }
-
-        if (
-          'merchant' in this.tx &&
-          this.tx.merchant &&
-          'logo' in this.tx.merchant &&
-          this.tx.merchant.logo
-        ) {
-          return this.tx.merchant.logo
-        }
-
-        return `./icons/${this.tx.category}.png`
       }
 
       clickHandler () {
