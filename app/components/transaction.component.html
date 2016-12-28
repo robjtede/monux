@@ -55,7 +55,7 @@
       max-width: auto;
 
       border: 1px solid #ccc;
-      border-radius: 10px;
+      border-radius: 25%;
     }
 
     .info {
@@ -67,10 +67,10 @@
       align-items: flex-start;
     }
 
-    .description {
+    .merchant {
       margin: 0;
 
-      font-size: 1.2em;
+      font-size: 1rem;
     }
 
     :host.pending .description::after {
@@ -85,9 +85,9 @@
     .notes {
       display: none;
       margin: 0;
-      margin-top: 10px;
+      margin-top: 0.2em;
 
-      font-size: 0.9em;
+      font-size: 0.8rem;
       color: #888;
     }
 
@@ -103,7 +103,7 @@
       justify-content: flex-end;
       align-items: center;
 
-      font-size: 1.2em;
+      font-size: 1.2rem;
     }
 
     .amount.income {
@@ -115,11 +115,11 @@
   <div class="icon-wrap"><img class="icon"></div>
 
   <div class="info">
-    <p class="description"></p>
+    <p class="merchant"></p>
     <p class="notes"></p>
   </div>
 
   <p class="amount"></p>
 </template>
 
-<script src="./transaction.component.js" charset="utf-8"></script>
+<script src="./transaction.component.js"></script>

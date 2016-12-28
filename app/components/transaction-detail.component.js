@@ -32,17 +32,68 @@
       render () {
         if (this.debug) console.log(`rendering ${this.index} detail`)
 
-        this.root.querySelector('.id').textContent = this.tx.id
         this.root.querySelector('.notes').textContent = this.tx.notes
         this.root.querySelector('.location').textContent = this.location
         this.root.querySelector('.attachments').innerHTML = this.attachments
-        this.root.querySelector('.description').innerHTML = this.tx.description
+
+        this.root.querySelector('.merchant').textContent = this.merchantName
+        this.root.querySelector('.icon').src = this.icon
+        this.root.querySelector('.amount').textContent = this.formatCurrency(this.amount)
+
+        this.root.querySelector('.id').textContent = this.tx.id
+        this.root.querySelector('.description').textContent = this.tx.description
 
         this.dataset.category = this.tx.category
       }
 
       get index () {
         return this.dataset.index
+      }
+
+      get merchantName () {
+        if ('merchant' in this.tx && this.tx.merchant && this.tx.merchant.name) {
+          return this.tx.merchant.name
+        } else return this.tx.description
+      }
+
+      get amount () {
+        let amount = this.tx.amount / 100
+
+        if (amount < 0) amount = `${Math.abs(amount).toFixed(2)}`
+        else amount = `+${amount.toFixed(2)}`
+
+        return amount
+      }
+
+      formatCurrency (amount) {
+        const currencies = {
+          'GBP': '£',
+          'USD': '$',
+          'EUR': '€'
+        }
+
+        return `${currencies[this.tx.currency] || ''}${amount}`
+      }
+
+      get icon () {
+        if ('is_topup' in this.tx.metadata && this.tx.metadata.is_topup) {
+          return './icons/topup.png'
+        }
+
+        if (this.tx.counterparty && 'user_id' in this.tx.counterparty) {
+          return './icons/peer.png'
+        }
+
+        if (
+          'merchant' in this.tx &&
+          this.tx.merchant &&
+          'logo' in this.tx.merchant &&
+          this.tx.merchant.logo
+        ) {
+          return this.tx.merchant.logo
+        }
+
+        return `./icons/${this.tx.category}.png`
       }
 
       get location () {

@@ -116,7 +116,7 @@ const createWindow = () => {
     y: mainWindowState.y,
     width: mainWindowState.width,
     height: mainWindowState.height,
-    minWidth: 450,
+    minWidth: 700,
     minHeight: 600,
     titleBarStyle: 'hidden-inset'
   })

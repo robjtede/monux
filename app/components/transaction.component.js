@@ -6,13 +6,13 @@
     window.ShadyCSS.prepareTemplate(thisDoc.querySelector('template'), 'm-transaction')
 
     window.customElements.define('m-transaction', class extends HTMLElement {
-      constructor () {
+      constructor (tx = {}) {
         super()
 
         this.debug = false
         if (this.debug) console.log('constructing')
 
-        this.tx = {}
+        this.tx = tx
       }
 
       connectedCallback () {
@@ -34,7 +34,7 @@
       render () {
         if (this.debug) console.log(`rendering ${this.index}`)
 
-        this.root.querySelector('.description').textContent = this.description
+        this.root.querySelector('.merchant').textContent = this.merchantName
 
         if (this.notes.trim() !== '') {
           this.root.querySelector('.notes').classList.add('noted')
@@ -59,7 +59,7 @@
         return this.dataset.index
       }
 
-      get description () {
+      get merchantName () {
         if ('merchant' in this.tx && this.tx.merchant && this.tx.merchant.name) {
           return this.tx.merchant.name
         } else return this.tx.description
@@ -111,24 +111,14 @@
 
       clickHandler () {
         if (this.debug) console.log(`clicked ${this.index}`)
-        const thisDetail = document.querySelector(`m-transaction-detail[data-index="${this.index}"]`)
+        const thisDetail = document.createElement('m-transaction-detail')
 
-        if (thisDetail.classList.contains('show')) {
-          thisDetail.classList.remove('show')
-          this.classList.remove('show')
-        } else {
-          Array.from(document.querySelectorAll('m-transaction-detail'))
-          .concat(Array.from(document.querySelectorAll('m-transaction'))).forEach(item => {
-            item.classList.remove('show')
-          })
+        thisDetail.tx = this.tx
+        thisDetail.dataset.index = this.index
 
-          thisDetail.classList.add('show')
-          this.classList.add('show')
-
-          const pos = this.getBoundingClientRect().top + window.scrollY
-          const offset = document.querySelector('.balances').getBoundingClientRect().height
-          window.scrollTo(0, pos - offset - 40)
-        }
+        if (document.querySelector('.transaction-detail-pane')) document.querySelector('.transaction-detail-pane').innerHTML = ''
+        document.querySelector('.transaction-detail-pane').appendChild(thisDetail)
+        console.log(thisDetail)
       }
 
       disconnectedCallback () {

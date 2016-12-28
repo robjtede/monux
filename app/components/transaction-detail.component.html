@@ -1,49 +1,89 @@
 <template>
   <style>
     :host {
-      display: none;
-      overflow-x: scroll;
-      max-width: 100%;
-      padding: 10px 15px;
-
-      border-bottom: 1px solid #ccc;
-      border-left: 20px solid;
-    }
-
-    :host.show {
       display: block;
     }
 
-    :host[data-category=groceries] { border-left-color: gold; }
-    :host[data-category=transport] { border-left-color: teal; }
-    :host[data-category=entertainment] { border-left-color: orangered; }
-    :host[data-category=eating_out] { border-left-color: crimson; }
-    :host[data-category=cash] { border-left-color: olivedrab; }
-    :host[data-category=mondo] { border-left-color: olivedrab; }
-    :host[data-category=monzo] { border-left-color: olivedrab; }
-    :host[data-category=general] { border-left-color: slategrey; }
-    :host[data-category=bills] { border-left-color: cornflowerblue; }
-    :host[data-category=holidays] { border-left-color: orchid; }
-    :host[data-category=shopping] { border-left-color: coral; }
-    :host[data-category=expenses] { border-left-color: darkkhaki; }
+    .info {
+      display: flex;
+      flex-flow: row nowrap;
+      justify-content: space-between;
+      align-items: center;
 
-    .id::before {
-      content: 'Transaction ID:';
-      padding-right: 0.5em;
+      padding: 0 15px;
+
+      border-left: 10px solid;
     }
 
-    .notes {
-      white-space: pre-wrap;
+    :host[data-category=groceries] .info { border-color: gold; }
+    :host[data-category=transport] .info { border-color: teal; }
+    :host[data-category=entertainment] .info { border-color: orangered; }
+    :host[data-category=eating_out] .info { border-color: crimson; }
+    :host[data-category=cash] .info { border-color: olivedrab; }
+    :host[data-category=mondo] .info { border-color: olivedrab; }
+    :host[data-category=monzo] .info { border-color: olivedrab; }
+    :host[data-category=general] .info { border-color: slategrey; }
+    :host[data-category=bills] .info { border-color: cornflowerblue; }
+    :host[data-category=holidays] .info { border-color: orchid; }
+    :host[data-category=shopping] .info { border-color: coral; }
+    :host[data-category=expenses] .info { border-color: darkkhaki; }
+
+    .icon-wrap {
+      display: flex;
+      flex-flow: row nowrap;
+      justify-content: center;
+      align-items: center;
+
+      flex: 1;
+      padding: 10px;
+      padding-left: 0;
     }
 
-    .notes::before {
-      content: 'Notes:';
-      padding-right: 0.5em;
+    .icon {
+      max-height: 3.25em;
+      max-width: auto;
+
+      border: 1px solid #ccc;
+      border-radius: 25%;
+    }
+
+    .merchant {
+      flex: 6;
+      margin: 0.2em 0;
+
+      font-size: 1.6rem;
+    }
+
+    .amount {
+      flex: 1;
+
+      font-size: 1.6rem;
     }
 
     .location::before {
       content: 'Location:';
       padding-right: 0.5em;
+    }
+
+    .notes {
+      padding: 0.8em 15px 0.5em;
+
+      border-bottom: 1px solid #ccc;
+
+      white-space: pre-wrap;
+    }
+
+    .notes::before {
+      content: 'Notes:';
+      display: block;
+
+      color: #aaa;
+    }
+
+    .attachments {
+      padding: 0.8em 15px 0.5em;
+
+      border-bottom: 1px solid #ccc;
     }
 
     .attachments img {
@@ -52,20 +92,43 @@
 
     .attachments::before {
       content: 'Attachments:';
-      padding-right: 0.5em;
+      display: block;
+    }
+
+    .id, .description {
+      padding: 0.8em 15px 0.5em;
+
+      font-size: 0.8rem;
+      color: #888;
+    }
+
+    .id::before, .description::before {
+      display: block;
+      color: #aaa;
     }
 
     .description::before {
-      content: 'Description:';
-      padding-right: 0.5em;
+      content: 'Transaction description:';
+    }
+
+    .id::before {
+      content: 'Transaction ID:';
     }
   </style>
 
-  <div class="id"></div>
-  <div class="notes"></div>
   <div class="location"></div>
+
+  <div class="info">
+    <div class="icon-wrap"><img class="icon"></div>
+    <p class="merchant"></p>
+    <p class="amount"></p>
+  </div>
+
+  <div class="notes"></div>
   <div class="attachments"></div>
+
+  <div class="id"></div>
   <div class="description"></div>
 </template>
 
-<script src="./transaction-detail.component.js" charset="utf-8"></script>
+<script src="./transaction-detail.component.js"></script>

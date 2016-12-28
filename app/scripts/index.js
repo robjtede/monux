@@ -32,11 +32,6 @@ document.addEventListener('DOMContentLoaded', () => {
         txel.tx = tx
         txel.dataset.index = index
         txsel.appendChild(txel)
-
-        const txDetail = document.createElement('m-transaction-detail')
-        txDetail.tx = tx
-        txDetail.dataset.index = index
-        txsel.appendChild(txDetail)
       })
 
       const headingLocations = txs.reduce((firsts, tx, index) => {
