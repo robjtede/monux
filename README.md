@@ -13,4 +13,4 @@ Unofficial Monzo Client for Desktop
 - Follow instructions and follow standard Monzo auth flow.
 
 ## Screenshot
-![Preview](http://i.imgur.com/bQLfyWI.png)
+![Preview](http://i.imgur.com/kKnDg0M.png)
