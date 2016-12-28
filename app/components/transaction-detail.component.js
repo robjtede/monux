@@ -38,7 +38,7 @@
 
         this.root.querySelector('.merchant').textContent = this.tx.merchantName
         this.root.querySelector('.icon').src = this.tx.icon
-        this.root.querySelector('.amount').textContent = this.tx.formatCurrency(this.tx.amount)
+        this.root.querySelector('.amount').textContent = this.tx.amount.formatted
 
         this.root.querySelector('.id').textContent = this.tx.id
         this.root.querySelector('.description').textContent = this.tx.description
