@@ -56,6 +56,33 @@
         } else return this.tx.description
       }
 
+      get pending () {
+        // declined transactions cannot be pending
+        if (this.declined) return false
+
+        if (this.topup) return false
+
+        // if settled does not exists
+        if (!('settled' in this.tx)) return true
+
+        // or if settled field is empty
+        if ('settled' in this.tx && this.tx.settled.trim() === '') return true
+
+        // assume transaction is not pending
+        return false
+      }
+
+      get declined () {
+        return 'decline_reason' in this.tx
+      }
+
+      get topup () {
+        return 'is_topup' in this.tx.metadata &&
+          this.tx.metadata.is_topup &&
+          this.tx.category === 'mondo' &&
+          this.tx.is_load
+      }
+
       get amount () {
         let amount = this.tx.amount / 100
 

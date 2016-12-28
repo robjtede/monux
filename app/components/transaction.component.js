@@ -46,11 +46,8 @@
 
         this.root.querySelector('.icon').src = this.icon
 
-        if ('decline_reason' in this.tx) this.classList.add('declined')
-        if (!('settled' in this.tx) || (
-          'settled' in this.tx &&
-          this.tx.settled.trim() === ''
-        )) this.classList.add('pending')
+        if (this.declined) this.classList.add('declined')
+        if (this.pending) this.classList.add('pending')
 
         this.dataset.category = this.tx.category
       }
@@ -67,6 +64,34 @@
 
       get notes () {
         return this.tx.notes.split('\n')[0]
+      }
+
+      get pending () {
+        // declined transactions are never pending
+        if (this.declined) return false
+
+        // cash is never pending
+        if (this.isCash) return false
+
+        // all income seems to be exempt?
+        if (this.tx.amount >= 0) return false
+
+        // if settled does not exists
+        if (!('settled' in this.tx)) return true
+
+        // or if settled field is empty
+        if ('settled' in this.tx && this.tx.settled.trim() === '') return true
+
+        // assume transaction is not pending
+        return false
+      }
+
+      get declined () {
+        return 'decline_reason' in this.tx
+      }
+
+      get isCash () {
+        return this.tx.category === 'cash'
       }
 
       get amount () {
