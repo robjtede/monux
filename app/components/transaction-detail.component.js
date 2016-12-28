@@ -38,6 +38,9 @@
 
         this.root.querySelector('.merchant').textContent = this.tx.merchantName
         this.root.querySelector('.icon').src = this.tx.icon
+
+        this.root.querySelector('.category').textContent = this.tx.category
+        this.root.querySelector('.category').classList.add(this.tx.category)
         this.root.querySelector('.amount').textContent = this.tx.amount.formatted
 
         this.root.querySelector('.id').textContent = this.tx.id

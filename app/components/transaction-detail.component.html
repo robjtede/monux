@@ -13,56 +13,104 @@
       padding: 0 15px;
 
       border-left: 10px solid;
+      border-bottom: 1px solid #ccc;
     }
 
-    :host[data-category=groceries] .info { border-color: gold; }
-    :host[data-category=transport] .info { border-color: teal; }
-    :host[data-category=entertainment] .info { border-color: orangered; }
-    :host[data-category=eating_out] .info { border-color: crimson; }
-    :host[data-category=cash] .info { border-color: olivedrab; }
-    :host[data-category=mondo] .info { border-color: olivedrab; }
-    :host[data-category=monzo] .info { border-color: olivedrab; }
-    :host[data-category=general] .info { border-color: slategrey; }
-    :host[data-category=bills] .info { border-color: cornflowerblue; }
-    :host[data-category=holidays] .info { border-color: orchid; }
-    :host[data-category=shopping] .info { border-color: coral; }
-    :host[data-category=expenses] .info { border-color: darkkhaki; }
+    :host[data-category=groceries] .info { border-left-color: gold; }
+    :host[data-category=transport] .info { border-left-color: teal; }
+    :host[data-category=entertainment] .info { border-left-color: orangered; }
+    :host[data-category=eating_out] .info { border-left-color: crimson; }
+    :host[data-category=cash] .info { border-left-color: olivedrab; }
+    :host[data-category=mondo] .info { border-left-color: olivedrab; }
+    :host[data-category=monzo] .info { border-left-color: olivedrab; }
+    :host[data-category=general] .info { border-left-color: slategrey; }
+    :host[data-category=bills] .info { border-left-color: cornflowerblue; }
+    :host[data-category=holidays] .info { border-left-color: orchid; }
+    :host[data-category=shopping] .info { border-left-color: coral; }
+    :host[data-category=expenses] .info { border-left-color: darkkhaki; }
 
-    .icon-wrap {
+    .map {
+      min-height: 100px;
+      background: lightblue;
+    }
+
+    .header {
       display: flex;
       flex-flow: row nowrap;
-      justify-content: center;
-      align-items: center;
+      justify-content: flex-start;
+      align-items: stretch;
 
-      flex: 1;
-      padding: 10px;
-      padding-left: 0;
+      padding: 0 15px;
+    }
+
+    .icon-wrap {
+      flex: 0 1 130px;
     }
 
     .icon {
-      max-height: 3.25em;
-      max-width: auto;
+      max-height: 3rem;
 
       border: 1px solid #ccc;
       border-radius: 25%;
+      background: white;
+
+      transform: scale(1.8);
+      transform-origin: bottom left;
     }
 
     .merchant {
-      flex: 6;
-      margin: 0.2em 0;
-
-      font-size: 1.6rem;
-    }
-
-    .amount {
       flex: 1;
 
-      font-size: 1.6rem;
+      font-size: 2rem;
     }
 
-    .location::before {
-      content: 'Location:';
-      padding-right: 0.5em;
+    .location {
+      padding: 0.5em 15px 0.8em;
+
+      font-size: 1rem;
+    }
+
+    .category-wrap {
+      padding: 0 15px;
+    }
+
+    .category::before {
+      content: '\263a';
+      font-size: 1.25em;
+      line-height: 1;
+    }
+
+    .category {
+      display: inline-block;
+      padding: 0.2em 0.6em 0.2em 0.4em;
+
+      border: 2px solid;
+      border-radius: 5px;
+
+      font-size: 1.2rem;
+      text-transform: capitalize;
+    }
+
+    :host[data-category=groceries] .category { border-color: gold; color: gold; }
+    :host[data-category=transport] .category { border-color: teal; color: teal; }
+    :host[data-category=entertainment] .category { border-color: orangered; color: orangered; }
+    :host[data-category=eating_out] .category { border-color: crimson; color: crimson; }
+    :host[data-category=cash] .category { border-color: olivedrab; color: olivedrab; }
+    :host[data-category=mondo] .category { border-color: olivedrab; color: olivedrab; }
+    :host[data-category=monzo] .category { border-color: olivedrab; color: olivedrab; }
+    :host[data-category=general] .category { border-color: slategrey; color: slategrey; }
+    :host[data-category=bills] .category { border-color: cornflowerblue; color: cornflowerblue; }
+    :host[data-category=holidays] .category { border-color: orchid; color: orchid; }
+    :host[data-category=shopping] .category { border-color: coral; color: coral; }
+    :host[data-category=expenses] .category { border-color: darkkhaki; color: darkkhaki; }
+
+    .amount {
+      padding: 0.4em 15px;
+
+      border-bottom: 1px solid #ccc;
+
+      font-size: 1.8rem;
+      white-space: nowrap;
     }
 
     .notes {
@@ -93,6 +141,7 @@
     .attachments::before {
       content: 'Attachments:';
       display: block;
+      color: #aaa;
     }
 
     .id, .description {
@@ -100,6 +149,7 @@
 
       font-size: 0.8rem;
       color: #888;
+      white-space: pre-wrap;
     }
 
     .id::before, .description::before {
@@ -116,13 +166,16 @@
     }
   </style>
 
-  <div class="location"></div>
+  <div class="map"></div>
 
-  <div class="info">
+  <div class="header">
     <div class="icon-wrap"><img class="icon"></div>
-    <p class="merchant"></p>
-    <p class="amount"></p>
+    <div class="merchant"></div>
   </div>
+
+  <div class="location"></div>
+  <div class="category-wrap"><div class="category"></div></div>
+  <div class="amount"></div>
 
   <div class="notes"></div>
   <div class="attachments"></div>
