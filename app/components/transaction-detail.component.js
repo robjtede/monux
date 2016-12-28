@@ -32,7 +32,7 @@
       render () {
         if (this.debug) console.log(`rendering ${this.index} detail`)
 
-        this.root.querySelector('.notes').textContent = this.tx.notes
+        this.root.querySelector('.notes').textContent = this.tx.notes.full
         this.root.querySelector('.location').textContent = this.tx.location
         this.root.querySelector('.attachments').innerHTML = this.tx.attachments
 
@@ -41,7 +41,7 @@
 
         this.root.querySelector('.category').textContent = this.tx.category
         this.root.querySelector('.category').classList.add(this.tx.category)
-        this.root.querySelector('.amount').textContent = this.tx.amount.formatted
+        this.root.querySelector('.amount-wrap').innerHTML = this.tx.amount.html(true, 0)
 
         this.root.querySelector('.id').textContent = this.tx.id
         this.root.querySelector('.description').textContent = this.tx.description

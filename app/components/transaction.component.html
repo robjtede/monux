@@ -93,7 +93,7 @@
       display: initial;
     }
 
-    .amount {
+    .amount-wrap {
       flex: 2 0;
 
       display: flex;
@@ -102,9 +102,10 @@
       align-items: center;
 
       font-size: 1.2rem;
+      white-space: nowrap;
     }
 
-    .amount.income {
+    .amount.positive {
       color: green;
     }
 
@@ -117,7 +118,7 @@
     <p class="notes"></p>
   </div>
 
-  <p class="amount"></p>
+  <p class="amount-wrap"></p>
 </template>
 
 <script src="./transaction.component.js"></script>

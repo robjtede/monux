@@ -36,13 +36,13 @@
 
         this.root.querySelector('.merchant').textContent = this.tx.merchantName
 
-        if (this.tx.notes.trim() !== '') {
+        if (this.tx.notes.short.trim() !== '') {
           this.root.querySelector('.notes').classList.add('noted')
-          this.root.querySelector('.notes').textContent = this.tx.notes
+          this.root.querySelector('.notes').textContent = this.tx.notes.short
         }
 
-        this.root.querySelector('.amount').textContent = this.tx.amount
-        if (this.tx.tx.amount >= 0) this.root.querySelector('.amount').classList.add('income')
+        this.root.querySelector('.amount-wrap').innerHTML = this.tx.amount.html(false, 2)
+        if (this.tx.amount.positive) this.root.querySelector('.amount').classList.add('income')
 
         this.root.querySelector('.icon').src = this.tx.icon
 
@@ -65,7 +65,6 @@
 
         if (document.querySelector('.transaction-detail-pane')) document.querySelector('.transaction-detail-pane').innerHTML = ''
         document.querySelector('.transaction-detail-pane').appendChild(thisDetail)
-        console.log(thisDetail)
       }
 
       disconnectedCallback () {

@@ -104,13 +104,21 @@
     :host[data-category=shopping] .category { border-color: coral; color: coral; }
     :host[data-category=expenses] .category { border-color: darkkhaki; color: darkkhaki; }
 
-    .amount {
+    .amount-wrap {
       padding: 0.4em 15px;
 
       border-bottom: 1px solid #ccc;
 
       font-size: 1.8rem;
       white-space: nowrap;
+    }
+
+    .amount.positive {
+      color: green;
+    }
+
+    .amount .major {
+      font-size: 2em;
     }
 
     .notes {
@@ -175,7 +183,7 @@
 
   <div class="location"></div>
   <div class="category-wrap"><div class="category"></div></div>
-  <div class="amount"></div>
+  <div class="amount-wrap"></div>
 
   <div class="notes"></div>
   <div class="attachments"></div>

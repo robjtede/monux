@@ -107,8 +107,8 @@ const createWindow = () => {
   debug('createWindow')
 
   const mainWindowState = windowState({
-    defaultWidth: 550,
-    defaultHeight: 800
+    defaultWidth: 1000,
+    defaultHeight: 700
   })
 
   mainWindow = new BrowserWindow({
@@ -116,7 +116,7 @@ const createWindow = () => {
     y: mainWindowState.y,
     width: mainWindowState.width,
     height: mainWindowState.height,
-    minWidth: 700,
+    minWidth: 600,
     minHeight: 600,
     titleBarStyle: 'hidden-inset'
   })

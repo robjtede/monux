@@ -39,16 +39,23 @@ body {
   -webkit-user-select: none;
 }
 
+.card-balance,
+.spent-today {
+  -webkit-app-region: drag;
+  -webkit-user-select: none;
+}
+
 .card-balance {
   flex: 1;
 
   text-align: left;
+
 }
 
 .spent-today {
   flex: 1;
 
-  text-align: right;,
+  text-align: right;
 }
 
 .card-balance h2,
@@ -58,13 +65,21 @@ body {
   font-weight: 300;
   font-size: 1.5rem;
 
+  -webkit-app-region: drag;
+  -webkit-user-select: none;
+}
+
+.card-balance .amount,
+.spent-today .amount,
+.card-balance .amount *,
+.spent-today .amount * {
   -webkit-app-region: no-drag;
   -webkit-user-select: initial;
 }
 
 .card-balance h2 .major,
 .spent-today h2 .major {
-  font-size: 3rem;
+  font-size: 2em;
 }
 
 .card-balance p,

@@ -69,28 +69,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
   monzo.accounts
     .then(accs => accs[0].balance)
-    .then(bal => {
-      if (debug) console.log(bal)
+    .then(({balance, spentToday}) => {
+      if (debug) console.log(balance)
+      if (debug) console.log(spentToday)
 
-      document.querySelector('.card-balance').querySelector('h2').innerHTML = format(bal.balance, bal.currency)
-      document.querySelector('.spent-today').querySelector('h2').innerHTML = format(Math.abs(bal.spend_today), bal.currency)
+      document.querySelector('.card-balance').querySelector('h2').innerHTML = balance.html(true, 0)
+      document.querySelector('.spent-today').querySelector('h2').innerHTML = spentToday.html(true, 0)
     })
 })
-
-const format = (amount, currency) => {
-  amount /= 100
-
-  if (amount < 0) amount = Math.abs(amount).toFixed(2)
-  else amount = amount.toFixed(2)
-
-  const parts = amount.split('.')
-  amount = `<span class="major">${parts[0]}</span>.${parts[1]}`
-
-  const currencies = {
-    'GBP': '£',
-    'USD': '$',
-    'EUR': '€'
-  }
-
-  return `${currencies[currency] || ''}${amount}`
-}
