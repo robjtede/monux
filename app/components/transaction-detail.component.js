@@ -88,7 +88,7 @@ const EXIF = require('../lib/exif')
         attachments.querySelector('.scroll-wrap').appendChild(scrollInner)
 
         // loop through attachment urls
-        this.tx.attachments.forEach(url => {
+        this.tx.attachments.reverse().forEach(url => {
           // create canvas for image
           const canvas = document.createElement('canvas')
           const ctx = canvas.getContext('2d')
@@ -138,6 +138,7 @@ const EXIF = require('../lib/exif')
               // draw image to canvas
               ctx.drawImage(img, 0, 0)
 
+              // insert image
               scrollInner.appendChild(canvas)
 
               // // create new image element to be inserted

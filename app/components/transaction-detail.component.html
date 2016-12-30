@@ -143,12 +143,6 @@
       border-bottom: 1px solid #ccc;
     }
 
-    .attachments img,
-    .attachments canvas {
-      max-width: 350px;
-      max-height: 350px;
-    }
-
     .attachments::before {
       content: 'Attachments:';
       display: block;
@@ -159,27 +153,28 @@
     }
 
     .attachments .scroll-wrap {
-      padding-bottom: 10px;
+      padding-bottom: 5px;
       overflow-x: scroll;
       overflow-y: hidden;
     }
 
     .attachments .scroll-inner {
-      display: flex;
-      flex-flow: row nowrap;
-      justify-content: flex-start;
-      align-items: center;
+      white-space: nowrap;
     }
 
     .attachments .scroll-inner img,
     .attachments .scroll-inner canvas {
+      max-width: 350px;
+      max-height: 350px;
       margin: 5px 10px;
+
+      box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.6);
     }
 
     .id,
     .description,
     .settled {
-      padding: 0.8em 15px 0.5em;
+      padding: 0.8em 15px;
 
       font-size: 0.8rem;
       color: #888;
