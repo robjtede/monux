@@ -36,7 +36,7 @@
 
         this.root.querySelector('.merchant').textContent = this.tx.merchantName
 
-        if (this.tx.notes.short.trim() !== '') {
+        if (this.tx.notes.short.trim()) {
           this.root.querySelector('.notes').classList.add('noted')
           this.root.querySelector('.notes').textContent = this.tx.notes.short
         }

@@ -40,7 +40,7 @@
       justify-content: flex-start;
       align-items: stretch;
 
-      padding: 0 15px;
+      padding: 0 15px 15px;
     }
 
     .icon-wrap {
@@ -65,7 +65,7 @@
     }
 
     .location {
-      padding: 0.5em 15px 0.8em;
+      padding: 0 15px 0.8em;
 
       font-size: 1rem;
     }
@@ -137,19 +137,42 @@
     }
 
     .attachments {
-      padding: 0.8em 15px 0.5em;
+      padding: 0.8em 0 0.5em;
 
       border-bottom: 1px solid #ccc;
     }
 
-    .attachments img {
-      max-width: 400px;
+    .attachments img,
+    .attachments canvas {
+      max-width: 350px;
+      max-height: 350px;
     }
 
     .attachments::before {
       content: 'Attachments:';
       display: block;
+      padding-left: 15px;
+      padding-right: 15px;
+
       color: #aaa;
+    }
+
+    .attachments .scroll-wrap {
+      padding-bottom: 10px;
+      overflow-x: scroll;
+      overflow-y: hidden;
+    }
+
+    .attachments .scroll-inner {
+      display: flex;
+      flex-flow: row nowrap;
+      justify-content: flex-start;
+      align-items: center;
+    }
+
+    .attachments .scroll-inner img,
+    .attachments .scroll-inner canvas {
+      margin: 5px 10px;
     }
 
     .id, .description {
@@ -186,7 +209,7 @@
   <div class="amount-wrap"></div>
 
   <div class="notes"></div>
-  <div class="attachments"></div>
+  <div class="attachments"><div class="scroll-wrap"></div></div>
 
   <div class="id"></div>
   <div class="description"></div>
