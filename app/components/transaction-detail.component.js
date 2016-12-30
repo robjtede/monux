@@ -47,6 +47,7 @@ const EXIF = require('../lib/exif')
 
         this.root.querySelector('.id').textContent = this.tx.id
         this.root.querySelector('.description').textContent = this.tx.description
+        this.root.querySelector('.settled').textContent = this.tx.settled
 
         this.dataset.category = this.tx.category
       }
@@ -118,8 +119,6 @@ const EXIF = require('../lib/exif')
                 canvas.width = img.width
                 canvas.height = img.height
               }
-
-              console.log(orientation, img.width, canvas.height)
 
               // possible orientation effects
               const orientations = {

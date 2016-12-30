@@ -2,6 +2,7 @@
   <style>
     :host {
       display: block;
+      padding-bottom: 15px;
     }
 
     .info {
@@ -175,7 +176,9 @@
       margin: 5px 10px;
     }
 
-    .id, .description {
+    .id,
+    .description,
+    .settled {
       padding: 0.8em 15px 0.5em;
 
       font-size: 0.8rem;
@@ -183,17 +186,23 @@
       white-space: pre-wrap;
     }
 
-    .id::before, .description::before {
+    .id::before,
+    .description::before,
+    .settled::before {
       display: block;
       color: #aaa;
     }
 
     .description::before {
-      content: 'Transaction description:';
+      content: 'Transaction Description:';
     }
 
     .id::before {
       content: 'Transaction ID:';
+    }
+
+    .settled::before {
+      content: 'Transaction Status:'
     }
   </style>
 
@@ -213,6 +222,7 @@
 
   <div class="id"></div>
   <div class="description"></div>
+  <div class="settled"></div>
 </template>
 
 <script src="./transaction-detail.component.js"></script>
