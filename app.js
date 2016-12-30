@@ -3,6 +3,7 @@
 const path = require('path')
 const url = require('url')
 const querystring = require('querystring')
+const crypto = require('crypto')
 const Debug = require('debug')
 
 const {
@@ -30,7 +31,7 @@ const appInfo = {
   client_secret: config.get('client_secret'),
   redirect_uri: 'monzoo://auth/',
   response_type: 'code',
-  state: 'totally random state key for oauth purposes'
+  state: crypto.randomBytes(512).toString('hex')
 }
 
 let mainWindow
@@ -263,6 +264,11 @@ app.on('open-url', function (ev, forwardedUrl) {
 
   const query = url.parse(forwardedUrl).query
   const authResponse = querystring.parse(query)
+
+  if (authResponse.state !== appInfo.state) {
+    console.error('auth state mismatch')
+    throw new Error('auth state mismatch')
+  }
 
   debug(`authResponse code => ${authResponse.code}`)
 
