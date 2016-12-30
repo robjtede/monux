@@ -34,7 +34,7 @@
       render () {
         if (this.debug) console.log(`rendering ${this.index}`)
 
-        this.root.querySelector('.merchant').textContent = this.tx.merchantName
+        this.root.querySelector('.merchant').textContent = this.tx.displayName
 
         if (this.tx.notes.short.trim()) {
           this.root.querySelector('.notes').classList.add('noted')

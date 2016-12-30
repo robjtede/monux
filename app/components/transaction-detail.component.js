@@ -38,7 +38,7 @@ const EXIF = require('../lib/exif')
         this.renderNotes()
         this.renderAttachments()
 
-        this.root.querySelector('.merchant').textContent = this.tx.merchantName
+        this.root.querySelector('.merchant').textContent = this.tx.displayName
         this.root.querySelector('.icon').src = this.tx.icon
 
         this.root.querySelector('.category').textContent = this.tx.category
