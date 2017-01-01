@@ -11,6 +11,7 @@
   "plugins": [],
   "rules": {
     "accessor-pairs": 2,
+    "array-callback-return": 1,
     "arrow-spacing": [
       2,
       {
@@ -76,7 +77,8 @@
       2,
       2,
       {
-        "SwitchCase": 1
+        "SwitchCase": 1,
+        "MemberExpression": 1
       }
     ],
     "jsx-quotes": [
@@ -104,6 +106,7 @@
         "capIsNew": false
       }
     ],
+    "newline-per-chained-call": 2,
     "new-parens": 2,
     "no-array-constructor": 2,
     "no-caller": 2,

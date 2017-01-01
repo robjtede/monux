@@ -22,9 +22,10 @@ document.addEventListener('DOMContentLoaded', () => {
   const app = document.querySelector('.app')
 
   const txlist = document.createElement('m-transaction-list')
-  // app.insertBefore(txlist, app.firstChild)
+  app.insertBefore(txlist, app.firstChild)
 
-  monzo.accounts
+  monzo
+    .accounts
     .then(accs => accs[0].transactions)
     .then(txs => {
       if (debug) console.log(txs)

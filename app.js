@@ -157,7 +157,7 @@ const requestAuth = () => {
 const getAccessToken = () => {
   debug('getAccessToken')
 
-  return rp({
+  const opts = {
     uri: 'https://api.monzo.com/oauth2/token',
     method: 'post',
     form: {
@@ -168,37 +168,43 @@ const getAccessToken = () => {
       code: config.get('authCode')
     },
     json: true
-  }).then(res => {
-    // debug response info
-    debug(`getAccessToken => ${typeof res}: ${res}`)
+  }
 
-    return res
-  }).catch(err => {
-    console.error(`getAccessToken => ${err.code}`)
+  return rp(opts)
+    .then(res => {
+      // debug response info
+      debug(`getAccessToken => ${typeof res}: ${res}`)
 
-    throw err
-  })
+      return res
+    }, err => {
+      console.error(`getAccessToken => ${err.code}`)
+
+      throw err
+    })
 }
 
 const verifyAccess = () => {
   debug(`verifyAccess with: ${config.get('accessToken')}`)
 
-  return rp({
+  const opts = {
     uri: 'https://api.monzo.com/ping/whoami',
     headers: {
       'Authorization': `Bearer ${config.get('accessToken')}`
     },
     json: true
-  }).then(res => {
-    // debug response info
-    debug(`verifyAccess => ${typeof res}: ${res}`)
+  }
 
-    return res
-  }).catch(err => {
-    debug(`verifyAccess => ${err.message}`)
+  return rp(opts)
+    .then(res => {
+      // debug response info
+      debug(`verifyAccess => ${typeof res}: ${res}`)
 
-    throw err
-  })
+      return res
+    }, err => {
+      console.error(`verifyAccess => ${err.message}`)
+
+      throw err
+    })
 }
 
 const clientDetails = () => {
@@ -226,12 +232,14 @@ const clientDetails = () => {
       return
     }
 
-    verifyAccess().then(res => {
-      if (res && 'authenticated' in res && res.authenticated) createWindow()
-      else requestAuth()
-    }).catch(err => {
-      console.error(err.message)
-    })
+    verifyAccess()
+      .then(res => {
+        if (res && 'authenticated' in res && res.authenticated) createWindow()
+        else requestAuth()
+      })
+      .catch(err => {
+        console.error(err.message)
+      })
   })
 }
 
@@ -249,12 +257,14 @@ app.on('ready', () => {
     return
   }
 
-  verifyAccess().then(res => {
-    if (res && 'authenticated' in res && res.authenticated) createWindow()
-    else requestAuth()
-  }).catch(err => {
-    console.error(err.message)
-  })
+  verifyAccess()
+    .then(res => {
+      if (res && 'authenticated' in res && res.authenticated) createWindow()
+      else requestAuth()
+    })
+    .catch(err => {
+      console.error(err.message)
+    })
 })
 
 app.on('open-url', function (ev, forwardedUrl) {
