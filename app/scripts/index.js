@@ -19,6 +19,11 @@ document.addEventListener('DOMContentLoaded', () => {
     window.Stickyfill.add(el)
   })
 
+  const app = document.querySelector('.app')
+
+  const txlist = document.createElement('m-transaction-list')
+  // app.insertBefore(txlist, app.firstChild)
+
   monzo.accounts
     .then(accs => accs[0].transactions)
     .then(txs => {
