@@ -109,22 +109,9 @@ body {
   flex: 7 1 auto;
 }
 
-.transactions {
+m-transaction-list {
   flex: 4;
-  overflow-y: scroll;
-
-  border-right: 1px solid #ccc;
 }
-
-.transactions .day-heading {
-  padding: 0.5em 20px;
-
-  border-bottom: 1px solid #ccc;
-  background: #f0f0f0;
-
-  font-size: 1rem;
-}
-
 
 .transaction-detail-pane {
   flex: 5;

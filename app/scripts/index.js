@@ -1,10 +1,10 @@
 'use strict'
 
-const strftime = require('date-fns/format')
-const startOfDay = require('date-fns/start_of_day')
-const isToday = require('date-fns/is_today')
-const isYesterday = require('date-fns/is_yesterday')
-const isThisYear = require('date-fns/is_this_year')
+// const strftime = require('date-fns/format')
+// const startOfDay = require('date-fns/start_of_day')
+// const isToday = require('date-fns/is_today')
+// const isYesterday = require('date-fns/is_yesterday')
+// const isThisYear = require('date-fns/is_this_year')
 
 const Config = require('electron-config')
 const config = new Config()
@@ -22,7 +22,6 @@ document.addEventListener('DOMContentLoaded', () => {
   const app = document.querySelector('.app')
 
   const txlist = document.createElement('m-transaction-list')
-  app.insertBefore(txlist, app.firstChild)
 
   monzo
     .accounts
@@ -30,47 +29,41 @@ document.addEventListener('DOMContentLoaded', () => {
     .then(txs => {
       if (debug) console.log(txs)
 
-      txs = txs.reverse()
-      const txsel = document.querySelector('.transactions')
+      txlist.txs = txs.reverse()
+      app.insertBefore(txlist, app.firstChild)
 
-      txs.forEach((tx, index) => {
-        const txel = document.createElement('m-transaction')
-        txel.tx = tx
-        txel.dataset.index = index
-        txsel.appendChild(txel)
-      })
+      // const headingLocations = txs.reduce((firsts, tx, index) => {
+      //   const created = new Date(tx.created)
+      //   const isoDate = startOfDay(created).toISOString()
+      //
+      //   if (!(isoDate in firsts)) {
+      //     firsts[isoDate] = document.querySelector(`m-transaction-summary[data-index="${index}"]`)
+      //   }
+      //
+      //   return firsts
+      // }, {})
 
-      const headingLocations = txs.reduce((firsts, tx, index) => {
-        const created = new Date(tx.created)
-        const isoDate = startOfDay(created).toISOString()
-
-        if (!(isoDate in firsts)) {
-          firsts[isoDate] = document.querySelector(`m-transaction[data-index="${index}"]`)
-        }
-
-        return firsts
-      }, {})
-
-      Object.keys(headingLocations).forEach(txel => {
-        txel = headingLocations[txel]
-
-        const day = document.createElement('div')
-        day.classList.add('day-heading')
-
-        const created = startOfDay(new Date(txel.tx.created))
-
-        if (isToday(created)) {
-          day.textContent = 'Today'
-        } else if (isYesterday(created)) {
-          day.textContent = 'Yesterday'
-        } else if (isThisYear(created)) {
-          day.textContent = strftime(created, 'dddd, Do MMMM')
-        } else {
-          day.textContent = strftime(created, 'dddd, Do MMMM YYYY')
-        }
-
-        txsel.insertBefore(day, txel)
-      })
+      // Object.keys(headingLocations).forEach(txel => {
+      //   console.log(txel)
+      //   txel = headingLocations[txel]
+      //
+      //   const day = document.createElement('div')
+      //   day.classList.add('day-heading')
+      //
+      //   const created = startOfDay(new Date(txel.tx.created))
+      //
+      //   if (isToday(created)) {
+      //     day.textContent = 'Today'
+      //   } else if (isYesterday(created)) {
+      //     day.textContent = 'Yesterday'
+      //   } else if (isThisYear(created)) {
+      //     day.textContent = strftime(created, 'dddd, Do MMMM')
+      //   } else {
+      //     day.textContent = strftime(created, 'dddd, Do MMMM YYYY')
+      //   }
+      //
+      //   txlist.insertBefore(day, txel)
+      // })
     })
 
   monzo.accounts
