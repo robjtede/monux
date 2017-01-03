@@ -1,6 +1,12 @@
 'use strict'
 
 ;(function (thisDoc) {
+  const strftime = require('date-fns/format')
+  const startOfDay = require('date-fns/start_of_day')
+  const isToday = require('date-fns/is_today')
+  const isYesterday = require('date-fns/is_yesterday')
+  const isThisYear = require('date-fns/is_this_year')
+
   class TransactionListComponent extends HTMLElement {
     constructor () {
       super()
@@ -22,19 +28,69 @@
 
       window.ShadyCSS.applyStyle(this)
 
-      this.txs.forEach((tx, index) => {
-        const txel = document.createElement('m-transaction-summary')
-        txel.tx = tx
-        txel.dataset.index = index
-
-        this.root.appendChild(txel)
-      })
-
       this.render()
     }
 
     render () {
       if (this.debug) console.log(`rendering list`)
+
+      if (this.hasAttribute('dayheadings')) {
+        const groupedByDay = this.txs.reduce((groups, tx, index) => {
+          const created = new Date(tx.created)
+          const dayid = +startOfDay(created)
+
+          if (dayid in groups) groups[dayid].push(tx)
+          else groups[dayid] = [tx]
+
+          return groups
+        }, {})
+
+        console.log(groupedByDay)
+
+        Object.keys(groupedByDay)
+          .sort()
+          .forEach(txgroup => {
+            txgroup = groupedByDay[txgroup]
+
+            const day = document.createElement('div')
+            day.classList.add('transaction-group')
+
+            const heading = document.createElement('div')
+            heading.classList.add('day-heading')
+
+            const created = startOfDay(new Date(txgroup[0].created))
+
+            if (isToday(created)) {
+              heading.textContent = 'Today'
+            } else if (isYesterday(created)) {
+              heading.textContent = 'Yesterday'
+            } else if (isThisYear(created)) {
+              heading.textContent = strftime(created, 'dddd, Do MMMM')
+            } else {
+              heading.textContent = strftime(created, 'dddd, Do MMMM YYYY')
+            }
+
+            day.appendChild(heading)
+
+            txgroup.forEach(tx => {
+              const txel = document.createElement('m-transaction-summary')
+              txel.tx = tx
+              txel.dataset.index = tx.index
+
+              day.appendChild(txel)
+            })
+
+            this.root.insertBefore(day, this.root.firstChild)
+          })
+      } else {
+        this.txs.forEach((tx, index) => {
+          const txel = document.createElement('m-transaction-summary')
+          txel.tx = tx
+          txel.dataset.index = index
+
+          this.root.appendChild(txel)
+        })
+      }
     }
 
     disconnectedCallback () {

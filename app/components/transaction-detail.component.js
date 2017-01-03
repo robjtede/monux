@@ -35,7 +35,12 @@ const EXIF = require('../lib/exif')
       this.renderAttachments()
 
       this.root.querySelector('.merchant').textContent = this.tx.displayName
-      this.root.querySelector('.icon').src = this.tx.icon
+
+      const icon = this.root.querySelector('.icon')
+      icon.src = this.tx.icon
+      icon.addEventListener('error', ev => {
+        icon.src = this.tx.iconFallback
+      })
 
       this.root.querySelector('.category').textContent = this.tx.category
       this.root.querySelector('.category').classList.add(this.tx.category)

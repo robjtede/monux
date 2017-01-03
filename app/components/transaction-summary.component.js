@@ -40,7 +40,11 @@
       this.root.querySelector('.amount-wrap').innerHTML = this.tx.amount.html(false, 2)
       if (this.tx.amount.positive) this.root.querySelector('.amount').classList.add('income')
 
-      this.root.querySelector('.icon').src = this.tx.icon
+      const icon = this.root.querySelector('.icon')
+      icon.src = this.tx.icon
+      icon.addEventListener('error', ev => {
+        icon.src = this.tx.iconFallback
+      })
 
       if (this.tx.declined) this.classList.add('declined')
       if (this.tx.pending) this.classList.add('pending')
