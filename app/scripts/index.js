@@ -23,10 +23,8 @@ document.addEventListener('DOMContentLoaded', () => {
     .then(txs => {
       if (debug) console.log(txs)
 
-      // txs.forEach((tx, index) => tx.index = index)
-
-      txlist.txs = txs.reverse()
-      app.insertBefore(txlist, app.firstChild)
+      txlist.txs = txs
+      txlist.render()
     })
 
   monzo.accounts

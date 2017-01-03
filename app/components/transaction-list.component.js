@@ -45,8 +45,6 @@
           return groups
         }, {})
 
-        console.log(groupedByDay)
-
         Object.keys(groupedByDay)
           .sort()
           .forEach(txgroup => {
@@ -56,7 +54,7 @@
             day.classList.add('transaction-group')
 
             const heading = document.createElement('div')
-            heading.classList.add('day-heading')
+            heading.classList.add('day-heading', 'fixable')
 
             const created = startOfDay(new Date(txgroup[0].created))
 
@@ -81,6 +79,7 @@
             })
 
             this.root.insertBefore(day, this.root.firstChild)
+            window.Stickyfill.add(heading)
           })
       } else {
         this.txs.forEach((tx, index) => {
@@ -102,7 +101,7 @@
     }
 
     static get observedAttributes () {
-      return []
+      return ['dayheadings']
     }
 
     attributeChangedCallback (attrName, oldVal, newVal) {
