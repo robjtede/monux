@@ -5,4 +5,473 @@
  *
  * MIT License
  */
-!function(a,b){function c(){y=D=z=A=B=C=K}function d(a,b){for(var c in b)b.hasOwnProperty(c)&&(a[c]=b[c])}function e(a){return parseFloat(a)||0}function f(){F={top:b.pageYOffset,left:b.pageXOffset}}function g(){return b.pageXOffset!=F.left?(f(),void z()):void(b.pageYOffset!=F.top&&(f(),i()))}function h(a){setTimeout(function(){b.pageYOffset!=F.top&&(F.top=b.pageYOffset,i())},0)}function i(){for(var a=H.length-1;a>=0;a--)j(H[a])}function j(a){if(a.inited){var b=F.top<=a.limit.start?0:F.top>=a.limit.end?2:1;a.mode!=b&&p(a,b)}}function k(){for(var a=H.length-1;a>=0;a--)if(H[a].inited){var b=Math.abs(t(H[a].clone)-H[a].docOffsetTop),c=Math.abs(H[a].parent.node.offsetHeight-H[a].parent.height);if(b>=2||c>=2)return!1}return!0}function l(a){isNaN(parseFloat(a.computed.top))||a.isCell||"none"==a.computed.display||(a.inited=!0,a.clone||q(a),"absolute"!=a.parent.computed.position&&"relative"!=a.parent.computed.position&&(a.parent.node.style.position="relative"),j(a),a.parent.height=a.parent.node.offsetHeight,a.docOffsetTop=t(a.clone))}function m(a){var b=!0;a.clone&&r(a),d(a.node.style,a.css);for(var c=H.length-1;c>=0;c--)if(H[c].node!==a.node&&H[c].parent.node===a.parent.node){b=!1;break}b&&(a.parent.node.style.position=a.parent.css.position),a.mode=-1}function n(){for(var a=H.length-1;a>=0;a--)l(H[a])}function o(){for(var a=H.length-1;a>=0;a--)m(H[a])}function p(a,b){var c=a.node.style;switch(b){case 0:c.position="absolute",c.left=a.offset.left+"px",c.right=a.offset.right+"px",c.top=a.offset.top+"px",c.bottom="auto",c.width="auto",c.marginLeft=0,c.marginRight=0,c.marginTop=0;break;case 1:c.position="fixed",c.left=a.box.left+"px",c.right=a.box.right+"px",c.top=a.css.top,c.bottom="auto",c.width="auto",c.marginLeft=0,c.marginRight=0,c.marginTop=0;break;case 2:c.position="absolute",c.left=a.offset.left+"px",c.right=a.offset.right+"px",c.top="auto",c.bottom=0,c.width="auto",c.marginLeft=0,c.marginRight=0}a.mode=b}function q(a){a.clone=document.createElement("div");var b=a.node.nextSibling||a.node,c=a.clone.style;c.height=a.height+"px",c.width=a.width+"px",c.marginTop=a.computed.marginTop,c.marginBottom=a.computed.marginBottom,c.marginLeft=a.computed.marginLeft,c.marginRight=a.computed.marginRight,c.padding=c.border=c.borderSpacing=0,c.fontSize="1em",c.position="static",c.cssFloat=a.computed.cssFloat,a.node.parentNode.insertBefore(a.clone,b)}function r(a){a.clone.parentNode.removeChild(a.clone),a.clone=void 0}function s(a){var b=getComputedStyle(a),c=a.parentNode,d=getComputedStyle(c),f=a.style.position;a.style.position="relative";var g={top:b.top,marginTop:b.marginTop,marginBottom:b.marginBottom,marginLeft:b.marginLeft,marginRight:b.marginRight,cssFloat:b.cssFloat,display:b.display},h={top:e(b.top),marginBottom:e(b.marginBottom),paddingLeft:e(b.paddingLeft),paddingRight:e(b.paddingRight),borderLeftWidth:e(b.borderLeftWidth),borderRightWidth:e(b.borderRightWidth)};a.style.position=f;var i={position:a.style.position,top:a.style.top,bottom:a.style.bottom,left:a.style.left,right:a.style.right,width:a.style.width,marginTop:a.style.marginTop,marginLeft:a.style.marginLeft,marginRight:a.style.marginRight},j=u(a),k=u(c),l={node:c,css:{position:c.style.position},computed:{position:d.position},numeric:{borderLeftWidth:e(d.borderLeftWidth),borderRightWidth:e(d.borderRightWidth),borderTopWidth:e(d.borderTopWidth),borderBottomWidth:e(d.borderBottomWidth)}},m={node:a,box:{left:j.win.left,right:J.clientWidth-j.win.right},offset:{top:j.win.top-k.win.top-l.numeric.borderTopWidth,left:j.win.left-k.win.left-l.numeric.borderLeftWidth,right:-j.win.right+k.win.right-l.numeric.borderRightWidth},css:i,isCell:"table-cell"==b.display,computed:g,numeric:h,width:j.win.right-j.win.left,height:j.win.bottom-j.win.top,mode:-1,inited:!1,parent:l,limit:{start:j.doc.top-h.top,end:k.doc.top+c.offsetHeight-l.numeric.borderBottomWidth-a.offsetHeight-h.top-h.marginBottom}};return m}function t(a){for(var b=0;a;)b+=a.offsetTop,a=a.offsetParent;return b}function u(a){var c=a.getBoundingClientRect();return{doc:{top:c.top+b.pageYOffset,left:c.left+b.pageXOffset},win:c}}function v(){G=setInterval(function(){!k()&&z()},500)}function w(){clearInterval(G)}function x(){I&&(document[L]?w():v())}function y(){I||(f(),n(),b.addEventListener("scroll",g),b.addEventListener("wheel",h),b.addEventListener("resize",z),b.addEventListener("orientationchange",z),a.addEventListener(M,x),v(),I=!0)}function z(){if(I){o();for(var a=H.length-1;a>=0;a--)H[a]=s(H[a].node);n()}}function A(){b.removeEventListener("scroll",g),b.removeEventListener("wheel",h),b.removeEventListener("resize",z),b.removeEventListener("orientationchange",z),a.removeEventListener(M,x),w(),I=!1}function B(){A(),o()}function C(){for(B();H.length;)H.pop()}function D(a){for(var b=H.length-1;b>=0;b--)if(H[b].node===a)return;var c=s(a);H.push(c),I?l(c):y()}function E(a){for(var b=H.length-1;b>=0;b--)H[b].node===a&&(m(H[b]),H.splice(b,1))}var F,G,H=[],I=!1,J=a.documentElement,K=function(){},L="hidden",M="visibilitychange";void 0!==a.webkitHidden&&(L="webkitHidden",M="webkitvisibilitychange"),b.getComputedStyle||c();for(var N=["","-webkit-","-moz-","-ms-"],O=document.createElement("div"),P=N.length-1;P>=0;P--){try{O.style.position=N[P]+"sticky"}catch(Q){}""!=O.style.position&&c()}f(),b.Stickyfill={stickies:H,add:D,remove:E,init:y,rebuild:z,pause:A,stop:B,kill:C}}(document,window),window.jQuery&&!function($){$.fn.Stickyfill=function(a){return this.each(function(){Stickyfill.add(this)}),this}}(window.jQuery);
+'use strict'
+;(function (doc, win) {
+  var watchArray = [],
+    scroll,
+    initialized = false,
+    html = doc.documentElement,
+    noop = function () {},
+    checkTimer,
+
+        // visibility API strings
+    hiddenPropertyName = 'hidden',
+    visibilityChangeEventName = 'visibilitychange'
+
+    // fallback to prefixed names in old webkit browsers
+  if (doc.webkitHidden !== undefined) {
+    hiddenPropertyName = 'webkitHidden'
+    visibilityChangeEventName = 'webkitvisibilitychange'
+  }
+
+    // test getComputedStyle
+  if (!win.getComputedStyle) {
+    seppuku()
+  }
+
+    // test for native support
+  var prefixes = ['', '-webkit-', '-moz-', '-ms-'],
+    block = document.createElement('div')
+
+  for (var i = prefixes.length - 1; i >= 0; i--) {
+    try {
+      block.style.position = prefixes[i] + 'sticky'
+    } catch (e) {}
+    if (block.style.position != '') {
+      seppuku()
+    }
+  }
+
+  updateScrollPos()
+
+    // commit seppuku!
+  function seppuku () {
+    init = add = rebuild = pause = stop = kill = noop
+  }
+
+  function mergeObjects (targetObj, sourceObject) {
+    for (var key in sourceObject) {
+      if (sourceObject.hasOwnProperty(key)) {
+        targetObj[key] = sourceObject[key]
+      }
+    }
+  }
+
+  function parseNumeric (val) {
+    return parseFloat(val) || 0
+  }
+
+  function updateScrollPos () {
+    scroll = {
+      top: win.pageYOffset,
+      left: win.pageXOffset
+    }
+  }
+
+  function onScroll () {
+    if (win.pageXOffset != scroll.left) {
+      updateScrollPos()
+      rebuild()
+      return
+    }
+
+    if (win.pageYOffset != scroll.top) {
+      updateScrollPos()
+      recalcAllPos()
+    }
+  }
+
+    // fixes flickering
+  function onWheel (event) {
+    setTimeout(function () {
+      if (win.pageYOffset != scroll.top) {
+        scroll.top = win.pageYOffset
+        recalcAllPos()
+      }
+    }, 0)
+  }
+
+  function recalcAllPos () {
+    for (var i = watchArray.length - 1; i >= 0; i--) {
+      recalcElementPos(watchArray[i])
+    }
+  }
+
+  function recalcElementPos (el) {
+    if (!el.inited) return
+
+    var currentMode = (scroll.top <= el.limit.start ? 0 : scroll.top >= el.limit.end ? 2 : 1)
+
+    if (el.mode != currentMode) {
+      switchElementMode(el, currentMode)
+    }
+  }
+
+    // checks whether stickies start or stop positions have changed
+  function fastCheck () {
+    for (var i = watchArray.length - 1; i >= 0; i--) {
+      if (!watchArray[i].inited) continue
+
+      var deltaTop = Math.abs(getDocOffsetTop(watchArray[i].clone) - watchArray[i].docOffsetTop),
+        deltaHeight = Math.abs(watchArray[i].parent.node.offsetHeight - watchArray[i].parent.height)
+
+      if (deltaTop >= 2 || deltaHeight >= 2) return false
+    }
+    return true
+  }
+
+  function initElement (el) {
+    if (isNaN(parseFloat(el.computed.top)) || el.isCell || el.computed.display == 'none') return
+
+    el.inited = true
+
+    if (!el.clone) clone(el)
+    if (el.parent.computed.position != 'absolute' &&
+            el.parent.computed.position != 'relative') el.parent.node.style.position = 'relative'
+
+    recalcElementPos(el)
+
+    el.parent.height = el.parent.node.offsetHeight
+    el.docOffsetTop = getDocOffsetTop(el.clone)
+  }
+
+  function deinitElement (el) {
+    var deinitParent = true
+
+    el.clone && killClone(el)
+    mergeObjects(el.node.style, el.css)
+
+        // check whether element's parent is used by other stickies
+    for (var i = watchArray.length - 1; i >= 0; i--) {
+      if (watchArray[i].node !== el.node && watchArray[i].parent.node === el.parent.node) {
+        deinitParent = false
+        break
+      }
+    };
+
+    if (deinitParent) el.parent.node.style.position = el.parent.css.position
+    el.mode = -1
+  }
+
+  function initAll () {
+    for (var i = watchArray.length - 1; i >= 0; i--) {
+      initElement(watchArray[i])
+    }
+  }
+
+  function deinitAll () {
+    for (var i = watchArray.length - 1; i >= 0; i--) {
+      deinitElement(watchArray[i])
+    }
+  }
+
+  function switchElementMode (el, mode) {
+    var nodeStyle = el.node.style
+
+    switch (mode) {
+      case 0:
+        nodeStyle.position = 'absolute'
+        nodeStyle.left = el.offset.left + 'px'
+        nodeStyle.right = el.offset.right + 'px'
+        nodeStyle.top = el.offset.top + 'px'
+        nodeStyle.bottom = 'auto'
+        nodeStyle.width = 'auto'
+        nodeStyle.marginLeft = 0
+        nodeStyle.marginRight = 0
+        nodeStyle.marginTop = 0
+        break
+
+      case 1:
+        nodeStyle.position = 'fixed'
+        nodeStyle.left = el.box.left + 'px'
+        nodeStyle.right = el.box.right + 'px'
+        nodeStyle.top = el.css.top
+        nodeStyle.bottom = 'auto'
+        nodeStyle.width = 'auto'
+        nodeStyle.marginLeft = 0
+        nodeStyle.marginRight = 0
+        nodeStyle.marginTop = 0
+        break
+
+      case 2:
+        nodeStyle.position = 'absolute'
+        nodeStyle.left = el.offset.left + 'px'
+        nodeStyle.right = el.offset.right + 'px'
+        nodeStyle.top = 'auto'
+        nodeStyle.bottom = 0
+        nodeStyle.width = 'auto'
+        nodeStyle.marginLeft = 0
+        nodeStyle.marginRight = 0
+        break
+    }
+
+    el.mode = mode
+  }
+
+  function clone (el) {
+    el.clone = document.createElement('div')
+
+    var refElement = el.node.nextSibling || el.node,
+      cloneStyle = el.clone.style
+
+    cloneStyle.height = el.height + 'px'
+    cloneStyle.width = el.width + 'px'
+    cloneStyle.marginTop = el.computed.marginTop
+    cloneStyle.marginBottom = el.computed.marginBottom
+    cloneStyle.marginLeft = el.computed.marginLeft
+    cloneStyle.marginRight = el.computed.marginRight
+    cloneStyle.padding = cloneStyle.border = cloneStyle.borderSpacing = 0
+    cloneStyle.fontSize = '1em'
+    cloneStyle.position = 'static'
+    cloneStyle.cssFloat = el.computed.cssFloat
+
+    el.node.parentNode.insertBefore(el.clone, refElement)
+  }
+
+  function killClone (el) {
+    el.clone.parentNode.removeChild(el.clone)
+    el.clone = undefined
+  }
+
+  function getElementParams (node) {
+    var computedStyle = getComputedStyle(node),
+      parentNode = node.parentNode,
+      parentComputedStyle = getComputedStyle(parentNode),
+      cachedPosition = node.style.position
+
+    node.style.position = 'relative'
+
+    var computed = {
+        top: computedStyle.top,
+        marginTop: computedStyle.marginTop,
+        marginBottom: computedStyle.marginBottom,
+        marginLeft: computedStyle.marginLeft,
+        marginRight: computedStyle.marginRight,
+        cssFloat: computedStyle.cssFloat,
+        display: computedStyle.display
+      },
+      numeric = {
+        top: parseNumeric(computedStyle.top),
+        marginBottom: parseNumeric(computedStyle.marginBottom),
+        paddingLeft: parseNumeric(computedStyle.paddingLeft),
+        paddingRight: parseNumeric(computedStyle.paddingRight),
+        borderLeftWidth: parseNumeric(computedStyle.borderLeftWidth),
+        borderRightWidth: parseNumeric(computedStyle.borderRightWidth)
+      }
+
+    node.style.position = cachedPosition
+
+    var css = {
+        position: node.style.position,
+        top: node.style.top,
+        bottom: node.style.bottom,
+        left: node.style.left,
+        right: node.style.right,
+        width: node.style.width,
+        marginTop: node.style.marginTop,
+        marginLeft: node.style.marginLeft,
+        marginRight: node.style.marginRight
+      },
+      nodeOffset = getElementOffset(node),
+      parentOffset = getElementOffset(parentNode),
+
+      parent = {
+        node: parentNode,
+        css: {
+          position: parentNode.style.position
+        },
+        computed: {
+          position: parentComputedStyle.position
+        },
+        numeric: {
+          borderLeftWidth: parseNumeric(parentComputedStyle.borderLeftWidth),
+          borderRightWidth: parseNumeric(parentComputedStyle.borderRightWidth),
+          borderTopWidth: parseNumeric(parentComputedStyle.borderTopWidth),
+          borderBottomWidth: parseNumeric(parentComputedStyle.borderBottomWidth)
+        }
+      },
+
+      el = {
+        node: node,
+        box: {
+          left: nodeOffset.win.left,
+          right: html.clientWidth - nodeOffset.win.right
+        },
+        offset: {
+          top: nodeOffset.win.top - parentOffset.win.top - parent.numeric.borderTopWidth,
+          left: nodeOffset.win.left - parentOffset.win.left - parent.numeric.borderLeftWidth,
+          right: -nodeOffset.win.right + parentOffset.win.right - parent.numeric.borderRightWidth
+        },
+        css: css,
+        isCell: computedStyle.display == 'table-cell',
+        computed: computed,
+        numeric: numeric,
+        width: nodeOffset.win.right - nodeOffset.win.left,
+        height: nodeOffset.win.bottom - nodeOffset.win.top,
+        mode: -1,
+        inited: false,
+        parent: parent,
+        limit: {
+          start: nodeOffset.doc.top - numeric.top,
+          end: parentOffset.doc.top + parentNode.offsetHeight - parent.numeric.borderBottomWidth -
+                        node.offsetHeight - numeric.top - numeric.marginBottom
+        }
+      }
+
+    return el
+  }
+
+  function getDocOffsetTop (node) {
+    var docOffsetTop = 0
+
+    while (node) {
+      docOffsetTop += node.offsetTop
+      node = node.offsetParent
+    }
+
+    return docOffsetTop
+  }
+
+  function getElementOffset (node) {
+    var box = node.getBoundingClientRect()
+
+    return {
+      doc: {
+        top: box.top + win.pageYOffset,
+        left: box.left + win.pageXOffset
+      },
+      win: box
+    }
+  }
+
+  function startFastCheckTimer () {
+    checkTimer = setInterval(function () {
+      !fastCheck() && rebuild()
+    }, 500)
+  }
+
+  function stopFastCheckTimer () {
+    clearInterval(checkTimer)
+  }
+
+  function handlePageVisibilityChange () {
+    if (!initialized) return
+
+    if (document[hiddenPropertyName]) {
+      stopFastCheckTimer()
+    } else {
+      startFastCheckTimer()
+    }
+  }
+
+  function init () {
+    if (initialized) return
+
+    updateScrollPos()
+    initAll()
+
+    win.addEventListener('scroll', onScroll, {passive: true})
+    win.addEventListener('wheel', onWheel, {passive: true})
+
+        // watch for width changes
+    win.addEventListener('resize', rebuild)
+    win.addEventListener('orientationchange', rebuild)
+
+        // watch for page visibility
+    doc.addEventListener(visibilityChangeEventName, handlePageVisibilityChange)
+
+    startFastCheckTimer()
+
+    initialized = true
+  }
+
+  function rebuild () {
+    if (!initialized) return
+
+    deinitAll()
+
+    for (var i = watchArray.length - 1; i >= 0; i--) {
+      watchArray[i] = getElementParams(watchArray[i].node)
+    }
+
+    initAll()
+  }
+
+  function pause () {
+    win.removeEventListener('scroll', onScroll)
+    win.removeEventListener('wheel', onWheel)
+    win.removeEventListener('resize', rebuild)
+    win.removeEventListener('orientationchange', rebuild)
+    doc.removeEventListener(visibilityChangeEventName, handlePageVisibilityChange)
+
+    stopFastCheckTimer()
+
+    initialized = false
+  }
+
+  function stop () {
+    pause()
+    deinitAll()
+  }
+
+  function kill () {
+    stop()
+
+        // empty the array without loosing the references,
+        // the most performant method according to http://jsperf.com/empty-javascript-array
+    while (watchArray.length) {
+      watchArray.pop()
+    }
+  }
+
+  function add (node) {
+        // check if Stickyfill is already applied to the node
+    for (var i = watchArray.length - 1; i >= 0; i--) {
+      if (watchArray[i].node === node) return
+    };
+
+    var el = getElementParams(node)
+
+    watchArray.push(el)
+
+    if (!initialized) {
+      init()
+    } else {
+      initElement(el)
+    }
+  }
+
+  function remove (node) {
+    for (var i = watchArray.length - 1; i >= 0; i--) {
+      if (watchArray[i].node === node) {
+        deinitElement(watchArray[i])
+        watchArray.splice(i, 1)
+      }
+    };
+  }
+
+    // expose Stickyfill
+  win.Stickyfill = {
+    stickies: watchArray,
+    add: add,
+    remove: remove,
+    init: init,
+    rebuild: rebuild,
+    pause: pause,
+    stop: stop,
+    kill: kill
+  }
+})(document, window)
+
+// if jQuery is available -- create a plugin
+if (window.jQuery) {
+  (function ($) {
+    $.fn.Stickyfill = function (options) {
+      this.each(function () {
+        Stickyfill.add(this)
+      })
+
+      return this
+    }
+  })(window.jQuery)
+}
