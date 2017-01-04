@@ -119,7 +119,8 @@ const createWindow = () => {
     height: mainWindowState.height,
     minWidth: 600,
     minHeight: 600,
-    titleBarStyle: 'hidden-inset'
+    titleBarStyle: 'hidden-inset',
+    experimentalFeatures: true
   })
 
   Menu.setApplicationMenu(Menu.buildFromTemplate(template))

@@ -35,6 +35,7 @@ const EXIF = require('../lib/exif')
       this.renderAttachments()
 
       this.root.querySelector('.merchant').textContent = this.tx.displayName
+      if (this.tx.online) this.root.querySelector('.merchant').classList.add('online')
 
       const icon = this.root.querySelector('.icon')
       icon.src = this.tx.icon
