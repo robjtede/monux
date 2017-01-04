@@ -101,7 +101,6 @@ body {
 .spent-today p {
   margin-top: 0.4em;
   margin-bottom: 0;
-  padding-bottom: 1em;
 
   cursor: default;
 
@@ -139,7 +138,7 @@ body {
   border-color: currentColor;
 
   color: var(--off-white);
-  font-size: 1rem;
+  font-size: 0.9rem;
 
   cursor: pointer;
 }
