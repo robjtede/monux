@@ -14,7 +14,7 @@
       padding: 0 15px;
 
       border-left: 10px solid;
-      border-bottom: 1px solid #ccc;
+      border-bottom: var(--thin-border);
     }
 
     :host[data-category=groceries] .info { border-left-color: gold; }
@@ -51,7 +51,7 @@
     .icon {
       max-height: 3rem;
 
-      border: 1px solid #ccc;
+      border: var(--thin-border);
       border-radius: 25%;
       background: white;
 
@@ -108,7 +108,7 @@
     .amount-wrap {
       padding: 0.4em 15px;
 
-      border-bottom: 1px solid #ccc;
+      border-bottom: var(--thin-border);
     }
 
     .amount {
@@ -128,7 +128,7 @@
     .notes {
       padding: 0.8em 15px 0.5em;
 
-      border-bottom: 1px solid #ccc;
+      border-bottom: var(--thin-border);
 
       white-space: pre-wrap;
     }
@@ -137,13 +137,13 @@
       content: 'Notes:';
       display: block;
 
-      color: #aaa;
+      color: var(--label-grey);
     }
 
     .attachments {
       padding: 0.8em 0 0.5em;
 
-      border-bottom: 1px solid #ccc;
+      border-bottom: var(--thin-border);
     }
 
     .attachments::before {
@@ -152,7 +152,7 @@
       padding-left: 15px;
       padding-right: 15px;
 
-      color: #aaa;
+      color: var(--label-grey);
     }
 
     .attachments .scroll-wrap {
@@ -180,7 +180,7 @@
       padding: 0.8em 15px;
 
       font-size: 0.8rem;
-      color: #888;
+      color: var(--medium-grey);
       white-space: pre-wrap;
     }
 
@@ -188,7 +188,7 @@
     .description::before,
     .settled::before {
       display: block;
-      color: #aaa;
+      color: var(--label-grey);
     }
 
     .description::before {
