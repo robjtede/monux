@@ -165,14 +165,17 @@ body {
   flex-flow: row nowrap;
   justify-content: center;
   align-items: stretch;
+
+  max-width: 100%;
 }
 
 .app-pane {
-  flex: 1;
+  flex: 1 0 auto;
   display: flex;
   flex-flow: row nowrap;
   justify-content: space-between;
   align-items: stretch;
+  max-width: 100%;
 }
 
 m-transaction-list {
