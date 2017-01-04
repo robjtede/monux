@@ -18,6 +18,10 @@
       color: var(--off-white);
     }
 
+    :host:hover {
+      cursor: pointer;
+    }
+
     :host:not(.selected):hover {
       background: #f0f0f0;
     }
@@ -119,7 +123,7 @@
     }
 
     :host.selected .amount.positive {
-      color: rgba(100, 240, 0, 1.0);
+      color: var(--off-white);
     }
 
   </style>

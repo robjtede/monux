@@ -35,15 +35,21 @@
     </div>
   </div>
 
-  <!-- <div class="options">
-    <span>Transactions</span>
-    <span>Spending</span>
-  </div> -->
+  <div class="tabs">
+    <div class="tabgroup">
+      <span class="tab active">Transactions</span>
+      <span class="tab">Spending</span>
+      <span class="tab">Map</span>
+      <span class="tab">Export</span>
+    </div>
+  </div>
 
   <div class="app">
-    <m-transaction-list class="inactive" dayheadings></m-transaction-list>
+    <div class="app-pane transaction-pane active">
+      <m-transaction-list class="inactive" dayheadings></m-transaction-list>
 
-    <div class="transaction-detail-pane inactive"></div>
+      <div class="transaction-detail-pane inactive"></div>
+    </div>
   </div>
 
 </body>
