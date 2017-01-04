@@ -27,11 +27,11 @@
     }
 
     :host:not(.selected).declined {
-      background: #fee;
+      background: #fff0f0;
     }
 
     :host:not(.selected).declined:hover {
-      background: #fdd;
+      background: #fee;
     }
 
     :host[data-category=groceries] { border-left-color: gold; }
@@ -104,6 +104,14 @@
 
     .notes.noted {
       display: initial;
+    }
+
+    :host.declined .notes.noted {
+      color: red;
+    }
+
+    :host.declined .notes.noted::before {
+      content: 'Declined due to '
     }
 
     .amount-wrap {

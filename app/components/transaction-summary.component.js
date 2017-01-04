@@ -48,8 +48,13 @@
         icon.src = this.tx.iconFallback
       })
 
-      if (this.tx.declined) this.classList.add('declined')
       if (this.tx.pending) this.classList.add('pending')
+
+      if (this.tx.declined) {
+        this.classList.add('declined')
+        this.root.querySelector('.notes').classList.add('noted')
+        this.root.querySelector('.notes').textContent = this.tx.declineReason
+      }
 
       this.dataset.category = this.tx.category
       this.dataset.index = this.tx.index
