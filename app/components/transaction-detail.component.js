@@ -42,7 +42,7 @@ const EXIF = require('../lib/exif')
         icon.src = this.tx.iconFallback
       })
 
-      this.root.querySelector('.category').textContent = this.tx.category
+      this.root.querySelector('.category').textContent = this.tx.category.formatted
       this.root.querySelector('.category').classList.add(this.tx.category)
       this.root.querySelector('.amount-wrap').innerHTML = this.tx.amount.html(true, 0)
 

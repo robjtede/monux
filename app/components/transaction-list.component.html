@@ -19,6 +19,11 @@
       -webkit-user-select: none;
     }
 
+    m-transaction-summary:not(:last-of-type),
+    .transaction-group:not(:last-of-type) m-transaction-summary:last-of-type {
+      border-bottom: var(--thin-border);
+    }
+
     .day-heading {
       padding: 0.5em 20px;
       position: sticky;
