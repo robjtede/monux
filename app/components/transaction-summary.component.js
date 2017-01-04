@@ -37,8 +37,10 @@
         this.root.querySelector('.notes').textContent = this.tx.notes.short
       }
 
-      this.root.querySelector('.amount-wrap').innerHTML = this.tx.amount.html(false, 2)
-      if (this.tx.amount.positive) this.root.querySelector('.amount').classList.add('income')
+      if (+this.tx.amount !== 0 && (this.tx.inSpending || this.tx.declined || this.tx.amount.positive)) {
+        this.root.querySelector('.amount-wrap').innerHTML = this.tx.amount.html(false, 2)
+        if (this.tx.amount.positive) this.root.querySelector('.amount').classList.add('income')
+      }
 
       const icon = this.root.querySelector('.icon')
       icon.src = this.tx.icon
