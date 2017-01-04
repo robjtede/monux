@@ -70,13 +70,14 @@
 
             day.appendChild(heading)
 
-            txgroup.forEach(tx => {
-              const txel = document.createElement('m-transaction-summary')
-              txel.tx = tx
-              txel.dataset.index = tx.index
+            txgroup
+              .reverse()
+              .forEach(tx => {
+                const txel = document.createElement('m-transaction-summary')
+                txel.tx = tx
 
-              day.appendChild(txel)
-            })
+                day.appendChild(txel)
+              })
 
             this.root.insertBefore(day, this.root.firstChild)
             window.Stickyfill.add(heading)

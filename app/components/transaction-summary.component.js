@@ -50,6 +50,7 @@
       if (this.tx.pending) this.classList.add('pending')
 
       this.dataset.category = this.tx.category
+      this.dataset.index = this.tx.category
     }
 
     get index () {
