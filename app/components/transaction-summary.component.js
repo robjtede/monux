@@ -50,7 +50,7 @@
       if (this.tx.pending) this.classList.add('pending')
 
       this.dataset.category = this.tx.category
-      this.dataset.index = this.tx.category
+      this.dataset.index = this.tx.index
     }
 
     get index () {
@@ -59,13 +59,21 @@
 
     clickHandler () {
       if (this.debug) console.log(`clicked ${this.index} summary`)
+
+      const detailPane = document.querySelector('.transaction-detail-pane')
       const thisDetail = document.createElement('m-transaction-detail')
 
       thisDetail.tx = this.tx
       thisDetail.dataset.index = this.index
 
-      if (document.querySelector('.transaction-detail-pane')) document.querySelector('.transaction-detail-pane').innerHTML = ''
-      document.querySelector('.transaction-detail-pane').appendChild(thisDetail)
+      if (detailPane) detailPane.innerHTML = ''
+      detailPane.appendChild(thisDetail)
+      detailPane.classList.remove('inactive')
+
+      const selectedTx = document.querySelector('m-transaction-summary.selected')
+
+      if (selectedTx) selectedTx.classList.remove('selected')
+      this.classList.add('selected')
     }
 
     disconnectedCallback () {

@@ -25,6 +25,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
       txlist.txs = txs
       txlist.render()
+      txlist.classList.remove('inactive')
     })
 
   monzo.accounts

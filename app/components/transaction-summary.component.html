@@ -14,15 +14,20 @@
       border-left: 20px solid;
     }
 
-    :host:hover {
+    :host.selected {
+      background: rgba(56, 78, 199, 1.0);
+      color: var(--off-white);
+    }
+
+    :host:not(.selected):hover {
       background: #f0f0f0;
     }
 
-    :host.declined {
+    :host:not(.selected).declined {
       background: #fee;
     }
 
-    :host.declined:hover {
+    :host:not(.selected).declined:hover {
       background: #fdd;
     }
 
@@ -54,6 +59,7 @@
       max-height: 3.25em;
       max-width: auto;
 
+      background: white;
       border: var(--thin-border);
       border-radius: 25%;
     }
@@ -89,6 +95,10 @@
       color: var(--medium-grey);
     }
 
+    :host.selected .notes {
+      color: var(--light-grey);
+    }
+
     .notes.noted {
       display: initial;
     }
@@ -107,6 +117,10 @@
 
     .amount.positive {
       color: green;
+    }
+
+    :host.selected .amount.positive {
+      color: rgba(100, 240, 0, 1.0);
     }
 
   </style>

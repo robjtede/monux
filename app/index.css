@@ -3,6 +3,7 @@
   --light-grey: rgba(204, 204, 204, 1.0);
   --label-grey: rgba(170, 170, 170, 1.0);
   --medium-grey: rgba(136, 136, 136, 1.0);
+  --dark-grey: rgba(80, 80, 80, 1.0);
   --monzo-blue: rgba(21, 35, 60, 1.0);
 
   --thin-border: 1px solid var(--light-grey);
@@ -125,6 +126,21 @@ m-transaction-list {
 
 .transaction-detail-pane {
   flex: 5;
-
   overflow-y: scroll;
+}
+
+.transaction-detail-pane.inactive {
+  background: var(--off-white);
+}
+
+.transaction-detail-pane.inactive::after {
+  content: 'Select transaction from the list to the left.';
+  display: block;
+  width: 100%;
+  padding-top: 150px;
+
+  color: var(--medium-grey);
+  text-align: center;
+
+  -webkit-user-select: none;
 }

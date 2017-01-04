@@ -7,6 +7,18 @@
       border-right: var(--thin-border);
     }
 
+    :host.inactive::after {
+      content: 'Loading...';
+      display: block;
+      width: 100%;
+      padding-top: 150px;
+
+      color: var(--medium-grey);
+      text-align: center;
+
+      -webkit-user-select: none;
+    }
+
     .day-heading {
       padding: 0.5em 20px;
       position: sticky;

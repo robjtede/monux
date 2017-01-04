@@ -22,23 +22,29 @@
 
 </head>
 <body>
+
   <div class="balances">
     <div class="card-balance">
       <h2></h2>
       <p>Account Balance</p>
     </div>
+
     <div class="spent-today">
       <h2></h2>
       <p>Spent Today</p>
     </div>
   </div>
+
   <!-- <div class="options">
     <span>Transactions</span>
     <span>Spending</span>
   </div> -->
+
   <div class="app">
-    <m-transaction-list dayheadings></m-transaction-list>
-    <div class="transaction-detail-pane"></div>
+    <m-transaction-list class="inactive" dayheadings></m-transaction-list>
+
+    <div class="transaction-detail-pane inactive"></div>
   </div>
+
 </body>
 </html>
