@@ -129,6 +129,10 @@
       color: green;
     }
 
+    :host.declined .amount {
+      color: red;
+    }
+
     .amount .major {
       font-size: 2em;
     }
@@ -208,7 +212,8 @@
 
     .id,
     .description,
-    .settled {
+    .settled,
+    .decline-reason {
       padding: 0.8em 15px;
 
       font-size: 0.8rem;
@@ -218,7 +223,8 @@
 
     .id::before,
     .description::before,
-    .settled::before {
+    .settled::before,
+    .decline-reason::before {
       display: block;
       color: var(--label-grey);
     }
@@ -237,6 +243,20 @@
 
     .settled::before {
       content: 'Transaction Status:'
+    }
+
+    .decline-reason {
+      display: none;
+
+      text-transform: capitalize;
+    }
+
+    :host.declined .decline-reason {
+      display: block;
+    }
+
+    .decline-reason::before {
+      content: 'Decline Reason:'
     }
   </style>
 
@@ -266,6 +286,7 @@
   <div class="id"></div>
   <div class="description"></div>
   <div class="settled"></div>
+  <div class="decline-reason"></div>
 </template>
 
 <script src="./transaction-detail.component.js"></script>

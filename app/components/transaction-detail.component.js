@@ -58,6 +58,12 @@ const EXIF = require('../lib/exif')
         this.root.querySelector('.settled').classList.add('meta')
       }
 
+      if (this.tx.declined) {
+        this.classList.add('declined')
+        this.root.querySelector('.settled').classList.add('meta')
+        this.root.querySelector('.decline-reason').textContent = this.tx.declineReason
+      }
+
       this.dataset.category = this.tx.category
     }
 
