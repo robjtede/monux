@@ -110,12 +110,15 @@ const EXIF = require('../lib/exif')
         button.textContent = 'Updating...'
 
         this.tx
-          .setNotes(textarea.value)
+          .setNotes(textarea.value.trim())
           .then(() => {
             updateNotes()
             summary.render()
 
+            textarea.value = textarea.value.trim()
+            textarea.textContent = textarea.value.trim()
             textarea.parentNode.removeChild(textarea)
+
             notes.style.display = 'block'
             button.textContent = 'Edit'
           })
