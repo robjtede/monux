@@ -1,6 +1,8 @@
 'use strict'
 
 ;(function (thisDoc) {
+  const template = thisDoc.querySelector('template')
+
   class TransactionSummaryComponent extends HTMLElement {
     constructor (tx = {}) {
       super()
@@ -17,7 +19,6 @@
       this.attachShadow({mode: 'closed'})
       this.root = this.shadowRoot
 
-      const template = thisDoc.querySelector('template')
       this.root.appendChild(document.importNode(template.content, true))
 
       window.ShadyCSS.applyStyle(this)
@@ -99,6 +100,7 @@
 
     attributeChangedCallback (attrName, oldVal, newVal) {
       if (this.debug) console.log(`attribute changed on ${this.index}: ${attrName}, ${oldVal} => ${newVal} summary`)
+
       const changes = {}
 
       if (attrName in changes) changes[attrName]()
@@ -109,7 +111,7 @@
 
   document.addEventListener('DOMContentLoaded', () => {
     // scope styles
-    window.ShadyCSS.prepareTemplate(thisDoc.querySelector('template'), 'm-transaction-summary')
+    window.ShadyCSS.prepareTemplate(template, 'm-transaction-summary')
 
     window.customElements.define('m-transaction-summary', TransactionSummaryComponent)
   })

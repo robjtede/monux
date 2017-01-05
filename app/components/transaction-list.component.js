@@ -7,6 +7,8 @@
   const isYesterday = require('date-fns/is_yesterday')
   const isThisYear = require('date-fns/is_this_year')
 
+  const template = thisDoc.querySelector('template')
+
   class TransactionListComponent extends HTMLElement {
     constructor () {
       super()
@@ -23,7 +25,6 @@
       this.attachShadow({mode: 'open'})
       this.root = this.shadowRoot
 
-      const template = thisDoc.querySelector('template')
       this.root.appendChild(document.importNode(template.content, true))
 
       window.ShadyCSS.applyStyle(this)
@@ -34,7 +35,9 @@
     render () {
       if (this.debug) console.log(`rendering list`)
 
-      if (this.hasAttribute('dayheadings')) {
+      this.root.innerHTML = ''
+
+      if (this.dayHeadings) {
         const groupedByDay = this.txs.reduce((groups, tx, index) => {
           const created = new Date(tx.created)
           const dayid = +startOfDay(created)
@@ -80,13 +83,12 @@
               })
 
             this.root.insertBefore(day, this.root.firstChild)
-            window.Stickyfill.add(heading)
+            // window.Stickyfill.add(heading)
           })
       } else {
         this.txs.forEach((tx, index) => {
           const txel = document.createElement('m-transaction-summary')
           txel.tx = tx
-          txel.dataset.index = index
 
           this.root.appendChild(txel)
         })
@@ -106,8 +108,12 @@
     }
 
     attributeChangedCallback (attrName, oldVal, newVal) {
-      if (this.debug) console.log(`attribute changed on list: ${attrName}, ${oldVal} => ${newVal}`)
-      const changes = {}
+      if (!this.isConnected) return
+      if (this.debug) console.log(`attribute changed on list: ${attrName}, ${oldVal} => ${newVal || 'undefined'}`)
+
+      const changes = {
+        dayheadings: () => { this.dayHeadings = this.hasAttribute('dayheadings') }
+      }
 
       if (attrName in changes) changes[attrName]()
 
@@ -117,7 +123,7 @@
 
   document.addEventListener('DOMContentLoaded', () => {
     // scope styles
-    window.ShadyCSS.prepareTemplate(thisDoc.querySelector('template'), 'm-transaction-list')
+    window.ShadyCSS.prepareTemplate(template, 'm-transaction-list')
 
     window.customElements.define('m-transaction-list', TransactionListComponent)
   })

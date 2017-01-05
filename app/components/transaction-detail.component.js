@@ -3,6 +3,8 @@
 const EXIF = require('../lib/exif')
 
 ;(function (thisDoc) {
+  const template = thisDoc.querySelector('template')
+
   class TransactionDetailComponent extends HTMLElement {
     constructor () {
       super()
@@ -19,7 +21,6 @@ const EXIF = require('../lib/exif')
       this.attachShadow({mode: 'open'})
       this.root = this.shadowRoot
 
-      const template = thisDoc.querySelector('template')
       this.root.appendChild(document.importNode(template.content, true))
 
       window.ShadyCSS.applyStyle(this)
@@ -241,7 +242,7 @@ const EXIF = require('../lib/exif')
 
   document.addEventListener('DOMContentLoaded', () => {
     // scope styles
-    window.ShadyCSS.prepareTemplate(thisDoc.querySelector('template'), 'm-transaction-detail')
+    window.ShadyCSS.prepareTemplate(template, 'm-transaction-detail')
 
     window.customElements.define('m-transaction-detail', TransactionDetailComponent)
   })
