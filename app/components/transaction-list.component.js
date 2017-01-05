@@ -13,7 +13,7 @@
     constructor () {
       super()
 
-      this.debug = false
+      this.debug = true
       if (this.debug) console.log('constructing list')
 
       this.txs = []
@@ -35,7 +35,10 @@
     render () {
       if (this.debug) console.log(`rendering list`)
 
-      this.root.innerHTML = ''
+      // BUG: this.root check required because async connectedCallback
+      if (this.root) {
+        this.root.innerHTML = ''
+      }
 
       if (this.dayHeadings) {
         const groupedByDay = this.txs.reduce((groups, tx, index) => {

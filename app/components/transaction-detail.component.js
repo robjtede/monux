@@ -46,11 +46,17 @@ const EXIF = require('../lib/exif')
 
       this.root.querySelector('.category').textContent = this.tx.category.formatted
       this.root.querySelector('.category').classList.add(this.tx.category)
-      this.root.querySelector('.amount-wrap').innerHTML = this.tx.amount.html(true, 0)
+
+      if (!this.tx.is.metaAction) this.root.querySelector('.amount-wrap').innerHTML = this.tx.amount.html(true, 0)
 
       this.root.querySelector('.id').textContent = this.tx.id
       this.root.querySelector('.description').textContent = this.tx.description
-      this.root.querySelector('.settled').textContent = this.tx.settled
+
+      if (!this.tx.is.metaAction) {
+        this.root.querySelector('.settled').textContent = this.tx.settled
+      } else {
+        this.root.querySelector('.settled').classList.add('meta')
+      }
 
       this.dataset.category = this.tx.category
     }
