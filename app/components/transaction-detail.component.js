@@ -71,9 +71,9 @@ const EXIF = require('../lib/exif')
       const updateNotes = () => {
         if (!this.tx.notes.full.trim()) {
           notes.style.display = 'none'
-          return
+        } else {
+          notes.style.display = 'block'
         }
-
         notes.textContent = this.tx.notes.full
       }
       updateNotes()
@@ -81,6 +81,16 @@ const EXIF = require('../lib/exif')
       const summary = document.querySelector(`m-transaction-summary[data-index="${this.index}"]`)
 
       const textarea = document.createElement('textarea')
+
+      const calcSize = () => {
+        textarea.style.height = '1px'
+        textarea.style.height = Math.max(150, textarea.scrollHeight) + 'px'
+      }
+
+      calcSize()
+      textarea.addEventListener('keydown', calcSize)
+      textarea.addEventListener('keyup', calcSize)
+      textarea.addEventListener('paste', calcSize)
 
       const button = this.root.querySelector('.notes-wrap').querySelector('.edit')
 

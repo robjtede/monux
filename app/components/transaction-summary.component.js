@@ -34,8 +34,10 @@
 
       if (this.tx.notes.short.trim()) {
         this.root.querySelector('.notes').classList.add('noted')
-        this.root.querySelector('.notes').textContent = this.tx.notes.short
+      } else {
+        this.root.querySelector('.notes').classList.remove('noted')
       }
+      this.root.querySelector('.notes').textContent = this.tx.notes.short
 
       if (+this.tx.amount !== 0 && (this.tx.inSpending || this.tx.declined || this.tx.amount.positive)) {
         this.root.querySelector('.amount-wrap').innerHTML = this.tx.amount.html(false, 2)
