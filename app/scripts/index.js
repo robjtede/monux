@@ -17,8 +17,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   const txlist = document.querySelector('m-transaction-list')
 
-  monzo
-    .accounts
+  monzo.accounts
     .then(accs => accs[0].transactions)
     .then(txs => {
       if (debug) console.log(txs)

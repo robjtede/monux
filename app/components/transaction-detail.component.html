@@ -133,19 +133,27 @@
       font-size: 2em;
     }
 
-    .notes {
+    .notes-wrap {
       padding: 0.8em 15px 0.5em;
 
       border-bottom: var(--thin-border);
-
-      white-space: pre-wrap;
     }
 
-    .notes::before {
-      content: 'Notes:';
+    .notes-wrap .label {
       display: block;
 
       color: var(--label-grey);
+    }
+
+    .notes-wrap .edit {
+      padding-left: 15px;
+
+      font-size: 0.9rem;
+      color: blue;
+    }
+
+    .notes {
+      white-space: pre-wrap;
     }
 
     .attachments {
@@ -220,10 +228,19 @@
   </div>
 
   <div class="location"></div>
-  <div class="category-wrap"><div class="category"></div></div>
+  <div class="category-wrap">
+    <div class="category"></div>
+  </div>
   <div class="amount-wrap"></div>
 
-  <div class="notes"></div>
+  <div class="notes-wrap">
+    <div class="label">
+      Notes:
+      <a href="#" class="edit">Edit</a>
+    </div>
+    <div class="notes"></div>
+  </div>
+
   <div class="attachments"><div class="scroll-wrap"></div></div>
 
   <div class="id"></div>

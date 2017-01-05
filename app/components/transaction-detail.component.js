@@ -68,12 +68,53 @@ const EXIF = require('../lib/exif')
     renderNotes () {
       const notes = this.root.querySelector('.notes')
 
-      if (!this.tx.notes.full.trim()) {
+      const updateNotes = () => {
+        if (!this.tx.notes.full.trim()) {
+          notes.style.display = 'none'
+          return
+        }
+
+        notes.textContent = this.tx.notes.full
+      }
+      updateNotes()
+
+      const summary = document.querySelector(`m-transaction-summary[data-index="${this.index}"]`)
+
+      const textarea = document.createElement('textarea')
+
+      const button = this.root.querySelector('.notes-wrap').querySelector('.edit')
+
+      const editHandler = ev => {
+        ev.preventDefault()
+
         notes.style.display = 'none'
-        return
+        textarea.textContent = notes.textContent
+        this.root.querySelector('.notes-wrap').appendChild(textarea)
+        button.textContent = 'Done'
+
+        button.removeEventListener('click', editHandler)
+        button.addEventListener('click', doneHandler)
       }
 
-      notes.textContent = this.tx.notes.full
+      const doneHandler = () => {
+        button.textContent = 'Updating...'
+
+        this.tx
+          .setNotes(textarea.value)
+          .then(() => {
+            updateNotes()
+            summary.render()
+
+            textarea.parentNode.removeChild(textarea)
+            notes.style.display = 'block'
+            button.textContent = 'Edit'
+          })
+
+        button.removeEventListener('click', doneHandler)
+        button.addEventListener('click', editHandler)
+      }
+
+      button.addEventListener('click', editHandler)
     }
 
     renderAttachments () {
