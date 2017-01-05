@@ -12,15 +12,22 @@ Unofficial Monzo Client for Desktop
 - Copy the `Client ID` and `Client secret` over to the input fields when launching.
 - Follow instructions and follow standard Monzo auth flow.
 
+## Support this project
+[https://monzo.me/robertede](https://monzo.me/robertede/5.00?d=Thanks%20for%20making%20Monzoo!)
+
 ## Goals
 - [x] View balance / spend today
 - [x] Transaction list view
 - [x] Transaction detail view
 - [x] Full notes and attachments
-- [ ] Merchant location (embedded map)
+- [x] Edit notes
+- [ ] Add and remove attachments/receipts
+- [ ] Transaction location on map
 - [ ] Filter transactions
 - [ ] Search transactions
 - [ ] Graph balance over time
+- [ ] Month-by-month spending break-downs
+- [ ] CSV / JSON / Excel export
 - [ ] Multiple accounts (Monzo pending)
 - [ ] View spending targets (Monzo pending)
 
