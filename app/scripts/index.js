@@ -17,7 +17,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
   const txlist = document.querySelector('m-transaction-list')
 
-  monzo.accounts
+  const accounts = monzo.accounts
+
+  accounts
     .then(accs => accs[0].transactions)
     .then(txs => {
       if (debug) console.log(txs)
@@ -27,7 +29,7 @@ document.addEventListener('DOMContentLoaded', () => {
       txlist.classList.remove('inactive')
     })
 
-  monzo.accounts
+  accounts
     .then(accs => accs[0].balance)
     .then(({balance, spentToday}) => {
       if (debug) console.log(balance)
