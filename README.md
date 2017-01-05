@@ -32,4 +32,4 @@ Unofficial Monzo Client for Desktop
 - [ ] View spending targets (Monzo pending)
 
 ## Screenshot
-![Preview](http://i.imgur.com/kKnDg0M.png)
+![Preview](http://i.imgur.com/LUpd1Pr.png)
