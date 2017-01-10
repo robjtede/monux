@@ -4,6 +4,8 @@ const Config = require('electron-config')
 const config = new Config()
 
 const Monzo = require('../lib/monzo/Monzo')
+const Amount = require('../lib/monzo/Amount')
+const Transaction = require('../lib/monzo/Transaction')
 
 const monzo = new Monzo(config.get('accessToken'))
 const debug = true
@@ -25,12 +27,18 @@ document.addEventListener('DOMContentLoaded', () => {
       if (debug) console.log(txs)
 
       txlist.txs = txs
-      txlist.render()
       txlist.classList.remove('inactive')
+
+      window.setTimeout(txlist.render.bind(txlist), 0)
     })
 
   accounts
-    .then(accs => accs[0].balance)
+    .then(accs => accs[0])
+    .then(acc => {
+      document.querySelector('.person').textContent = acc.description
+
+      return acc.balance
+    })
     .then(({balance, spentToday}) => {
       if (debug) console.log(balance)
       if (debug) console.log(spentToday)

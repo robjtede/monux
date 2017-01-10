@@ -115,10 +115,10 @@ body {
 
   display: flex;
   flex-flow: row nowrap;
-  justify-content: center;
+  justify-content: space-between;
   align-items: center;
 
-  padding: 15px 0 20px;
+  padding: 10px 15px 20px;
 
   background: var(--monzo-blue);
   border-bottom: var(--thin-border);
@@ -126,15 +126,38 @@ body {
   -webkit-user-select: none;
 }
 
+.person {
+  padding: 0.4em 0.8em;
+
+  background: url('./icons/monzo.png') 5px center no-repeat;
+  background-size: contain;
+  border: var(--thin-border);
+  border-radius: 8px;
+
+  color: var(--off-white);
+  font-size: 0.9rem;
+}
+
+.person::before {
+  content: '';
+  display: inline-block;
+  width: 40px;
+  height: 0;
+}
+
 .tabgroup {
+  overflow: hidden;
+
+  border: var(--thin-border);
+  border-radius: 5px;
+
   font-size: 0;
 }
 
 .tab {
+  display: inline-block;
   padding: 0.4em 0.8em;
 
-  border: var(--thin-border);
-  border-right: none;
   border-color: currentColor;
 
   color: var(--off-white);
@@ -143,14 +166,9 @@ body {
   cursor: pointer;
 }
 
-.tab:first-of-type {
-  border-radius: 5px 0 0 5px;
-}
-
-.tab:last-of-type {
+.tab:not(:last-child) {
   border-right: var(--thin-border);
   border-color: currentColor;
-  border-radius: 0 5px 5px 0;
 }
 
 .tab.active {

@@ -84,9 +84,18 @@
     }
 
     .category::before {
-      content: '\263a';
+      content: '';
+      display: inline-block;
+      width: 1em;
+      height: 1em;
+      margin-right: 0.25em;
+
+      background: url('./icons/bills.png');
+      background-size: contain;
+
       font-size: 1.25em;
       line-height: 1;
+      vertical-align: sub;
     }
 
     .category {
