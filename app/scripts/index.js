@@ -1,20 +1,20 @@
 'use strict'
 
-const Config = require('electron-config')
-const config = new Config()
-
-const Monzo = require('../lib/monzo/Monzo')
-const Amount = require('../lib/monzo/Amount')
-const Transaction = require('../lib/monzo/Transaction')
-
-const monzo = new Monzo(config.get('accessToken'))
-const debug = true
-
 document.addEventListener('DOMContentLoaded', () => {
+  const Config = require('electron-config')
+  const config = new Config()
+
+  const Monzo = require('../lib/monzo/Monzo')
+
+  const monzo = new Monzo(config.get('accessToken'))
+  const debug = true
+
   Array.from(document.querySelectorAll('.fixable')).forEach(function (el) {
     window.Stickyfill.add(el)
   })
 
+  const balances = document.querySelector('.balances')
+  const tabs = document.querySelector('.tabs')
   const app = document.querySelector('.app')
 
   const txlist = document.querySelector('m-transaction-list')
@@ -35,7 +35,7 @@ document.addEventListener('DOMContentLoaded', () => {
   accounts
     .then(accs => accs[0])
     .then(acc => {
-      document.querySelector('.person').textContent = acc.description
+      tabs.querySelector('.person').textContent = acc.description
 
       return acc.balance
     })
@@ -43,7 +43,7 @@ document.addEventListener('DOMContentLoaded', () => {
       if (debug) console.log(balance)
       if (debug) console.log(spentToday)
 
-      document.querySelector('.card-balance').querySelector('h2').innerHTML = balance.html(true, 0)
-      document.querySelector('.spent-today').querySelector('h2').innerHTML = spentToday.html(true, 0)
+      balances.querySelector('.card-balance').querySelector('h2').innerHTML = balance.html(true, 0)
+      balances.querySelector('.spent-today').querySelector('h2').innerHTML = spentToday.html(true, 0)
     })
 })
