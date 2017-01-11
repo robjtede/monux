@@ -58,13 +58,13 @@ body {
   -webkit-user-select: none;
 }
 
-.card-balance,
-.spent-today {
-  -webkit-app-region: drag;
-  -webkit-user-select: none;
+.balances * {
+  -webkit-app-region: inherit;
+  -webkit-user-select: inherit;
 }
 
 .card-balance {
+  --label-text: 'Account Balance';
   flex: 1;
 
   text-align: left;
@@ -72,6 +72,7 @@ body {
 }
 
 .spent-today {
+  --label-text: 'Spent Today';
   flex: 1;
 
   text-align: right;
@@ -83,15 +84,10 @@ body {
 
   font-weight: 300;
   font-size: 1.5rem;
-
-  -webkit-app-region: drag;
-  -webkit-user-select: none;
 }
 
 .card-balance .amount,
-.spent-today .amount,
-.card-balance .amount *,
-.spent-today .amount * {
+.spent-today .amount {
   -webkit-app-region: no-drag;
   -webkit-user-select: initial;
 }
@@ -101,17 +97,19 @@ body {
   font-size: 2em;
 }
 
-.card-balance p,
-.spent-today p {
+.card-balance::after,
+.spent-today::after {
+  content: var(--label-text);
+  display: block;
   margin-top: 0.4em;
   margin-bottom: 0;
 
-  cursor: default;
-
+  color: var(--label-grey);
   font-size: 0.8rem;
   letter-spacing: 0.025em;
   text-transform: uppercase;
-  color: var(--light-grey);
+
+  cursor: default;
 }
 
 .tabs {
