@@ -219,6 +219,18 @@ const EXIF = require('../lib/exif')
               const blobUrl = URL.createObjectURL(blob)
               imgEl.src = blobUrl
 
+              // bind lightbox to attachments
+              const lightbox = document.querySelector('.lightbox')
+              const lightboxImg = lightbox.querySelector('img')
+
+              imgEl.classList.add('lightboxable')
+              imgEl.addEventListener('click', ev => {
+                ev.preventDefault()
+
+                lightboxImg.src = blobUrl
+                lightbox.classList.add('show')
+              })
+
               // insert image
               scrollInner.appendChild(imgEl)
             }, 'image/jpeg')

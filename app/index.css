@@ -230,3 +230,36 @@ m-transaction-list {
 
   -webkit-user-select: none;
 }
+
+.lightboxable {
+  cursor: pointer;
+}
+
+.lightbox {
+  justify-content: center;
+  align-items: center;
+  flex-wrap: nowrap;
+
+  display: none;
+  position: fixed;
+  z-index: 10;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+
+  background: rgba(0, 0, 0, 0.8);
+
+  -webkit-user-select: none;
+}
+
+.lightbox.show {
+  display: flex;
+}
+
+.lightbox img {
+  width: auto;
+  height: auto;
+  max-width: 80vw;
+  max-height: 80vh;
+}
