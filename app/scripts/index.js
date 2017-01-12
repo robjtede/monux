@@ -4,6 +4,10 @@ document.addEventListener('DOMContentLoaded', () => {
   const Config = require('electron-config')
   const config = new Config()
 
+  const context = require('electron-contextmenu-middleware')
+  context.use(require('electron-image-menu'))
+  context.activate()
+
   const Monzo = require('../lib/monzo/Monzo')
 
   const monzo = new Monzo(config.get('accessToken'))
