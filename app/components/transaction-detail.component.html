@@ -159,7 +159,7 @@
     }
 
     .balance-wrap {
-      --label: 'Balance (after transaction):';
+      --label-text: 'Balance (after transaction):';
 
       padding: 0.8em 15px 0.5em;
 
@@ -170,8 +170,12 @@
       font-size: 1.6rem;
     }
 
+    .balance-wrap .amount.positive {
+      color: inherit;
+    }
+
     .balance-wrap::before {
-      content: var(--label);
+      content: var(--label-text);
       display: block;
 
       color: var(--label-grey);
