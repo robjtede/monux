@@ -1,9 +1,12 @@
 :root {
+  --white: rgba(255, 255, 255, 1.0);
   --off-white: rgba(240, 240, 240, 1.0);
   --light-grey: rgba(204, 204, 204, 1.0);
   --label-grey: rgba(170, 170, 170, 1.0);
   --medium-grey: rgba(136, 136, 136, 1.0);
   --dark-grey: rgba(80, 80, 80, 1.0);
+  --black: rgba(80, 80, 80, 1.0);
+
   --monzo-blue: rgba(21, 35, 60, 1.0);
 
   --thin-border: 1px solid var(--light-grey);
@@ -35,6 +38,8 @@ body {
   height: 100vh;
   width: 100vw;
   overflow: hidden;
+
+  background-color: var(--white);
 }
 
 .balances {

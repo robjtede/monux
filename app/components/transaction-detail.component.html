@@ -53,7 +53,7 @@
 
       border: var(--thin-border);
       border-radius: 25%;
-      background: white;
+      background: var(--white);
 
       transform: scale(1.8);
       transform-origin: bottom left;
@@ -83,21 +83,6 @@
       padding: 0 15px;
     }
 
-    .category::before {
-      content: '';
-      display: inline-block;
-      width: 1em;
-      height: 1em;
-      margin-right: 0.25em;
-
-      background: url('./icons/bills.png');
-      background-size: contain;
-
-      font-size: 1.25em;
-      line-height: 1;
-      vertical-align: sub;
-    }
-
     .category {
       display: inline-block;
       padding: 0.2em 0.6em 0.2em 0.4em;
@@ -109,6 +94,42 @@
       font-size: 1.2rem;
       text-transform: capitalize;
     }
+
+    .category:hover {
+      background-color: var(--category-color);
+
+      color: var(--white);
+
+      cursor: pointer;
+    }
+
+    .category::before {
+      content: '';
+      display: inline-block;
+      width: 1em;
+      height: 1em;
+      margin-right: 0.25em;
+
+      background: url('./icons/monzo.png') left center no-repeat;
+      background-size: contain;
+
+      font-size: 1.25em;
+      line-height: 1;
+      vertical-align: sub;
+    }
+
+    :host[data-category=groceries] .category::before { background-image: url('./icons/groceries.png'); }
+    :host[data-category=transport] .category::before { background-image: url('./icons/transport.png'); }
+    :host[data-category=entertainment] .category::before { background-image: url('./icons/entertainment.png'); }
+    :host[data-category=eating_out] .category::before { background-image: url('./icons/eating_out.png'); }
+    :host[data-category=cash] .category::before { background-image: url('./icons/monzo.png'); }
+    :host[data-category=mondo] .category::before { background-image: url('./icons/monzo.png'); }
+    :host[data-category=monzo] .category::before { background-image: url('./icons/monzo.png'); }
+    :host[data-category=general] .category::before { background-image: url('./icons/general.png'); }
+    :host[data-category=bills] .category::before { background-image: url('./icons/bills.png'); }
+    :host[data-category=holidays] .category::before { background-image: url('./icons/holidays.png'); }
+    :host[data-category=shopping] .category::before { background-image: url('./icons/shopping.png'); }
+    :host[data-category=expenses] .category::before { background-image: url('./icons/expenses.png'); }
 
     .amount-wrap {
       padding: 0.8em 15px 0.5em;
