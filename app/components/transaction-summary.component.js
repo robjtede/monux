@@ -21,6 +21,9 @@
 
       this.root.appendChild(document.importNode(template.content, true))
 
+      this.dataset.category = this.tx.category
+      this.dataset.index = this.tx.index
+
       window.ShadyCSS.applyStyle(this)
 
       this.render()
@@ -58,9 +61,6 @@
         this.root.querySelector('.notes').classList.add('noted')
         this.root.querySelector('.notes').textContent = this.tx.declineReason
       }
-
-      this.dataset.category = this.tx.category
-      this.dataset.index = this.tx.index
     }
 
     get index () {

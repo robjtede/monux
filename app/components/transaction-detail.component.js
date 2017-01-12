@@ -23,6 +23,8 @@ const EXIF = require('../lib/exif')
 
       this.root.appendChild(document.importNode(template.content, true))
 
+      this.dataset.category = this.tx.category
+
       window.ShadyCSS.applyStyle(this)
 
       this.render()
@@ -45,9 +47,10 @@ const EXIF = require('../lib/exif')
       })
 
       this.root.querySelector('.category').textContent = this.tx.category.formatted
-      this.root.querySelector('.category').classList.add(this.tx.category)
 
       if (!this.tx.is.metaAction) this.root.querySelector('.amount-wrap').innerHTML = this.tx.amount.html(true, 0)
+
+      this.root.querySelector('.balance-wrap').innerHTML = this.tx.balance.html(true, 0)
 
       this.root.querySelector('.id').textContent = this.tx.id
       this.root.querySelector('.description').textContent = this.tx.description
@@ -63,8 +66,6 @@ const EXIF = require('../lib/exif')
         this.root.querySelector('.settled').classList.add('meta')
         this.root.querySelector('.decline-reason').textContent = this.tx.declineReason
       }
-
-      this.dataset.category = this.tx.category
     }
 
     renderLocation () {
@@ -207,20 +208,20 @@ const EXIF = require('../lib/exif')
             // draw image to canvas
             ctx.drawImage(img, 0, 0)
 
-            // insert image
-            scrollInner.appendChild(canvas)
+            // // insert image
+            // scrollInner.appendChild(canvas)
 
-            // // create new image element to be inserted
-            // const imgEl = document.createElement('img')
-            //
-            // // get blob of canvas
-            // canvas.toBlob(blob => {
-            //   const blobUrl = URL.createObjectURL(blob)
-            //   imgEl.src = blobUrl
-            //
-            //   // insert image
-            //   scrollInner.appendChild(imgEl)
-            // }, 'image/jpeg')
+            // create new image element to be inserted
+            const imgEl = document.createElement('img')
+
+            // get blob of canvas
+            canvas.toBlob(blob => {
+              const blobUrl = URL.createObjectURL(blob)
+              imgEl.src = blobUrl
+
+              // insert image
+              scrollInner.appendChild(imgEl)
+            }, 'image/jpeg')
           }
         })
       })

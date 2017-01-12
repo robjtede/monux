@@ -111,15 +111,18 @@
     }
 
     .amount-wrap {
-      padding: 0.4em 15px;
+      padding: 0.8em 15px 0.5em;
 
       border-bottom: var(--thin-border);
     }
 
-    .amount {
+    .amount-wrap .amount {
       font-size: 1.8rem;
+      line-height: 1.2;
+    }
+
+    .amount {
       white-space: nowrap;
-      line-height: 1;
     }
 
     .amount.positive {
@@ -130,8 +133,28 @@
       color: red;
     }
 
-    .amount .major {
+    .amount-wrap .amount .major {
       font-size: 2em;
+    }
+
+    .balance-wrap {
+      --label: 'Balance (after transaction):';
+
+      padding: 0.8em 15px 0.5em;
+
+      border-bottom: var(--thin-border);
+    }
+
+    .balance-wrap .amount {
+      font-size: 1.6rem;
+    }
+
+    .balance-wrap::before {
+      content: var(--label);
+      display: block;
+
+      color: var(--label-grey);
+      font-size: 1rem;
     }
 
     .notes-wrap {
@@ -268,6 +291,7 @@
     <div class="category"></div>
   </div>
   <div class="amount-wrap"></div>
+  <div class="balance-wrap"></div>
 
   <div class="notes-wrap">
     <div class="label">
