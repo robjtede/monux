@@ -1,8 +1,8 @@
 'use strict'
 
-const EXIF = require('../lib/exif')
-
 ;(function (thisDoc) {
+  const EXIF = require('../lib/exif')
+
   const template = thisDoc.querySelector('template')
 
   class TransactionDetailComponent extends HTMLElement {
@@ -61,9 +61,14 @@ const EXIF = require('../lib/exif')
         this.root.querySelector('.settled').classList.add('meta')
       }
 
+      if (this.tx.settled === 'Settled: Invalid Date') {
+        console.warn('Invalid settled date. This may be a bug.')
+        this.root.querySelector('.settled').classList.add('meta')
+      }
+
       if (this.tx.declined) {
         this.classList.add('declined')
-        this.root.querySelector('.settled').classList.add('meta')
+
         this.root.querySelector('.decline-reason').textContent = this.tx.declineReason
       }
     }
