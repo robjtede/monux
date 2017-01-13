@@ -378,9 +378,9 @@ dashdash@^1.12.0:
   dependencies:
     assert-plus "^1.0.0"
 
-date-fns@^1.22.0:
-  version "1.22.0"
-  resolved "https://registry.yarnpkg.com/date-fns/-/date-fns-1.22.0.tgz#3199427130e10e3333af9350a8701e7e1c634bc8"
+date-fns@^1.25.0:
+  version "1.25.0"
+  resolved "https://registry.yarnpkg.com/date-fns/-/date-fns-1.25.0.tgz#9af706bccbc7b76d796f0e93190802c204ba5efa"
 
 debug@0.7.4:
   version "0.7.4"
@@ -560,9 +560,9 @@ electron-osx-sign@^0.4.1:
     plist "^1.2.0"
     tempfile "^1.1.1"
 
-electron-packager@^8.4.0:
-  version "8.4.0"
-  resolved "https://registry.yarnpkg.com/electron-packager/-/electron-packager-8.4.0.tgz#aad862797ced23cf3c6d25533f452ffe3765f355"
+electron-packager@^8.5.0:
+  version "8.5.0"
+  resolved "https://registry.yarnpkg.com/electron-packager/-/electron-packager-8.5.0.tgz#f3897913604a64e69e0b7440e762c955c47f2c03"
   dependencies:
     asar "^0.12.3"
     debug "^2.2.0"
@@ -596,9 +596,9 @@ electron-window-state@^4.0.1:
     jsonfile "^2.2.3"
     mkdirp "^0.5.1"
 
-electron@^1.4.13:
-  version "1.4.13"
-  resolved "https://registry.yarnpkg.com/electron/-/electron-1.4.13.tgz#aecc073484c25d351007d75ad8972b0f2f835ab3"
+electron@^1.4.14:
+  version "1.4.14"
+  resolved "https://registry.yarnpkg.com/electron/-/electron-1.4.14.tgz#e374b76ccdc432bccad9bb3ce1add453bf5648b4"
   dependencies:
     electron-download "^3.0.1"
     extract-zip "^1.0.3"
@@ -686,9 +686,9 @@ escope@^3.6.0:
     esrecurse "^4.1.0"
     estraverse "^4.1.1"
 
-eslint@^3.12.2:
-  version "3.12.2"
-  resolved "https://registry.yarnpkg.com/eslint/-/eslint-3.12.2.tgz#6be5a9aa29658252abd7f91e9132bab1f26f3c34"
+eslint@^3.13.1:
+  version "3.13.1"
+  resolved "https://registry.yarnpkg.com/eslint/-/eslint-3.13.1.tgz#564d2646b5efded85df96985332edd91a23bff25"
   dependencies:
     babel-code-frame "^6.16.0"
     chalk "^1.1.3"
@@ -720,7 +720,7 @@ eslint@^3.12.2:
     require-uncached "^1.0.2"
     shelljs "^0.7.5"
     strip-bom "^3.0.0"
-    strip-json-comments "~1.0.1"
+    strip-json-comments "~2.0.1"
     table "^3.7.8"
     text-table "~0.2.0"
     user-home "^2.0.0"
@@ -2047,9 +2047,13 @@ strip-indent@^1.0.1:
   dependencies:
     get-stdin "^4.0.1"
 
-strip-json-comments@~1.0.1, strip-json-comments@~1.0.4:
+strip-json-comments@~1.0.4:
   version "1.0.4"
   resolved "https://registry.yarnpkg.com/strip-json-comments/-/strip-json-comments-1.0.4.tgz#1e15fbcac97d3ee99bf2d73b4c656b082bbafb91"
+
+strip-json-comments@~2.0.1:
+  version "2.0.1"
+  resolved "https://registry.yarnpkg.com/strip-json-comments/-/strip-json-comments-2.0.1.tgz#3c531942e908c2697c0ec344858c286c7ca0a60a"
 
 sumchecker@^1.2.0:
   version "1.2.0"
