@@ -1,15 +1,15 @@
 {
-  "name": "Monzoo",
+  "name": "Monux",
   "version": "0.5.0",
   "description": "Unoffical Monzo Client for Desktop",
   "main": "app.js",
-  "repository": "https://github.com/robjtede/monzoo",
+  "repository": "https://github.com/robjtede/monux",
   "author": "robjtede",
   "license": "MIT",
   "scripts": {
     "start:dev": "$(yarn bin)/electron .",
-    "start": "yarn build && ./Monzoo-darwin-x64/Monzoo.app/Contents/MacOS/Monzoo",
-    "build": "$(yarn bin)/electron-packager . Monzoo --platform darwin --electron-version 1.4.14 --protocol monzoo --protocol-name Monzoo --overwrite"
+    "start": "yarn build && ./Monux-darwin-x64/Monux.app/Contents/MacOS/Monux",
+    "build": "$(yarn bin)/electron-packager . Monux --platform darwin --electron-version 1.4.14 --protocol monux --protocol-name Monux --overwrite"
   },
   "dependencies": {
     "date-fns": "^1.25.0",

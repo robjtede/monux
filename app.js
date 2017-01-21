@@ -20,7 +20,7 @@ const windowState = require('electron-window-state')
 const config = new Config()
 const debug = new Debug('app:app.js')
 // const updater = new GHUpdater({
-//   repo: 'robjtede/monzoo',
+//   repo: 'robjtede/monux',
 //   currentVersion: app.getVersion()
 // })
 
@@ -29,7 +29,7 @@ console.log(`starting ${app.getName()} version ${app.getVersion()}`)
 const appInfo = {
   client_id: config.get('client_id'),
   client_secret: config.get('client_secret'),
-  redirect_uri: 'monzoo://auth/',
+  redirect_uri: 'monux://auth/',
   response_type: 'code',
   state: crypto.randomBytes(512).toString('hex')
 }
@@ -78,7 +78,7 @@ const template = [
   }, {
     role: 'help',
     submenu: [
-      { label: 'Monzoo GitHub Repo', click: () => require('electron').shell.openExternal('https://github.com/robjtede/monzoo') },
+      { label: 'Monux GitHub Repo', click: () => require('electron').shell.openExternal('https://github.com/robjtede/monux') },
       { label: 'Learn More About Electron', click: () => require('electron').shell.openExternal('http://electron.atom.io') }
     ]
   }
