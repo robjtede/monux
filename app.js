@@ -109,7 +109,7 @@ const createWindow = () => {
 
   const mainWindowState = windowState({
     defaultWidth: 1000,
-    defaultHeight: 700
+    defaultHeight: 800
   })
 
   mainWindow = new BrowserWindow({

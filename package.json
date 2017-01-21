@@ -9,7 +9,7 @@
   "scripts": {
     "start:dev": "$(yarn bin)/electron .",
     "start": "yarn build && ./Monux-darwin-x64/Monux.app/Contents/MacOS/Monux",
-    "build": "$(yarn bin)/electron-packager . Monux --platform darwin --electron-version 1.4.14 --protocol monux --protocol-name Monux --overwrite"
+    "build": "$(yarn bin)/electron-packager . Monux --platform darwin --icon monux --electron-version 1.4.14 --protocol monux --protocol-name Monux --overwrite"
   },
   "dependencies": {
     "date-fns": "^1.25.0",
