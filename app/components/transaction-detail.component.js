@@ -12,7 +12,7 @@
       this.debug = false
       if (this.debug) console.log('constructing')
 
-      this.tx = {}
+      this.tx = null
     }
 
     connectedCallback () {
@@ -23,11 +23,11 @@
 
       this.root.appendChild(document.importNode(template.content, true))
 
-      this.dataset.category = this.tx.category
+      if (this.tx) this.dataset.category = this.tx.category
 
       window.ShadyCSS.applyStyle(this)
 
-      this.render()
+      if (this.tx) this.render()
     }
 
     render () {

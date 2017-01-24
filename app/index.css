@@ -231,6 +231,10 @@ m-transaction-list {
   -webkit-user-select: none;
 }
 
+.transaction-detail-pane.inactive m-transaction-detail {
+  display: none;
+}
+
 .lightboxable {
   cursor: pointer;
 }

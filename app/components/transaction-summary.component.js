@@ -71,13 +71,12 @@
       if (this.debug) console.log(`clicked ${this.index} summary`)
 
       const detailPane = document.querySelector('.transaction-detail-pane')
-      const thisDetail = document.createElement('m-transaction-detail')
+      const txDetail = document.querySelector('m-transaction-detail')
 
-      thisDetail.tx = this.tx
-      thisDetail.dataset.index = this.index
+      txDetail.tx = this.tx
+      txDetail.dataset.category = this.tx.category
+      txDetail.render()
 
-      if (detailPane) detailPane.innerHTML = ''
-      detailPane.appendChild(thisDetail)
       detailPane.classList.remove('inactive')
 
       const selectedTx = document.querySelector('m-transaction-summary.selected')

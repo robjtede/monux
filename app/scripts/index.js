@@ -30,8 +30,6 @@ document.addEventListener('DOMContentLoaded', () => {
   const transactions = localStorage.getItem('transactions')
 
   if (transactions) {
-    console.log(transactions)
-
     txlist.txs = JSON.parse(transactions)
       .map((tx, index) => {
         tx = new Transaction(this.monzo, this, tx, index)
