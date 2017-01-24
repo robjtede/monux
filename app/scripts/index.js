@@ -9,8 +9,9 @@ document.addEventListener('DOMContentLoaded', () => {
   context.activate()
 
   const Monzo = require('../lib/monzo/Monzo')
-
+  // const monzo = new MonzoService(new Monzo(config.get('accessToken')))
   const monzo = new Monzo(config.get('accessToken'))
+
   const debug = true
 
   Array.from(document.querySelectorAll('.fixable')).forEach(function (el) {
@@ -36,10 +37,28 @@ document.addEventListener('DOMContentLoaded', () => {
       window.setTimeout(txlist.render.bind(txlist), 0)
     })
 
+  const balance = localStorage.getItem('balance')
+  const spentToday = localStorage.getItem('spentToday')
+  const accDescription = localStorage.getItem('accDescription')
+
+  if (accDescription) {
+    tabs.querySelector('.person').textContent = accDescription
+  }
+
+  if (balance) {
+    balances.querySelector('.card-balance').querySelector('h2').innerHTML = balance
+  }
+
+  if (spentToday) {
+    balances.querySelector('.spent-today').querySelector('h2').innerHTML = spentToday
+  }
+
   accounts
     .then(accs => accs[0])
     .then(acc => {
-      tabs.querySelector('.person').textContent = acc.description
+      localStorage.setItem('accDescription', acc.description)
+
+      tabs.querySelector('.person').textContent = localStorage.getItem('accDescription')
 
       return acc.balance
     })
@@ -47,7 +66,10 @@ document.addEventListener('DOMContentLoaded', () => {
       if (debug) console.log(balance)
       if (debug) console.log(spentToday)
 
-      balances.querySelector('.card-balance').querySelector('h2').innerHTML = balance.html(true, 0)
-      balances.querySelector('.spent-today').querySelector('h2').innerHTML = spentToday.html(true, 0)
+      localStorage.setItem('balance', balance.html(true, 0))
+      localStorage.setItem('spentToday', spentToday.html(true, 0))
+
+      balances.querySelector('.card-balance').querySelector('h2').innerHTML = localStorage.getItem('balance')
+      balances.querySelector('.spent-today').querySelector('h2').innerHTML = localStorage.getItem('spentToday')
     })
 })
