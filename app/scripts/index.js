@@ -9,6 +9,7 @@ document.addEventListener('DOMContentLoaded', () => {
   context.activate()
 
   const Monzo = require('../lib/monzo/Monzo')
+  const Transaction = require('../lib/monzo/Transaction')
   // const monzo = new MonzoService(new Monzo(config.get('accessToken')))
   const monzo = new Monzo(config.get('accessToken'))
 
@@ -25,6 +26,23 @@ document.addEventListener('DOMContentLoaded', () => {
   const txlist = document.querySelector('m-transaction-list')
 
   const accounts = monzo.accounts
+
+  const transactions = localStorage.getItem('transactions')
+
+  if (transactions) {
+    console.log(transactions)
+
+    txlist.txs = JSON.parse(transactions)
+      .map((tx, index) => {
+        tx = new Transaction(this.monzo, this, tx, index)
+
+        return tx
+      })
+
+    txlist.classList.remove('inactive')
+
+    window.setTimeout(txlist.render.bind(txlist), 0)
+  }
 
   accounts
     .then(accs => accs[0].transactions)
