@@ -43,7 +43,7 @@
       }
       this.root.querySelector('.notes').textContent = this.tx.notes.short
 
-      if (!this.tx.is.metaAction) {
+      if (!this.tx.is.metaAction && !this.tx.declined) {
         this.root.querySelector('.amount-wrap').innerHTML = this.tx.amount.html(false, 2)
         if (this.tx.amount.positive) this.root.querySelector('.amount').classList.add('income')
       } else {
