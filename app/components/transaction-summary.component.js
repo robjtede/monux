@@ -46,6 +46,18 @@
       if (!this.tx.is.metaAction) {
         this.root.querySelector('.amount-wrap').innerHTML = this.tx.amount.html(false, 2)
         if (this.tx.amount.positive) this.root.querySelector('.amount').classList.add('income')
+      } else {
+        const hider = document.createElement('div')
+        hider.classList.add('hider')
+        hider.innerHTML = '&#10761;'
+
+        hider.addEventListener('click', ev => {
+          ev.stopPropagation()
+          this.hide()
+        })
+
+        this.root.querySelector('.amount-wrap').classList.add('hidable')
+        this.root.querySelector('.amount-wrap').appendChild(hider)
       }
 
       const icon = this.root.querySelector('.icon')
@@ -83,6 +95,16 @@
 
       if (selectedTx) selectedTx.classList.remove('selected')
       this.classList.add('selected')
+    }
+
+    hide () {
+      return this.tx.annotate('monux_hidden', 'true')
+        .then(tx => {
+          console.log(tx)
+          this.parentNode.removeChild(this)
+
+          return tx
+        })
     }
 
     disconnectedCallback () {

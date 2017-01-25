@@ -41,15 +41,20 @@
       }
 
       if (this.dayHeadings) {
-        const groupedByDay = this.txs.reduce((groups, tx, index) => {
-          const created = new Date(tx.created)
-          const dayid = +startOfDay(created)
+        const groupedByDay = this.txs
+          .filter(tx => {
+            if (!this.showHidden && tx.hidden) return false
+            return true
+          })
+          .reduce((groups, tx, index) => {
+            const created = new Date(tx.created)
+            const dayid = +startOfDay(created)
 
-          if (dayid in groups) groups[dayid].push(tx)
-          else groups[dayid] = [tx]
+            if (dayid in groups) groups[dayid].push(tx)
+            else groups[dayid] = [tx]
 
-          return groups
-        }, {})
+            return groups
+          }, {})
 
         Object.keys(groupedByDay)
           .sort()
@@ -107,7 +112,7 @@
     }
 
     static get observedAttributes () {
-      return ['dayheadings']
+      return ['dayheadings', 'showhidden']
     }
 
     attributeChangedCallback (attrName, oldVal, newVal) {
@@ -115,7 +120,8 @@
       if (this.debug) console.log(`attribute changed on list: ${attrName}, ${oldVal} => ${newVal || 'undefined'}`)
 
       const changes = {
-        dayheadings: () => { this.dayHeadings = this.hasAttribute('dayheadings') }
+        dayheadings: () => { this.dayHeadings = this.hasAttribute('dayheadings') },
+        showhidden: () => { this.showHidden = this.hasAttribute('showhidden') }
       }
 
       if (attrName in changes) changes[attrName]()
