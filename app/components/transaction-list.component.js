@@ -92,7 +92,7 @@
                   if (heading.hasAttribute('group-total')) {
                     const current = Number(heading.getAttribute('group-total'))
                     const added = current + tx.amount.amount
-                    console.log(current, tx.amount.amount, added)
+
                     heading.setAttribute('group-total', added.toFixed(2))
                   } else {
                     heading.setAttribute('group-total', tx.amount.normalize)

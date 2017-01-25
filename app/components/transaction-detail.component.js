@@ -51,7 +51,11 @@
       })
 
       this.root.querySelector('.category').textContent = this.tx.category.formatted
-      this.root.querySelector('.category').setAttribute('emoji', this.tx.tx.merchant.emoji)
+      if (this.tx.merchant.emoji) {
+        this.root.querySelector('.category').setAttribute('emoji', this.tx.merchant.emoji)
+      } else {
+        this.root.querySelector('.category').classList.add('noemoji')
+      }
 
       if (!this.tx.is.metaAction) this.root.querySelector('.amount-wrap').innerHTML = this.tx.amount.html(true, 0)
 
