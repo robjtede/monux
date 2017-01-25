@@ -35,6 +35,13 @@
       font-size: 1rem;
     }
 
+    .day-heading::after {
+      content: attr(currency) attr(group-total);
+      float: right;
+
+      color: var(--medium-grey);
+    }
+
   </style>
 </template>
 

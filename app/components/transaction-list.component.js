@@ -68,6 +68,7 @@
             heading.classList.add('day-heading', 'fixable')
 
             const created = startOfDay(new Date(txgroup[0].created))
+            heading.setAttribute('currency', txgroup[0].amount.symbol)
 
             if (isToday(created)) {
               heading.textContent = 'Today'
@@ -86,6 +87,19 @@
               .forEach(tx => {
                 const txel = document.createElement('m-transaction-summary')
                 txel.tx = tx
+
+                if (!tx.is.metaAction && tx.amount.negative) {
+                  if (heading.hasAttribute('group-total')) {
+                    const current = Number(heading.getAttribute('group-total'))
+                    const added = current + tx.amount.amount
+                    console.log(current, tx.amount.amount, added)
+                    heading.setAttribute('group-total', added.toFixed(2))
+                  } else {
+                    heading.setAttribute('group-total', tx.amount.normalize)
+                  }
+                } else {
+                  heading.setAttribute('group-total', Number(0).toFixed(2))
+                }
 
                 day.appendChild(txel)
               })
