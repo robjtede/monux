@@ -38,7 +38,11 @@
       this.renderAttachments()
 
       this.root.querySelector('.merchant').textContent = this.tx.displayName
-      if (this.tx.online) this.root.querySelector('.merchant').classList.add('online')
+      if (this.tx.online) {
+        this.root.querySelector('.merchant').classList.add('online')
+      } else {
+        this.root.querySelector('.merchant').classList.remove('online')
+      }
 
       const icon = this.root.querySelector('.icon')
       icon.src = this.tx.icon
@@ -71,6 +75,8 @@
       if (this.tx.declined) {
         this.classList.add('declined')
         this.root.querySelector('.decline-reason').textContent = this.tx.declineReason
+      } else {
+        this.classList.remove('declined')
       }
     }
 
