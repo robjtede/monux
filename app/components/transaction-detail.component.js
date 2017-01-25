@@ -47,6 +47,7 @@
       })
 
       this.root.querySelector('.category').textContent = this.tx.category.formatted
+      this.root.querySelector('.category').setAttribute('emoji', this.tx.tx.merchant.emoji)
 
       if (!this.tx.is.metaAction) this.root.querySelector('.amount-wrap').innerHTML = this.tx.amount.html(true, 0)
 
