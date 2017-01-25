@@ -55,10 +55,11 @@
       this.root.querySelector('.id').textContent = this.tx.id
       this.root.querySelector('.description').textContent = this.tx.description
 
-      if (!this.tx.is.metaAction) {
-        this.root.querySelector('.settled').textContent = this.tx.settled
-      } else {
+      if (this.tx.is.metaAction) {
         this.root.querySelector('.settled').classList.add('meta')
+      } else {
+        this.root.querySelector('.settled').classList.remove('meta')
+        this.root.querySelector('.settled').textContent = this.tx.settled
       }
 
       if (this.tx.settled === 'Settled: Invalid Date') {
@@ -68,7 +69,6 @@
 
       if (this.tx.declined) {
         this.classList.add('declined')
-
         this.root.querySelector('.decline-reason').textContent = this.tx.declineReason
       }
     }
