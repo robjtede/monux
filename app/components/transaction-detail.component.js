@@ -53,6 +53,7 @@
       this.root.querySelector('.category').textContent = this.tx.category.formatted
       if (this.tx.merchant.emoji) {
         this.root.querySelector('.category').setAttribute('emoji', this.tx.merchant.emoji)
+        this.root.querySelector('.category').classList.remove('noemoji')
       } else {
         this.root.querySelector('.category').classList.add('noemoji')
       }
