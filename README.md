@@ -1,6 +1,8 @@
 # Monux
 Unofficial Monzo Client for Desktop
 
+<img alt="Monux Logo" height="200" src="https://github.com/robjtede/monux/blob/master/monux.png">
+
 **Monux is MacOS only for now.**
 
 ## Download
