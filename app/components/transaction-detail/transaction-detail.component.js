@@ -12,20 +12,18 @@
       this.debug = false
       if (this.debug) console.log('constructing')
 
+      this.attachShadow({mode: 'open'})
+      this.root = this.shadowRoot
+
+      this.root.appendChild(document.importNode(template.content, true))
+
       this.tx = null
     }
 
     connectedCallback () {
       if (this.debug) console.log(`connected ${this.index} detail`)
 
-      this.attachShadow({mode: 'open'})
-      this.root = this.shadowRoot
-
-      this.root.appendChild(document.importNode(template.content, true))
-
       if (this.tx) this.dataset.category = this.tx.category
-
-      window.ShadyCSS.applyStyle(this)
 
       if (this.tx) this.render()
     }
@@ -283,9 +281,6 @@
   }
 
   document.addEventListener('DOMContentLoaded', () => {
-    // scope styles
-    window.ShadyCSS.prepareTemplate(template, 'm-transaction-detail')
-
     window.customElements.define('m-transaction-detail', TransactionDetailComponent)
   })
 })(document.currentScript.ownerDocument)

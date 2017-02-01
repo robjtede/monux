@@ -5,18 +5,18 @@
       padding-bottom: 15px;
     }
 
-    :host[data-category=groceries]     { --category-color: gold; }
-    :host[data-category=transport]     { --category-color: teal; }
-    :host[data-category=entertainment] { --category-color: orangered; }
-    :host[data-category=eating_out]    { --category-color: crimson; }
-    :host[data-category=cash]          { --category-color: olivedrab; }
-    :host[data-category=mondo]         { --category-color: olivedrab; }
-    :host[data-category=monzo]         { --category-color: olivedrab; }
-    :host[data-category=general]       { --category-color: slategrey; }
-    :host[data-category=bills]         { --category-color: cornflowerblue; }
-    :host[data-category=holidays]      { --category-color: orchid; }
-    :host[data-category=shopping]      { --category-color: coral; }
-    :host[data-category=expenses]      { --category-color: darkkhaki; }
+    :host([data-category=groceries])     { --category-color: gold; }
+    :host([data-category=transport])     { --category-color: teal; }
+    :host([data-category=entertainment]) { --category-color: orangered; }
+    :host([data-category=eating_out])    { --category-color: crimson; }
+    :host([data-category=cash])          { --category-color: olivedrab; }
+    :host([data-category=mondo])         { --category-color: olivedrab; }
+    :host([data-category=monzo])         { --category-color: olivedrab; }
+    :host([data-category=general])       { --category-color: slategrey; }
+    :host([data-category=bills])         { --category-color: cornflowerblue; }
+    :host([data-category=holidays])      { --category-color: orchid; }
+    :host([data-category=shopping])      { --category-color: coral; }
+    :host([data-category=expenses])      { --category-color: darkkhaki; }
 
     .info {
       display: flex;
@@ -296,7 +296,7 @@
       text-transform: capitalize;
     }
 
-    :host.declined .decline-reason {
+    :host(.declined) .decline-reason {
       display: block;
     }
   </style>

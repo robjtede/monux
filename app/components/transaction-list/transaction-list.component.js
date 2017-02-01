@@ -1,11 +1,15 @@
 'use strict'
 
 ;(function (thisDoc) {
-  const strftime = require('date-fns/format')
-  const startOfDay = require('date-fns/start_of_day')
-  const isToday = require('date-fns/is_today')
-  const isYesterday = require('date-fns/is_yesterday')
-  const isThisYear = require('date-fns/is_this_year')
+  const fs = require('fs')
+
+  const strftime = require('date-fns').format
+  const {
+    startOfDay,
+    isToday,
+    isYesterday,
+    isThisYear
+  } = require('date-fns')
 
   const template = thisDoc.querySelector('template')
 
@@ -16,29 +20,22 @@
       this.debug = false
       if (this.debug) console.log('constructing list')
 
+      this.attachShadow({mode: 'open'})
+      this.root = this.shadowRoot
+
+      this.root.appendChild(document.importNode(template.content, true))
+
       this.txs = []
     }
 
     connectedCallback () {
       if (this.debug) console.log(`connected list`)
 
-      this.attachShadow({mode: 'open'})
-      this.root = this.shadowRoot
-
-      this.root.appendChild(document.importNode(template.content, true))
-
-      window.ShadyCSS.applyStyle(this)
-
       this.render()
     }
 
     render () {
       if (this.debug) console.log(`rendering list`)
-
-      // BUG: this.root check required because async connectedCallback
-      if (this.root) {
-        this.root.innerHTML = ''
-      }
 
       if (this.dayHeadings) {
         const groupedByDay = this.txs
@@ -145,9 +142,6 @@
   }
 
   document.addEventListener('DOMContentLoaded', () => {
-    // scope styles
-    window.ShadyCSS.prepareTemplate(template, 'm-transaction-list')
-
     window.customElements.define('m-transaction-list', TransactionListComponent)
   })
 })(document.currentScript.ownerDocument)

@@ -4,27 +4,27 @@
   const template = thisDoc.querySelector('template')
 
   class TransactionSummaryComponent extends HTMLElement {
-    constructor (tx = {}) {
+    constructor () {
       super()
 
       this.debug = false
       if (this.debug) console.log('constructing summary')
 
-      this.tx = tx
+      this.attachShadow({mode: 'open'})
+      this.root = this.shadowRoot
+
+      this.root.appendChild(document.importNode(template.content, true))
+
+      this.tx = {}
     }
 
     connectedCallback () {
       if (this.debug) console.log(`connected ${this.index} summary`)
 
-      this.attachShadow({mode: 'closed'})
-      this.root = this.shadowRoot
-
-      this.root.appendChild(document.importNode(template.content, true))
+      this.txlist = document.querySelector('m-transaction-list')
 
       this.dataset.category = this.tx.category
       this.dataset.index = this.tx.index
-
-      window.ShadyCSS.applyStyle(this)
 
       this.render()
 
@@ -91,7 +91,7 @@
 
       detailPane.classList.remove('inactive')
 
-      const selectedTx = document.querySelector('m-transaction-summary.selected')
+      const selectedTx = this.txlist.shadowRoot.querySelector('m-transaction-summary.selected')
 
       if (selectedTx) selectedTx.classList.remove('selected')
       this.classList.add('selected')
@@ -131,9 +131,6 @@
   }
 
   document.addEventListener('DOMContentLoaded', () => {
-    // scope styles
-    window.ShadyCSS.prepareTemplate(template, 'm-transaction-summary')
-
     window.customElements.define('m-transaction-summary', TransactionSummaryComponent)
   })
 })(document.currentScript.ownerDocument)
