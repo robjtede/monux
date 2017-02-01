@@ -378,9 +378,9 @@ dashdash@^1.12.0:
   dependencies:
     assert-plus "^1.0.0"
 
-date-fns@^1.25.0:
-  version "1.25.0"
-  resolved "https://registry.yarnpkg.com/date-fns/-/date-fns-1.25.0.tgz#9af706bccbc7b76d796f0e93190802c204ba5efa"
+date-fns@^1.27.1:
+  version "1.27.1"
+  resolved "https://registry.yarnpkg.com/date-fns/-/date-fns-1.27.1.tgz#194ba3c77b42d98e280ec1e5d6f094434b77cbca"
 
 debug@0.7.4:
   version "0.7.4"
@@ -560,9 +560,9 @@ electron-osx-sign@^0.4.1:
     plist "^1.2.0"
     tempfile "^1.1.1"
 
-electron-packager@^8.5.0:
-  version "8.5.0"
-  resolved "https://registry.yarnpkg.com/electron-packager/-/electron-packager-8.5.0.tgz#f3897913604a64e69e0b7440e762c955c47f2c03"
+electron-packager@^8.5.1:
+  version "8.5.1"
+  resolved "https://registry.yarnpkg.com/electron-packager/-/electron-packager-8.5.1.tgz#514d1b38560c7c05924ff4c41d3ffef76dd206d0"
   dependencies:
     asar "^0.12.3"
     debug "^2.2.0"
@@ -686,9 +686,9 @@ escope@^3.6.0:
     esrecurse "^4.1.0"
     estraverse "^4.1.1"
 
-eslint@^3.13.1:
-  version "3.13.1"
-  resolved "https://registry.yarnpkg.com/eslint/-/eslint-3.13.1.tgz#564d2646b5efded85df96985332edd91a23bff25"
+eslint@^3.14.1:
+  version "3.14.1"
+  resolved "https://registry.yarnpkg.com/eslint/-/eslint-3.14.1.tgz#8a62175f2255109494747a1b25128d97b8eb3d97"
   dependencies:
     babel-code-frame "^6.16.0"
     chalk "^1.1.3"

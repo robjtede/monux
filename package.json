@@ -12,19 +12,19 @@
     "build": "$(yarn bin)/electron-packager . Monux --platform darwin --icon monux --electron-version 1.4.14 --protocol monux --protocol-name Monux --overwrite"
   },
   "dependencies": {
-    "date-fns": "^1.25.0",
+    "date-fns": "^1.27.1",
     "debug": "^2.6.0",
     "electron": "^1.4.14",
     "electron-config": "^0.2.1",
     "electron-contextmenu-middleware": "^1.0.2",
     "electron-gh-releases": "^2.0.4",
     "electron-image-menu": "^1.0.1",
-    "electron-packager": "^8.5.0",
+    "electron-packager": "^8.5.1",
     "electron-window-state": "^4.0.1",
     "request": "^2.79.0",
     "request-promise": "^4.1.1"
   },
   "devDependencies": {
-    "eslint": "^3.13.1"
+    "eslint": "^3.14.1"
   }
 }
