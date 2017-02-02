@@ -98,6 +98,8 @@
 
             const blobUrl = URL.createObjectURL(blob)
 
+            $this.blobUrl = blobUrl
+
             // output image
             imgEl.src = blobUrl
             $this.root.appendChild(imgEl)

@@ -162,7 +162,13 @@
     renderAttachments () {
       const attachments = this.root.querySelector('.attachments')
 
-      if (this.tx.attachments.length === 0) {
+      Array.from(attachments.querySelectorAll('img-exif')).forEach(attachment => {
+        attachment.parentNode.removeChild(attachment)
+      })
+
+      if (this.tx.attachments.length) {
+        attachments.style.display = 'block'
+      } else {
         attachments.style.display = 'none'
         return
       }
@@ -179,6 +185,18 @@
         img.classList.add('lightboxable')
 
         scrollInner.appendChild(img)
+
+        // bind lightbox to attachments
+        const lightbox = document.querySelector('.lightbox')
+        const lightboxImg = lightbox.querySelector('img')
+
+        img.classList.add('lightboxable')
+        img.addEventListener('click', ev => {
+          ev.preventDefault()
+
+          lightboxImg.src = img.blobUrl
+          lightbox.classList.add('show')
+        })
       })
     }
 
