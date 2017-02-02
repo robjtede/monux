@@ -174,83 +174,11 @@
 
       // loop through attachment urls
       this.tx.attachments.reverse().forEach(url => {
-        // create canvas for image
-        const canvas = document.createElement('canvas')
-        const ctx = canvas.getContext('2d')
+        const img = document.createElement('img-exif')
+        img.setAttribute('src', url)
+        img.classList.add('lightboxable')
 
-        // parse image for orientation
-        EXIF.getData({src: url}, function (imgBuffer) {
-          // convert buffer to blob
-          const arrayBufferView = new Uint8Array(imgBuffer)
-          const blob = new Blob([arrayBufferView], {type: 'image/jpeg'})
-
-          // create blob url
-          const urlCreator = window.URL || window.webkitURL
-          const imageUrl = urlCreator.createObjectURL(blob)
-
-          // create virtual Image with blob src
-          const img = new Image()
-          img.src = imageUrl
-
-          img.onload = () => {
-            // get orientation
-            const orientation = EXIF.getTag(this, 'Orientation')
-
-            // if image dimensions have changed
-            if ([5, 6, 7, 8].includes(orientation)) {
-              canvas.width = img.height
-              canvas.height = img.width
-            } else {
-              canvas.width = img.width
-              canvas.height = img.height
-            }
-
-            // possible orientation effects
-            const orientations = {
-              1: () => ctx.transform(1, 0, 0, 1, 0, 0),
-              2: () => ctx.transform(-1, 0, 0, 1, img.width, 0),
-              3: () => ctx.transform(-1, 0, 0, -1, img.width, img.height),
-              4: () => ctx.transform(1, 0, 0, -1, 0, img.height),
-              5: () => ctx.transform(0, 1, 1, 0, 0, 0),
-              6: () => ctx.transform(0, 1, -1, 0, img.height, 0),
-              7: () => ctx.transform(0, -1, -1, 0, img.height, img.width),
-              8: () => ctx.transform(0, -1, 1, 0, 0, img.width)
-            }
-
-            // apply orientation to canvas
-            orientations[orientation || 1]()
-
-            // draw image to canvas
-            ctx.drawImage(img, 0, 0)
-
-            // // insert image
-            // scrollInner.appendChild(canvas)
-
-            // create new image element to be inserted
-            const imgEl = document.createElement('img')
-
-            // get blob of canvas
-            canvas.toBlob(blob => {
-              const blobUrl = URL.createObjectURL(blob)
-              imgEl.src = blobUrl
-
-              // bind lightbox to attachments
-              const lightbox = document.querySelector('.lightbox')
-              const lightboxImg = lightbox.querySelector('img')
-
-              imgEl.classList.add('lightboxable')
-              imgEl.addEventListener('click', ev => {
-                ev.preventDefault()
-
-                lightboxImg.src = blobUrl
-                lightbox.classList.add('show')
-              })
-
-              // insert image
-              scrollInner.appendChild(imgEl)
-            }, 'image/jpeg')
-          }
-        })
+        scrollInner.appendChild(img)
       })
     }
 
