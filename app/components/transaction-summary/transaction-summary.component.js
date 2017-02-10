@@ -45,6 +45,11 @@
 
       if (!this.tx.is.metaAction && !this.tx.declined) {
         this.root.querySelector('.amount-wrap').innerHTML = this.tx.amount.html(false, 2)
+
+        if (this.tx.amount.foreign) {
+          this.root.querySelector('.amount-wrap').innerHTML += this.tx.amount.local.html(true, 2)
+        }
+
         if (this.tx.amount.positive) this.root.querySelector('.amount').classList.add('income')
       } else {
         const hider = document.createElement('div')

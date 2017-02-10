@@ -1,8 +1,6 @@
 'use strict'
 
 ;(function (thisDoc) {
-  const fs = require('fs')
-
   const strftime = require('date-fns').format
   const {
     startOfDay,

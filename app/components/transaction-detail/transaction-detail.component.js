@@ -1,8 +1,6 @@
 'use strict'
 
 ;(function (thisDoc) {
-  const EXIF = require('../lib/exif')
-
   const template = thisDoc.querySelector('template')
 
   class TransactionDetailComponent extends HTMLElement {
