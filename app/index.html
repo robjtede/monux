@@ -36,10 +36,10 @@
     <div class="person">--- ---</div>
 
     <div class="tabgroup">
-      <div class="tab active">Transactions</div>
-      <div class="tab" title="Coming soon..." style="cursor: not-allowed;">Spending</div>
-      <div class="tab" title="Coming soon..." style="cursor: not-allowed;">Map</div>
-      <div class="tab" title="Coming soon..." style="cursor: not-allowed;">Export</div>
+      <div data-pane="transaction" class="tab active">Transactions</div>
+      <div data-pane="spending" class="tab">Spending</div>
+      <div data-pane="map" class="tab">Map</div>
+      <div data-pane="export" class="tab">Export</div>
     </div>
   </div>
 
@@ -50,6 +50,21 @@
       <div class="transaction-detail-pane inactive">
         <m-transaction-detail></m-transaction-detail>
       </div>
+    </div>
+
+    <div class="app-pane spending-pane">
+      spending and insights
+      <!-- <m-spending></m-spending> -->
+    </div>
+
+    <div class="app-pane map-pane">
+      map
+      <!-- <m-map></m-map> -->
+    </div>
+
+    <div class="app-pane export-pane">
+      export
+      <!-- <m-export></m-export> -->
     </div>
   </div>
 

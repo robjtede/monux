@@ -88,4 +88,21 @@ document.addEventListener('DOMContentLoaded', () => {
       balances.querySelector('.card-balance').querySelector('h2').innerHTML = localStorage.getItem('balance')
       balances.querySelector('.spent-today').querySelector('h2').innerHTML = localStorage.getItem('spentToday')
     })
+
+  const allTabs = Array.from(tabs.querySelectorAll('.tab'))
+  const allPanes = Array.from(app.querySelectorAll('.app-pane'))
+
+  allTabs.forEach(tab => {
+    tab.addEventListener('click', ev => {
+      event.stopPropagation()
+
+      const pane = app.querySelector(`.app-pane.${tab.dataset.pane}-pane`)
+
+      allTabs.forEach(tab => tab.classList.remove('active'))
+      allPanes.forEach(pane => pane.classList.remove('active'))
+
+      tab.classList.add('active')
+      pane.classList.add('active')
+    })
+  })
 })

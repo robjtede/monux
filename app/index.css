@@ -173,7 +173,7 @@ body {
   color: var(--off-white);
   font-size: 0.9rem;
 
-  cursor: pointer;
+  cursor: default;
 }
 
 .tab:not(:last-child) {
@@ -187,6 +187,10 @@ body {
   border-color: var(--off-white);
 }
 
+.tab:not(.active) {
+  cursor: pointer;
+}
+
 .app {
   flex: 8 1 auto;
   display: flex;
@@ -198,12 +202,16 @@ body {
 }
 
 .app-pane {
+  display: none;
   flex: 1 0 auto;
-  display: flex;
   flex-flow: row nowrap;
   justify-content: space-between;
   align-items: stretch;
   max-width: 100%;
+}
+
+.app-pane.active {
+  display: flex;
 }
 
 m-transaction-list {
