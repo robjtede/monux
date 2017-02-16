@@ -54,7 +54,13 @@
         this.root.querySelector('.category').classList.add('noemoji')
       }
 
-      if (!this.tx.is.metaAction) this.root.querySelector('.amount-wrap').innerHTML = this.tx.amount.html(true, 0)
+      if (!this.tx.is.metaAction) {
+        this.root.querySelector('.amount-wrap').innerHTML = this.tx.amount.html(true, 0)
+
+        if (this.tx.amount.foreign) {
+          this.root.querySelector('.amount-wrap').innerHTML += this.tx.amount.local.html(true, 0)
+        }
+      }
 
       this.root.querySelector('.balance-wrap').innerHTML = this.tx.balance.html(true, 0)
 

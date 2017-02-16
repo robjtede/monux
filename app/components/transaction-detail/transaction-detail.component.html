@@ -133,17 +133,24 @@
       border-bottom: var(--thin-border);
     }
 
-    .amount-wrap .amount {
+    .amount {
+      display: block;
+
       font-size: 1.8rem;
       line-height: 1.2;
-    }
-
-    .amount {
       white-space: nowrap;
     }
 
     .amount.positive {
       color: green;
+    }
+
+    .amount + .amount {
+      font-size: 1.5rem;
+    }
+
+    .amount + .amount:not(.positive) {
+      color: var(--dark-grey);
     }
 
     :host.declined .amount {

@@ -62,11 +62,11 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   if (balance) {
-    balances.querySelector('.card-balance').querySelector('h2').innerHTML = balance
+    balances.querySelector('.card-balance h2').innerHTML = balance
   }
 
   if (spentToday) {
-    balances.querySelector('.spent-today').querySelector('h2').innerHTML = spentToday
+    balances.querySelector('.spent-today h2').innerHTML = spentToday
   }
 
   accounts
@@ -85,8 +85,8 @@ document.addEventListener('DOMContentLoaded', () => {
       localStorage.setItem('balance', balance.html(true, 0))
       localStorage.setItem('spentToday', spentToday.html(true, 0))
 
-      balances.querySelector('.card-balance').querySelector('h2').innerHTML = localStorage.getItem('balance')
-      balances.querySelector('.spent-today').querySelector('h2').innerHTML = localStorage.getItem('spentToday')
+      balances.querySelector('.card-balance h2').innerHTML = localStorage.getItem('balance')
+      balances.querySelector('.spent-today h2').innerHTML = localStorage.getItem('spentToday')
     })
 
   const allTabs = Array.from(tabs.querySelectorAll('.tab'))

@@ -134,9 +134,16 @@
       color: var(--off-white);
     }
 
-    .amount + .amount  {
+    .amount + .amount {
       font-size: 0.8em;
+    }
+
+    .amount + .amount:not(.positive) {
       color: var(--dark-grey);
+    }
+
+    :host(.selected) .amount + .amount  {
+      color: var(--light-grey);
     }
   </style>
 
