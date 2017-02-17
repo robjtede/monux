@@ -1,12 +1,8 @@
 'use strict'
 
 ;(function (thisDoc) {
-  const strftime = require('date-fns').format
   const {
-    startOfDay,
-    isToday,
-    isYesterday,
-    isThisYear
+    startOfDay
   } = require('date-fns')
 
   const template = thisDoc.querySelector('template')
@@ -35,81 +31,26 @@
     render () {
       if (this.debug) console.log(`rendering list`)
 
-      if (this.dayHeadings) {
-        const groupedByDay = this.txs
-          .filter(tx => {
-            if (!this.showHidden && tx.hidden) return false
-            return true
-          })
-          .reduce((groups, tx, index) => {
-            const created = new Date(tx.created)
-            const dayid = +startOfDay(created)
+      const grouped = this.txs.reduce((groups, tx, index) => {
+        const created = new Date(tx.created)
+        const dayid = +startOfDay(created)
 
-            if (dayid in groups) groups[dayid].push(tx)
-            else groups[dayid] = [tx]
+        if (dayid in groups) groups[dayid].push(tx)
+        else groups[dayid] = [tx]
 
-            return groups
-          }, {})
+        return groups
+      }, {})
 
-        Object.keys(groupedByDay)
-          .sort()
-          .forEach(txgroup => {
-            txgroup = groupedByDay[txgroup]
+      Object.entries(grouped)
+        .sort((a, b) => a[0].created > b[0].created)
+        .forEach(([key, group]) => {
+          const $group = document.createElement('m-transaction-group')
 
-            const day = document.createElement('div')
-            day.classList.add('transaction-group')
+          $group.index = key
+          $group.txs = group
 
-            const heading = document.createElement('div')
-            heading.classList.add('day-heading', 'fixable')
-
-            const created = startOfDay(new Date(txgroup[0].created))
-            heading.setAttribute('currency', txgroup[0].amount.symbol)
-
-            if (isToday(created)) {
-              heading.textContent = 'Today'
-            } else if (isYesterday(created)) {
-              heading.textContent = 'Yesterday'
-            } else if (isThisYear(created)) {
-              heading.textContent = strftime(created, 'dddd, Do MMMM')
-            } else {
-              heading.textContent = strftime(created, 'dddd, Do MMMM YYYY')
-            }
-
-            day.appendChild(heading)
-
-            txgroup
-              .reverse()
-              .forEach(tx => {
-                const txel = document.createElement('m-transaction-summary')
-                txel.tx = tx
-
-                if (!tx.is.metaAction && tx.amount.negative) {
-                  if (heading.hasAttribute('group-total')) {
-                    const current = Number(heading.getAttribute('group-total'))
-                    const added = current + tx.amount.amount
-
-                    heading.setAttribute('group-total', added.toFixed(2))
-                  } else {
-                    heading.setAttribute('group-total', tx.amount.normalize)
-                  }
-                } else {
-                  heading.setAttribute('group-total', Number(0).toFixed(2))
-                }
-
-                day.appendChild(txel)
-              })
-
-            this.root.insertBefore(day, this.root.firstChild)
-            // window.Stickyfill.add(heading)
-          })
-      } else {
-        this.txs.forEach((tx, index) => {
-          const txel = document.createElement('m-transaction-summary')
-          txel.tx = tx
-
-          this.root.appendChild(txel)
+          this.root.appendChild($group)
         })
-      }
     }
 
     disconnectedCallback () {

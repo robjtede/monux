@@ -19,29 +19,9 @@
       -webkit-user-select: none;
     }
 
-    m-transaction-summary:not(:last-of-type),
-    .transaction-group:not(:last-of-type) m-transaction-summary:last-of-type {
+    m-transaction-group:not(:last-of-type) {
       border-bottom: var(--thin-border);
     }
-
-    .day-heading {
-      padding: 0.5em 20px;
-      position: sticky;
-      top: 0;
-
-      border-bottom: var(--thin-border);
-      background: #f0f0f0;
-
-      font-size: 1rem;
-    }
-
-    .day-heading::after {
-      content: attr(currency) attr(group-total);
-      float: right;
-
-      color: var(--medium-grey);
-    }
-
   </style>
 </template>
 
