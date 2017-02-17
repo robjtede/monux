@@ -96,7 +96,13 @@
 
       detailPane.classList.remove('inactive')
 
-      const selectedTx = this.txlist.shadowRoot.querySelector('m-transaction-summary.selected')
+      const selectedGroup = Array.from(this.txlist.shadowRoot.querySelectorAll('m-transaction-group'))
+        .find(group => group.shadowRoot.querySelector('m-transaction-summary.selected'))
+
+      let selectedTx
+      if (selectedGroup) {
+        selectedTx = selectedGroup.shadowRoot.querySelector('m-transaction-summary.selected')
+      }
 
       if (selectedTx) selectedTx.classList.remove('selected')
       this.classList.add('selected')
