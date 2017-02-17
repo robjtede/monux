@@ -58,11 +58,16 @@
         heading.textContent = strftime(created, 'dddd, Do MMMM YYYY')
       }
 
-      const subtotal = this.txs.reduce((sum, tx) => {
-        return tx.amount.positive
+      const subtotal = this.txs
+        .filter(tx => {
+          if (tx.is.metaAction || tx.declined) return false
+          return true
+        })
+        .reduce((sum, tx) => {
+          return tx.amount.positive
           ? sum
           : sum + tx.amount.raw
-      }, 0)
+        }, 0)
 
       this.subtotal = new Amount({
         raw: subtotal,
@@ -77,6 +82,10 @@
 
     renderTransactions () {
       this.txs
+        .filter(tx => {
+          if (!this.showHidden && tx.hidden) return false
+          return true
+        })
         .sort((a, b) => b.created - a.created)
         .forEach(tx => {
           const $tx = document.createElement('m-transaction-summary')
