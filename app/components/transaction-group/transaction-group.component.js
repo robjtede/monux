@@ -33,7 +33,7 @@
 
       this.dataset.index = this.key
 
-        .this.render()
+      this.render()
     }
 
     render () {
@@ -46,8 +46,7 @@
     renderHeading () {
       const heading = this.root.querySelector('.m-transaction-group-heading')
 
-      const created = startOfDay(new Date(this.txs[0].created))
-      heading.setAttribute('currency', this.txs[0].amount.symbol)
+      const created = startOfDay(this.txs[0].created)
 
       if (isToday(created)) {
         heading.textContent = 'Today'
@@ -71,6 +70,7 @@
       })
 
       heading.setAttribute('subtotal', this.subtotal.normalize)
+      heading.setAttribute('currency', this.txs[0].amount.symbol)
 
       this.root.appendChild(heading)
     }
