@@ -1,5 +1,9 @@
 <template>
   <style>
+    :host {
+      display: block;
+    }
+
     .m-transaction-group-heading {
       padding: 0.5em 20px;
       position: sticky;
@@ -16,6 +20,10 @@
       float: right;
 
       color: var(--medium-grey);
+    }
+
+    m-transaction-summary:not(:last-of-type) {
+      border-bottom: var(--thin-border);
     }
   </style>
 
