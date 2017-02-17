@@ -42,7 +42,7 @@
       }, {})
 
       Object.entries(grouped)
-        .sort((a, b) => a[0].created > b[0].created)
+        .sort((a, b) => b[0] - a[0])
         .forEach(([key, group]) => {
           const $group = document.createElement('m-transaction-group')
 

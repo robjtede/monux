@@ -31,7 +31,9 @@
     connectedCallback () {
       if (this.debug) console.log(`connected ${this.index} group`)
 
-      this.render()
+      this.dataset.index = this.key
+
+        .this.render()
     }
 
     render () {
@@ -58,7 +60,9 @@
       }
 
       const subtotal = this.txs.reduce((sum, tx) => {
-        return tx.amount.positive ? sum : sum + tx.amount.raw
+        return tx.amount.positive
+          ? sum
+          : sum + tx.amount.raw
       }, 0)
 
       this.subtotal = new Amount({
@@ -73,7 +77,7 @@
 
     renderTransactions () {
       this.txs
-        .sort((a, b) => new Date(a.created) < new Date(b.created))
+        .sort((a, b) => b.created - a.created)
         .forEach(tx => {
           const $tx = document.createElement('m-transaction-summary')
           $tx.tx = tx
