@@ -187,15 +187,14 @@
     }
 
     .notes-wrap {
+      display: none;
       padding: 0.8em 15px 0.5em;
 
       border-bottom: var(--thin-border);
     }
 
-    .notes-wrap .label {
+    .notes-wrap.noted {
       display: block;
-
-      color: var(--label-grey);
     }
 
     .notes-wrap .edit {
@@ -209,11 +208,11 @@
     .notes-wrap textarea {
       width: 100%;
       padding: 0.5em;
-      min-height: 150px;
       overflow-y: hidden;
 
       border-radius: 5px;
-      border: var(--thin-border);
+      border: 1px solid;
+      border-color: transparent;
 
       font-size: inherit;
       line-height: inherit;
@@ -221,8 +220,8 @@
       resize: none;
     }
 
-    .notes {
-      white-space: pre-wrap;
+    .notes-wrap textarea:hover {
+      border-color: var(--light-grey);
     }
 
     .attachments {
@@ -326,9 +325,8 @@
   <div class="notes-wrap">
     <div class="label">
       Notes:
-      <a href="#" class="edit">Edit</a>
     </div>
-    <div class="notes"></div>
+    <textarea class="notes"></textarea>
   </div>
 
   <div class="attachments"><div class="scroll-wrap"></div></div>

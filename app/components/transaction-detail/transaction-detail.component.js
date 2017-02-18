@@ -99,68 +99,64 @@
     }
 
     renderNotes () {
-      const notes = this.root.querySelector('.notes')
+      const $notes = this.root.querySelector('.notes')
+      const $notesWrap = this.root.querySelector('.notes-wrap')
+      const $summary = document.querySelector(`m-transaction-summary[data-index="${this.index}"]`)
 
       const updateNotes = () => {
-        if (!this.tx.notes.full.trim()) {
-          notes.style.display = 'none'
-        } else {
-          notes.style.display = 'block'
-        }
-        notes.textContent = this.tx.notes.full
+        if (this.tx.notes.full) $notesWrap.classList.add('noted')
+        else $notesWrap.classList.remove('noted')
+
+        $notes.textContent = this.tx.notes.full
+        $notes.value = this.tx.notes.full
       }
+
       updateNotes()
 
-      const summary = document.querySelector(`m-transaction-summary[data-index="${this.index}"]`)
-
-      const textarea = document.createElement('textarea')
-
       const calcSize = () => {
-        textarea.style.height = '1px'
-        textarea.style.height = Math.max(150, textarea.scrollHeight) + 'px'
+        $notes.style.height = '1px'
+        $notes.style.height = $notes.scrollHeight
       }
 
-      calcSize()
-      textarea.addEventListener('keydown', calcSize)
-      textarea.addEventListener('keyup', calcSize)
-      textarea.addEventListener('paste', calcSize)
+      setTimeout(calcSize.bind(this), 0)
+      $notes.addEventListener('keydown', calcSize)
+      $notes.addEventListener('keyup', calcSize)
+      $notes.addEventListener('paste', calcSize)
 
-      const button = this.root.querySelector('.notes-wrap').querySelector('.edit')
-
-      const editHandler = ev => {
-        ev.preventDefault()
-
-        notes.style.display = 'none'
-        textarea.textContent = notes.textContent
-        this.root.querySelector('.notes-wrap').appendChild(textarea)
-        button.textContent = 'Done'
-
-        button.removeEventListener('click', editHandler)
-        button.addEventListener('click', doneHandler)
-      }
-
-      const doneHandler = () => {
-        button.textContent = 'Updating...'
-
-        this.tx
-          .setNotes(textarea.value.trim())
-          .then(() => {
-            updateNotes()
-            summary.render()
-
-            textarea.value = textarea.value.trim()
-            textarea.textContent = textarea.value.trim()
-            textarea.parentNode.removeChild(textarea)
-
-            notes.style.display = 'block'
-            button.textContent = 'Edit'
-          })
-
-        button.removeEventListener('click', doneHandler)
-        button.addEventListener('click', editHandler)
-      }
-
-      button.addEventListener('click', editHandler)
+      // const editHandler = ev => {
+      //   ev.preventDefault()
+      //
+      //   notes.style.display = 'none'
+      //   notes.textContent = notes.textContent
+      //   this.root.querySelector('.notes-wrap').appendChild(notes)
+      //   button.textContent = 'Done'
+      //
+      //   button.removeEventListener('click', editHandler)
+      //   button.addEventListener('click', doneHandler)
+      // }
+      //
+      // const doneHandler = () => {
+      //   button.textContent = 'Updating...'
+      //
+      //   this.tx
+      //     .setNotes(notes.value.trim())
+      //     .then(() => {
+      //       updateNotes()
+      //       summary.render()
+      //
+      //       notes.value = notes.value.trim()
+      //       notes.textContent = notes.value.trim()
+      //       notes.parentNode.removeChild(notes)
+      //
+      //       notes.style.display = 'block'
+      //       button.textContent = 'Edit'
+      //     })
+      //
+      //   button.removeEventListener('click', doneHandler)
+      //   button.addEventListener('click', editHandler)
+      // }
+      //
+      // button.addEventListener('click', editHandler)
     }
 
     renderAttachments () {
