@@ -123,40 +123,16 @@
       $notes.addEventListener('keyup', calcSize)
       $notes.addEventListener('paste', calcSize)
 
-      // const editHandler = ev => {
-      //   ev.preventDefault()
-      //
-      //   notes.style.display = 'none'
-      //   notes.textContent = notes.textContent
-      //   this.root.querySelector('.notes-wrap').appendChild(notes)
-      //   button.textContent = 'Done'
-      //
-      //   button.removeEventListener('click', editHandler)
-      //   button.addEventListener('click', doneHandler)
-      // }
-      //
-      // const doneHandler = () => {
-      //   button.textContent = 'Updating...'
-      //
-      //   this.tx
-      //     .setNotes(notes.value.trim())
-      //     .then(() => {
-      //       updateNotes()
-      //       summary.render()
-      //
-      //       notes.value = notes.value.trim()
-      //       notes.textContent = notes.value.trim()
-      //       notes.parentNode.removeChild(notes)
-      //
-      //       notes.style.display = 'block'
-      //       button.textContent = 'Edit'
-      //     })
-      //
-      //   button.removeEventListener('click', doneHandler)
-      //   button.addEventListener('click', editHandler)
-      // }
-      //
-      // button.addEventListener('click', editHandler)
+      const editHandler = ev => {
+        this.tx
+          .setNotes($notes.value.trim())
+          .then(() => {
+            updateNotes()
+            $summary.render()
+          })
+      }
+
+      $notes.addEventListener('blur', editHandler)
     }
 
     renderAttachments () {

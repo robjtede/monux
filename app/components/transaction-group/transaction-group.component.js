@@ -16,7 +16,7 @@
     constructor () {
       super()
 
-      this.debug = false
+      this.debug = true
       if (this.debug) console.log('constructing group')
 
       this.attachShadow({mode: 'open'})
@@ -31,7 +31,7 @@
     connectedCallback () {
       if (this.debug) console.log(`connected ${this.index} group`)
 
-      this.dataset.index = this.key
+      this.dataset.index = this.index
 
       this.render()
     }
@@ -92,6 +92,8 @@
           $tx.tx = tx
 
           this.root.appendChild($tx)
+
+          $tx.render()
         })
     }
 

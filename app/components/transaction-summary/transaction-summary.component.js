@@ -7,7 +7,7 @@
     constructor () {
       super()
 
-      this.debug = false
+      this.debug = true
       if (this.debug) console.log('constructing summary')
 
       this.attachShadow({mode: 'open'})

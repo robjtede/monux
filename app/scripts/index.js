@@ -19,10 +19,9 @@ document.addEventListener('DOMContentLoaded', () => {
     window.Stickyfill.add(el)
   })
 
+  const app = document.querySelector('.app')
   const balances = document.querySelector('.balances')
   const tabs = document.querySelector('.tabs')
-  const app = document.querySelector('.app')
-
   const txlist = document.querySelector('m-transaction-list')
 
   const accounts = monzo.accounts
@@ -37,6 +36,7 @@ document.addEventListener('DOMContentLoaded', () => {
         return tx
       })
 
+    if (debug) console.log(txlist.txs)
     txlist.classList.remove('inactive')
 
     window.setTimeout(txlist.render.bind(txlist), 0)

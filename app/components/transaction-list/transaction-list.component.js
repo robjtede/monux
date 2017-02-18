@@ -11,7 +11,7 @@
     constructor () {
       super()
 
-      this.debug = false
+      this.debug = true
       if (this.debug) console.log('constructing list')
 
       this.attachShadow({mode: 'open'})
@@ -30,6 +30,9 @@
 
     render () {
       if (this.debug) console.log(`rendering list`)
+      Array.from(this.root.querySelectorAll('m-transaction-group')).forEach(group => {
+        group.parentNode.removeChild(group)
+      })
 
       const grouped = this.txs.reduce((groups, tx, index) => {
         const created = new Date(tx.created)
@@ -62,7 +65,7 @@
     }
 
     static get observedAttributes () {
-      return ['dayheadings', 'showhidden']
+      return ['groupheadings', 'showhidden']
     }
 
     attributeChangedCallback (attrName, oldVal, newVal) {
@@ -70,7 +73,7 @@
       if (this.debug) console.log(`attribute changed on list: ${attrName}, ${oldVal} => ${newVal || 'undefined'}`)
 
       const changes = {
-        dayheadings: () => { this.dayHeadings = this.hasAttribute('dayheadings') },
+        groupheadings: () => { this.dayHeadings = this.hasAttribute('groupheadings') },
         showhidden: () => { this.showHidden = this.hasAttribute('showhidden') }
       }
 
