@@ -16,13 +16,15 @@
     constructor () {
       super()
 
-      this.debug = true
+      this.debug = false
       if (this.debug) console.log('constructing group')
 
       this.attachShadow({mode: 'open'})
       this.root = this.shadowRoot
 
       this.root.appendChild(document.importNode(template.content, true))
+
+      this.$list = null
 
       this.txs = {}
       this.subtotal = 0
@@ -89,11 +91,12 @@
         .sort((a, b) => b.created - a.created)
         .forEach(tx => {
           const $tx = document.createElement('m-transaction-summary')
+
+          $tx.$list = this.$list
+          $tx.$group = this
           $tx.tx = tx
 
           this.root.appendChild($tx)
-
-          $tx.render()
         })
     }
 

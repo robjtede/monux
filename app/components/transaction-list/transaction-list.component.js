@@ -49,6 +49,7 @@
         .forEach(([key, group]) => {
           const $group = document.createElement('m-transaction-group')
 
+          $group.$list = this
           $group.index = key
           $group.txs = group
 

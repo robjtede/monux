@@ -7,13 +7,16 @@
     constructor () {
       super()
 
-      this.debug = true
+      this.debug = false
       if (this.debug) console.log('constructing summary')
 
       this.attachShadow({mode: 'open'})
       this.root = this.shadowRoot
 
       this.root.appendChild(document.importNode(template.content, true))
+
+      this.$group = null
+      this.$list = null
 
       this.tx = {}
     }
@@ -87,24 +90,25 @@
     clickHandler () {
       if (this.debug) console.log(`clicked ${this.index} summary`)
 
-      const detailPane = document.querySelector('.transaction-detail-pane')
-      const txDetail = document.querySelector('m-transaction-detail')
+      const $detailPane = document.querySelector('.transaction-detail-pane')
+      const $txDetail = document.querySelector('m-transaction-detail')
 
-      txDetail.tx = this.tx
-      txDetail.dataset.category = this.tx.category
-      txDetail.render()
+      $txDetail.$summary = this
+      $txDetail.tx = this.tx
+      $txDetail.dataset.category = this.tx.category
+      $txDetail.render()
 
-      detailPane.classList.remove('inactive')
+      $detailPane.classList.remove('inactive')
 
-      const selectedGroup = Array.from(this.txlist.shadowRoot.querySelectorAll('m-transaction-group'))
+      const $selectedGroup = Array.from(this.txlist.shadowRoot.querySelectorAll('m-transaction-group'))
         .find(group => group.shadowRoot.querySelector('m-transaction-summary.selected'))
 
-      let selectedTx
-      if (selectedGroup) {
-        selectedTx = selectedGroup.shadowRoot.querySelector('m-transaction-summary.selected')
+      let $selectedTx
+      if ($selectedGroup) {
+        $selectedTx = $selectedGroup.shadowRoot.querySelector('m-transaction-summary.selected')
       }
 
-      if (selectedTx) selectedTx.classList.remove('selected')
+      if ($selectedTx) $selectedTx.classList.remove('selected')
       this.classList.add('selected')
     }
 

@@ -15,15 +15,18 @@
 
       this.root.appendChild(document.importNode(template.content, true))
 
+      this.$summary = null
+
       this.tx = null
     }
 
     connectedCallback () {
       if (this.debug) console.log(`connected ${this.index} detail`)
 
-      if (this.tx) this.dataset.category = this.tx.category
-
-      if (this.tx) this.render()
+      if (this.tx) {
+        this.dataset.category = this.tx.category
+        this.render()
+      }
     }
 
     render () {
@@ -128,7 +131,7 @@
           .setNotes($notes.value.trim())
           .then(() => {
             updateNotes()
-            $summary.render()
+            this.$summary.render()
           })
       }
 
