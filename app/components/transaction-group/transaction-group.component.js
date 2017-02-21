@@ -2,13 +2,6 @@
 
 ;(function (thisDoc) {
   const Amount = require('../lib/monzo/Amount')
-  const strftime = require('date-fns').format
-  const {
-    startOfDay,
-    isToday,
-    isYesterday,
-    isThisYear
-  } = require('date-fns')
 
   const template = thisDoc.querySelector('template')
 
@@ -28,6 +21,7 @@
 
       this.txs = {}
       this.subtotal = 0
+      this.label = ''
     }
 
     connectedCallback () {
@@ -48,17 +42,7 @@
     renderHeading () {
       const heading = this.root.querySelector('.m-transaction-group-heading')
 
-      const created = startOfDay(this.txs[0].created)
-
-      if (isToday(created)) {
-        heading.textContent = 'Today'
-      } else if (isYesterday(created)) {
-        heading.textContent = 'Yesterday'
-      } else if (isThisYear(created)) {
-        heading.textContent = strftime(created, 'dddd, Do MMMM')
-      } else {
-        heading.textContent = strftime(created, 'dddd, Do MMMM YYYY')
-      }
+      heading.textContent = this.label
 
       const subtotal = this.txs
         .filter(tx => {

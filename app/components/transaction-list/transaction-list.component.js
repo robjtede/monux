@@ -1,8 +1,12 @@
 'use strict'
 
 ;(function (thisDoc) {
+  const strftime = require('date-fns').format
   const {
-    startOfDay
+    startOfDay,
+    isToday,
+    isYesterday,
+    isThisYear
   } = require('date-fns')
 
   const template = thisDoc.querySelector('template')
@@ -34,27 +38,90 @@
         group.parentNode.removeChild(group)
       })
 
-      const grouped = this.txs.reduce((groups, tx, index) => {
-        const created = new Date(tx.created)
-        const dayid = +startOfDay(created)
+      const groupIds = {
+        day: (groups, tx, index) => {
+          const created = new Date(tx.created)
+          return +startOfDay(created)
+        },
 
-        if (dayid in groups) groups[dayid].push(tx)
-        else groups[dayid] = [tx]
+        merchant: (groups, tx, index) => {
+          return tx.tx.merchant ? tx.tx.merchant.group_id : 'other'
+        }
+      }
+
+      const grouped = this.txs.reduce((groups, tx, index) => {
+        const groupId = groupIds[this.groupBy || 'none'](groups, tx, index)
+
+        if (groupId in groups) groups[groupId].push(tx)
+        else groups[groupId] = [tx]
 
         return groups
       }, {})
 
+      const sortGroupsBy = {
+        day: (a, b) => b[0] - a[0],
+
+        merchant: (a, b) => {
+          const atot = a[1].filter(tx => {
+            if (tx.is.metaAction || tx.declined) return false
+            return true
+          })
+          .reduce((sum, tx) => {
+            return tx.amount.positive
+            ? sum
+            : sum + tx.amount.raw
+          }, 0)
+
+          const btot = b[1].filter(tx => {
+            if (tx.is.metaAction || tx.declined) return false
+            return true
+          })
+          .reduce((sum, tx) => {
+            return tx.amount.positive
+            ? sum
+            : sum + tx.amount.raw
+          }, 0)
+
+          return atot - btot
+        }
+      }
+
       Object.entries(grouped)
-        .sort((a, b) => b[0] - a[0])
+        .sort((a, b) => sortGroupsBy[this.groupBy || 'none'](a, b))
         .forEach(([key, group]) => {
           const $group = document.createElement('m-transaction-group')
 
           $group.$list = this
-          $group.index = key
           $group.txs = group
+
+          const groupByLabels = {
+            day: tx => {
+              const created = startOfDay(tx.created)
+
+              if (isToday(created)) {
+                return 'Today'
+              } else if (isYesterday(created)) {
+                return 'Yesterday'
+              } else if (isThisYear(created)) {
+                return strftime(created, 'dddd, Do MMMM')
+              } else {
+                return strftime(created, 'dddd, Do MMMM YYYY')
+              }
+            },
+
+            merchant: tx => {
+              return tx.merchant.name
+            }
+          }
+
+          $group.label = groupByLabels[this.groupBy || 'none'](group[0])
 
           this.root.appendChild($group)
         })
+    }
+
+    get groupBy () {
+      return 'day'
     }
 
     disconnectedCallback () {
