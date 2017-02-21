@@ -37,23 +37,28 @@
     render () {
       if (this.debug) console.log(`rendering ${this.index} summary`)
 
-      this.root.querySelector('.merchant').textContent = this.tx.displayName
+      const $amountWrap = this.root.querySelector('.amount-wrap')
+      const $amount = this.root.querySelector('.amount')
+      const $merchant = this.root.querySelector('.merchant')
+      const $notes = this.root.querySelector('.notes')
+
+      $merchant.textContent = this.tx.displayName
 
       if (this.tx.notes.short.trim()) {
-        this.root.querySelector('.notes').classList.add('noted')
+        $notes.classList.add('noted')
       } else {
-        this.root.querySelector('.notes').classList.remove('noted')
+        $notes.classList.remove('noted')
       }
-      this.root.querySelector('.notes').textContent = this.tx.notes.short
+      $notes.textContent = this.tx.notes.short
 
       if (!this.tx.is.metaAction && !this.tx.declined) {
-        this.root.querySelector('.amount-wrap').innerHTML = this.tx.amount.html(false, 2)
+        $amountWrap.innerHTML = this.tx.amount.html(false, 2)
 
         if (this.tx.amount.foreign) {
-          this.root.querySelector('.amount-wrap').innerHTML += this.tx.amount.local.html(true, 2)
+          $amountWrap.innerHTML += this.tx.amount.local.html(true, 2)
         }
 
-        if (this.tx.amount.positive) this.root.querySelector('.amount').classList.add('income')
+        if (this.tx.amount.positive) $amount.classList.add('income')
       } else {
         const hider = document.createElement('div')
         hider.classList.add('hider')
@@ -64,8 +69,8 @@
           this.hide()
         })
 
-        this.root.querySelector('.amount-wrap').classList.add('hidable')
-        this.root.querySelector('.amount-wrap').appendChild(hider)
+        $amountWrap.classList.add('hidable')
+        $amountWrap.appendChild(hider)
       }
 
       const icon = this.root.querySelector('.icon')
@@ -78,8 +83,8 @@
 
       if (this.tx.declined) {
         this.classList.add('declined')
-        this.root.querySelector('.notes').classList.add('noted')
-        this.root.querySelector('.notes').textContent = this.tx.declineReason
+        $notes.classList.add('noted')
+        $notes.textContent = this.tx.declineReason
       }
     }
 
