@@ -58,19 +58,22 @@
           $amountWrap.innerHTML += this.tx.amount.local.html(true, 2)
         }
 
-        if (this.tx.amount.positive) $amount.classList.add('income')
+        if (this.tx.amount.positive && $amount) $amount.classList.add('income')
       } else {
-        const hider = document.createElement('div')
-        hider.classList.add('hider')
-        hider.innerHTML = '&#10761;'
+        let $hider = this.root.querySelector('.hider')
+        if ($hider) $hider.parentNode.removeChild($hider)
 
-        hider.addEventListener('click', ev => {
+        $hider = document.createElement('div')
+        $hider.classList.add('hider')
+        $hider.innerHTML = '&#10761;'
+
+        $hider.addEventListener('click', ev => {
           ev.stopPropagation()
           this.hide()
         })
 
         $amountWrap.classList.add('hidable')
-        $amountWrap.appendChild(hider)
+        $amountWrap.appendChild($hider)
       }
 
       const icon = this.root.querySelector('.icon')

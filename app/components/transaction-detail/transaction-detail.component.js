@@ -104,7 +104,6 @@
     renderNotes () {
       const $notes = this.root.querySelector('.notes')
       const $notesWrap = this.root.querySelector('.notes-wrap')
-      const $summary = document.querySelector(`m-transaction-summary[data-index="${this.index}"]`)
 
       const updateNotes = () => {
         if (this.tx.notes.full) $notesWrap.classList.add('noted')
