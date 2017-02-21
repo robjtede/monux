@@ -178,7 +178,8 @@
       color: inherit;
     }
 
-    .balance-wrap::before {
+    .balance-wrap::before,
+    .notes-wrap::before {
       content: var(--label-text);
       display: block;
 
@@ -187,25 +188,15 @@
     }
 
     .notes-wrap {
-      display: none;
+      --label-text: 'Notes:';
+
       padding: 0.8em 15px 0.5em;
 
       border-bottom: var(--thin-border);
     }
 
-    .notes-wrap.noted {
-      display: block;
-    }
-
-    .notes-wrap .edit {
-      padding-left: 15px;
-
-      font-size: 0.9rem;
-      color: rgba(80, 80, 255, 1.0);
-      text-decoration: none;
-    }
-
     .notes-wrap textarea {
+      display: none;
       width: 100%;
       padding: 0.5em;
       overflow-y: hidden;
@@ -220,8 +211,20 @@
       resize: none;
     }
 
+    .notes-wrap.noted textarea {
+      display: block;
+    }
+
     .notes-wrap textarea:hover {
       border-color: var(--light-grey);
+    }
+
+    .notes-wrap a {
+      text-decoration: none;
+    }
+
+    .notes-wrap.noted a {
+      display: none;
     }
 
     .attachments {
@@ -323,13 +326,13 @@
   <div class="balance-wrap"></div>
 
   <div class="notes-wrap">
-    <div class="label">
-      Notes:
-    </div>
+    <a href="#">Add note</a>
     <textarea class="notes"></textarea>
   </div>
 
-  <div class="attachments"><div class="scroll-wrap"></div></div>
+  <div class="attachments">
+    <div class="scroll-wrap"></div>
+  </div>
 
   <div class="id"></div>
   <div class="description"></div>

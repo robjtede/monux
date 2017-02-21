@@ -108,10 +108,22 @@
     renderNotes () {
       const $notes = this.root.querySelector('.notes')
       const $notesWrap = this.root.querySelector('.notes-wrap')
+      const $addNote = this.root.querySelector('.notes-wrap a')
 
       const updateNotes = () => {
-        if (this.tx.notes.full) $notesWrap.classList.add('noted')
-        else $notesWrap.classList.remove('noted')
+        if (this.tx.notes.full) {
+          $notesWrap.classList.add('noted')
+        } else {
+          $notesWrap.classList.remove('noted')
+
+          $addNote.addEventListener('click', ev => {
+            ev.preventDefault()
+
+            $notesWrap.classList.add('noted')
+            $notes.focus()
+            calcSize()
+          })
+        }
 
         $notes.textContent = this.tx.notes.full
         $notes.value = this.tx.notes.full
