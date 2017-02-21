@@ -36,11 +36,20 @@
       this.renderNotes()
       this.renderAttachments()
 
-      this.root.querySelector('.merchant').textContent = this.tx.displayName
+      const $amountWrap = this.root.querySelector('.amount-wrap')
+      const $category = this.root.querySelector('.category')
+      const $merchant = this.root.querySelector('.merchant')
+      const $settled = this.root.querySelector('.settled')
+
+      this.root.querySelector('.balance-wrap').innerHTML = this.tx.balance.html(true, 0)
+      this.root.querySelector('.id').textContent = this.tx.id
+      this.root.querySelector('.description').textContent = this.tx.description
+
+      $merchant.textContent = this.tx.displayName
       if (this.tx.online) {
-        this.root.querySelector('.merchant').classList.add('online')
+        $merchant.classList.add('online')
       } else {
-        this.root.querySelector('.merchant').classList.remove('online')
+        $merchant.classList.remove('online')
       }
 
       const icon = this.root.querySelector('.icon')
@@ -49,37 +58,32 @@
         icon.src = this.tx.iconFallback
       })
 
-      this.root.querySelector('.category').textContent = this.tx.category.formatted
+      $category.textContent = this.tx.category.formatted
       if (this.tx.merchant.emoji) {
-        this.root.querySelector('.category').setAttribute('emoji', this.tx.merchant.emoji)
-        this.root.querySelector('.category').classList.remove('noemoji')
+        $category.setAttribute('emoji', this.tx.merchant.emoji)
+        $category.classList.remove('noemoji')
       } else {
-        this.root.querySelector('.category').classList.add('noemoji')
+        $category.classList.add('noemoji')
       }
 
       if (!this.tx.is.metaAction) {
-        this.root.querySelector('.amount-wrap').innerHTML = this.tx.amount.html(true, 0)
+        $amountWrap.innerHTML = this.tx.amount.html(true, 0)
 
         if (this.tx.amount.foreign) {
-          this.root.querySelector('.amount-wrap').innerHTML += this.tx.amount.local.html(true, 0)
+          $amountWrap.innerHTML += this.tx.amount.local.html(true, 0)
         }
       }
 
-      this.root.querySelector('.balance-wrap').innerHTML = this.tx.balance.html(true, 0)
-
-      this.root.querySelector('.id').textContent = this.tx.id
-      this.root.querySelector('.description').textContent = this.tx.description
-
       if (this.tx.is.metaAction) {
-        this.root.querySelector('.settled').classList.add('meta')
+        $settled.classList.add('meta')
       } else {
-        this.root.querySelector('.settled').classList.remove('meta')
-        this.root.querySelector('.settled').textContent = this.tx.settled
+        $settled.classList.remove('meta')
+        $settled.textContent = this.tx.settled
       }
 
       if (this.tx.settled === 'Settled: Invalid Date') {
         console.warn('Invalid settled date. This may be a bug.')
-        this.root.querySelector('.settled').classList.add('meta')
+        $settled.classList.add('meta')
       }
 
       if (this.tx.declined) {
