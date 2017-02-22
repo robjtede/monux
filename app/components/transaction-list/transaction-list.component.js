@@ -29,6 +29,12 @@
     connectedCallback () {
       if (this.debug) console.log(`connected list`)
 
+      const $groupBy = this.root.querySelector('.group-by')
+
+      $groupBy.addEventListener('change', ev => {
+        this.setAttribute('group-by', $groupBy.value)
+      })
+
       this.render()
     }
 
@@ -46,6 +52,10 @@
 
         merchant: (groups, tx, index) => {
           return tx.tx.merchant ? tx.tx.merchant.group_id : 'other'
+        },
+
+        none: (groups, tx, index) => {
+          return 'none'
         }
       }
 
@@ -83,6 +93,10 @@
           }, 0)
 
           return atot - btot
+        },
+
+        none: (a, b) => {
+          return a
         }
       }
 
@@ -111,6 +125,10 @@
 
             merchant: tx => {
               return tx.merchant.name
+            },
+
+            none: tx => {
+              return 'unsorted'
             }
           }
 
@@ -121,7 +139,7 @@
     }
 
     get groupBy () {
-      return 'day'
+      return this.getAttribute('group-by')
     }
 
     disconnectedCallback () {
@@ -133,16 +151,22 @@
     }
 
     static get observedAttributes () {
-      return ['groupheadings', 'showhidden']
+      return ['groupheadings', 'showhidden', 'group-by']
     }
 
     attributeChangedCallback (attrName, oldVal, newVal) {
-      if (!this.isConnected) return
+      // if (!this.isConnected) return
       if (this.debug) console.log(`attribute changed on list: ${attrName}, ${oldVal} => ${newVal || 'undefined'}`)
 
       const changes = {
-        groupheadings: () => { this.dayHeadings = this.hasAttribute('groupheadings') },
-        showhidden: () => { this.showHidden = this.hasAttribute('showhidden') }
+        'group-headings': () => { this.dayHeadings = this.hasAttribute('groupheadings') },
+
+        'group-by': () => {
+          console.log(oldVal, newVal)
+          if (oldVal !== newVal) this.render()
+        },
+
+        'show-hidden': () => { this.showHidden = this.hasAttribute('showhidden') }
       }
 
       if (attrName in changes) changes[attrName]()

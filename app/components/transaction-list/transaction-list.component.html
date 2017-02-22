@@ -22,7 +22,22 @@
     m-transaction-group:not(:last-of-type) {
       border-bottom: var(--thin-border);
     }
+
+    .options {
+      padding: 0.5em 0.5em;
+    }
+
+    .options .group-by {
+      font-size: 1rem;
+    }
   </style>
+
+  <div class="options">
+    <select class="group-by">
+      <option value="day">Day</option>
+      <option value="merchant">Merchant</option>
+    </select>
+  </div>
 </template>
 
 <script src="./transaction-list.component.js"></script>
