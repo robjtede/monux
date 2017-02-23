@@ -25,6 +25,8 @@
 
     .options {
       padding: 0.5em 0.5em;
+
+      border-bottom: var(--thin-border);
     }
 
     .options .group-by {
@@ -33,9 +35,26 @@
   </style>
 
   <div class="options">
+    Group By:
     <select class="group-by">
       <option value="day">Day</option>
       <option value="merchant">Merchant</option>
+    </select>
+
+    Filter Category:
+    <select class="filter-category">
+      <option value="groceries"></option>
+      <option value="transport"></option>
+      <option value="entertainment"></option>
+      <option value="eating_out"></option>
+      <option value="cash"></option>
+      <option value="mondo"></option>
+      <option value="monzo"></option>
+      <option value="general"></option>
+      <option value="bills"></option>
+      <option value="holidays"></option>
+      <option value="shopping"></option>
+      <option value="expenses"></option>
     </select>
   </div>
 </template>

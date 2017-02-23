@@ -19,9 +19,9 @@
 
       this.$list = null
 
-      this.txs = {}
+      this.txs = []
       this.subtotal = 0
-      this.label = ''
+      this.label = 'No Group Label'
     }
 
     connectedCallback () {

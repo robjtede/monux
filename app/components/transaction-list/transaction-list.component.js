@@ -142,6 +142,14 @@
       return this.getAttribute('group-by')
     }
 
+    get showHidden () {
+      return this.hasAttribute('show-hidden')
+    }
+
+    get groupHeadings () {
+      return this.hasAttribute('group-headings')
+    }
+
     disconnectedCallback () {
       if (this.debug) console.log(`disconnection list`)
     }
@@ -151,27 +159,27 @@
     }
 
     static get observedAttributes () {
-      return ['groupheadings', 'showhidden', 'group-by']
+      return ['group-headings', 'show-hidden', 'group-by']
     }
 
     attributeChangedCallback (attrName, oldVal, newVal) {
-      // if (!this.isConnected) return
       if (this.debug) console.log(`attribute changed on list: ${attrName}, ${oldVal} => ${newVal || 'undefined'}`)
 
       const changes = {
-        'group-headings': () => { this.dayHeadings = this.hasAttribute('groupheadings') },
-
-        'group-by': () => {
-          console.log(oldVal, newVal)
+        'group-headings': () => {
           if (oldVal !== newVal) this.render()
         },
 
-        'show-hidden': () => { this.showHidden = this.hasAttribute('showhidden') }
+        'group-by': () => {
+          if (oldVal !== newVal) this.render()
+        },
+
+        'show-hidden': () => {
+          if (oldVal !== newVal) this.render()
+        }
       }
 
       if (attrName in changes) changes[attrName]()
-
-      this.render()
     }
   }
 
