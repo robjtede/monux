@@ -35,6 +35,12 @@
         this.setAttribute('group-by', $groupBy.value)
       })
 
+      const $filterCategory = this.root.querySelector('.filter-category')
+
+      $filterCategory.addEventListener('change', ev => {
+        this.setAttribute('filter-category', $filterCategory.value)
+      })
+
       this.render()
     }
 
@@ -42,6 +48,13 @@
       if (this.debug) console.log(`rendering list`)
       Array.from(this.root.querySelectorAll('m-transaction-group')).forEach(group => {
         group.parentNode.removeChild(group)
+      })
+
+      const filtered = this.txs.filter(tx => {
+        if (!this.filterCategory) return true
+
+        if (this.filterCategory === tx.category.raw) return true
+        return false
       })
 
       const groupIds = {
@@ -59,7 +72,7 @@
         }
       }
 
-      const grouped = this.txs.reduce((groups, tx, index) => {
+      const grouped = filtered.reduce((groups, tx, index) => {
         const groupId = groupIds[this.groupBy || 'none'](groups, tx, index)
 
         if (groupId in groups) groups[groupId].push(tx)
@@ -150,6 +163,10 @@
       return this.hasAttribute('group-headings')
     }
 
+    get filterCategory () {
+      return this.getAttribute('filter-category')
+    }
+
     disconnectedCallback () {
       if (this.debug) console.log(`disconnection list`)
     }
@@ -159,7 +176,7 @@
     }
 
     static get observedAttributes () {
-      return ['group-headings', 'show-hidden', 'group-by']
+      return ['group-headings', 'show-hidden', 'group-by', 'filter-category']
     }
 
     attributeChangedCallback (attrName, oldVal, newVal) {
@@ -171,6 +188,10 @@
         },
 
         'group-by': () => {
+          if (oldVal !== newVal) this.render()
+        },
+
+        'filter-category': () => {
           if (oldVal !== newVal) this.render()
         },
 

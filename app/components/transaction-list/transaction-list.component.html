@@ -29,7 +29,8 @@
       border-bottom: var(--thin-border);
     }
 
-    .options .group-by {
+    .options .group-by,
+    .options .filter-category {
       font-size: 1rem;
     }
   </style>
@@ -41,20 +42,20 @@
       <option value="merchant">Merchant</option>
     </select>
 
-    Filter Category:
+    Filter:
     <select class="filter-category">
-      <option value="groceries"></option>
-      <option value="transport"></option>
-      <option value="entertainment"></option>
-      <option value="eating_out"></option>
-      <option value="cash"></option>
-      <option value="mondo"></option>
-      <option value="monzo"></option>
-      <option value="general"></option>
-      <option value="bills"></option>
-      <option value="holidays"></option>
-      <option value="shopping"></option>
-      <option value="expenses"></option>
+      <option value="">---</option>
+      <option value="groceries">Groceries</option>
+      <option value="transport">Transport</option>
+      <option value="entertainment">Entertainment</option>
+      <option value="eating_out">Eating Out</option>
+      <option value="cash">Cash</option>
+      <option value="monzo">Monzo</option>
+      <option value="general">General</option>
+      <option value="bills">Bills</option>
+      <option value="holidays">Holidays</option>
+      <option value="shopping">Shopping</option>
+      <option value="expenses">Expenses</option>
     </select>
   </div>
 </template>
