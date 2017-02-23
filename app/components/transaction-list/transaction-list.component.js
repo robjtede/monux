@@ -50,6 +50,8 @@
         group.parentNode.removeChild(group)
       })
 
+      if (this.filterCategory) this.root.querySelector('.filter-category').value = this.filterCategory
+
       const filtered = this.txs.filter(tx => {
         if (!this.filterCategory) return true
 

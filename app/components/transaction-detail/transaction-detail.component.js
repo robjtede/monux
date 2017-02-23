@@ -68,6 +68,11 @@
       } else {
         $category.classList.add('noemoji')
       }
+      $category.addEventListener('click', ev => {
+        ev.preventDefault()
+
+        this.$summary.$list.setAttribute('filter-category', this.tx.category)
+      })
 
       if (!this.tx.is.metaAction) {
         $amountWrap.innerHTML = this.tx.amount.html(true, 0)
