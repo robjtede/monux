@@ -68,10 +68,6 @@
 
     renderTransactions () {
       this.txs
-        .filter(tx => {
-          if (!this.showHidden && tx.hidden) return false
-          return true
-        })
         .sort((a, b) => b.created - a.created)
         .forEach(tx => {
           const $tx = document.createElement('m-transaction-summary')

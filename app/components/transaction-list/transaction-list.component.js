@@ -53,6 +53,8 @@
       if (this.filterCategory) this.root.querySelector('.filter-category').value = this.filterCategory
 
       const filtered = this.txs.filter(tx => {
+        if (!this.showHidden && tx.hidden) return false
+
         if (!this.filterCategory) return true
 
         if (this.filterCategory === tx.category.raw) return true
