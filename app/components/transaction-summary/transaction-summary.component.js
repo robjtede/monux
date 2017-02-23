@@ -104,6 +104,7 @@
       $txDetail.$summary = this
       $txDetail.tx = this.tx
       $txDetail.dataset.category = this.tx.category
+      $txDetail.dataset.index = this.index
       $txDetail.render()
 
       $detailPane.classList.remove('inactive')

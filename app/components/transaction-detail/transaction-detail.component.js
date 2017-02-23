@@ -29,6 +29,53 @@
         this.dataset.category = this.tx.category
         this.render()
       }
+
+      const $attachments = this.root.querySelector('.attachments')
+      const $scrollInner = $attachments.querySelector('.scroll-inner')
+      const $newAttachment = this.root.querySelector('.new-attachment')
+
+      $newAttachment.addEventListener('change', ev => {
+        ev.preventDefault()
+
+        const contentType = 'image/jpeg'
+
+        this.tx
+          .requestAttachmentUpload(contentType)
+          .then(urls => {
+            if (this.debug) console.log('got attachment upload url')
+
+            return Promise.all([fetch(urls.upload_url, {
+              method: 'PUT',
+              headers: {
+                'Content-Type': contentType
+              },
+              body: $newAttachment.files[0]
+            }), urls])
+          })
+          .then(([res, urls]) => {
+            if (!res.ok) throw new Error('Not able to upload')
+
+            return this.tx.registerAttachment(urls.file_url, contentType)
+          })
+          .then(res => {
+            if (this.debug) console.log('registered attachment')
+
+            const $attachment = document.createElement('div')
+            $attachment.classList.add('attachment')
+            $attachment.innerHTML = '<div class="delete"></div>'
+
+            const $img = document.createElement('img-exif')
+            $img.setAttribute('src', res.attachment.file_url)
+            $img.classList.add('lightboxable')
+
+            $attachment.appendChild($img)
+            $scrollInner.insertBefore($attachment, $scrollInner.firstChild)
+          })
+          .catch(err => {
+            console.log(err)
+            throw err
+          })
+      })
     }
 
     render () {
@@ -114,9 +161,9 @@
     }
 
     renderNotes () {
-      const $notes = this.root.querySelector('.notes')
       const $notesWrap = this.root.querySelector('.notes-wrap')
-      const $addNote = this.root.querySelector('.notes-wrap a')
+      const $notes = $notesWrap.querySelector('.notes')
+      const $addNote = $notesWrap.querySelector('a')
 
       const updateNotes = () => {
         if (this.tx.notes.full) {
@@ -163,70 +210,52 @@
 
     renderAttachments () {
       const $attachments = this.root.querySelector('.attachments')
-      const $attachmentsInner = $attachments.querySelector('.scroll-inner')
-      const $newAttachment = this.root.querySelector('.new-attachment')
 
-      Array.from($attachments.querySelectorAll('img-exif')).forEach($attachment => {
+      Array.from($attachments.querySelectorAll('.attachment')).forEach($attachment => {
         $attachment.parentNode.removeChild($attachment)
       })
 
-      const scrollInner = this.root.querySelector('.scroll-inner')
+      const $scrollInner = this.root.querySelector('.scroll-inner')
 
       // loop through attachment urls
-      this.tx.attachments.reverse().forEach(url => {
-        const img = document.createElement('img-exif')
-        img.setAttribute('src', url)
-        img.classList.add('lightboxable')
+      this.tx.attachments.reverse().forEach(attachment => {
+        const url = attachment.url
+        const $attachment = document.createElement('div')
+        $attachment.classList.add('attachment')
+        $attachment.innerHTML = '<div class="delete"></div>'
 
-        scrollInner.appendChild(img)
+        const $img = document.createElement('img-exif')
+        $img.setAttribute('src', url)
+        $img.classList.add('lightboxable')
 
-        // bind lightbox to attachments
-        const lightbox = document.querySelector('.lightbox')
-        const lightboxImg = lightbox.querySelector('img')
+        $attachment.appendChild($img)
+        $scrollInner.appendChild($attachment)
 
-        img.classList.add('lightboxable')
-        img.addEventListener('click', ev => {
+        const $delete = $attachment.querySelector('.delete')
+        $delete.addEventListener('click', ev => {
           ev.preventDefault()
 
-          lightboxImg.src = img.blobUrl
-          lightbox.classList.add('show')
+          this.tx
+            .deregisterAttachment(attachment.id)
+            .then(res => {
+              $attachment.parentNode.removeChild($attachment)
+            })
+            .catch(err => {
+              throw err
+            })
         })
-      })
 
-      $newAttachment.addEventListener('change', ev => {
-        ev.preventDefault()
+        // bind lightbox to attachments
+        const $lightbox = document.querySelector('.lightbox')
+        const $lightboxImg = $lightbox.querySelector('img')
 
-        const contentType = 'image/jpeg'
+        $img.classList.add('lightboxable')
+        $img.addEventListener('click', ev => {
+          ev.preventDefault()
 
-        this.tx
-          .requestAttachmentUpload('contentType')
-          .then(urls => {
-            if (this.debug) console.log('got')
-
-            return Promise.all([fetch(urls.upload_url, {
-              method: 'PUT',
-              headers: {
-                'Content-Type': contentType
-              },
-              body: $newAttachment.files[0]
-            }), urls])
-          })
-          .then(([res, urls]) => {
-            if (!res.ok) throw new Error('Not able to upload')
-
-            return this.tx.registerAttachment(urls.file_url, contentType)
-          })
-          .then(res => {
-            const $attachment = document.createElement('img-exif')
-            $attachment.setAttribute('src', res.attachment.file_url)
-            $attachment.classList.add('lightboxable')
-
-            $attachmentsInner.insertBefore($attachment, $attachmentsInner.firstChild)
-          })
-          .catch(err => {
-            console.log(err)
-            throw err
-          })
+          $lightboxImg.src = $img.blobUrl
+          $lightbox.classList.add('show')
+        })
       })
     }
 
