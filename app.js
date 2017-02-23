@@ -12,7 +12,7 @@ const {
   BrowserWindow
 } = require('electron')
 
-const rp = require('request-promise')
+const rp = require('request-promise-native')
 const Config = require('electron-config')
 const windowState = require('electron-window-state')
 // const GHUpdater = require('electron-gh-releases')

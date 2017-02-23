@@ -15,7 +15,7 @@
     constructor () {
       super()
 
-      this.debug = true
+      this.debug = false
       if (this.debug) console.log('constructing list')
 
       this.attachShadow({mode: 'open'})

@@ -162,23 +162,15 @@
     }
 
     renderAttachments () {
-      const attachments = this.root.querySelector('.attachments')
+      const $attachments = this.root.querySelector('.attachments')
+      const $attachmentsInner = $attachments.querySelector('.scroll-inner')
+      const $newAttachment = this.root.querySelector('.new-attachment')
 
-      Array.from(attachments.querySelectorAll('img-exif')).forEach(attachment => {
-        attachment.parentNode.removeChild(attachment)
+      Array.from($attachments.querySelectorAll('img-exif')).forEach($attachment => {
+        $attachment.parentNode.removeChild($attachment)
       })
 
-      if (this.tx.attachments.length) {
-        attachments.style.display = 'block'
-      } else {
-        attachments.style.display = 'none'
-        return
-      }
-
-      const scrollInner = document.createElement('div')
-      scrollInner.classList.add('scroll-inner')
-
-      attachments.querySelector('.scroll-wrap').appendChild(scrollInner)
+      const scrollInner = this.root.querySelector('.scroll-inner')
 
       // loop through attachment urls
       this.tx.attachments.reverse().forEach(url => {
@@ -199,6 +191,42 @@
           lightboxImg.src = img.blobUrl
           lightbox.classList.add('show')
         })
+      })
+
+      $newAttachment.addEventListener('change', ev => {
+        ev.preventDefault()
+
+        const contentType = 'image/jpeg'
+
+        this.tx
+          .requestAttachmentUpload('contentType')
+          .then(urls => {
+            if (this.debug) console.log('got')
+
+            return Promise.all([fetch(urls.upload_url, {
+              method: 'PUT',
+              headers: {
+                'Content-Type': contentType
+              },
+              body: $newAttachment.files[0]
+            }), urls])
+          })
+          .then(([res, urls]) => {
+            if (!res.ok) throw new Error('Not able to upload')
+
+            return this.tx.registerAttachment(urls.file_url, contentType)
+          })
+          .then(res => {
+            const $attachment = document.createElement('img-exif')
+            $attachment.setAttribute('src', res.attachment.file_url)
+            $attachment.classList.add('lightboxable')
+
+            $attachmentsInner.insertBefore($attachment, $attachmentsInner.firstChild)
+          })
+          .catch(err => {
+            console.log(err)
+            throw err
+          })
       })
     }
 
