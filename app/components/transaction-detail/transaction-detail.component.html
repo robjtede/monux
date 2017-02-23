@@ -262,6 +262,7 @@
       box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.6);
     }
 
+    .date,
     .id,
     .description,
     .settled,
@@ -273,6 +274,7 @@
       white-space: pre-wrap;
     }
 
+    .date::before,
     .id::before,
     .description::before,
     .settled::before,
@@ -283,6 +285,9 @@
       color: var(--label-grey);
     }
 
+    .date {
+      --label-text: 'Transaction Date and Time:';
+    }
     .description {
       --label-text: 'Transaction Description:';
     }
@@ -334,6 +339,7 @@
     <div class="scroll-wrap"></div>
   </div>
 
+  <div class="date"></div>
   <div class="id"></div>
   <div class="description"></div>
   <div class="settled"></div>

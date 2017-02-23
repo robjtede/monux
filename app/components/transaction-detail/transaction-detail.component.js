@@ -1,6 +1,8 @@
 'use strict'
 
 ;(function (thisDoc) {
+  const strftime = require('date-fns').format
+
   const template = thisDoc.querySelector('template')
 
   class TransactionDetailComponent extends HTMLElement {
@@ -42,6 +44,7 @@
       const $settled = this.root.querySelector('.settled')
 
       this.root.querySelector('.balance-wrap').innerHTML = this.tx.balance.html(true, 0)
+      this.root.querySelector('.date').textContent = strftime(this.tx.created, 'h:mma - Do MMMM YYYY')
       this.root.querySelector('.id').textContent = this.tx.id
       this.root.querySelector('.description').textContent = this.tx.description
 
