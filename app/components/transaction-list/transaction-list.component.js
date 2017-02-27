@@ -68,7 +68,7 @@
         },
 
         merchant: (groups, tx, index) => {
-          return tx.tx.merchant ? tx.tx.merchant.group_id : 'other'
+          return tx.tx.merchant ? tx.tx.merchant.group_id : tx.tx.counterparty.user_id ? 'monzo-contacts' : 'top-ups'
         },
 
         none: (groups, tx, index) => {
@@ -141,7 +141,7 @@
             },
 
             merchant: tx => {
-              return tx.merchant.name
+              return tx.tx.merchant ? tx.merchant.name : tx.tx.counterparty.user_id ? 'Monzo Contacts' : 'Top Ups'
             },
 
             none: tx => {
