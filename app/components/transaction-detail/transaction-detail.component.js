@@ -60,15 +60,11 @@
           .then(res => {
             if (this.debug) console.log('registered attachment')
 
-            const $attachment = document.createElement('div')
-            $attachment.classList.add('attachment')
-            $attachment.innerHTML = '<div class="delete"></div>'
+            const $attachment = document.createElement('m-transaction-attachment')
 
-            const $img = document.createElement('img-exif')
-            $img.setAttribute('src', res.attachment.file_url)
-            $img.classList.add('lightboxable')
+            $attachment.tx = this.tx
+            $attachment.attachment = res.attachment
 
-            $attachment.appendChild($img)
             $scrollInner.insertBefore($attachment, $scrollInner.firstChild)
           })
           .catch(err => {
@@ -210,12 +206,11 @@
 
     renderAttachments () {
       const $attachments = this.root.querySelector('.attachments')
+      const $scrollInner = $attachments.querySelector('.scroll-inner')
 
-      Array.from($attachments.querySelectorAll('.attachment')).forEach($attachment => {
+      Array.from($scrollInner.childNodes).forEach($attachment => {
         $attachment.parentNode.removeChild($attachment)
       })
-
-      const $scrollInner = this.root.querySelector('.scroll-inner')
 
       // loop through attachment urls
       this.tx.attachments.reverse().forEach(attachment => {
