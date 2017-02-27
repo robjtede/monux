@@ -18,7 +18,6 @@
       if (this.debug) console.log('connected img-exif')
 
       this.connected = true
-      this.src = this.getAttribute('src')
 
       this.render()
     }
@@ -108,6 +107,14 @@
       })
     }
 
+    get src () {
+      return this.getAttribute('src')
+    }
+
+    set src (val) {
+      this.setAttribute('src', val)
+    }
+
     disconnectedCallback () {
       if (this.debug) console.log('disconnection img-exif')
     }
@@ -125,15 +132,12 @@
       if (this.debug) console.log(`attribute changed on img-exif: ${attrName}, ${oldVal} => ${newVal}`)
 
       const changes = {
-        src: () => { this.src = this.getAttribute('src') }
+        src: () => {
+          if (oldVal !== newVal) this.render()
+        }
       }
 
-      if (attrName in changes) {
-        changes[attrName]()
-        this.render()
-      } else {
-        console.log('=> no effect')
-      }
+      if (attrName in changes) changes[attrName]()
     }
   }
 

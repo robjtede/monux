@@ -280,8 +280,6 @@
       const changes = {}
 
       if (attrName in changes) changes[attrName]()
-
-      this.render()
     }
   }
 
