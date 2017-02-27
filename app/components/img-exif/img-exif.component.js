@@ -3,6 +3,8 @@
 ;(function (thisDoc) {
   const EXIF = require('../lib/exif')
 
+  const template = thisDoc.querySelector('template')
+
   class ImageExif extends HTMLElement {
     constructor () {
       super()
@@ -12,14 +14,14 @@
 
       this.attachShadow({mode: 'open'})
       this.root = this.shadowRoot
+
+      this.root.appendChild(document.importNode(template.content, true))
     }
 
     connectedCallback () {
       if (this.debug) console.log('connected img-exif')
 
-      this.connected = true
-
-      this.render()
+      if (this.src) this.render()
     }
 
     render () {
@@ -83,12 +85,12 @@
           ctx.drawImage(img, 0, 0)
 
           // create new image element to be inserted
-          const imgEl = document.createElement('img')
+          const $img = $this.root.querySelector('img')
 
           if (canvas.height > canvas.width) {
-            imgEl.height = '350'
+            $img.height = '350'
           } else {
-            imgEl.width = '350'
+            $img.width = '350'
           }
 
           // get blob of canvas
@@ -100,8 +102,8 @@
             $this.blobUrl = blobUrl
 
             // output image
-            imgEl.src = blobUrl
-            $this.root.appendChild(imgEl)
+            $img.src = blobUrl
+            $this.root.appendChild($img)
           }, 'image/jpeg')
         }
       })
@@ -112,7 +114,7 @@
     }
 
     set src (val) {
-      this.setAttribute('src', val)
+      return this.setAttribute('src', val)
     }
 
     disconnectedCallback () {
@@ -128,11 +130,11 @@
     }
 
     attributeChangedCallback (attrName, oldVal, newVal) {
-      if (!this.connected) return
       if (this.debug) console.log(`attribute changed on img-exif: ${attrName}, ${oldVal} => ${newVal}`)
 
       const changes = {
         src: () => {
+          console.log(oldVal, newVal)
           if (oldVal !== newVal) this.render()
         }
       }

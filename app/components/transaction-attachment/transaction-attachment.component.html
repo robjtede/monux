@@ -1,0 +1,42 @@
+<template>
+  <style>
+      :host {
+        position: relative;
+      }
+
+      img-exif {
+        display: inline-block;
+        max-width: 350px;
+        max-height: 350px;
+        margin: 5px 10px;
+        vertical-align: middle;
+
+        box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.6);
+      }
+
+      .delete {
+        display: inline-block;
+        position: absolute;
+        box-sizing: border-box;
+        width: 1rem;
+        height: 1rem;
+        padding-top: 2px;
+
+        background: rgb(200, 50, 30);
+        border: 1px solid var(--medium-grey);
+        border-radius: 50%;
+        box-shadow: 1px 1px 2px grey;
+
+        font-size: 0.5rem;
+        text-align: center;
+        color: white;
+      }
+  </style>
+
+  <div class="delete">
+    ╳
+  </div>
+  <img-exif class="lightboxable"></img-exif>
+</template>
+
+<script src="./transaction-attachment.component.js"></script>

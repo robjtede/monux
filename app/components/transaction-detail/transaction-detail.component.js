@@ -219,43 +219,12 @@
 
       // loop through attachment urls
       this.tx.attachments.reverse().forEach(attachment => {
-        const url = attachment.url
-        const $attachment = document.createElement('div')
-        $attachment.classList.add('attachment')
-        $attachment.innerHTML = '<div class="delete"></div>'
+        const $attachment = document.createElement('m-transaction-attachment')
 
-        const $img = document.createElement('img-exif')
-        $img.setAttribute('src', url)
-        $img.classList.add('lightboxable')
+        $attachment.tx = this.tx
+        $attachment.attachment = attachment
 
-        $attachment.appendChild($img)
         $scrollInner.appendChild($attachment)
-
-        const $delete = $attachment.querySelector('.delete')
-        $delete.addEventListener('click', ev => {
-          ev.preventDefault()
-
-          this.tx
-            .deregisterAttachment(attachment.id)
-            .then(res => {
-              $attachment.parentNode.removeChild($attachment)
-            })
-            .catch(err => {
-              throw err
-            })
-        })
-
-        // bind lightbox to attachments
-        const $lightbox = document.querySelector('.lightbox')
-        const $lightboxImg = $lightbox.querySelector('img')
-
-        $img.classList.add('lightboxable')
-        $img.addEventListener('click', ev => {
-          ev.preventDefault()
-
-          $lightboxImg.src = $img.blobUrl
-          $lightbox.classList.add('show')
-        })
       })
     }
 
