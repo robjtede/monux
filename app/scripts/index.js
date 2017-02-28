@@ -13,7 +13,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // const monzo = new MonzoService(new Monzo(config.get('accessToken')))
   const monzo = new Monzo(config.get('accessToken'))
 
-  const debug = true
+  const debug = false
 
   Array.from(document.querySelectorAll('.fixable')).forEach(function (el) {
     window.Stickyfill.add(el)

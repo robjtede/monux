@@ -27,7 +27,7 @@
     connectedCallback () {
       if (this.debug) console.log(`connected ${this.index} group`)
 
-      this.dataset.index = this.index
+      this.dataset.label = this.label
 
       this.render()
     }

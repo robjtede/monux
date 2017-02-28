@@ -133,10 +133,7 @@
       if (this.debug) console.log(`attribute changed on img-exif: ${attrName}, ${oldVal} => ${newVal}`)
 
       const changes = {
-        src: () => {
-          console.log(oldVal, newVal)
-          if (oldVal !== newVal) this.render()
-        }
+        src: () => { if (oldVal !== newVal) this.render() }
       }
 
       if (attrName in changes) changes[attrName]()

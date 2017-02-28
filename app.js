@@ -120,7 +120,9 @@ const createWindow = () => {
     minWidth: 600,
     minHeight: 600,
     titleBarStyle: 'hidden-inset',
-    experimentalFeatures: true
+    webPreferences: {
+      experimentalFeatures: true
+    }
   })
 
   Menu.setApplicationMenu(Menu.buildFromTemplate(template))

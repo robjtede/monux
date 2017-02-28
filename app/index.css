@@ -10,6 +10,10 @@
   --monzo-blue: rgba(21, 35, 60, 1.0);
 
   --thin-border: 1px solid var(--light-grey);
+
+  --header-height: 150px;
+  --nav-height: 80px;
+  --main-height: calc(100vh - (var(--header-height) + var(--nav-height)));
 }
 
 *,
@@ -29,10 +33,9 @@
 }
 
 body {
-  display: flex;
-  flex-flow: column nowrap;
-  justify-content: center;
-  align-items: stretch;
+  display: grid;
+  grid-template-rows: var(--header-height) var(--nav-height) auto;
+  grid-template-columns: auto;
 
   margin: 0;
   height: 100vh;
@@ -43,14 +46,23 @@ body {
 }
 
 .balances {
-  flex: 1 0 auto;
+  grid-row: 1 / 2;
+}
 
+.tabs {
+  grid-row: 2 / 3;
+}
+
+main {
+  grid-row: 3 / 4;
+}
+
+header {
   display: flex;
   flex-flow: row nowrap;
   justify-content: space-between;
   align-items: center;
 
-  max-height: 160px;
   padding: 30px 20px 10px;
   z-index: 1;
 
@@ -117,15 +129,12 @@ body {
   cursor: default;
 }
 
-.tabs {
-  flex: 1 0 auto;
-
+nav {
   display: flex;
   flex-flow: row nowrap;
   justify-content: space-between;
   align-items: center;
 
-  max-height: 100px;
   padding: 10px 15px 20px;
 
   background: var(--monzo-blue);
@@ -191,14 +200,14 @@ body {
   cursor: pointer;
 }
 
-.app {
-  flex: 8 1 auto;
+main {
   display: flex;
   flex-flow: row nowrap;
   justify-content: center;
   align-items: stretch;
 
-  max-width: 100%;
+  max-width: 100vw;
+  max-height: var(--main-height);
 }
 
 .app-pane {
