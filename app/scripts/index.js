@@ -53,7 +53,7 @@ document.addEventListener('DOMContentLoaded', () => {
       $txDetail.removeAttribute('offline')
 
       if ($selectedTx) {
-        const $tx = $txList.getTransactionSummary($selectedTx.index)
+        const $tx = $txList.getTransactionByIndex($selectedTx.index)
         $tx.classList.add('selected')
         $tx.render()
 

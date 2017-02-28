@@ -30,16 +30,16 @@
       if (this.debug) console.log(`connected list`)
 
       const $groupBy = this.root.querySelector('.group-by')
+      const $filterCategory = this.root.querySelector('.filter-category')
 
       $groupBy.addEventListener('change', ev => {
         this.setAttribute('group-by', $groupBy.value)
       })
 
-      const $filterCategory = this.root.querySelector('.filter-category')
-
       $filterCategory.addEventListener('change', ev => {
         this.setAttribute('filter-category', $filterCategory.value)
       })
+      window.addEventListener('keydown', this.keyHandler.bind(this))
 
       this.render()
     }
@@ -171,6 +171,12 @@
       return this.getAttribute('filter-category')
     }
 
+    get allTransactions () {
+      return Array.from(this.root.querySelectorAll('m-transaction-group'))
+        .map(group => Array.from(group.shadowRoot.querySelectorAll('m-transaction-summary')))
+        .reduce((groups, group) => [...groups, ...group], [])
+    }
+
     get selectedTransaction () {
       const $selectedGroup = Array.from(this.root.querySelectorAll('m-transaction-group'))
         .find(group => group.shadowRoot.querySelector('m-transaction-summary.selected'))
@@ -183,7 +189,7 @@
       return $selectedTx
     }
 
-    getTransactionSummary (index = 0) {
+    getTransactionByIndex (index = 0) {
       const $selectedGroup = Array.from(this.root.querySelectorAll('m-transaction-group'))
         .find(group => group.shadowRoot.querySelector(`m-transaction-summary[data-index="${index}"]`))
 
@@ -193,6 +199,59 @@
       }
 
       return $tx
+    }
+
+    keyHandler (ev) {
+      const $detailPane = document.querySelector('.transaction-detail-pane')
+      const $txDetail = document.querySelector('m-transaction-detail')
+
+      const KEY_UP = 38
+      const KEY_DOWN = 40
+
+      const actions = {
+        [KEY_UP]: () => {
+          if (!this.selectedTransaction) {
+            return this.allTransactions[this.allTransactions.length - 1]
+          } else {
+            const index = this.allTransactions.indexOf(this.selectedTransaction) - 1
+            return this.allTransactions[index]
+          }
+        },
+
+        [KEY_DOWN]: () => {
+          if (!this.selectedTransaction) {
+            return this.allTransactions[0]
+          } else {
+            const index = this.allTransactions.indexOf(this.selectedTransaction) + 1
+            return this.allTransactions[index]
+          }
+        }
+      }
+
+      if (ev.keyCode in actions) {
+        ev.preventDefault()
+
+        const $selected = this.selectedTransaction
+        const $next = actions[ev.keyCode]()
+
+        if ($selected) {
+          $selected.classList.remove('selected')
+          $selected.render()
+        }
+
+        $next.classList.add('selected')
+        $next.render()
+
+        // TODO: fix odd scroll behavior
+        // this.scrollTo(0, $next.getBoundingClientRect().top - 500)
+
+        $detailPane.classList.remove('inactive')
+        $txDetail.$summary = $next
+        $txDetail.tx = $next.tx
+        $txDetail.dataset.category = $next.tx.category
+        $txDetail.dataset.index = $next.index
+        $txDetail.render()
+      }
     }
 
     disconnectedCallback () {
