@@ -9,7 +9,7 @@
     constructor () {
       super()
 
-      this.debug = false
+      this.debug = true
       if (this.debug) console.log('constructing')
 
       this.attachShadow({mode: 'open'})
@@ -23,7 +23,7 @@
     }
 
     connectedCallback () {
-      if (this.debug) console.log(`connected ${this.index} detail`)
+      if (this.debug) console.log(`connected detail`)
 
       if (this.tx) {
         this.dataset.category = this.tx.category
@@ -32,7 +32,7 @@
 
       const $attachments = this.root.querySelector('.attachments')
       const $scrollInner = $attachments.querySelector('.scroll-inner')
-      const $newAttachment = this.root.querySelector('.new-attachment')
+      const $newAttachment = this.root.querySelector('input.new-attachment')
 
       $newAttachment.addEventListener('change', ev => {
         ev.preventDefault()
@@ -75,7 +75,8 @@
     }
 
     render () {
-      if (this.debug) console.log(`rendering ${this.index} detail`)
+      if (!this.tx) return
+      if (this.debug) console.log(`rendering detail`)
 
       this.renderLocation()
       this.renderNotes()
@@ -146,20 +147,22 @@
     }
 
     renderLocation () {
-      const location = this.root.querySelector('.location')
+      const $location = this.root.querySelector('.location')
 
       if (!this.tx.location || this.tx.location.toLowerCase() === 'online') {
-        location.style.display = 'none'
-        return
+        $location.style.display = 'none'
+      } else {
+        $location.style.display = 'block'
+        $location.textContent = this.tx.location
       }
-
-      location.textContent = this.tx.location
     }
 
     renderNotes () {
       const $notesWrap = this.root.querySelector('.notes-wrap')
-      const $notes = $notesWrap.querySelector('.notes')
+      const $notes = $notesWrap.querySelector('textarea.notes')
       const $addNote = $notesWrap.querySelector('a')
+
+      $notes.disabled = this.offline
 
       const updateNotes = () => {
         if (this.tx.notes.full) {
@@ -193,6 +196,8 @@
       $notes.addEventListener('paste', calcSize)
 
       const editHandler = ev => {
+        console.log('edit handler')
+
         this.tx
           .setNotes($notes.value.trim())
           .then(() => {
@@ -207,10 +212,13 @@
     renderAttachments () {
       const $attachments = this.root.querySelector('.attachments')
       const $scrollInner = $attachments.querySelector('.scroll-inner')
+      const $newAttachment = this.root.querySelector('input.new-attachment')
 
       Array.from($scrollInner.childNodes).forEach($attachment => {
         $attachment.parentNode.removeChild($attachment)
       })
+
+      $newAttachment.disabled = this.offline
 
       // loop through attachment urls
       this.tx.attachments.reverse().forEach(attachment => {
@@ -227,21 +235,28 @@
       return this.dataset.index
     }
 
+    get offline () {
+      return this.hasAttribute('offline')
+    }
+
     disconnectedCallback () {
-      if (this.debug) console.log(`disconnection ${this.index} detail`)
+      if (this.debug) console.log(`disconnection detail`)
     }
 
     adoptedCallback () {
-      if (this.debug) console.log(`adopted ${this.index} detail`)
+      if (this.debug) console.log(`adopted detail`)
     }
 
     static get observedAttributes () {
-      return []
+      return ['offline']
     }
 
     attributeChangedCallback (attrName, oldVal, newVal) {
-      if (this.debug) console.log(`attribute changed on ${this.index} detail: ${attrName}, ${oldVal} => ${newVal}`)
-      const changes = {}
+      if (this.debug) console.log(`attribute changed on detail: ${attrName}, ${oldVal} => ${newVal}`)
+
+      const changes = {
+        offline: () => { if (oldVal !== newVal) this.render() }
+      }
 
       if (attrName in changes) changes[attrName]()
     }

@@ -154,7 +154,7 @@
       color: var(--dark-grey);
     }
 
-    :host.declined .amount {
+    :host(.declined) .amount {
       color: red;
     }
 
@@ -340,14 +340,14 @@
 
   <div class="notes-wrap">
     <a href="#">Add note</a>
-    <textarea class="notes"></textarea>
+    <textarea class="notes" disabled></textarea>
   </div>
 
   <div class="attachments">
     <div class="scroll-wrap">
       <div class="scroll-inner"></div>
     </div>
-    <input type="file" class="new-attachment">
+    <input type="file" class="new-attachment" disabled>
   </div>
 
   <div class="date"></div>

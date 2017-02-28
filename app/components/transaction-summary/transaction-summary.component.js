@@ -18,13 +18,13 @@
       this.$group = null
       this.$list = null
 
+      this.$txlist = document.querySelector('m-transaction-list')
+
       this.tx = {}
     }
 
     connectedCallback () {
       if (this.debug) console.log(`connected ${this.index} summary`)
-
-      this.txlist = document.querySelector('m-transaction-list')
 
       this.dataset.category = this.tx.category
       this.dataset.index = this.tx.index
@@ -109,13 +109,7 @@
 
       $detailPane.classList.remove('inactive')
 
-      const $selectedGroup = Array.from(this.txlist.shadowRoot.querySelectorAll('m-transaction-group'))
-        .find(group => group.shadowRoot.querySelector('m-transaction-summary.selected'))
-
-      let $selectedTx
-      if ($selectedGroup) {
-        $selectedTx = $selectedGroup.shadowRoot.querySelector('m-transaction-summary.selected')
-      }
+      const $selectedTx = this.$txlist.selectedTransaction
 
       if ($selectedTx) $selectedTx.classList.remove('selected')
       this.classList.add('selected')

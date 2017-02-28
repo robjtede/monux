@@ -15,31 +15,28 @@ document.addEventListener('DOMContentLoaded', () => {
 
   const debug = false
 
-  Array.from(document.querySelectorAll('.fixable')).forEach(function (el) {
-    window.Stickyfill.add(el)
-  })
-
-  const app = document.querySelector('.app')
-  const balances = document.querySelector('.balances')
-  const tabs = document.querySelector('.tabs')
-  const txlist = document.querySelector('m-transaction-list')
+  const $app = document.querySelector('main')
+  const $header = document.querySelector('header')
+  const $nav = document.querySelector('nav')
+  const $txList = document.querySelector('m-transaction-list')
+  const $txDetail = document.querySelector('m-transaction-detail')
 
   const accounts = monzo.accounts
 
   const transactions = localStorage.getItem('transactions')
 
   if (transactions) {
-    txlist.txs = JSON.parse(transactions)
+    $txList.txs = JSON.parse(transactions)
       .map((tx, index) => {
         tx = new Transaction(this.monzo, this, tx, index)
 
         return tx
       })
 
-    if (debug) console.log(txlist.txs)
-    txlist.classList.remove('inactive')
+    if (debug) console.log($txList.txs)
 
-    window.setTimeout(txlist.render.bind(txlist), 0)
+    $txList.classList.remove('inactive')
+    $txList.render()
   }
 
   accounts
@@ -47,10 +44,24 @@ document.addEventListener('DOMContentLoaded', () => {
     .then(txs => {
       if (debug) console.log(txs)
 
-      txlist.txs = txs
-      txlist.classList.remove('inactive')
+      const $selectedTx = $txList.selectedTransaction
 
-      window.setTimeout(txlist.render.bind(txlist), 0)
+      $txList.txs = txs
+      $txList.classList.remove('inactive')
+      $txList.render()
+
+      $txDetail.removeAttribute('offline')
+
+      if ($selectedTx) {
+        const $tx = $txList.getTransactionSummary($selectedTx.index)
+        $tx.classList.add('selected')
+        $tx.render()
+
+        $txDetail.$summary = $tx
+        $txDetail.tx = $tx.tx
+        $txDetail.dataset.category = $tx.tx.category
+        $txDetail.render()
+      }
     })
 
   const balance = localStorage.getItem('balance')
@@ -58,15 +69,15 @@ document.addEventListener('DOMContentLoaded', () => {
   const accDescription = localStorage.getItem('accDescription')
 
   if (accDescription) {
-    tabs.querySelector('.person').textContent = accDescription
+    $nav.querySelector('.person').textContent = accDescription
   }
 
   if (balance) {
-    balances.querySelector('.card-balance h2').innerHTML = balance
+    $header.querySelector('.card-balance h2').innerHTML = balance
   }
 
   if (spentToday) {
-    balances.querySelector('.spent-today h2').innerHTML = spentToday
+    $header.querySelector('.spent-today h2').innerHTML = spentToday
   }
 
   accounts
@@ -74,7 +85,7 @@ document.addEventListener('DOMContentLoaded', () => {
     .then(acc => {
       localStorage.setItem('accDescription', acc.description)
 
-      tabs.querySelector('.person').textContent = localStorage.getItem('accDescription')
+      $nav.querySelector('.person').textContent = localStorage.getItem('accDescription')
 
       return acc.balance
     })
@@ -85,18 +96,18 @@ document.addEventListener('DOMContentLoaded', () => {
       localStorage.setItem('balance', balance.html(true, 0))
       localStorage.setItem('spentToday', spentToday.html(true, 0))
 
-      balances.querySelector('.card-balance h2').innerHTML = localStorage.getItem('balance')
-      balances.querySelector('.spent-today h2').innerHTML = localStorage.getItem('spentToday')
+      $header.querySelector('.card-balance h2').innerHTML = localStorage.getItem('balance')
+      $header.querySelector('.spent-today h2').innerHTML = localStorage.getItem('spentToday')
     })
 
-  const allTabs = Array.from(tabs.querySelectorAll('.tab'))
-  const allPanes = Array.from(app.querySelectorAll('.app-pane'))
+  const allTabs = Array.from($nav.querySelectorAll('.tab'))
+  const allPanes = Array.from($app.querySelectorAll('.app-pane'))
 
   allTabs.forEach(tab => {
     tab.addEventListener('click', ev => {
       event.stopPropagation()
 
-      const pane = app.querySelector(`.app-pane.${tab.dataset.pane}-pane`)
+      const pane = $app.querySelector(`.app-pane.${tab.dataset.pane}-pane`)
 
       allTabs.forEach(tab => tab.classList.remove('active'))
       allPanes.forEach(pane => pane.classList.remove('active'))

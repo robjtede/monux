@@ -171,6 +171,30 @@
       return this.getAttribute('filter-category')
     }
 
+    get selectedTransaction () {
+      const $selectedGroup = Array.from(this.root.querySelectorAll('m-transaction-group'))
+        .find(group => group.shadowRoot.querySelector('m-transaction-summary.selected'))
+
+      let $selectedTx
+      if ($selectedGroup) {
+        $selectedTx = $selectedGroup.shadowRoot.querySelector('m-transaction-summary.selected')
+      }
+
+      return $selectedTx
+    }
+
+    getTransactionSummary (index = 0) {
+      const $selectedGroup = Array.from(this.root.querySelectorAll('m-transaction-group'))
+        .find(group => group.shadowRoot.querySelector(`m-transaction-summary[data-index="${index}"]`))
+
+      let $tx
+      if ($selectedGroup) {
+        $tx = $selectedGroup.shadowRoot.querySelector(`m-transaction-summary[data-index="${index}"]`)
+      }
+
+      return $tx
+    }
+
     disconnectedCallback () {
       if (this.debug) console.log(`disconnection list`)
     }
