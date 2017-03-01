@@ -23,15 +23,16 @@ Unofficial Monzo Client for Desktop
 - [x] Transaction detail view
 - [x] Full notes and attachments
 - [x] Edit notes
-- [ ] Add and remove attachments/receipts
+- [x] Add and remove attachments/receipts
+- [x] Filter transactions
 - [ ] Transaction location on map
-- [ ] Filter transactions
 - [ ] Search transactions
 - [ ] Graph balance over time
 - [ ] Month-by-month spending break-downs
 - [ ] CSV / JSON / Excel export
+- [ ] Change category (Monzo pending)
 - [ ] Multiple accounts (Monzo pending)
 - [ ] View spending targets (Monzo pending)
 
 ## Screenshot
-![Preview](http://i.imgur.com/ZlidTbZ.png)
+![Preview](http://i.imgur.com/xZFeXDj.png)
