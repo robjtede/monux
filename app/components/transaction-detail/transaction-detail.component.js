@@ -9,7 +9,7 @@
     constructor () {
       super()
 
-      this.debug = true
+      this.debug = false
       if (this.debug) console.log('constructing')
 
       this.attachShadow({mode: 'open'})
@@ -78,32 +78,87 @@
       if (!this.tx) return
       if (this.debug) console.log(`rendering detail`)
 
+      this.renderCategory()
+      this.renderIcon()
       this.renderLocation()
+      this.renderMerchant()
       this.renderNotes()
       this.renderAttachments()
+      this.renderAmount()
+      this.renderBalance()
+      this.renderDate()
+      this.renderId()
+      this.renderDescription()
+    }
 
+    renderBalance () {
+      const balance = this.tx.balance.html(true, 0)
+      this.root.querySelector('.balance-wrap').innerHTML = balance
+    }
+
+    renderDate () {
+      const date = strftime(this.tx.created, 'h:mma - Do MMMM YYYY')
+      this.root.querySelector('.date').textContent = date
+    }
+
+    renderId () {
+      const id = this.tx.id
+      this.root.querySelector('.id').textContent = id
+    }
+
+    renderDescription () {
+      const description = this.tx.description
+      this.root.querySelector('.description').textContent = description
+    }
+
+    renderAmount () {
       const $amountWrap = this.root.querySelector('.amount-wrap')
-      const $category = this.root.querySelector('.category')
-      const $merchant = this.root.querySelector('.merchant')
+
+      if (!this.tx.is.metaAction) {
+        $amountWrap.innerHTML = this.tx.amount.html(true, 0)
+
+        if (this.tx.amount.foreign) {
+          $amountWrap.innerHTML += this.tx.amount.local.html(true, 0)
+        }
+      }
+    }
+
+    renderSettled () {
       const $settled = this.root.querySelector('.settled')
 
-      this.root.querySelector('.balance-wrap').innerHTML = this.tx.balance.html(true, 0)
-      this.root.querySelector('.date').textContent = strftime(this.tx.created, 'h:mma - Do MMMM YYYY')
-      this.root.querySelector('.id').textContent = this.tx.id
-      this.root.querySelector('.description').textContent = this.tx.description
-
-      $merchant.textContent = this.tx.displayName
-      if (this.tx.online) {
-        $merchant.classList.add('online')
-      } else {
-        $merchant.classList.remove('online')
+      if (this.tx.settled === 'Settled: Invalid Date') {
+        console.warn('Invalid settled date. This may be a bug.')
+        $settled.classList.add('meta')
       }
 
-      const icon = this.root.querySelector('.icon')
-      icon.src = this.tx.icon
-      icon.addEventListener('error', ev => {
-        icon.src = this.tx.iconFallback
+      if (this.tx.is.metaAction) {
+        $settled.classList.add('meta')
+      } else {
+        $settled.classList.remove('meta')
+        $settled.textContent = this.tx.settled
+      }
+    }
+
+    renderDeclined () {
+      if (this.tx.declined) {
+        this.classList.add('declined')
+        this.root.querySelector('.decline-reason').textContent = this.tx.declineReason
+      } else {
+        this.classList.remove('declined')
+      }
+    }
+
+    renderIcon () {
+      const $icon = this.root.querySelector('.icon')
+
+      $icon.src = this.tx.icon
+      $icon.addEventListener('error', ev => {
+        $icon.src = this.tx.iconFallback
       })
+    }
+
+    renderCategory () {
+      const $category = this.root.querySelector('.category')
 
       $category.textContent = this.tx.category.formatted
       if (this.tx.merchant.emoji) {
@@ -117,33 +172,6 @@
 
         this.$summary.$list.setAttribute('filter-category', this.tx.category)
       })
-
-      if (!this.tx.is.metaAction) {
-        $amountWrap.innerHTML = this.tx.amount.html(true, 0)
-
-        if (this.tx.amount.foreign) {
-          $amountWrap.innerHTML += this.tx.amount.local.html(true, 0)
-        }
-      }
-
-      if (this.tx.is.metaAction) {
-        $settled.classList.add('meta')
-      } else {
-        $settled.classList.remove('meta')
-        $settled.textContent = this.tx.settled
-      }
-
-      if (this.tx.settled === 'Settled: Invalid Date') {
-        console.warn('Invalid settled date. This may be a bug.')
-        $settled.classList.add('meta')
-      }
-
-      if (this.tx.declined) {
-        this.classList.add('declined')
-        this.root.querySelector('.decline-reason').textContent = this.tx.declineReason
-      } else {
-        this.classList.remove('declined')
-      }
     }
 
     renderLocation () {
@@ -154,6 +182,17 @@
       } else {
         $location.style.display = 'block'
         $location.textContent = this.tx.location
+      }
+    }
+
+    renderMerchant () {
+      const $merchant = this.root.querySelector('.merchant')
+
+      $merchant.textContent = this.tx.displayName
+      if (this.tx.online) {
+        $merchant.classList.add('online')
+      } else {
+        $merchant.classList.remove('online')
       }
     }
 
