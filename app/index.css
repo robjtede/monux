@@ -56,7 +56,7 @@ header {
   justify-content: space-between;
   align-items: center;
 
-  padding: 30px 20px 10px;
+  padding: 30px 20px 0;
   z-index: 1;
 
   background: var(--monzo-blue);
@@ -98,6 +98,8 @@ header {
 
 .card-balance .amount,
 .spent-today .amount {
+  line-height: 1;
+
   -webkit-app-region: no-drag;
   -webkit-user-select: initial;
 }
@@ -120,6 +122,19 @@ header {
   text-transform: uppercase;
 
   cursor: default;
+}
+
+.card-balance h2 .amount + .amount,
+.spent-today h2 .amount + .amount {
+  display: block;
+
+  color: var(--light-grey);
+  font-size: 0.8em;
+}
+
+.card-balance h2 .amount + .amount .major,
+.spent-today h2 .amount + .amount .major {
+  font-size: 1em;
 }
 
 nav {

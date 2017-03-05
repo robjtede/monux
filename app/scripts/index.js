@@ -94,7 +94,10 @@ document.addEventListener('DOMContentLoaded', () => {
       if (debug) console.log(spentToday)
 
       localStorage.setItem('balance', balance.html(true, 0))
+      if (balance.local) localStorage.setItem('balance', balance.local.html(true, 0) + ' ' + balance.html(true, 0))
+
       localStorage.setItem('spentToday', spentToday.html(true, 0))
+      if (balance.local) localStorage.setItem('spentToday', spentToday.local.html(true, 0) + ' ' + spentToday.html(true, 0))
 
       $header.querySelector('.card-balance h2').innerHTML = localStorage.getItem('balance')
       $header.querySelector('.spent-today h2').innerHTML = localStorage.getItem('spentToday')
