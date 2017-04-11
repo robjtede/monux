@@ -7,21 +7,21 @@
   "author": "robjtede",
   "license": "MIT",
   "scripts": {
-    "start:dev": "$(yarn bin)/electron .",
+    "start:dev": "yarn electron .",
     "start": "yarn build && ./Monux-darwin-x64/Monux.app/Contents/MacOS/Monux",
-    "build": "$(yarn bin)/electron-packager . Monux --platform darwin --icon monux --protocol monux --protocol-name Monux --overwrite"
+    "build": "yarn electron-packager . Monux --platform darwin --icon monux --protocol monux --protocol-name Monux --overwrite"
   },
   "dependencies": {
-    "date-fns": "^1.28.0",
-    "debug": "^2.6.1",
-    "electron": "1.6.1",
+    "date-fns": "^1.28.2",
+    "debug": "^2.6.3",
+    "electron": "beta",
     "electron-config": "^0.2.1",
-    "electron-contextmenu-middleware": "^1.0.2",
+    "electron-contextmenu-middleware": "^1.0.3",
     "electron-gh-releases": "^2.0.4",
     "electron-image-menu": "^1.0.1",
-    "electron-packager": "^8.5.2",
-    "electron-window-state": "^4.0.2",
-    "request": "^2.79.0",
+    "electron-packager": "^8.6.0",
+    "electron-window-state": "^4.1.0",
+    "request": "^2.81.0",
     "request-promise-native": "^1.0.3"
   },
   "devDependencies": {
