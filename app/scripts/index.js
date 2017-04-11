@@ -3,8 +3,18 @@
 document.addEventListener('DOMContentLoaded', () => {
   const Config = require('electron-config')
   const config = new Config()
-  const { TouchBar } = require('electron').remote.require('electron')
-  const { TouchBarLabel } = TouchBar
+  const path = require('path')
+  const {
+    remote,
+    nativeImage
+  } = require('electron')
+
+  const { TouchBar } = remote.require('electron')
+  const {
+    TouchBarLabel,
+    TouchBarButton,
+    TouchBarSpacer
+  } = TouchBar
 
   const context = require('electron-contextmenu-middleware')
   context.use(require('electron-image-menu'))
@@ -70,10 +80,32 @@ document.addEventListener('DOMContentLoaded', () => {
   const spentToday = localStorage.getItem('spentToday')
   const accDescription = localStorage.getItem('accDescription')
 
-  const tbBalance = new TouchBarLabel()
-  tbBalance.label = 'Balance: £--.--'
-  const touchBar = new TouchBar([tbBalance])
-  require('electron').remote.getCurrentWindow().setTouchBar(touchBar)
+  const tbBalance = new TouchBarLabel({
+    label: 'Balance: £--.--'
+  })
+  const tbSpent = new TouchBarLabel({
+    label: 'Spent Today: £--.--'
+  })
+
+  const monzoIcon = nativeImage.createFromPath(path.resolve('./app/icons/monzo.png'))
+  console.log(monzoIcon)
+
+  const escKey = new TouchBarButton({
+    icon: path.resolve('./app/icons/monzo.touchbar.png'),
+    label: 'Monzo',
+    backgroundColor: '#15233C'
+  })
+  console.log(escKey)
+
+  const touchBar = new TouchBar({
+    items: [
+      tbBalance,
+      new TouchBarSpacer({ size: 'large' }),
+      tbSpent
+    ],
+    escapeItem: escKey
+  })
+  remote.getCurrentWindow().setTouchBar(touchBar)
 
   if (accDescription) {
     $nav.querySelector('.person').textContent = accDescription
@@ -101,6 +133,7 @@ document.addEventListener('DOMContentLoaded', () => {
       if (debug) console.log(spentToday)
 
       tbBalance.label = `Balance: ${balance.format('%y%a')}`
+      tbSpent.label = `Spent Today: ${spentToday.format('%y%a')}`
 
       localStorage.setItem('balance', balance.html(true, 0))
       if (balance.local) localStorage.setItem('balance', balance.local.html(true, 0) + ' ' + balance.html(true, 0))
