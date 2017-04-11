@@ -3,6 +3,8 @@
 document.addEventListener('DOMContentLoaded', () => {
   const Config = require('electron-config')
   const config = new Config()
+  const { TouchBar } = require('electron').remote.require('electron')
+  const { TouchBarLabel } = TouchBar
 
   const context = require('electron-contextmenu-middleware')
   context.use(require('electron-image-menu'))
@@ -13,7 +15,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // const monzo = new MonzoService(new Monzo(config.get('accessToken')))
   const monzo = new Monzo(config.get('accessToken'))
 
-  const debug = false
+  const debug = true
 
   const $app = document.querySelector('main')
   const $header = document.querySelector('header')
@@ -68,6 +70,11 @@ document.addEventListener('DOMContentLoaded', () => {
   const spentToday = localStorage.getItem('spentToday')
   const accDescription = localStorage.getItem('accDescription')
 
+  const tbBalance = new TouchBarLabel()
+  tbBalance.label = 'Balance: £--.--'
+  const touchBar = new TouchBar([tbBalance])
+  require('electron').remote.getCurrentWindow().setTouchBar(touchBar)
+
   if (accDescription) {
     $nav.querySelector('.person').textContent = accDescription
   }
@@ -92,6 +99,8 @@ document.addEventListener('DOMContentLoaded', () => {
     .then(({balance, spentToday}) => {
       if (debug) console.log(balance)
       if (debug) console.log(spentToday)
+
+      tbBalance.label = `Balance: ${balance.format('%y%a')}`
 
       localStorage.setItem('balance', balance.html(true, 0))
       if (balance.local) localStorage.setItem('balance', balance.local.html(true, 0) + ' ' + balance.html(true, 0))
