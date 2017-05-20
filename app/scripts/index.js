@@ -5,8 +5,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const config = new Config()
   const path = require('path')
   const {
-    remote,
-    nativeImage
+    remote
   } = require('electron')
 
   const { TouchBar } = remote.require('electron')
@@ -87,12 +86,10 @@ document.addEventListener('DOMContentLoaded', () => {
     label: 'Spent Today: £--.--'
   })
 
-  const monzoIcon = nativeImage.createFromPath(path.resolve('./app/icons/monzo.png'))
-  console.log(monzoIcon)
-
   const escKey = new TouchBarButton({
-    icon: path.resolve('./app/icons/monzo.touchbar.png'),
-    label: 'Monzo',
+    icon: path.resolve(path.join(path.resolve('.'), 'app', 'icons', 'monzo.touchbar.png')),
+    label: 'Monux',
+    iconPosition: 'left',
     backgroundColor: '#15233C'
   })
   console.log(escKey)

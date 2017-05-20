@@ -34,43 +34,37 @@
       const $scrollInner = $attachments.querySelector('.scroll-inner')
       const $newAttachment = this.root.querySelector('input.new-attachment')
 
-      $newAttachment.addEventListener('change', ev => {
+      $newAttachment.addEventListener('change', async ev => {
         ev.preventDefault()
 
         const contentType = 'image/jpeg'
 
-        this.tx
-          .requestAttachmentUpload(contentType)
-          .then(urls => {
-            if (this.debug) console.log('got attachment upload url')
+        const urls = await this.tx.requestAttachmentUpload(contentType)
+        if (this.debug) console.log('got attachment upload url')
 
-            return Promise.all([fetch(urls.upload_url, {
-              method: 'PUT',
-              headers: {
-                'Content-Type': contentType
-              },
-              body: $newAttachment.files[0]
-            }), urls])
-          })
-          .then(([res, urls]) => {
-            if (!res.ok) throw new Error('Not able to upload')
+        const uploadRes = await fetch(urls.upload_url, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': contentType
+          },
+          body: $newAttachment.files[0]
+        })
 
-            return this.tx.registerAttachment(urls.file_url, contentType)
-          })
-          .then(res => {
-            if (this.debug) console.log('registered attachment')
+        if (!uploadRes.ok) throw new Error('Not able to upload')
 
-            const $attachment = document.createElement('m-transaction-attachment')
+        const registerRes = await this.tx.registerAttachment(urls.file_url, contentType)
+        if (this.debug) console.log('registered attachment')
 
-            $attachment.tx = this.tx
-            $attachment.attachment = res.attachment
+        const $attachment = document.createElement('m-transaction-attachment')
 
-            $scrollInner.insertBefore($attachment, $scrollInner.firstChild)
-          })
-          .catch(err => {
-            console.log(err)
-            throw err
-          })
+        $attachment.tx = this.tx
+        $attachment.attachment = registerRes.attachment
+
+        $scrollInner.insertBefore($attachment, $scrollInner.firstChild)
+
+        // try/catch this
+        // console.log(err)
+        // throw err
       })
     }
 
