@@ -19,8 +19,10 @@ document.addEventListener('DOMContentLoaded', () => {
   context.use(require('electron-image-menu'))
   context.activate()
 
-  const Monzo = require('../lib/monzo/Monzo')
-  const Transaction = require('../lib/monzo/Transaction')
+  const {
+    Monzo,
+    Transaction
+  } = require('../../lib/monzo')
   // const monzo = new MonzoService(new Monzo(config.get('accessToken')))
   const monzo = new Monzo(config.get('accessToken'))
 
@@ -39,7 +41,7 @@ document.addEventListener('DOMContentLoaded', () => {
   if (transactions) {
     $txList.txs = JSON.parse(transactions)
       .map((tx, index) => {
-        tx = new Transaction(this.monzo, this, tx, index)
+        tx = new Transaction(monzo, this, tx, index)
 
         return tx
       })

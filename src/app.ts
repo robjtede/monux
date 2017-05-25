@@ -1,4 +1,3 @@
-'use strict'
 
 const path = require('path')
 const url = require('url')
@@ -6,23 +5,21 @@ const querystring = require('querystring')
 const crypto = require('crypto')
 const Debug = require('debug')
 
-const {
+import {
   app,
   Menu,
+  shell,
   BrowserWindow
-} = require('electron')
+} from 'electron'
 
-const rp = require('request-promise-native')
-const Config = require('electron-config')
-const windowState = require('electron-window-state')
-// const GHUpdater = require('electron-gh-releases')
+import { enableLiveReload } from 'electron-compile';
+
+import * as rp from 'request-promise-native'
+import * as Config from 'electron-config'
+import windowState = require('electron-window-state')
 
 const config = new Config()
 const debug = new Debug('app:app.js')
-// const updater = new GHUpdater({
-//   repo: 'robjtede/monux',
-//   currentVersion: app.getVersion()
-// })
 
 console.log(`starting ${app.getName()} version ${app.getVersion()}`)
 
@@ -34,10 +31,13 @@ const appInfo = {
   state: crypto.randomBytes(512).toString('hex')
 }
 
-let mainWindow
-let authWindow
+enableLiveReload();
 
-const template = [
+let mainWindow: Electron.BrowserWindow | null
+let authWindow: Electron.BrowserWindow | null
+let clientDetailsWindow: Electron.BrowserWindow | null
+
+const template: Electron.MenuItemOptions[] = [
   {
     label: 'Application',
     submenu: [
@@ -78,13 +78,13 @@ const template = [
   }, {
     role: 'help',
     submenu: [
-      { label: 'Monux GitHub Repo', click: () => require('electron').shell.openExternal('https://github.com/robjtede/monux') },
-      { label: 'Learn More About Electron', click: () => require('electron').shell.openExternal('http://electron.atom.io') }
+      { label: 'Monux GitHub Repo', click: () => shell.openExternal('https://github.com/robjtede/monux') },
+      { label: 'Learn More About Electron', click: () => shell.openExternal('http://electron.atom.io') }
     ]
   }
 ]
 
-const checkAccess = () => {
+const checkAccess = (): boolean => {
   debug('checkAccess')
 
   if (!config.has('accessToken')) {
@@ -93,9 +93,10 @@ const checkAccess = () => {
   }
 
   if (config.has('authTime') && config.has('authExpires')) return checkAuthTimeout()
+  else return false
 }
 
-const checkAuthTimeout = () => {
+const checkAuthTimeout = (): boolean => {
   debug('checkAuthTimeout')
 
   const valid = config.get('authTime') + config.get('authExpires') > +new Date()
@@ -104,7 +105,7 @@ const checkAuthTimeout = () => {
   return valid
 }
 
-const createWindow = () => {
+const createWindow = (): void => {
   debug('createWindow')
 
   const mainWindowState = windowState({
@@ -128,7 +129,7 @@ const createWindow = () => {
   Menu.setApplicationMenu(Menu.buildFromTemplate(template))
 
   mainWindow.loadURL(url.format({
-    pathname: path.resolve(__dirname, 'app/index.html'),
+    pathname: path.resolve(__dirname, '..', 'app', 'index.html'),
     protocol: 'file:',
     slashes: true
   }))
@@ -138,7 +139,7 @@ const createWindow = () => {
   mainWindow.on('closed', () => { mainWindow = null })
 }
 
-const requestAuth = () => {
+const requestAuth = (): void => {
   debug('requestAuth')
 
   debug('clearing auth details')
@@ -157,7 +158,7 @@ const requestAuth = () => {
   authWindow.loadURL(url)
 }
 
-const getAccessToken = () => {
+const getAccessToken = (): Promise<any> => {
   debug('getAccessToken')
 
   const opts = {
@@ -186,7 +187,7 @@ const getAccessToken = () => {
     })
 }
 
-const verifyAccess = () => {
+const verifyAccess = (): Promise<any> => {
   debug(`verifyAccess with: ${config.get('accessToken')}`)
 
   const opts = {
@@ -210,8 +211,8 @@ const verifyAccess = () => {
     })
 }
 
-const clientDetails = () => {
-  let clientDetailsWindow = new BrowserWindow({
+const clientDetails = (): void => {
+  clientDetailsWindow = new BrowserWindow({
     width: 400,
     height: 600
   })
@@ -219,7 +220,7 @@ const clientDetails = () => {
   Menu.setApplicationMenu(Menu.buildFromTemplate(template))
 
   clientDetailsWindow.loadURL(url.format({
-    pathname: path.resolve(__dirname, 'app/get-client-info.html'),
+    pathname: path.resolve(__dirname, '..', 'app', 'get-client-info.html'),
     protocol: 'file:',
     slashes: true
   }))
@@ -270,10 +271,10 @@ app.on('ready', () => {
     })
 })
 
-app.on('open-url', function (ev, forwardedUrl) {
+app.on('open-url', (_, forwardedUrl) => {
   debug('open-url event')
 
-  authWindow.close()
+  if (authWindow) authWindow.close()
 
   const query = url.parse(forwardedUrl).query
   const authResponse = querystring.parse(query)
@@ -287,7 +288,7 @@ app.on('open-url', function (ev, forwardedUrl) {
 
   config.set('authCode', authResponse.code)
 
-  getAccessToken(authResponse)
+  getAccessToken()
     .then(res => {
       config.set({
         accessToken: res.access_token,
@@ -306,7 +307,7 @@ app.on('open-url', function (ev, forwardedUrl) {
 app.on('window-all-closed', () => {
   debug('window-all-closed event')
 
-  // conflicts with auth strategy
+  // conflicts with auth strategy for now
   // if (process.platform !== 'darwin') app.quit()
 })
 
@@ -314,11 +315,3 @@ app.on('activate', () => {
   debug('activate event')
   if (!mainWindow) createWindow()
 })
-
-// updater.check((err, status) => {
-//   if (!err && status) updater.download()
-// })
-//
-// updater.on('update-downloaded', info => {
-//   updater.install()
-// })

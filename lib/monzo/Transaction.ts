@@ -1,59 +1,77 @@
-'use strict'
+import { format as strftime } from 'date-fns'
 
-const strftime = require('date-fns').format
+import {
+  Amount,
+  Monzo,
+  Merchant,
+  IAmountOptions,
+  IMonzoApiAccount
+} from './'
 
-const Amount = require('./Amount')
-const Merchant = require('./Merchant')
+export interface IMonzoApiTransaction {
+  [propName:string]: any
+}
 
-class Transaction {
-  constructor (monzo, acc, tx, index = -1) {
+export default class Transaction {
+  private monzo: Monzo
+  private acc: IMonzoApiAccount
+  private tx: IMonzoApiTransaction
+  private index: number
+  
+  constructor(monzo: Monzo, acc: IMonzoApiAccount, tx: IMonzoApiTransaction, index = -1) {
     this.monzo = monzo
     this.acc = acc
     this.tx = tx
     this.index = index
   }
 
-  get amount () {
-    let opts = {
+  get amount(): Amount {
+    let opts: IAmountOptions = {
       raw: this.tx.amount,
-      currency: this.tx.currency
+      currency: this.tx.currency,
     }
 
     // if foreign currency
     if (this.tx.local_currency !== this.tx.currency) {
       opts = Object.assign(opts, {
         localRaw: this.tx.local_amount,
-        localCurrency: this.tx.local_currency
+        localCurrency: this.tx.local_currency,
       })
     }
 
     return new Amount(opts)
   }
 
-  annotate (key, val) {
-    return this.monzo
-      .request(`/transactions/${this.id}`, {
-        [`metadata[${key}]`]: val
-      }, 'PATCH')
-      .catch(err => console.error(err))
+  async annotate(key: string, val: string) {
+    const metaKey = `metadata[${key}]`
+    
+    try {
+      return await this.monzo
+        .request(`/transactions/${this.id}`, {
+          [metaKey]: val,
+        }, 'PATCH')
+    } catch (err) {
+      console.error(err)
+    }
+    
   }
 
-  get attachments () {
+  get attachments() {
     if (!this.tx.attachments) return ''
 
     return this.tx.attachments
   }
 
-  requestAttachmentUpload (contentType = 'image/jpeg') {
-    return this.monzo
+  async requestAttachmentUpload(contentType = 'image/jpeg') {
+    return await this.monzo
       .request('/attachment/upload', {
         file_name: 'monux-attachment.jpg',
-        file_type: contentType
+        file_type: contentType,
       }, 'POST')
   }
 
-  registerAttachment (fileUrl, contentType = 'image/jpeg') {
-    return this.monzo
+  async registerAttachment(fileUrl: string, contentType = 'image/jpeg') {
+    return await this.monzo
       .request('/attachment/register', {
         external_id: this.tx.id,
         file_url: fileUrl,
@@ -61,23 +79,23 @@ class Transaction {
       }, 'POST')
   }
 
-  deregisterAttachment (attachmentId) {
-    return this.monzo
+  async deregisterAttachment(attachmentId: string) {
+    return await this.monzo
       .request('/attachment/deregister', {
         id: attachmentId
       }, 'POST')
   }
 
-  get balance () {
-    const opts = {
+  get balance(): Amount {
+    const opts: IAmountOptions = {
       raw: this.tx.account_balance,
-      currency: this.tx.currency
+      currency: this.tx.currency,
     }
 
     return new Amount(opts)
   }
 
-  get category () {
+  get category() {
     let raw = this.tx.category
     raw = raw.replace('mondo', 'monzo')
 
@@ -87,38 +105,38 @@ class Transaction {
     return {
       raw,
       formatted,
-      toString: () => raw
+      toString: () => raw,
     }
   }
 
-  get created () {
+  get created(): Date {
     return new Date(this.tx.created)
   }
 
-  get declined () {
+  get declined(): boolean {
     return 'decline_reason' in this.tx
   }
 
-  get declineReason () {
+  get declineReason(): string {
     return this.declined ? this.tx.decline_reason.replace('_', ' ').toLowerCase() : ''
   }
 
-  get description () {
+  get description(): string {
     return this.tx.description
   }
 
-  get displayName () {
+  get displayName(): string {
     if (this.merchant.name) return this.merchant.name
     else return this.description
   }
 
-  get hidden () {
+  get hidden(): boolean {
     if ('monux_hidden' in this.tx.metadata) {
       return this.tx.metadata.monux_hidden !== 'false'
     } else return false
   }
 
-  get icon () {
+  get icon(): string {
     if ('is_topup' in this.tx.metadata && this.tx.metadata.is_topup) {
       return './icons/topup.png'
     }
@@ -132,15 +150,15 @@ class Transaction {
     return this.iconFallback
   }
 
-  get iconFallback () {
+  get iconFallback(): string {
     return `./icons/${this.tx.category}.png`
   }
 
-  get id () {
+  get id() {
     return this.tx.id
   }
 
-  get is () {
+  get is() {
     const cash = this.tx.category === 'cash'
     const zero = +this.tx.amount === 0
 
@@ -149,15 +167,15 @@ class Transaction {
     return {
       metaAction,
       cash,
-      zero
+      zero,
     }
   }
 
-  get inSpending () {
+  get inSpending() {
     return this.tx.include_in_spending || false
   }
 
-  get location () {
+  get location() {
     if (
       this.tx.merchant &&
       'online' in this.tx.merchant &&
@@ -177,33 +195,35 @@ class Transaction {
     }
   }
 
-  get merchant () {
+  get merchant(): Merchant {
     return new Merchant(this.tx.merchant)
   }
 
-  get notes () {
+  get notes() {
     return {
       toString: () => this.tx.notes,
       short: this.tx.notes.split('\n')[0],
-      full: this.tx.notes
+      full: this.tx.notes,
     }
   }
 
-  setNotes (val) {
-    return this.annotate('notes', val)
-      .then(val => {
-        this.tx.notes = val.transaction.notes
-      })
+  async setNotes(val: string): Promise<string> {
+    const res = await this.annotate('notes', val)
+    
+    this.tx.notes = res.transaction.notes
+    return this.tx.notes
   }
 
-  get online () {
+  get online(): boolean {
     if (
       this.tx.merchant &&
       'online' in this.tx.merchant
-    ) return this.tx.merchant.online || false
+    ) return this.tx.merchant.online
+    
+    return false
   }
 
-  get pending () {
+  get pending(): boolean {
     // declined transactions are never pending
     if (this.declined) return false
 
@@ -224,10 +244,8 @@ class Transaction {
     return false
   }
 
-  get settled () {
+  get settled(): string {
     if (this.pending) return 'Pending'
     else return `Settled: ${strftime(new Date(this.tx.settled), 'h:mma - Do MMMM YYYY')}`
   }
 }
-
-module.exports = Transaction

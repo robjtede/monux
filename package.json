@@ -2,29 +2,74 @@
   "name": "Monux",
   "version": "0.7.0",
   "description": "Unoffical Monzo Client for Desktop",
-  "main": "app.js",
+  "main": "src/app.ts",
   "repository": "https://github.com/robjtede/monux",
   "author": "robjtede",
   "license": "MIT",
   "scripts": {
-    "start:dev": "yarn electron .",
-    "start": "yarn build && ./Monux-darwin-x64/Monux.app/Contents/MacOS/Monux",
-    "build": "yarn electron-packager . Monux --platform darwin --icon monux --protocol monux --protocol-name Monux --overwrite"
+    "start": "electron-forge start",
+    "package": "electron-forge package",
+    "make": "electron-forge make"
   },
   "dependencies": {
+    "@types/electron": "^1.4.38",
+    "@types/electron-config": "^0.2.1",
+    "@types/electron-window-state": "^2.0.28",
+    "@types/request-promise-native": "^1.0.5",
     "date-fns": "^1.28.5",
     "debug": "^2.6.8",
-    "electron": "beta",
+    "electron-compile": "^6.4.1",
     "electron-config": "^1.0.0",
     "electron-contextmenu-middleware": "^1.0.3",
     "electron-gh-releases": "^2.0.4",
     "electron-image-menu": "^1.0.1",
-    "electron-packager": "^8.7.0",
     "electron-window-state": "^4.1.1",
     "request": "^2.81.0",
     "request-promise-native": "^1.0.4"
   },
   "devDependencies": {
-    "eslint": "^3.19.0"
+    "babel-plugin-transform-async-to-generator": "^6.24.1",
+    "babel-preset-env": "^1.5.1",
+    "electron-forge": "^3.0.1",
+    "electron-prebuilt-compile": "1.6.8",
+    "eslint": "^3.19.0",
+    "tslib": "^1.7.1",
+    "tslint": "^5.3.2",
+    "typescript": "^2.3.3"
+  },
+  "config": {
+    "forge": {
+      "make_targets": {
+        "win32": [
+          "squirrel"
+        ],
+        "darwin": [
+          "zip"
+        ],
+        "linux": [
+          "deb",
+          "rpm"
+        ]
+      },
+      "electronPackagerConfig": {
+        "icon": "monux",
+        "protocols": [{
+          "schemes": ["monux"],
+          "name": "Monux"
+        }]
+      },
+      "electronWinstallerConfig": {
+        "name": ""
+      },
+      "electronInstallerDebian": {},
+      "electronInstallerRedhat": {},
+      "github_repository": {
+        "owner": "",
+        "name": ""
+      },
+      "windowsStoreConfig": {
+        "packageName": ""
+      }
+    }
   }
 }

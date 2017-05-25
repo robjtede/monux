@@ -1,10 +1,21 @@
-'use strict'
+import {
+  Amount,
+  Monzo,
+  Transaction,
+  IMonzoApiTransaction
+} from './'
 
-const Transaction = require('./Transaction')
-const Amount = require('./Amount')
+export interface IMonzoApiAccount {
+  id: string,
+  description: string,
+  created: string
+}
 
-class Account {
-  constructor (monzo, acc) {
+export default class Account {
+  private monzo: Monzo
+  private acc: IMonzoApiAccount
+  
+  constructor (monzo: Monzo, acc: IMonzoApiAccount) {
     this.monzo = monzo
     this.acc = acc
   }
@@ -64,7 +75,7 @@ class Account {
       })
       .then(txs => txs
         .transactions
-        .map((tx, index) => {
+        .map((tx: IMonzoApiTransaction, index: number) => {
           tx = new Transaction(this.monzo, this, tx, index)
 
           return tx
@@ -72,5 +83,3 @@ class Account {
       )
   }
 }
-
-module.exports = Account
