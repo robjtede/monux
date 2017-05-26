@@ -144,7 +144,10 @@ const requestAuth = (): void => {
 
   debug('clearing auth details')
 
-  authWindow = new BrowserWindow({width: 500, height: 700})
+  authWindow = new BrowserWindow({
+    width: 500,
+    height: 700
+  })
 
   Menu.setApplicationMenu(Menu.buildFromTemplate(template))
 
@@ -160,7 +163,7 @@ const requestAuth = (): void => {
   authWindow.loadURL(url)
 }
 
-const getAccessToken = () => {
+const getAccessToken = async () => {
   debug('getAccessToken')
 
   const opts = {
@@ -176,20 +179,18 @@ const getAccessToken = () => {
     json: true
   }
 
-  return rp(opts)
-    .then((res) => {
-      // debug response info
-      debug(`getAccessToken => ${typeof res}: ${res}`)
+  try {
+    const res = await rp(opts)
 
-      return res
-    }, (err) => {
-      console.error(`getAccessToken => ${err.code}`)
-
-      throw err
-    })
+    debug(`getAccessToken => ${typeof res}: ${res}`)
+    return res
+  } catch (err) {
+    console.error(`getAccessToken => ${err.code}`)
+    throw err
+  }
 }
 
-const verifyAccess = () => {
+const verifyAccess = async () => {
   debug(`verifyAccess with: ${config.get('accessToken')}`)
 
   const opts = {
@@ -200,19 +201,18 @@ const verifyAccess = () => {
     json: true
   }
 
-  return rp(opts)
-    .then((res) => {
-      // debug response info
-      debug(`verifyAccess => ${typeof res}: ${res}`)
+  try {
+    const res = await rp(opts)
 
-      return res
-    }, (err) => {
-      console.error('verifyAccess =>', err)
-      throw err
-    })
+    debug(`verifyAccess => ${typeof res}: ${res}`)
+    return res
+  } catch (err) {
+    console.error('verifyAccess =>', err)
+    throw err
+  }
 }
 
-const clientDetails = (): void => {
+const clientDetails = async () => {
   clientDetailsWindow = new BrowserWindow({
     width: 400,
     height: 600
@@ -226,7 +226,7 @@ const clientDetails = (): void => {
     slashes: true
   }))
 
-  clientDetailsWindow.on('closed', () => {
+  clientDetailsWindow.on('closed', async () => {
     clientDetailsWindow = undefined
 
     appInfo.client_id = config.get('client_id')
@@ -237,18 +237,18 @@ const clientDetails = (): void => {
       return
     }
 
-    verifyAccess()
-      .then((res) => {
-        if (res && 'authenticated' in res && res.authenticated) createWindow()
-        else requestAuth()
-      })
-      .catch((err) => {
-        console.error(err.message)
-      })
+    try {
+      const res = await verifyAccess()
+
+      if (res && 'authenticated' in res && res.authenticated) createWindow()
+      else requestAuth()
+    } catch (err) {
+      console.error(err.message)
+    }
   })
 }
 
-app.on('ready', () => {
+app.on('ready', async () => {
   debug('ready event')
 
   if (!(config.has('client_id') && config.has('client_secret'))) {
@@ -262,17 +262,17 @@ app.on('ready', () => {
     return
   }
 
-  verifyAccess()
-    .then((res) => {
-      if (res && 'authenticated' in res && res.authenticated) createWindow()
-      else requestAuth()
-    })
-    .catch((err) => {
-      console.error(err.message)
-    })
+  try {
+    const res = await verifyAccess()
+
+    if (res && 'authenticated' in res && res.authenticated) createWindow()
+    else requestAuth()
+  } catch (err)  {
+    console.error(err.message)
+  }
 })
 
-app.on('open-url', (_, forwardedUrl) => {
+app.on('open-url', async (_, forwardedUrl) => {
   debug('open-url event')
 
   if (authWindow) authWindow.close()
@@ -289,20 +289,23 @@ app.on('open-url', (_, forwardedUrl) => {
 
   config.set('authCode', authResponse.code)
 
-  getAccessToken()
-    .then((res) => {
-      config.set({
-        accessToken: res.access_token,
-        authExpires: res.expires_in * 1000,
-        authTime: +new Date()
-      })
-    })
-    .then(verifyAccess)
-    .then((res) => {
-      debug(`open-url event => verifyAccess.then => ${res}`)
+  try {
+    const res = await getAccessToken()
 
-      createWindow()
+    config.set({
+      accessToken: res.access_token,
+      authExpires: res.expires_in * 1000,
+      authTime: +new Date()
     })
+
+    await verifyAccess()
+
+    debug('open-url event => verifyAccess.then')
+
+    createWindow()
+  } catch (err)  {
+    console.error(err.message)
+  }
 })
 
 app.on('window-all-closed', () => {

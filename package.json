@@ -12,6 +12,7 @@
     "make": "electron-forge make"
   },
   "dependencies": {
+    "@types/common-tags": "^1.2.5",
     "common-tags": "^1.4.0",
     "date-fns": "^1.28.5",
     "debug": "^2.6.8",
