@@ -1,24 +1,25 @@
 import { format as strftime } from 'date-fns'
+import undefsafe = require('undefsafe')
 
 import {
+  Account,
   Amount,
-  Monzo,
-  Merchant,
   IAmountOptions,
-  IMonzoApiAccount
+  Merchant,
+  Monzo
 } from './'
 
 export interface IMonzoApiTransaction {
-  [propName:string]: any
+  [propName: string]: any
 }
 
 export default class Transaction {
-  private monzo: Monzo
-  private acc: IMonzoApiAccount
+  private monzo: Monzo | null
+  private acc: Account | null
   private tx: IMonzoApiTransaction
   private index: number
-  
-  constructor(monzo: Monzo, acc: IMonzoApiAccount, tx: IMonzoApiTransaction, index = -1) {
+
+  constructor(monzo: Monzo | null, acc: Account | null, tx: IMonzoApiTransaction, index = -1) {
     this.monzo = monzo
     this.acc = acc
     this.tx = tx
@@ -28,49 +29,57 @@ export default class Transaction {
   get amount(): Amount {
     let opts: IAmountOptions = {
       raw: this.tx.amount,
-      currency: this.tx.currency,
+      currency: this.tx.currency
     }
 
     // if foreign currency
     if (this.tx.local_currency !== this.tx.currency) {
-      opts = Object.assign(opts, {
+      opts = {
+        ...opts,
         localRaw: this.tx.local_amount,
-        localCurrency: this.tx.local_currency,
-      })
+        localCurrency: this.tx.local_currency
+      }
     }
 
     return new Amount(opts)
   }
 
-  async annotate(key: string, val: string) {
+  public async annotate(key: string, val: string) {
+    if (!this.monzo) throw new Error('Monzo account is null')
+
     const metaKey = `metadata[${key}]`
-    
+
     try {
       return await this.monzo
         .request(`/transactions/${this.id}`, {
-          [metaKey]: val,
+          [metaKey]: val
         }, 'PATCH')
     } catch (err) {
       console.error(err)
     }
-    
+
   }
 
   get attachments() {
-    if (!this.tx.attachments) return ''
+    if (!this.monzo) throw new Error('Monzo account is null')
+    if (!this.tx.attachments) return null
 
     return this.tx.attachments
   }
 
-  async requestAttachmentUpload(contentType = 'image/jpeg') {
+  public async requestAttachmentUpload(contentType = 'image/jpeg') {
+    if (!this.monzo) throw new Error('Monzo account is null')
+
     return await this.monzo
       .request('/attachment/upload', {
         file_name: 'monux-attachment.jpg',
-        file_type: contentType,
+        file_type: contentType
       }, 'POST')
   }
 
-  async registerAttachment(fileUrl: string, contentType = 'image/jpeg') {
+  public async registerAttachment(fileUrl: string, contentType = 'image/jpeg') {
+    if (!this.monzo) throw new Error('Monzo account is null')
+
     return await this.monzo
       .request('/attachment/register', {
         external_id: this.tx.id,
@@ -79,7 +88,9 @@ export default class Transaction {
       }, 'POST')
   }
 
-  async deregisterAttachment(attachmentId: string) {
+  public async deregisterAttachment(attachmentId: string) {
+    if (!this.monzo) throw new Error('Monzo account is null')
+
     return await this.monzo
       .request('/attachment/deregister', {
         id: attachmentId
@@ -89,7 +100,7 @@ export default class Transaction {
   get balance(): Amount {
     const opts: IAmountOptions = {
       raw: this.tx.account_balance,
-      currency: this.tx.currency,
+      currency: this.tx.currency
     }
 
     return new Amount(opts)
@@ -105,7 +116,7 @@ export default class Transaction {
     return {
       raw,
       formatted,
-      toString: () => raw,
+      toString: () => raw
     }
   }
 
@@ -154,7 +165,7 @@ export default class Transaction {
     return `./icons/${this.tx.category}.png`
   }
 
-  get id() {
+  get id(): string {
     return this.tx.id
   }
 
@@ -167,31 +178,19 @@ export default class Transaction {
     return {
       metaAction,
       cash,
-      zero,
+      zero
     }
   }
 
-  get inSpending() {
+  get inSpending(): boolean {
     return this.tx.include_in_spending || false
   }
 
-  get location() {
-    if (
-      this.tx.merchant &&
-      'online' in this.tx.merchant &&
-      this.tx.merchant.online
-    ) {
+  get location(): string | undefined {
+    if (undefsafe(this, 'tx.merchant.online')) {
       return 'Online'
-    }
-
-    if (
-      this.tx.merchant &&
-      'address' in this.tx.merchant &&
-      this.tx.merchant.address &&
-      'short_formatted' in this.tx.merchant.address &&
-      this.tx.merchant.address.short_formatted
-    ) {
-      return this.tx.merchant.address.short_formatted
+    } else {
+      return undefsafe(this, 'tx.merchant.address.short_formatted')
     }
   }
 
@@ -199,28 +198,23 @@ export default class Transaction {
     return new Merchant(this.tx.merchant)
   }
 
-  get notes() {
+  get notes(): object {
     return {
       toString: () => this.tx.notes,
       short: this.tx.notes.split('\n')[0],
-      full: this.tx.notes,
+      full: this.tx.notes
     }
   }
 
-  async setNotes(val: string): Promise<string> {
+  public async setNotes(val: string): Promise<string> {
     const res = await this.annotate('notes', val)
-    
+
     this.tx.notes = res.transaction.notes
     return this.tx.notes
   }
 
   get online(): boolean {
-    if (
-      this.tx.merchant &&
-      'online' in this.tx.merchant
-    ) return this.tx.merchant.online
-    
-    return false
+    return !!undefsafe(this, 'tx.merchange.online')
   }
 
   get pending(): boolean {

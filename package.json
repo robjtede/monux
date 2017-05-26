@@ -12,26 +12,23 @@
     "make": "electron-forge make"
   },
   "dependencies": {
-    "@types/electron": "^1.4.38",
-    "@types/electron-config": "^0.2.1",
-    "@types/electron-window-state": "^2.0.28",
-    "@types/request-promise-native": "^1.0.5",
     "date-fns": "^1.28.5",
     "debug": "^2.6.8",
     "electron-compile": "^6.4.1",
     "electron-config": "^1.0.0",
     "electron-contextmenu-middleware": "^1.0.3",
-    "electron-gh-releases": "^2.0.4",
     "electron-image-menu": "^1.0.1",
     "electron-window-state": "^4.1.1",
     "request": "^2.81.0",
     "request-promise-native": "^1.0.4"
   },
   "devDependencies": {
-    "babel-plugin-transform-async-to-generator": "^6.24.1",
-    "babel-preset-env": "^1.5.1",
-    "electron-forge": "^3.0.1",
-    "electron-prebuilt-compile": "1.6.8",
+    "@types/debug": "0.0.29",
+    "@types/electron-config": "^0.2.1",
+    "@types/electron-window-state": "^2.0.28",
+    "@types/request-promise-native": "^1.0.5",
+    "electron-forge": "^3.0.2",
+    "electron-prebuilt-compile": "1.7.1",
     "eslint": "^3.19.0",
     "tslib": "^1.7.1",
     "tslint": "^5.3.2",
@@ -53,10 +50,14 @@
       },
       "electronPackagerConfig": {
         "icon": "monux",
-        "protocols": [{
-          "schemes": ["monux"],
-          "name": "Monux"
-        }]
+        "protocols": [
+          {
+            "schemes": [
+              "monux"
+            ],
+            "name": "Monux"
+          }
+        ]
       },
       "electronWinstallerConfig": {
         "name": ""

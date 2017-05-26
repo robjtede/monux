@@ -4,8 +4,8 @@ import Account, {
 
 import Amount, {
   IAmountOptions,
-  ICurrency,
-  ICurrencies
+  ICurrencies,
+  ICurrency
 } from './Amount'
 
 import Merchant, {
@@ -25,7 +25,7 @@ export {
   Merchant,
   Monzo,
   Transaction,
-  
+
   // class options
   IAmountOptions,
 
@@ -33,7 +33,7 @@ export {
   IMonzoApiAccount,
   IMonzoApiMerchant,
   IMonzoApiTransaction,
-  
+
   // helpers
   ICurrency,
   ICurrencies

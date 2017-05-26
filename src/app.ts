@@ -1,27 +1,27 @@
+import * as crypto from 'crypto'
+import * as path from 'path'
+import * as querystring from 'querystring'
+import * as url from 'url'
 
-const path = require('path')
-const url = require('url')
-const querystring = require('querystring')
-const crypto = require('crypto')
-const Debug = require('debug')
+import * as Debug from 'debug'
 
 import {
   app,
+  BrowserWindow,
   Menu,
-  shell,
-  BrowserWindow
+  shell
 } from 'electron'
 
-import { enableLiveReload } from 'electron-compile';
+import { enableLiveReload } from 'electron-compile'
 
-import * as rp from 'request-promise-native'
 import * as Config from 'electron-config'
+import * as rp from 'request-promise-native'
 import windowState = require('electron-window-state')
 
 const config = new Config()
-const debug = new Debug('app:app.js')
+const debug = Debug('app:app.js')
 
-console.log(`starting ${app.getName()} version ${app.getVersion()}`)
+console.info(`starting ${app.getName()} version ${app.getVersion()}`)
 
 const appInfo = {
   client_id: config.get('client_id'),
@@ -31,7 +31,7 @@ const appInfo = {
   state: crypto.randomBytes(512).toString('hex')
 }
 
-enableLiveReload();
+enableLiveReload()
 
 let mainWindow: Electron.BrowserWindow | null
 let authWindow: Electron.BrowserWindow | null
@@ -109,8 +109,8 @@ const createWindow = (): void => {
   debug('createWindow')
 
   const mainWindowState = windowState({
-    defaultWidth: 1000,
-    defaultHeight: 800
+    defaultHeight: 800,
+    defaultWidth: 1000
   })
 
   mainWindow = new BrowserWindow({
@@ -158,7 +158,7 @@ const requestAuth = (): void => {
   authWindow.loadURL(url)
 }
 
-const getAccessToken = (): Promise<any> => {
+const getAccessToken = (): Promise<{}> => {
   debug('getAccessToken')
 
   const opts = {
@@ -175,38 +175,37 @@ const getAccessToken = (): Promise<any> => {
   }
 
   return rp(opts)
-    .then(res => {
+    .then((res) => {
       // debug response info
       debug(`getAccessToken => ${typeof res}: ${res}`)
 
       return res
-    }, err => {
+    },    (err) => {
       console.error(`getAccessToken => ${err.code}`)
 
       throw err
     })
 }
 
-const verifyAccess = (): Promise<any> => {
+const verifyAccess = (): Promise<{}> => {
   debug(`verifyAccess with: ${config.get('accessToken')}`)
 
   const opts = {
     uri: 'https://api.monzo.com/ping/whoami',
     headers: {
-      'Authorization': `Bearer ${config.get('accessToken')}`
+      Authorization: `Bearer ${config.get('accessToken')}`
     },
     json: true
   }
 
   return rp(opts)
-    .then(res => {
+    .then((res) => {
       // debug response info
       debug(`verifyAccess => ${typeof res}: ${res}`)
 
       return res
-    }, err => {
-      console.error(`verifyAccess => ${err.message}`)
-
+    }, (err) => {
+      console.error('verifyAccess =>', err)
       throw err
     })
 }
@@ -237,11 +236,11 @@ const clientDetails = (): void => {
     }
 
     verifyAccess()
-      .then(res => {
+      .then((res) => {
         if (res && 'authenticated' in res && res.authenticated) createWindow()
         else requestAuth()
       })
-      .catch(err => {
+      .catch((err) => {
         console.error(err.message)
       })
   })
@@ -262,11 +261,11 @@ app.on('ready', () => {
   }
 
   verifyAccess()
-    .then(res => {
+    .then((res) => {
       if (res && 'authenticated' in res && res.authenticated) createWindow()
       else requestAuth()
     })
-    .catch(err => {
+    .catch((err) => {
       console.error(err.message)
     })
 })
@@ -289,7 +288,7 @@ app.on('open-url', (_, forwardedUrl) => {
   config.set('authCode', authResponse.code)
 
   getAccessToken()
-    .then(res => {
+    .then((res) => {
       config.set({
         accessToken: res.access_token,
         authExpires: res.expires_in * 1000,
@@ -297,7 +296,7 @@ app.on('open-url', (_, forwardedUrl) => {
       })
     })
     .then(verifyAccess)
-    .then(res => {
+    .then((res) => {
       debug(`open-url event => verifyAccess.then => ${res}`)
 
       createWindow()

@@ -1,22 +1,22 @@
-import * as rp from "request-promise-native"
+import * as rp from 'request-promise-native'
 
 import {
   Account,
   IMonzoApiAccount
-} from "./"
+} from './'
 
 export default class Monzo {
   private proto: string
   private apiRoot: string
   private access: string
-  
+
   constructor(accessResponse: string) {
-    this.proto = "https://"
-    this.apiRoot = "api.monzo.com"
+    this.proto = 'https://'
+    this.apiRoot = 'api.monzo.com'
     this.access = accessResponse
   }
 
-  request(path = "/ping/whoami", qs = {}, method = "GET", json = true) {
+  public request(path = '/ping/whoami', qs = {}, method = 'GET', json = true) {
     method = method.toUpperCase()
 
     const headers = {
@@ -26,7 +26,7 @@ export default class Monzo {
     const opts = {
       method,
       uri: `${this.proto}${this.apiRoot}${path}`,
-      [method === "GET" ? "qs" : "form"]: qs,
+      [method === 'GET' ? 'qs' : 'form']: qs,
       headers,
       json
     }
@@ -36,8 +36,8 @@ export default class Monzo {
 
   get accounts() {
     return this
-      .request("/accounts")
-      .then(accs => accs.accounts
+      .request('/accounts')
+      .then((accs) => accs.accounts
         .map((acc: IMonzoApiAccount) => new Account(this, acc))
       )
   }

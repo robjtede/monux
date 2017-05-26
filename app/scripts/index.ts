@@ -1,38 +1,42 @@
-'use strict'
+import * as path from 'path'
+
+import {
+  remote
+} from 'electron'
+
+const { TouchBar } = remote.require('electron')
+const {
+  TouchBarLabel,
+  TouchBarButton,
+  TouchBarSpacer
+} = TouchBar
+
+import * as Config from 'electron-config'
+const config = new Config()
+
+const context = require('electron-contextmenu-middleware')
+const imageMenu = require('electron-image-menu')
+context.use(imageMenu)
+context.activate()
+
+import {
+  Monzo,
+  Transaction
+} from '../../lib/monzo'
+
+const monzo = new Monzo(config.get('accessToken'))
+
+const debug = true
 
 document.addEventListener('DOMContentLoaded', () => {
-  const Config = require('electron-config')
-  const config = new Config()
-  const path = require('path')
-  const {
-    remote
-  } = require('electron')
-
-  const { TouchBar } = remote.require('electron')
-  const {
-    TouchBarLabel,
-    TouchBarButton,
-    TouchBarSpacer
-  } = TouchBar
-
-  const context = require('electron-contextmenu-middleware')
-  context.use(require('electron-image-menu'))
-  context.activate()
-
-  const {
-    Monzo,
-    Transaction
-  } = require('../../lib/monzo')
-  // const monzo = new MonzoService(new Monzo(config.get('accessToken')))
-  const monzo = new Monzo(config.get('accessToken'))
-
-  const debug = true
-
-  const $app = document.querySelector('main')
-  const $header = document.querySelector('header')
-  const $nav = document.querySelector('nav')
-  const $txList = document.querySelector('m-transaction-list')
-  const $txDetail = document.querySelector('m-transaction-detail')
+  const $app = document.querySelector('main') as HTMLElement
+  const $header = document.querySelector('header') as HTMLElement
+  const $nav = document.querySelector('nav') as HTMLElement
+  const $txList = document.querySelector('m-transaction-list') as HTMLElement
+  const $txDetail = document.querySelector('m-transaction-detail') as HTMLElement
+  const $balance = $header.querySelector('.card-balance h2') as HTMLHeadingElement
+  const $spentToday = $header.querySelector('.spent-today h2') as HTMLHeadingElement
+  const $accHolder = $nav.querySelector('.person') as HTMLDivElement
 
   const accounts = monzo.accounts
 
@@ -40,11 +44,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
   if (transactions) {
     $txList.txs = JSON.parse(transactions)
-      .map((tx, index) => {
-        tx = new Transaction(monzo, this, tx, index)
-
-        return tx
-      })
+      .map((tx, index) =>
+        new Transaction(null, null, tx, index))
 
     if (debug) console.log($txList.txs)
 
@@ -53,9 +54,9 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   accounts
-    .then(accs => accs[0].transactions)
-    .then(txs => {
-      if (debug) console.log(txs)
+    .then((accs) => accs[0].transactions)
+    .then((txs) => {
+      if (debug) console.dir(txs)
 
       const $selectedTx = $txList.selectedTransaction
 
@@ -82,10 +83,10 @@ document.addEventListener('DOMContentLoaded', () => {
   const accDescription = localStorage.getItem('accDescription')
 
   const tbBalance = new TouchBarLabel({
-    label: 'Balance: £--.--'
+    label: 'Balance: $--.--'
   })
   const tbSpent = new TouchBarLabel({
-    label: 'Spent Today: £--.--'
+    label: 'Spent Today: $--.--'
   })
 
   const escKey = new TouchBarButton({
@@ -94,7 +95,6 @@ document.addEventListener('DOMContentLoaded', () => {
     iconPosition: 'left',
     backgroundColor: '#15233C'
   })
-  console.log(escKey)
 
   const touchBar = new TouchBar({
     items: [
@@ -106,24 +106,16 @@ document.addEventListener('DOMContentLoaded', () => {
   })
   remote.getCurrentWindow().setTouchBar(touchBar)
 
-  if (accDescription) {
-    $nav.querySelector('.person').textContent = accDescription
-  }
-
-  if (balance) {
-    $header.querySelector('.card-balance h2').innerHTML = balance
-  }
-
-  if (spentToday) {
-    $header.querySelector('.spent-today h2').innerHTML = spentToday
-  }
+  if (accDescription) $accHolder.textContent = accDescription
+  if (balance)  $balance.innerHTML = balance
+  if (spentToday)  $spentToday.innerHTML = spentToday
 
   accounts
-    .then(accs => accs[0])
-    .then(acc => {
+    .then((accs) => accs[0])
+    .then((acc) => {
       localStorage.setItem('accDescription', acc.description)
 
-      $nav.querySelector('.person').textContent = localStorage.getItem('accDescription')
+      $accHolder.textContent = localStorage.getItem('accDescription')
 
       return acc.balance
     })
@@ -140,21 +132,21 @@ document.addEventListener('DOMContentLoaded', () => {
       localStorage.setItem('spentToday', spentToday.html(true, 0))
       if (balance.local) localStorage.setItem('spentToday', spentToday.local.html(true, 0) + ' ' + spentToday.html(true, 0))
 
-      $header.querySelector('.card-balance h2').innerHTML = localStorage.getItem('balance')
-      $header.querySelector('.spent-today h2').innerHTML = localStorage.getItem('spentToday')
+      $balance.innerHTML = localStorage.getItem('balance') as string
+      $spentToday.innerHTML = localStorage.getItem('spentToday') as string
     })
 
   const allTabs = Array.from($nav.querySelectorAll('.tab'))
   const allPanes = Array.from($app.querySelectorAll('.app-pane'))
 
-  allTabs.forEach(tab => {
-    tab.addEventListener('click', ev => {
-      event.stopPropagation()
+  allTabs.forEach((tab: HTMLElement) => {
+    tab.addEventListener('click', (ev: MouseEvent) => {
+      ev.stopPropagation()
 
-      const pane = $app.querySelector(`.app-pane.${tab.dataset.pane}-pane`)
+      const pane = $app.querySelector(`.app-pane.${tab.dataset.pane}-pane`) as HTMLElement
 
-      allTabs.forEach(tab => tab.classList.remove('active'))
-      allPanes.forEach(pane => pane.classList.remove('active'))
+      allTabs.forEach((tab) => tab.classList.remove('active'))
+      allPanes.forEach((pane) => pane.classList.remove('active'))
 
       tab.classList.add('active')
       pane.classList.add('active')

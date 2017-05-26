@@ -8,9 +8,9 @@ export interface ICurrencies {
 }
 
 const currencies: ICurrencies = {
-  "EUR": { symbol: "€", separator: "." },
-  "GBP": { symbol: "£", separator: "." },
-  "USDmo": { symbol: "$", separator: "." },
+  EUR: { symbol: '€', separator: '.' },
+  GBP: { symbol: '£', separator: '.' },
+  USD: { symbol: '$', separator: '.' }
 }
 
 export interface IAmountOptions {
@@ -46,12 +46,13 @@ export default class Amount {
   // returns local currency amount object
   get local() {
     if (!this.foreign) return null
+    if (!this.localRaw || !this.localCurrency) return null
 
     return new Amount({
       raw: this.localRaw,
       currency: this.localCurrency,
-      exchanged: true,
-    } as IAmountOptions)
+      exchanged: true
+    })
   }
 
   // returns true if negative amount
@@ -66,27 +67,27 @@ export default class Amount {
 
   // returns sign
   get sign() {
-    return this.negative ? "-" : "+"
+    return this.negative ? '-' : '+'
   }
 
   // returns sign only when positive
   get signIfPositive() {
-    return this.positive ? "+" : ""
+    return this.positive ? '+' : ''
   }
 
   // returns sign only when negative
   get signIfNegative() {
-    return this.negative ? "-" : ""
+    return this.negative ? '-' : ''
   }
 
   // returns currency symbol
   get symbol() {
-    return this.currency in currencies ? currencies[this.currency].symbol : ""
+    return this.currency in currencies ? currencies[this.currency].symbol : ''
   }
 
   // return currency separator
   get separator() {
-    return this.currency in currencies ? currencies[this.currency].separator : ""
+    return this.currency in currencies ? currencies[this.currency].separator : ''
   }
 
   // returns amount in major units (no truncation)
@@ -101,7 +102,7 @@ export default class Amount {
 
   // returns amount split into major and minor units
   get split() {
-    return String(this.normalize).split(".")
+    return String(this.normalize).split('.')
   }
 
   // returns major unit
@@ -120,7 +121,7 @@ export default class Amount {
   }
 
   // returns html formatted string
-  html(showCurrency = true, signMode = 1) {
+  public html(showCurrency = true, signMode = 1) {
     let str = '<span class="major">%j</span>'
     str += '<span class="separator">%p</span>'
     str += '<span class="minor">%n</span>'
@@ -128,18 +129,18 @@ export default class Amount {
     if (showCurrency) str = '<span class="currency">%y</span>' + str
 
     const signModes = [
-      "",
+      '',
       '<span class="sign">%s</span>',
       '<span class="sign">%+</span>',
-      '<span class="sign">%-</span>',
+      '<span class="sign">%-</span>'
     ]
 
     str = signModes[signMode] + str
     str = this.format(str)
 
-    const el = document.createElement("span")
-    el.classList.add("amount")
-    el.classList.add(this.positive ? "positive" : "negative")
+    const el = document.createElement('span')
+    el.classList.add('amount')
+    el.classList.add(this.positive ? 'positive' : 'negative')
     el.innerHTML = str
 
     return el.outerHTML
@@ -160,7 +161,7 @@ export default class Amount {
   // %j -> major
   // %n -> minor
   // %p -> separator
-  format(formatString: string = "%s%y%j%p%n"): string {
+  public format(formatString: string = '%s%y%j%p%n'): string {
     let str = formatString
 
     str = str.replace(/%s/g, this.sign)
@@ -180,11 +181,11 @@ export default class Amount {
     return str
   }
 
-  toString(): string {
+  public toString(): string {
     return this.format()
   }
 
-  valueOf(): number {
+  public valueOf(): number {
     return this.raw
   }
 }

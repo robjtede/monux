@@ -1,8 +1,8 @@
 import {
   Amount,
+  IMonzoApiTransaction,
   Monzo,
-  Transaction,
-  IMonzoApiTransaction
+  Transaction
 } from './'
 
 export interface IMonzoApiAccount {
@@ -14,36 +14,34 @@ export interface IMonzoApiAccount {
 export default class Account {
   private monzo: Monzo
   private acc: IMonzoApiAccount
-  
-  constructor (monzo: Monzo, acc: IMonzoApiAccount) {
+
+  constructor(monzo: Monzo, acc: IMonzoApiAccount) {
     this.monzo = monzo
     this.acc = acc
   }
 
-  get id () {
+  get id(): string {
     return this.acc.id
   }
 
-  get name () {
+  get name(): string {
     return this.description
   }
 
-  get description () {
+  get description(): string {
     return this.acc.description
   }
 
-  get created () {
+  get created(): string {
     return this.acc.created
   }
 
-  get balance () {
+  get balance(): Promise<{balance: Amount, spentToday: Amount}> {
     return this.monzo
       .request('/balance', {
-        'account_id': this.id
+        account_id: this.id
       })
-      .then(bal => {
-        // console.log(bal)
-
+      .then((bal) => {
         return {
           balance: new Amount({
             raw: bal.balance,
@@ -62,23 +60,21 @@ export default class Account {
       })
   }
 
-  get transactions () {
+  get transactions(): Promise<Transaction[]> {
     return this.monzo
       .request('/transactions', {
-        'expand[]': 'merchant',
-        'account_id': this.id
+        'account_id': this.id,
+        'expand[]': 'merchant'
       })
-      .then(txs => {
+      .then((txs) => {
         localStorage.setItem('transactions', JSON.stringify(txs.transactions))
 
         return txs
       })
-      .then(txs => txs
+      .then((txs) => txs
         .transactions
         .map((tx: IMonzoApiTransaction, index: number) => {
-          tx = new Transaction(this.monzo, this, tx, index)
-
-          return tx
+          return new Transaction(this.monzo, this, tx, index)
         })
       )
   }
