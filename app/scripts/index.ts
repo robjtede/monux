@@ -45,9 +45,9 @@ document.addEventListener('DOMContentLoaded', () => {
   if (transactions) {
     $txList.txs = JSON.parse(transactions)
       .map((tx, index) =>
-        new Transaction(null, null, tx, index))
+        new Transaction(undefined, undefined, tx, index))
 
-    if (debug) console.log($txList.txs)
+    if (debug) console.info($txList.txs)
 
     $txList.classList.remove('inactive')
     $txList.render()

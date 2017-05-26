@@ -22,6 +22,20 @@
     "curly": {
       "options": ["ignore-same-line"]
     },
-    "object-literal-sort-keys": false
+    "object-literal-sort-keys": false,
+    "no-object-literal-type-assertion": false,
+    "whitespace": {
+      "options": [
+        "check-branch",
+        "check-decl",
+        "check-operator",
+        "check-module",
+        "check-separator",
+        "check-type",
+        "check-typecast",
+        "check-preblock"
+      ],
+      "severity": "warn"
+    }
   }
 }

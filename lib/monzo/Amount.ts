@@ -16,112 +16,111 @@ const currencies: ICurrencies = {
 export interface IAmountOptions {
   raw: number
   currency: string
-  localRaw?: number | null
-  localCurrency?: string | null
+  localRaw?: number | undefined
+  localCurrency?: string | undefined
   exchanged?: boolean
 }
 
 export default class Amount {
   private raw: number
   private currency: string
-  private localRaw?: number | null
-  private localCurrency?: string | null
+  private localRaw?: number | undefined
+  private localCurrency?: string | undefined
   private exchanged?: boolean
 
-  constructor({ raw, currency, localRaw = null, localCurrency = null, exchanged = false }: IAmountOptions) {
+  constructor({ raw, currency, localRaw, localCurrency, exchanged = false }: IAmountOptions) {
     this.raw = Number(raw)
     this.currency = String(currency).toUpperCase()
 
-    this.localRaw = localRaw === null ? null : Number(localRaw)
-    this.localCurrency = localCurrency === null ? null : localCurrency.toUpperCase()
+    this.localRaw = localRaw ? Number(localRaw) : undefined
+    this.localCurrency = localCurrency ? localCurrency.toUpperCase() : undefined
 
     this.exchanged = exchanged
   }
 
   // returns true if not home currency
   get foreign(): boolean {
-    return !this.localRaw && !this.localCurrency
+    return !!this.localRaw && !!this.localCurrency
   }
 
   // returns local currency amount object
-  get local() {
-    if (!this.foreign) return null
-    if (!this.localRaw || !this.localCurrency) return null
+  get local(): Amount | undefined {
+    if (!this.foreign) return
 
     return new Amount({
       raw: this.localRaw,
       currency: this.localCurrency,
       exchanged: true
-    })
+    } as IAmountOptions)
   }
 
   // returns true if negative amount
-  get negative() {
+  get negative(): boolean {
     return this.raw <= 0
   }
 
   // returns true if positive amount
-  get positive() {
+  get positive(): boolean {
     return !this.negative
   }
 
   // returns sign
-  get sign() {
+  get sign(): string {
     return this.negative ? '-' : '+'
   }
 
   // returns sign only when positive
-  get signIfPositive() {
+  get signIfPositive(): string {
     return this.positive ? '+' : ''
   }
 
   // returns sign only when negative
-  get signIfNegative() {
+  get signIfNegative(): string {
     return this.negative ? '-' : ''
   }
 
   // returns currency symbol
-  get symbol() {
+  get symbol(): string {
     return this.currency in currencies ? currencies[this.currency].symbol : ''
   }
 
   // return currency separator
-  get separator() {
+  get separator(): string {
     return this.currency in currencies ? currencies[this.currency].separator : ''
   }
 
   // returns amount in major units (no truncation)
-  get amount() {
+  get amount(): number {
     return Math.abs(this.raw) / this.scale
   }
 
   // returns truncated amount in major units
-  get normalize() {
+  get normalize(): string {
     return this.amount.toFixed(2)
   }
 
   // returns amount split into major and minor units
-  get split() {
+  get split(): string[] {
     return String(this.normalize).split('.')
   }
 
   // returns major unit
-  get major() {
+  get major(): string {
     return this.split[0]
   }
 
   // returns minor unit
-  get minor() {
+  get minor(): string {
     return this.split[1]
   }
 
   // return number of minor units in major
-  get scale() {
+  get scale(): number {
     return 100
   }
 
   // returns html formatted string
-  public html(showCurrency = true, signMode = 1) {
+  public html(showCurrency = true, signMode = 1): string {
     let str = '<span class="major">%j</span>'
     str += '<span class="separator">%p</span>'
     str += '<span class="minor">%n</span>'

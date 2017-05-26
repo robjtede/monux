@@ -5,6 +5,7 @@ import {
   Account,
   Amount,
   IAmountOptions,
+  ICurrency,
   Merchant,
   Monzo
 } from './'
@@ -14,12 +15,12 @@ export interface IMonzoApiTransaction {
 }
 
 export default class Transaction {
-  private monzo: Monzo | null
-  private acc: Account | null
+  private monzo: Monzo | undefined
+  private acc: Account | undefined
   private tx: IMonzoApiTransaction
   private index: number
 
-  constructor(monzo: Monzo | null, acc: Account | null, tx: IMonzoApiTransaction, index = -1) {
+  constructor(monzo: Monzo | undefined, acc: Account | undefined, tx: IMonzoApiTransaction, index = -1) {
     this.monzo = monzo
     this.acc = acc
     this.tx = tx
@@ -45,7 +46,7 @@ export default class Transaction {
   }
 
   public async annotate(key: string, val: string) {
-    if (!this.monzo) throw new Error('Monzo account is null')
+    if (!this.monzo) throw new Error('Monzo account is undefined')
 
     const metaKey = `metadata[${key}]`
 
@@ -61,14 +62,11 @@ export default class Transaction {
   }
 
   get attachments() {
-    if (!this.monzo) throw new Error('Monzo account is null')
-    if (!this.tx.attachments) return null
-
-    return this.tx.attachments
+    return undefsafe(this, 'tx.attachments')
   }
 
   public async requestAttachmentUpload(contentType = 'image/jpeg') {
-    if (!this.monzo) throw new Error('Monzo account is null')
+    if (!this.monzo) throw new Error('Monzo account is undefined')
 
     return await this.monzo
       .request('/attachment/upload', {
@@ -78,7 +76,7 @@ export default class Transaction {
   }
 
   public async registerAttachment(fileUrl: string, contentType = 'image/jpeg') {
-    if (!this.monzo) throw new Error('Monzo account is null')
+    if (!this.monzo) throw new Error('Monzo account is undefined')
 
     return await this.monzo
       .request('/attachment/register', {
@@ -89,7 +87,7 @@ export default class Transaction {
   }
 
   public async deregisterAttachment(attachmentId: string) {
-    if (!this.monzo) throw new Error('Monzo account is null')
+    if (!this.monzo) throw new Error('Monzo account is undefined')
 
     return await this.monzo
       .request('/attachment/deregister', {

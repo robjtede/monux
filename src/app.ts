@@ -3,6 +3,7 @@ import * as path from 'path'
 import * as querystring from 'querystring'
 import * as url from 'url'
 
+import { oneLineTrim } from 'common-tags'
 import * as Debug from 'debug'
 
 import {
@@ -13,7 +14,6 @@ import {
 } from 'electron'
 
 import { enableLiveReload } from 'electron-compile'
-
 import * as Config from 'electron-config'
 import * as rp from 'request-promise-native'
 import windowState = require('electron-window-state')
@@ -33,9 +33,9 @@ const appInfo = {
 
 enableLiveReload()
 
-let mainWindow: Electron.BrowserWindow | null
-let authWindow: Electron.BrowserWindow | null
-let clientDetailsWindow: Electron.BrowserWindow | null
+let mainWindow: Electron.BrowserWindow | undefined
+let authWindow: Electron.BrowserWindow | undefined
+let clientDetailsWindow: Electron.BrowserWindow | undefined
 
 const template: Electron.MenuItemOptions[] = [
   {
@@ -136,7 +136,7 @@ const createWindow = (): void => {
 
   mainWindowState.manage(mainWindow)
 
-  mainWindow.on('closed', () => { mainWindow = null })
+  mainWindow.on('closed', () => { mainWindow = undefined })
 }
 
 const requestAuth = (): void => {
@@ -149,16 +149,18 @@ const requestAuth = (): void => {
   Menu.setApplicationMenu(Menu.buildFromTemplate(template))
 
   // get auth token
-  let url = 'https://auth.getmondo.co.uk/'
-  url += `?client_id=${appInfo.client_id}`
-  url += `&redirect_uri=${appInfo.redirect_uri}`
-  url += `&response_type=${appInfo.response_type}`
-  url += `&state=${appInfo.state}`
+  const url = oneLineTrim`
+    https://auth.getmondo.co.uk/
+    ?client_id=${appInfo.client_id}
+    &redirect_uri=${appInfo.redirect_uri}
+    &response_type=${appInfo.response_type}
+    &state=${appInfo.state}
+  `
 
   authWindow.loadURL(url)
 }
 
-const getAccessToken = (): Promise<{}> => {
+const getAccessToken = () => {
   debug('getAccessToken')
 
   const opts = {
@@ -180,14 +182,14 @@ const getAccessToken = (): Promise<{}> => {
       debug(`getAccessToken => ${typeof res}: ${res}`)
 
       return res
-    },    (err) => {
+    }, (err) => {
       console.error(`getAccessToken => ${err.code}`)
 
       throw err
     })
 }
 
-const verifyAccess = (): Promise<{}> => {
+const verifyAccess = () => {
   debug(`verifyAccess with: ${config.get('accessToken')}`)
 
   const opts = {
@@ -225,7 +227,7 @@ const clientDetails = (): void => {
   }))
 
   clientDetailsWindow.on('closed', () => {
-    clientDetailsWindow = null
+    clientDetailsWindow = undefined
 
     appInfo.client_id = config.get('client_id')
     appInfo.client_secret = config.get('client_secret')

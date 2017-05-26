@@ -7,21 +7,22 @@ export interface IMonzoApiMerchant {
 }
 
 export default class Merchant {
-  private merchant: IMonzoApiMerchant
+  private merchant: IMonzoApiMerchant | null
 
-  private id: string
-  private groupId: string
-
-  constructor(merchant: IMonzoApiMerchant) {
+  constructor(merchant: IMonzoApiMerchant | null) {
     this.merchant = merchant
+  }
 
-    this.id = this.merchant.id
-    this.groupId = this.merchant.group_id
+  get id(): string {
+    return undefsafe(this, 'merchant.id')
+  }
+
+  get groupId(): string {
+    return undefsafe(this, 'merchant.group_id')
   }
 
   get emoji(): string {
-    if (this.merchant) return this.merchant.emoji
-    else return ''
+    return undefsafe(this, 'merchant.emoji')
   }
 
   get name(): string | undefined {
@@ -43,6 +44,6 @@ export default class Merchant {
   }
 
   public toString() {
-    return this.merchant.name || ''
+    return undefsafe(this, 'merchant.name')
   }
 }
