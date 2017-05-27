@@ -1,5 +1,6 @@
 import {
   Amount,
+  IAmount,
   IMonzoApiTransaction,
   Monzo,
   Transaction
@@ -42,20 +43,36 @@ export default class Account {
         account_id: this.id
       })
       .then((bal) => {
-        return {
-          balance: new Amount({
-            raw: bal.balance,
-            currency: bal.currency,
-            localRaw: bal.balance * bal.local_exchange_rate,
-            localCurrency: bal.local_currency
-          }),
+        const nativeBalance: IAmount = {
+          amount: 1,
+          currency: ''
+        }
 
-          spentToday: new Amount({
-            raw: bal.spend_today,
-            currency: bal.currency,
-            localRaw: bal.local_spend.length > 0 ? bal.local_spend[0].spend_today * bal.local_exchange_rate : 0,
-            localCurrency: bal.local_currency
-          })
+        const nativeSpend: IAmount = {
+          amount: bal.spend_today,
+          currency: bal.currency
+        }
+
+        if (bal.currency !== bal.local_currency) {
+          const localBalance: IAmount = {
+            amount: bal.balance * bal.local_exchange_rate,
+            currency: bal.local_currency
+          }
+
+          const localSpend: IAmount = {
+            amount: bal.local_spend.length > 0 ? bal.local_spend[0].spend_today * bal.local_exchange_rate : 0,
+            currency: bal.local_currency
+          }
+
+          return {
+            balance: new Amount(nativeBalance, localBalance),
+            spentToday: new Amount(nativeSpend, localSpend)
+          }
+        } else {
+          return {
+            balance: new Amount(nativeBalance),
+            spentToday: new Amount(nativeSpend)
+          }
         }
       })
   }
@@ -69,13 +86,10 @@ export default class Account {
       .then((txs) => {
         localStorage.setItem('transactions', JSON.stringify(txs.transactions))
 
-        return txs
+        return txs.transactions
+          .map((tx: IMonzoApiTransaction, index: number) => {
+            return new Transaction(this.monzo, this, tx, index)
+          })
       })
-      .then((txs) => txs
-        .transactions
-        .map((tx: IMonzoApiTransaction, index: number) => {
-          return new Transaction(this.monzo, this, tx, index)
-        })
-      )
   }
 }

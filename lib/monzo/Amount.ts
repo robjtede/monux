@@ -7,56 +7,33 @@ export interface ICurrencies {
   [currencyName: string]: ICurrency
 }
 
+export interface IAmount {
+  amount: number,
+  currency: string
+}
+
 const currencies: ICurrencies = {
   EUR: { symbol: '€', separator: '.' },
   GBP: { symbol: '£', separator: '.' },
   USD: { symbol: '$', separator: '.' }
 }
 
-export interface IAmountOptions {
-  raw: number
-  currency: string
-  localRaw?: number | undefined
-  localCurrency?: string | undefined
-  exchanged?: boolean
-}
-
 export default class Amount {
-  private raw: number
-  private currency: string
-  private localRaw?: number | undefined
-  private localCurrency?: string | undefined
-  private exchanged?: boolean
-
-  constructor({ raw, currency, localRaw, localCurrency, exchanged = false }: IAmountOptions) {
-    this.raw = Number(raw)
-    this.currency = String(currency).toUpperCase()
-
-    this.localRaw = localRaw ? Number(localRaw) : undefined
-    this.localCurrency = localCurrency ? localCurrency.toUpperCase() : undefined
-
-    this.exchanged = exchanged
-  }
+  constructor(readonly native: IAmount, readonly local?: IAmount) {}
 
   // returns true if not home currency
   get foreign(): boolean {
-    return !!this.localRaw && !!this.localCurrency
+    return !!this.local
   }
 
-  // returns local currency amount object
-  get local(): Amount | undefined {
-    if (!this.foreign) return
-
-    return new Amount({
-      raw: this.localRaw,
-      currency: this.localCurrency,
-      exchanged: true
-    } as IAmountOptions)
-  }
+  get exchanged(): Amount | undefined {
+    if (this.local) return new Amount(this.local)
+    else return
+ }
 
   // returns true if negative amount
   get negative(): boolean {
-    return this.raw <= 0
+    return this.native.amount <= 0
   }
 
   // returns true if positive amount
@@ -81,17 +58,17 @@ export default class Amount {
 
   // returns currency symbol
   get symbol(): string {
-    return this.currency in currencies ? currencies[this.currency].symbol : ''
+    return this.native.currency in currencies ? currencies[this.native.currency].symbol : ''
   }
 
   // return currency separator
   get separator(): string {
-    return this.currency in currencies ? currencies[this.currency].separator : ''
+    return this.native.currency in currencies ? currencies[this.native.currency].separator : ''
   }
 
   // returns amount in major units (no truncation)
   get amount(): number {
-    return Math.abs(this.raw) / this.scale
+    return Math.abs(this.native.amount) / this.scale
   }
 
   // returns truncated amount in major units
@@ -164,13 +141,13 @@ export default class Amount {
     let str = formatString
 
     str = str.replace(/%s/g, this.sign)
-    str = str.replace(/%c/g, this.currency)
+    str = str.replace(/%c/g, this.native.currency)
     str = str.replace(/%y/g, this.symbol)
 
     str = str.replace(/%\+/g, this.signIfPositive)
     str = str.replace(/%-/g, this.signIfNegative)
 
-    str = str.replace(/%r/g, String(this.raw))
+    str = str.replace(/%r/g, String(this.native.amount))
     str = str.replace(/%a/g, String(this.amount))
 
     str = str.replace(/%j/g, this.major)
@@ -185,6 +162,6 @@ export default class Amount {
   }
 
   public valueOf(): number {
-    return this.raw
+    return this.native.amount
   }
 }

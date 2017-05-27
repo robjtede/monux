@@ -52,11 +52,11 @@ class TransactionGroupComponent extends HTMLElement {
         .reduce((sum, tx) => {
           return tx.amount.positive
           ? sum
-          : sum + tx.amount.raw
+          : sum + tx.amount.native.amount
         }, 0)
 
     this.subtotal = new Amount({
-      raw: subtotal,
+      amount: subtotal,
       currency: 'GBP'
     })
 

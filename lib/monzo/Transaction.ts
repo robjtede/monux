@@ -4,8 +4,7 @@ import undefsafe = require('undefsafe')
 import {
   Account,
   Amount,
-  IAmountOptions,
-  ICurrency,
+  IAmount,
   Merchant,
   Monzo
 } from './'
@@ -28,21 +27,23 @@ export default class Transaction {
   }
 
   get amount(): Amount {
-    let opts: IAmountOptions = {
-      raw: this.tx.amount,
+    const native: IAmount = {
+      amount: this.tx.amount,
       currency: this.tx.currency
     }
 
     // if foreign currency
     if (this.tx.local_currency !== this.tx.currency) {
-      opts = {
-        ...opts,
-        localRaw: this.tx.local_amount,
-        localCurrency: this.tx.local_currency
+      const local: IAmount = {
+        amount: this.tx.local_amount,
+        currency: this.tx.local_currency
       }
+
+      return new Amount(native, local)
+    } else {
+      return new Amount(native)
     }
 
-    return new Amount(opts)
   }
 
   public async annotate(key: string, val: string) {
@@ -96,12 +97,12 @@ export default class Transaction {
   }
 
   get balance(): Amount {
-    const opts: IAmountOptions = {
-      raw: this.tx.account_balance,
+    const native: IAmount = {
+      amount: this.tx.account_balance,
       currency: this.tx.currency
     }
 
-    return new Amount(opts)
+    return new Amount(native)
   }
 
   get category() {

@@ -3,7 +3,7 @@ import Account, {
 } from './Account'
 
 import Amount, {
-  IAmountOptions,
+  IAmount,
   ICurrencies,
   ICurrency
 } from './Amount'
@@ -27,7 +27,6 @@ export {
   Transaction,
 
   // class options
-  IAmountOptions,
 
   // monzo api schemas
   IMonzoApiAccount,
@@ -35,6 +34,7 @@ export {
   IMonzoApiTransaction,
 
   // helpers
+  IAmount,
   ICurrency,
   ICurrencies
 }

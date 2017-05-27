@@ -112,7 +112,7 @@
         $amountWrap.innerHTML = this.tx.amount.html(true, 0)
 
         if (this.tx.amount.foreign) {
-          $amountWrap.innerHTML += this.tx.amount.local.html(true, 0)
+          $amountWrap.innerHTML += this.tx.amount.exchanged.html(true, 0)
         }
       }
     }
