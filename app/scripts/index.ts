@@ -14,8 +14,8 @@ const {
 import * as Config from 'electron-config'
 const config = new Config()
 
-const context = require('electron-contextmenu-middleware')
-const imageMenu = require('electron-image-menu')
+import context = require('electron-contextmenu-middleware')
+import imageMenu = require('electron-image-menu')
 context.use(imageMenu)
 context.activate()
 
@@ -36,7 +36,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const $txDetail = document.querySelector('m-transaction-detail') as HTMLElement
   const $balance = $header.querySelector('.card-balance h2') as HTMLHeadingElement
   const $spentToday = $header.querySelector('.spent-today h2') as HTMLHeadingElement
-  const $accHolder = $nav.querySelector('.person') as HTMLDivElement
+  const $accDescription = $nav.querySelector('.person') as HTMLDivElement
 
   const accounts = monzo.accounts
 
@@ -54,8 +54,8 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   accounts
-    .then((accs) => accs[0].transactions)
-    .then((txs) => {
+    .then(accs => accs[0].transactions)
+    .then(txs => {
       if (debug) console.dir(txs)
 
       const $selectedTx = $txList.selectedTransaction
@@ -82,6 +82,10 @@ document.addEventListener('DOMContentLoaded', () => {
   const spentToday = localStorage.getItem('spentToday')
   const accDescription = localStorage.getItem('accDescription')
 
+  if (accDescription) $accDescription.textContent = accDescription
+  if (balance) $balance.innerHTML = balance
+  if (spentToday) $spentToday.innerHTML = spentToday
+
   const tbBalance = new TouchBarLabel({
     label: 'Balance: $--.--'
   })
@@ -106,38 +110,37 @@ document.addEventListener('DOMContentLoaded', () => {
   })
   remote.getCurrentWindow().setTouchBar(touchBar)
 
-  if (accDescription) $accHolder.textContent = accDescription
-  if (balance)  $balance.innerHTML = balance
-  if (spentToday)  $spentToday.innerHTML = spentToday
-
   accounts
-    .then((accs) => accs[0])
-    .then((acc) => {
-      localStorage.setItem('accDescription', acc.description)
+    .then(accs => accs[0])
+    .then(acc => {
+      if (debug) console.log(acc)
 
-      $accHolder.textContent = localStorage.getItem('accDescription')
+      localStorage.setItem('accDescription', acc.description)
+      $accDescription.textContent = localStorage.getItem('accDescription')
 
       return acc.balance
     })
-    .then(({balance, spentToday}) => {
-      if (debug) console.log(balance)
-      if (debug) console.log(spentToday)
+    .then(({ balance, spentToday }) => {
+      if (debug) console.info(balance)
+      if (debug) console.info(spentToday)
 
       tbBalance.label = `Balance: ${balance.format('%y%a')}`
       tbSpent.label = `Spent Today: ${spentToday.format('%y%a')}`
 
-      localStorage.setItem('balance', balance.html(true, 0))
-      if (balance.local) localStorage.setItem('balance', balance.local.html(true, 0) + ' ' + balance.html(true, 0))
-
-      localStorage.setItem('spentToday', spentToday.html(true, 0))
-      if (balance.local) localStorage.setItem('spentToday', spentToday.local.html(true, 0) + ' ' + spentToday.html(true, 0))
+      if (!balance.foreign) {
+        localStorage.setItem('balance', balance.html(true, 0))
+        localStorage.setItem('spentToday', spentToday.html(true, 0))
+      } else {
+        localStorage.setItem('balance', balance.exchanged.html(true, 0) + '' + balance.html(true, 0))
+        localStorage.setItem('spentToday', spentToday.exchanged.html(true, 0) + '' + spentToday.html(true, 0))
+      }
 
       $balance.innerHTML = localStorage.getItem('balance') as string
       $spentToday.innerHTML = localStorage.getItem('spentToday') as string
     })
 
-  const allTabs = Array.from($nav.querySelectorAll('.tab'))
-  const allPanes = Array.from($app.querySelectorAll('.app-pane'))
+  const allTabs = Array.from($nav.querySelectorAll('.tab')) as HTMLElement[]
+  const allPanes = Array.from($app.querySelectorAll('.app-pane')) as HTMLElement[]
 
   allTabs.forEach((tab: HTMLElement) => {
     tab.addEventListener('click', (ev: MouseEvent) => {
@@ -145,8 +148,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
       const pane = $app.querySelector(`.app-pane.${tab.dataset.pane}-pane`) as HTMLElement
 
-      allTabs.forEach((tab) => tab.classList.remove('active'))
-      allPanes.forEach((pane) => pane.classList.remove('active'))
+      allTabs.forEach(tab => tab.classList.remove('active'))
+      allPanes.forEach(pane => pane.classList.remove('active'))
 
       tab.classList.add('active')
       pane.classList.add('active')

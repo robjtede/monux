@@ -42,10 +42,10 @@ export default class Account {
       .request('/balance', {
         account_id: this.id
       })
-      .then((bal) => {
+      .then(bal => {
         const nativeBalance: IAmount = {
-          amount: 1,
-          currency: ''
+          amount: bal.balance,
+          currency: bal.currency
         }
 
         const nativeSpend: IAmount = {
@@ -53,7 +53,7 @@ export default class Account {
           currency: bal.currency
         }
 
-        if (bal.currency !== bal.local_currency) {
+        if (bal.local_currency) {
           const localBalance: IAmount = {
             amount: bal.balance * bal.local_exchange_rate,
             currency: bal.local_currency
@@ -83,7 +83,7 @@ export default class Account {
         'account_id': this.id,
         'expand[]': 'merchant'
       })
-      .then((txs) => {
+      .then(txs => {
         localStorage.setItem('transactions', JSON.stringify(txs.transactions))
 
         return txs.transactions

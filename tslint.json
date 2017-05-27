@@ -24,6 +24,9 @@
     },
     "object-literal-sort-keys": false,
     "no-object-literal-type-assertion": false,
+    "arrow-parens": {
+      "options": ["ban-single-arg-parens"]
+    },
     "whitespace": {
       "options": [
         "check-branch",
