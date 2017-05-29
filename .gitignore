@@ -43,4 +43,4 @@ jspm_packages
 /config.js
 
 # electron build files
-/Monux-*
+/out

@@ -55,7 +55,7 @@
         $amountWrap.innerHTML = this.tx.amount.html(false, 2)
 
         if (this.tx.amount.foreign) {
-          $amountWrap.innerHTML += this.tx.amount.local.html(true, 2)
+          $amountWrap.innerHTML += this.tx.amount.exchanged.html(true, 2)
         }
 
         if (this.tx.amount.positive && $amount) $amount.classList.add('income')

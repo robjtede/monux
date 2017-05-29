@@ -1,30 +1,27 @@
-'use strict'
+import * as crypto from 'crypto'
+import * as path from 'path'
+import * as querystring from 'querystring'
+import * as url from 'url'
 
-const path = require('path')
-const url = require('url')
-const querystring = require('querystring')
-const crypto = require('crypto')
-const Debug = require('debug')
+import { oneLineTrim } from 'common-tags'
+import * as Debug from 'debug'
 
-const {
+import {
   app,
+  BrowserWindow,
   Menu,
-  BrowserWindow
-} = require('electron')
+  shell
+} from 'electron'
 
-const rp = require('request-promise-native')
-const Config = require('electron-config')
-const windowState = require('electron-window-state')
-// const GHUpdater = require('electron-gh-releases')
+import { enableLiveReload } from 'electron-compile'
+import * as Config from 'electron-config'
+import * as rp from 'request-promise-native'
+import windowState = require('electron-window-state')
 
 const config = new Config()
-const debug = new Debug('app:app.js')
-// const updater = new GHUpdater({
-//   repo: 'robjtede/monux',
-//   currentVersion: app.getVersion()
-// })
+const debug = Debug('app:app.js')
 
-console.log(`starting ${app.getName()} version ${app.getVersion()}`)
+console.info(`starting ${app.getName()} version ${app.getVersion()}`)
 
 const appInfo = {
   client_id: config.get('client_id'),
@@ -34,10 +31,13 @@ const appInfo = {
   state: crypto.randomBytes(512).toString('hex')
 }
 
-let mainWindow
-let authWindow
+enableLiveReload()
 
-const template = [
+let mainWindow: Electron.BrowserWindow | undefined
+let authWindow: Electron.BrowserWindow | undefined
+let clientDetailsWindow: Electron.BrowserWindow | undefined
+
+const template: Electron.MenuItemOptions[] = [
   {
     label: 'Application',
     submenu: [
@@ -78,13 +78,13 @@ const template = [
   }, {
     role: 'help',
     submenu: [
-      { label: 'Monux GitHub Repo', click: () => require('electron').shell.openExternal('https://github.com/robjtede/monux') },
-      { label: 'Learn More About Electron', click: () => require('electron').shell.openExternal('http://electron.atom.io') }
+      { label: 'Monux GitHub Repo', click: () => shell.openExternal('https://github.com/robjtede/monux') },
+      { label: 'Learn More About Electron', click: () => shell.openExternal('http://electron.atom.io') }
     ]
   }
 ]
 
-const checkAccess = () => {
+const checkAccess = (): boolean => {
   debug('checkAccess')
 
   if (!config.has('accessToken')) {
@@ -93,23 +93,24 @@ const checkAccess = () => {
   }
 
   if (config.has('authTime') && config.has('authExpires')) return checkAuthTimeout()
+  else return false
 }
 
-const checkAuthTimeout = () => {
+const checkAuthTimeout = (): boolean => {
   debug('checkAuthTimeout')
 
-  const valid = config.get('authTime') + config.get('authExpires') > +new Date()
+  const valid = config.get('authTime') + config.get('authExpires') > Date.now()
 
   if (!valid) debug('=> access token expired')
   return valid
 }
 
-const createWindow = () => {
+const createWindow = (): void => {
   debug('createWindow')
 
   const mainWindowState = windowState({
-    defaultWidth: 1000,
-    defaultHeight: 800
+    defaultHeight: 800,
+    defaultWidth: 1000
   })
 
   mainWindow = new BrowserWindow({
@@ -128,36 +129,41 @@ const createWindow = () => {
   Menu.setApplicationMenu(Menu.buildFromTemplate(template))
 
   mainWindow.loadURL(url.format({
-    pathname: path.resolve(__dirname, 'app/index.html'),
+    pathname: path.resolve(__dirname, '..', 'app', 'index.html'),
     protocol: 'file:',
     slashes: true
   }))
 
   mainWindowState.manage(mainWindow)
 
-  mainWindow.on('closed', () => { mainWindow = null })
+  mainWindow.on('closed', () => { mainWindow = undefined })
 }
 
-const requestAuth = () => {
+const requestAuth = (): void => {
   debug('requestAuth')
 
   debug('clearing auth details')
 
-  authWindow = new BrowserWindow({width: 500, height: 700})
+  authWindow = new BrowserWindow({
+    width: 500,
+    height: 700
+  })
 
   Menu.setApplicationMenu(Menu.buildFromTemplate(template))
 
   // get auth token
-  let url = 'https://auth.getmondo.co.uk/'
-  url += `?client_id=${appInfo.client_id}`
-  url += `&redirect_uri=${appInfo.redirect_uri}`
-  url += `&response_type=${appInfo.response_type}`
-  url += `&state=${appInfo.state}`
+  const url = oneLineTrim`
+    https://auth.getmondo.co.uk/
+    ?client_id=${appInfo.client_id}
+    &redirect_uri=${appInfo.redirect_uri}
+    &response_type=${appInfo.response_type}
+    &state=${appInfo.state}
+  `
 
   authWindow.loadURL(url)
 }
 
-const getAccessToken = () => {
+const getAccessToken = async () => {
   debug('getAccessToken')
 
   const opts = {
@@ -173,45 +179,41 @@ const getAccessToken = () => {
     json: true
   }
 
-  return rp(opts)
-    .then(res => {
-      // debug response info
-      debug(`getAccessToken => ${typeof res}: ${res}`)
+  try {
+    const res = await rp(opts)
 
-      return res
-    }, err => {
-      console.error(`getAccessToken => ${err.code}`)
-
-      throw err
-    })
+    debug(`getAccessToken => ${typeof res}: ${res}`)
+    return res
+  } catch (err) {
+    console.error(`getAccessToken => ${err.code}`)
+    throw err
+  }
 }
 
-const verifyAccess = () => {
+const verifyAccess = async () => {
   debug(`verifyAccess with: ${config.get('accessToken')}`)
 
   const opts = {
     uri: 'https://api.monzo.com/ping/whoami',
     headers: {
-      'Authorization': `Bearer ${config.get('accessToken')}`
+      Authorization: `Bearer ${config.get('accessToken')}`
     },
     json: true
   }
 
-  return rp(opts)
-    .then(res => {
-      // debug response info
-      debug(`verifyAccess => ${typeof res}: ${res}`)
+  try {
+    const res = await rp(opts)
 
-      return res
-    }, err => {
-      console.error(`verifyAccess => ${err.message}`)
-
-      throw err
-    })
+    debug(`verifyAccess => ${typeof res}: ${res}`)
+    return res
+  } catch (err) {
+    console.error('verifyAccess =>', err)
+    throw err
+  }
 }
 
-const clientDetails = () => {
-  let clientDetailsWindow = new BrowserWindow({
+const clientDetails = async () => {
+  clientDetailsWindow = new BrowserWindow({
     width: 400,
     height: 600
   })
@@ -219,13 +221,13 @@ const clientDetails = () => {
   Menu.setApplicationMenu(Menu.buildFromTemplate(template))
 
   clientDetailsWindow.loadURL(url.format({
-    pathname: path.resolve(__dirname, 'app/get-client-info.html'),
+    pathname: path.resolve(__dirname, '..', 'app', 'get-client-info.html'),
     protocol: 'file:',
     slashes: true
   }))
 
-  clientDetailsWindow.on('closed', () => {
-    clientDetailsWindow = null
+  clientDetailsWindow.on('closed', async () => {
+    clientDetailsWindow = undefined
 
     appInfo.client_id = config.get('client_id')
     appInfo.client_secret = config.get('client_secret')
@@ -235,18 +237,18 @@ const clientDetails = () => {
       return
     }
 
-    verifyAccess()
-      .then(res => {
-        if (res && 'authenticated' in res && res.authenticated) createWindow()
-        else requestAuth()
-      })
-      .catch(err => {
-        console.error(err.message)
-      })
+    try {
+      const res = await verifyAccess()
+
+      if (res && 'authenticated' in res && res.authenticated) createWindow()
+      else requestAuth()
+    } catch (err) {
+      console.error(err.message)
+    }
   })
 }
 
-app.on('ready', () => {
+app.on('ready', async () => {
   debug('ready event')
 
   if (!(config.has('client_id') && config.has('client_secret'))) {
@@ -260,20 +262,20 @@ app.on('ready', () => {
     return
   }
 
-  verifyAccess()
-    .then(res => {
-      if (res && 'authenticated' in res && res.authenticated) createWindow()
-      else requestAuth()
-    })
-    .catch(err => {
-      console.error(err.message)
-    })
+  try {
+    const res = await verifyAccess()
+
+    if (res && 'authenticated' in res && res.authenticated) createWindow()
+    else requestAuth()
+  } catch (err)  {
+    console.error(err.message)
+  }
 })
 
-app.on('open-url', function (ev, forwardedUrl) {
+app.on('open-url', async (_, forwardedUrl) => {
   debug('open-url event')
 
-  authWindow.close()
+  if (authWindow) authWindow.close()
 
   const query = url.parse(forwardedUrl).query
   const authResponse = querystring.parse(query)
@@ -287,26 +289,29 @@ app.on('open-url', function (ev, forwardedUrl) {
 
   config.set('authCode', authResponse.code)
 
-  getAccessToken(authResponse)
-    .then(res => {
-      config.set({
-        accessToken: res.access_token,
-        authExpires: res.expires_in * 1000,
-        authTime: +new Date()
-      })
-    })
-    .then(verifyAccess)
-    .then(res => {
-      debug(`open-url event => verifyAccess.then => ${res}`)
+  try {
+    const res = await getAccessToken()
 
-      createWindow()
+    config.set({
+      accessToken: res.access_token,
+      authExpires: res.expires_in * 1000,
+      authTime: +new Date()
     })
+
+    await verifyAccess()
+
+    debug('open-url event => verifyAccess.then')
+
+    createWindow()
+  } catch (err)  {
+    console.error(err.message)
+  }
 })
 
 app.on('window-all-closed', () => {
   debug('window-all-closed event')
 
-  // conflicts with auth strategy
+  // conflicts with auth strategy for now
   // if (process.platform !== 'darwin') app.quit()
 })
 
@@ -314,11 +319,3 @@ app.on('activate', () => {
   debug('activate event')
   if (!mainWindow) createWindow()
 })
-
-// updater.check((err, status) => {
-//   if (!err && status) updater.download()
-// })
-//
-// updater.on('update-downloaded', info => {
-//   updater.install()
-// })

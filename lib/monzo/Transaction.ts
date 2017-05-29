@@ -1,59 +1,86 @@
-'use strict'
+import { format as strftime } from 'date-fns'
+import undefsafe = require('undefsafe')
 
-const strftime = require('date-fns').format
+import {
+  Account,
+  Amount,
+  IAmount,
+  Merchant,
+  Monzo
+} from './'
 
-const Amount = require('./Amount')
-const Merchant = require('./Merchant')
+export interface IMonzoApiTransaction {
+  [propName: string]: any
+}
 
-class Transaction {
-  constructor (monzo, acc, tx, index = -1) {
+export default class Transaction {
+  public index: number
+
+  private monzo: Monzo | undefined
+  private acc: Account | undefined
+  private tx: IMonzoApiTransaction
+
+  constructor(monzo: Monzo | undefined, acc: Account | undefined, tx: IMonzoApiTransaction, index = -1) {
     this.monzo = monzo
     this.acc = acc
     this.tx = tx
     this.index = index
   }
 
-  get amount () {
-    let opts = {
-      raw: this.tx.amount,
+  get amount(): Amount {
+    const native: IAmount = {
+      amount: this.tx.amount,
       currency: this.tx.currency
     }
 
     // if foreign currency
     if (this.tx.local_currency !== this.tx.currency) {
-      opts = Object.assign(opts, {
-        localRaw: this.tx.local_amount,
-        localCurrency: this.tx.local_currency
-      })
+      const local: IAmount = {
+        amount: this.tx.local_amount,
+        currency: this.tx.local_currency
+      }
+
+      return new Amount(native, local)
+    } else {
+      return new Amount(native)
     }
 
-    return new Amount(opts)
   }
 
-  annotate (key, val) {
-    return this.monzo
-      .request(`/transactions/${this.id}`, {
-        [`metadata[${key}]`]: val
-      }, 'PATCH')
-      .catch(err => console.error(err))
+  public async annotate(key: string, val: string) {
+    if (!this.monzo) throw new Error('Monzo account is undefined')
+
+    const metaKey = `metadata[${key}]`
+
+    try {
+      return await this.monzo
+        .request(`/transactions/${this.id}`, {
+          [metaKey]: val
+        }, 'PATCH')
+    } catch (err) {
+      console.error(err)
+    }
+
   }
 
-  get attachments () {
-    if (!this.tx.attachments) return ''
-
-    return this.tx.attachments
+  get attachments() {
+    return undefsafe(this, 'tx.attachments')
   }
 
-  requestAttachmentUpload (contentType = 'image/jpeg') {
-    return this.monzo
+  public async requestAttachmentUpload(contentType = 'image/jpeg') {
+    if (!this.monzo) throw new Error('Monzo account is undefined')
+
+    return await this.monzo
       .request('/attachment/upload', {
         file_name: 'monux-attachment.jpg',
         file_type: contentType
       }, 'POST')
   }
 
-  registerAttachment (fileUrl, contentType = 'image/jpeg') {
-    return this.monzo
+  public async registerAttachment(fileUrl: string, contentType = 'image/jpeg') {
+    if (!this.monzo) throw new Error('Monzo account is undefined')
+
+    return await this.monzo
       .request('/attachment/register', {
         external_id: this.tx.id,
         file_url: fileUrl,
@@ -61,23 +88,25 @@ class Transaction {
       }, 'POST')
   }
 
-  deregisterAttachment (attachmentId) {
-    return this.monzo
+  public async deregisterAttachment(attachmentId: string) {
+    if (!this.monzo) throw new Error('Monzo account is undefined')
+
+    return await this.monzo
       .request('/attachment/deregister', {
         id: attachmentId
       }, 'POST')
   }
 
-  get balance () {
-    const opts = {
-      raw: this.tx.account_balance,
+  get balance(): Amount {
+    const native: IAmount = {
+      amount: this.tx.account_balance,
       currency: this.tx.currency
     }
 
-    return new Amount(opts)
+    return new Amount(native)
   }
 
-  get category () {
+  get category() {
     let raw = this.tx.category
     raw = raw.replace('mondo', 'monzo')
 
@@ -91,34 +120,34 @@ class Transaction {
     }
   }
 
-  get created () {
+  get created(): Date {
     return new Date(this.tx.created)
   }
 
-  get declined () {
+  get declined(): boolean {
     return 'decline_reason' in this.tx
   }
 
-  get declineReason () {
+  get declineReason(): string {
     return this.declined ? this.tx.decline_reason.replace('_', ' ').toLowerCase() : ''
   }
 
-  get description () {
+  get description(): string {
     return this.tx.description
   }
 
-  get displayName () {
+  get displayName(): string {
     if (this.merchant.name) return this.merchant.name
     else return this.description
   }
 
-  get hidden () {
+  get hidden(): boolean {
     if ('monux_hidden' in this.tx.metadata) {
       return this.tx.metadata.monux_hidden !== 'false'
     } else return false
   }
 
-  get icon () {
+  get icon(): string {
     if ('is_topup' in this.tx.metadata && this.tx.metadata.is_topup) {
       return './icons/topup.png'
     }
@@ -132,15 +161,15 @@ class Transaction {
     return this.iconFallback
   }
 
-  get iconFallback () {
+  get iconFallback(): string {
     return `./icons/${this.tx.category}.png`
   }
 
-  get id () {
+  get id(): string {
     return this.tx.id
   }
 
-  get is () {
+  get is() {
     const cash = this.tx.category === 'cash'
     const zero = +this.tx.amount === 0
 
@@ -153,35 +182,23 @@ class Transaction {
     }
   }
 
-  get inSpending () {
+  get inSpending(): boolean {
     return this.tx.include_in_spending || false
   }
 
-  get location () {
-    if (
-      this.tx.merchant &&
-      'online' in this.tx.merchant &&
-      this.tx.merchant.online
-    ) {
+  get location(): string | undefined {
+    if (undefsafe(this, 'tx.merchant.online')) {
       return 'Online'
-    }
-
-    if (
-      this.tx.merchant &&
-      'address' in this.tx.merchant &&
-      this.tx.merchant.address &&
-      'short_formatted' in this.tx.merchant.address &&
-      this.tx.merchant.address.short_formatted
-    ) {
-      return this.tx.merchant.address.short_formatted
+    } else {
+      return undefsafe(this, 'tx.merchant.address.short_formatted')
     }
   }
 
-  get merchant () {
+  get merchant(): Merchant {
     return new Merchant(this.tx.merchant)
   }
 
-  get notes () {
+  get notes() {
     return {
       toString: () => this.tx.notes,
       short: this.tx.notes.split('\n')[0],
@@ -189,21 +206,18 @@ class Transaction {
     }
   }
 
-  setNotes (val) {
-    return this.annotate('notes', val)
-      .then(val => {
-        this.tx.notes = val.transaction.notes
-      })
+  public async setNotes(val: string): Promise<string> {
+    const res = await this.annotate('notes', val)
+
+    this.tx.notes = res.transaction.notes
+    return this.tx.notes
   }
 
-  get online () {
-    if (
-      this.tx.merchant &&
-      'online' in this.tx.merchant
-    ) return this.tx.merchant.online || false
+  get online(): boolean {
+    return !!undefsafe(this, 'tx.merchange.online')
   }
 
-  get pending () {
+  get pending(): boolean {
     // declined transactions are never pending
     if (this.declined) return false
 
@@ -224,10 +238,8 @@ class Transaction {
     return false
   }
 
-  get settled () {
+  get settled(): string {
     if (this.pending) return 'Pending'
     else return `Settled: ${strftime(new Date(this.tx.settled), 'h:mma - Do MMMM YYYY')}`
   }
 }
-
-module.exports = Transaction

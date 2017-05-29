@@ -1,0 +1,44 @@
+{
+  "defaultSeverity": "error",
+  "extends": "tslint:latest",
+  "rules": {
+    "quotemark": {
+      "options": ["single", "avoid-template"],
+      "severity": "warn"
+    },
+    "semicolon": {
+      "options": ["never"]
+    },
+    "trailing-comma": {
+      "options": {
+          "multiline": "never",
+          "singleline": "never"
+      }
+    },
+    "no-console": {
+      "options": ["log"],
+      "severity": "warn"
+    },
+    "curly": {
+      "options": ["ignore-same-line"]
+    },
+    "object-literal-sort-keys": false,
+    "no-object-literal-type-assertion": false,
+    "arrow-parens": {
+      "options": ["ban-single-arg-parens"]
+    },
+    "whitespace": {
+      "options": [
+        "check-branch",
+        "check-decl",
+        "check-operator",
+        "check-module",
+        "check-separator",
+        "check-type",
+        "check-typecast",
+        "check-preblock"
+      ],
+      "severity": "warn"
+    }
+  }
+}
