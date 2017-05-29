@@ -14,10 +14,11 @@ export interface IMonzoApiTransaction {
 }
 
 export default class Transaction {
+  public index: number
+
   private monzo: Monzo | undefined
   private acc: Account | undefined
   private tx: IMonzoApiTransaction
-  private index: number
 
   constructor(monzo: Monzo | undefined, acc: Account | undefined, tx: IMonzoApiTransaction, index = -1) {
     this.monzo = monzo
@@ -197,7 +198,7 @@ export default class Transaction {
     return new Merchant(this.tx.merchant)
   }
 
-  get notes(): object {
+  get notes() {
     return {
       toString: () => this.tx.notes,
       short: this.tx.notes.split('\n')[0],

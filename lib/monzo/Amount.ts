@@ -19,7 +19,13 @@ const currencies: ICurrencies = {
 }
 
 export default class Amount {
-  constructor(readonly native: IAmount, readonly local?: IAmount) {}
+  private readonly native: IAmount
+  private readonly local?: IAmount
+
+  constructor(native: IAmount, local?: IAmount) {
+    this.native = native
+    this.local = local
+  }
 
   // returns true if not home currency
   get foreign(): boolean {

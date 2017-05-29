@@ -99,7 +99,7 @@ const checkAccess = (): boolean => {
 const checkAuthTimeout = (): boolean => {
   debug('checkAuthTimeout')
 
-  const valid = config.get('authTime') + config.get('authExpires') > +new Date()
+  const valid = config.get('authTime') + config.get('authExpires') > Date.now()
 
   if (!valid) debug('=> access token expired')
   return valid
