@@ -12,9 +12,6 @@
 
       const template = ownerDocument.querySelector('template')
       this.root.appendChild(document.importNode(template.content, true))
-
-      this.tx = null
-      this.attachment = null
     }
 
     connectedCallback () {
@@ -32,17 +29,17 @@
       $img.src = this.src
 
       const $delete = this.root.querySelector('.delete')
-      $delete.addEventListener('click', ev => {
+      $delete.addEventListener('click', async ev => {
         ev.preventDefault()
 
-        this.tx
-          .deregisterAttachment(this.attachment.id)
-          .then(res => {
-            this.parentNode.removeChild(this)
-          })
-          .catch(err => {
-            throw err
-          })
+        try {
+          await this.tx.deregisterAttachment(this.attachment.id)
+
+          this.parentNode.removeChild(this)
+        } catch (err) {
+          console.error(err)
+          throw new Error(err)
+        }
       })
 
       // bind lightbox to attachments

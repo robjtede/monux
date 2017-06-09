@@ -37,7 +37,7 @@ export default class Monzo {
   get accounts() {
     return this
       .request('/accounts')
-      .then((accs) => accs.accounts
+      .then(accs => accs.accounts
         .map((acc: IMonzoApiAccount) => new Account(this, acc))
       )
   }

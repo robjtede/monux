@@ -14,10 +14,6 @@
 
       const template = thisDoc.querySelector('template')
       this.root.appendChild(document.importNode(template.content, true))
-
-      this.$summary = null
-
-      this.tx = null
     }
 
     connectedCallback () {
@@ -28,42 +24,11 @@
         this.render()
       }
 
-      const $attachments = this.root.querySelector('.attachments')
-      const $scrollInner = $attachments.querySelector('.scroll-inner')
-      const $newAttachment = this.root.querySelector('input.new-attachment')
+      this.$attachments = this.root.querySelector('.attachments')
+      this.$scrollInner = this.$attachments.querySelector('.scroll-inner')
+      this.$newAttachment = this.root.querySelector('input.new-attachment')
 
-      $newAttachment.addEventListener('change', async ev => {
-        ev.preventDefault()
-
-        const contentType = 'image/jpeg'
-
-        const urls = await this.tx.requestAttachmentUpload(contentType)
-        this.debug('got attachment upload url')
-
-        const uploadRes = await fetch(urls.upload_url, {
-          method: 'PUT',
-          headers: {
-            'Content-Type': contentType
-          },
-          body: $newAttachment.files[0]
-        })
-
-        if (!uploadRes.ok) throw new Error('Not able to upload')
-
-        const registerRes = await this.tx.registerAttachment(urls.file_url, contentType)
-        this.debug('registered attachment')
-
-        const $attachment = document.createElement('m-transaction-attachment')
-
-        $attachment.tx = this.tx
-        $attachment.attachment = registerRes.attachment
-
-        $scrollInner.insertBefore($attachment, $scrollInner.firstChild)
-
-        // try/catch this
-        // console.log(err)
-        // throw err
-      })
+      this.$newAttachment.addEventListener('change', this.uploadAttachment.bind(this))
     }
 
     render () {
@@ -226,15 +191,13 @@
       $notes.addEventListener('keyup', calcSize)
       $notes.addEventListener('paste', calcSize)
 
-      const editHandler = ev => {
+      const editHandler = async ev => {
         console.log('edit handler')
 
-        this.tx
-          .setNotes($notes.value.trim())
-          .then(() => {
-            updateNotes()
-            this.$summary.render()
-          })
+        await this.tx.setNotes($notes.value.trim())
+
+        updateNotes()
+        this.$summary.render()
       }
 
       $notes.addEventListener('blur', editHandler)
@@ -260,6 +223,35 @@
 
         $scrollInner.appendChild($attachment)
       })
+    }
+
+    async uploadAttachment (ev) {
+      ev.preventDefault()
+
+      const contentType = 'image/jpeg'
+
+      const urls = await this.tx.requestAttachmentUpload(contentType)
+      this.debug('got attachment upload url')
+
+      const uploadRes = await fetch(urls.upload_url, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': contentType
+        },
+        body: this.$newAttachment.files[0]
+      })
+
+      if (!uploadRes.ok) throw new Error('Not able to upload')
+
+      const registerRes = await this.tx.registerAttachment(urls.file_url, contentType)
+      this.debug('registered attachment')
+
+      const $attachment = document.createElement('m-transaction-attachment')
+
+      $attachment.tx = this.tx
+      $attachment.attachment = registerRes.attachment
+
+      this.$scrollInner.insertBefore($attachment, this.$scrollInner.firstChild)
     }
 
     get index () {

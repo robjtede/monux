@@ -14,6 +14,12 @@
   <link rel="import" href="./components/transaction-summary/transaction-summary.component.html">
   <link rel="import" href="./components/transaction-group/transaction-group.component.html">
   <link rel="import" href="./components/transaction-list/transaction-list.component.html">
+  
+  <!-- Scripts -->
+  <script async>
+    import './scripts/index'
+    import './scripts/lightbox'
+  </script>
 </head>
 <body>
   <header class="balances">
@@ -39,7 +45,7 @@
 
   <main class="app">
     <div class="app-pane transaction-pane active">
-      <m-transaction-list group-headings group-by="day" class="inactive"></m-transaction-list>
+      <m-transaction-list group-headings show-hidden group-by="day" class="inactive"></m-transaction-list>
 
       <div class="transaction-detail-pane inactive">
         <m-transaction-detail offline></m-transaction-detail>
@@ -65,12 +71,5 @@
   <div class="lightbox">
     <img>
   </div>
-  
-  <!-- Scripts -->
-  <script>
-    import './scripts/index'
-    import './scripts/lightbox'
-  </script>
-  
 </body>
 </html>

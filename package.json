@@ -32,7 +32,7 @@
     "@types/electron-window-state": "^2.0.28",
     "@types/request-promise-native": "^1.0.5",
     "electron-forge": "^3.0.2",
-    "electron-prebuilt-compile": "1.7.3",
+    "electron-prebuilt-compile": "1.7.1",
     "eslint": "^3.19.0",
     "tslib": "^1.7.1",
     "tslint": "^5.4.3",

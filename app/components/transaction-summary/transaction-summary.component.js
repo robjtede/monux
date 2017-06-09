@@ -108,14 +108,12 @@
       this.classList.add('selected')
     }
 
-    hide () {
-      return this.tx.annotate('monux_hidden', 'true')
-        .then(tx => {
-          console.log(tx)
-          this.parentNode.removeChild(this)
+    async hide () {
+      const tx = await this.tx.annotate('monux_hidden', 'true')
 
-          return tx
-        })
+      this.parentNode.removeChild(this)
+
+      return tx
     }
 
     disconnectedCallback () {
