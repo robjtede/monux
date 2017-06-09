@@ -17,19 +17,21 @@
     connectedCallback () {
       this.debug(`connected attachment`)
 
-      this.src = this.attachment.url
+      this.$img = this.root.querySelector('img-exif')
+      this.$lightbox = document.querySelector('.lightbox')
+      this.$lightboxImg = this.$lightbox.querySelector('img')
+      this.$delete = this.root.querySelector('.delete')
 
-      this.render()
+      this.src = this.attachment.url
+      this.$img.src = this.src
+
+      // this.render()
     }
 
     render () {
       this.debug(`rendering attachment`)
 
-      const $img = this.root.querySelector('img-exif')
-      $img.src = this.src
-
-      const $delete = this.root.querySelector('.delete')
-      $delete.addEventListener('click', async ev => {
+      this.$delete.addEventListener('click', async ev => {
         ev.preventDefault()
 
         try {
@@ -42,16 +44,13 @@
         }
       })
 
-      // bind lightbox to attachments
-      const $lightbox = document.querySelector('.lightbox')
-      const $lightboxImg = $lightbox.querySelector('img')
-
-      $img.classList.add('lightboxable')
-      $img.addEventListener('click', ev => {
+      // bind lightbox to image
+      this.$img.classList.add('lightboxable')
+      this.$img.addEventListener('click', async ev => {
         ev.preventDefault()
 
-        $lightboxImg.src = $img.blobUrl
-        $lightbox.classList.add('show')
+        this.$lightboxImg.src = await this.$img.blobUrl
+        this.$lightbox.classList.add('show')
       })
     }
 
@@ -86,7 +85,7 @@
     }
 
     debug (msg) {
-      if (this._debug) console.log(msg)
+      if (this._debug) console.info(msg)
     }
 
     static get is () {

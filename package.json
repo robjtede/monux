@@ -20,7 +20,7 @@
     "electron-contextmenu-middleware": "^1.0.3",
     "electron-image-menu": "^1.0.1",
     "electron-window-state": "^4.1.1",
-    "img-exif": "^0.1.0",
+    "img-exif": "^0.2.0",
     "request": "^2.81.0",
     "request-promise-native": "^1.0.4",
     "undefsafe": "^2.0.1"

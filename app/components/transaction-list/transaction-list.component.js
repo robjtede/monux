@@ -290,7 +290,7 @@
     }
 
     debug (msg) {
-      if (this._debug) console.log(msg)
+      if (this._debug) console.info(msg)
     }
 
     static get is () {
