@@ -1,6 +1,6 @@
 'use strict'
 
-;(function (thisDoc) {
+;(function (ownerDocument) {
   const strftime = require('date-fns').format
   const {
     startOfDay,
@@ -9,25 +9,24 @@
     isThisYear
   } = require('date-fns')
 
-  const template = thisDoc.querySelector('template')
-
   class TransactionListComponent extends HTMLElement {
     constructor () {
       super()
 
-      this.debug = false
-      if (this.debug) console.log('constructing list')
+      this._debug = false
+      this.debug('constructing list')
 
       this.attachShadow({mode: 'open'})
       this.root = this.shadowRoot
 
+      const template = ownerDocument.querySelector('template')
       this.root.appendChild(document.importNode(template.content, true))
 
       this.txs = []
     }
 
     connectedCallback () {
-      if (this.debug) console.log(`connected list`)
+      this.debug(`connected list`)
 
       const $groupBy = this.root.querySelector('.group-by')
       const $filterCategory = this.root.querySelector('.filter-category')
@@ -45,7 +44,7 @@
     }
 
     render () {
-      if (this.debug) console.log(`rendering list`)
+      this.debug(`rendering list`)
       Array.from(this.root.querySelectorAll('m-transaction-group')).forEach(group => {
         group.parentNode.removeChild(group)
       })
@@ -255,11 +254,11 @@
     }
 
     disconnectedCallback () {
-      if (this.debug) console.log(`disconnection list`)
+      this.debug(`disconnection list`)
     }
 
     adoptedCallback () {
-      if (this.debug) console.log(`adopted list`)
+      this.debug(`adopted list`)
     }
 
     static get observedAttributes () {
@@ -267,7 +266,7 @@
     }
 
     attributeChangedCallback (attrName, oldVal, newVal) {
-      if (this.debug) console.log(`attribute changed on list: ${attrName}, ${oldVal} => ${newVal || 'undefined'}`)
+      this.debug(`attribute changed on list: ${attrName}, ${oldVal} => ${newVal || 'undefined'}`)
 
       const changes = {
         'group-headings': () => {
@@ -289,9 +288,15 @@
 
       if (attrName in changes) changes[attrName]()
     }
+
+    debug (msg) {
+      if (this._debug) console.log(msg)
+    }
+
+    static get is () {
+      return 'm-transaction-list'
+    }
   }
 
-  document.addEventListener('DOMContentLoaded', () => {
-    window.customElements.define('m-transaction-list', TransactionListComponent)
-  })
+  window.customElements.define(TransactionListComponent.is, TransactionListComponent)
 })(document.currentScript.ownerDocument)

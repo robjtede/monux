@@ -1,18 +1,16 @@
 'use strict'
 
-;(function (thisDoc) {
-  const template = thisDoc.querySelector('template')
-
+;(function (ownerDocument) {
   class TransactionAttachmentComponent extends HTMLElement {
     constructor () {
       super()
 
-      this.debug = false
-      if (this.debug) console.log('attachmen')
+      this._debug = false
+      this.debug('attachment')
 
-      this.attachShadow({mode: 'open'})
-      this.root = this.shadowRoot
+      this.root = this.attachShadow({mode: 'open'})
 
+      const template = ownerDocument.querySelector('template')
       this.root.appendChild(document.importNode(template.content, true))
 
       this.tx = null
@@ -20,7 +18,7 @@
     }
 
     connectedCallback () {
-      if (this.debug) console.log(`connected attachment`)
+      this.debug(`connected attachment`)
 
       this.src = this.attachment.url
 
@@ -28,7 +26,7 @@
     }
 
     render () {
-      if (this.debug) console.log(`rendering attachment`)
+      this.debug(`rendering attachment`)
 
       const $img = this.root.querySelector('img-exif')
       $img.src = this.src
@@ -69,11 +67,11 @@
     }
 
     disconnectedCallback () {
-      if (this.debug) console.log(`disconnection attachment`)
+      this.debug(`disconnection attachment`)
     }
 
     adoptedCallback () {
-      if (this.debug) console.log(`adopted attachment`)
+      this.debug(`adopted attachment`)
     }
 
     static get observedAttributes () {
@@ -81,7 +79,7 @@
     }
 
     attributeChangedCallback (attrName, oldVal, newVal) {
-      if (this.debug) console.log(`attribute changed on attachment: ${attrName}, ${oldVal} => ${newVal}`)
+      this.debug(`attribute changed on attachment: ${attrName}, ${oldVal} => ${newVal}`)
 
       const changes = {
         src: () => { if (oldVal !== newVal) this.render() }
@@ -89,9 +87,15 @@
 
       if (attrName in changes) changes[attrName]()
     }
+
+    debug (msg) {
+      if (this._debug) console.log(msg)
+    }
+
+    static get is () {
+      return 'm-transaction-attachment'
+    }
   }
 
-  document.addEventListener('DOMContentLoaded', () => {
-    window.customElements.define('m-transaction-attachment', TransactionAttachmentComponent)
-  })
+  window.customElements.define(TransactionAttachmentComponent.is, TransactionAttachmentComponent)
 })(document.currentScript.ownerDocument)

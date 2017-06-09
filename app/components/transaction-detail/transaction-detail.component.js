@@ -3,18 +3,16 @@
 ;(function (thisDoc) {
   const strftime = require('date-fns').format
 
-  const template = thisDoc.querySelector('template')
-
   class TransactionDetailComponent extends HTMLElement {
     constructor () {
       super()
 
-      this.debug = false
-      if (this.debug) console.log('constructing')
+      this._debug = false
+      this.debug('constructing')
 
-      this.attachShadow({mode: 'open'})
-      this.root = this.shadowRoot
+      this.root = this.attachShadow({mode: 'open'})
 
+      const template = thisDoc.querySelector('template')
       this.root.appendChild(document.importNode(template.content, true))
 
       this.$summary = null
@@ -23,7 +21,7 @@
     }
 
     connectedCallback () {
-      if (this.debug) console.log(`connected detail`)
+      this.debug(`connected detail`)
 
       if (this.tx) {
         this.dataset.category = this.tx.category
@@ -40,7 +38,7 @@
         const contentType = 'image/jpeg'
 
         const urls = await this.tx.requestAttachmentUpload(contentType)
-        if (this.debug) console.log('got attachment upload url')
+        this.debug('got attachment upload url')
 
         const uploadRes = await fetch(urls.upload_url, {
           method: 'PUT',
@@ -53,7 +51,7 @@
         if (!uploadRes.ok) throw new Error('Not able to upload')
 
         const registerRes = await this.tx.registerAttachment(urls.file_url, contentType)
-        if (this.debug) console.log('registered attachment')
+        this.debug('registered attachment')
 
         const $attachment = document.createElement('m-transaction-attachment')
 
@@ -70,7 +68,7 @@
 
     render () {
       if (!this.tx) return
-      if (this.debug) console.log(`rendering detail`)
+      this.debug(`rendering detail`)
 
       this.renderCategory()
       this.renderIcon()
@@ -273,11 +271,11 @@
     }
 
     disconnectedCallback () {
-      if (this.debug) console.log(`disconnection detail`)
+      this.debug(`disconnection detail`)
     }
 
     adoptedCallback () {
-      if (this.debug) console.log(`adopted detail`)
+      this.debug(`adopted detail`)
     }
 
     static get observedAttributes () {
@@ -285,7 +283,7 @@
     }
 
     attributeChangedCallback (attrName, oldVal, newVal) {
-      if (this.debug) console.log(`attribute changed on detail: ${attrName}, ${oldVal} => ${newVal}`)
+      this.debug(`attribute changed on detail: ${attrName}, ${oldVal} => ${newVal}`)
 
       const changes = {
         offline: () => { if (oldVal !== newVal) this.render() }
@@ -293,9 +291,15 @@
 
       if (attrName in changes) changes[attrName]()
     }
+
+    debug (msg) {
+      if (this._debug) console.log(msg)
+    }
+
+    static get is () {
+      return 'm-transaction-detail'
+    }
   }
 
-  document.addEventListener('DOMContentLoaded', () => {
-    window.customElements.define('m-transaction-detail', TransactionDetailComponent)
-  })
+  window.customElements.define(TransactionDetailComponent.is, TransactionDetailComponent)
 })(document.currentScript.ownerDocument)

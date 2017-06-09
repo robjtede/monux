@@ -1,30 +1,23 @@
 'use strict'
 
-;(function (thisDoc) {
-  const template = thisDoc.querySelector('template')
-
+;(function (ownerDocument) {
   class TransactionSummaryComponent extends HTMLElement {
     constructor () {
       super()
 
-      this.debug = false
-      if (this.debug) console.log('constructing summary')
+      this._debug = false
+      this.debug('constructing summary')
 
-      this.attachShadow({mode: 'open'})
-      this.root = this.shadowRoot
+      this.root = this.attachShadow({mode: 'open'})
 
+      const template = ownerDocument.querySelector('template')
       this.root.appendChild(document.importNode(template.content, true))
 
-      this.$group = null
-      this.$list = null
-
       this.$txlist = document.querySelector('m-transaction-list')
-
-      this.tx = {}
     }
 
     connectedCallback () {
-      if (this.debug) console.log(`connected ${this.index} summary`)
+      this.debug(`connected ${this.index} summary`)
 
       this.dataset.category = this.tx.category
       this.dataset.index = this.tx.index
@@ -35,7 +28,7 @@
     }
 
     render () {
-      if (this.debug) console.log(`rendering ${this.index} summary`)
+      this.debug(`rendering ${this.index} summary`)
 
       const $amountWrap = this.root.querySelector('.amount-wrap')
       const $amount = this.root.querySelector('.amount')
@@ -96,7 +89,7 @@
     }
 
     clickHandler () {
-      if (this.debug) console.log(`clicked ${this.index} summary`)
+      this.debug(`clicked ${this.index} summary`)
 
       const $detailPane = document.querySelector('.transaction-detail-pane')
       const $txDetail = document.querySelector('m-transaction-detail')
@@ -126,11 +119,11 @@
     }
 
     disconnectedCallback () {
-      if (this.debug) console.log(`disconnection ${this.index} summary`)
+      this.debug(`disconnection ${this.index} summary`)
     }
 
     adoptedCallback () {
-      if (this.debug) console.log(`adopted ${this.index} summary`)
+      this.debug(`adopted ${this.index} summary`)
     }
 
     static get observedAttributes () {
@@ -138,7 +131,7 @@
     }
 
     attributeChangedCallback (attrName, oldVal, newVal) {
-      if (this.debug) console.log(`attribute changed on ${this.index}: ${attrName}, ${oldVal} => ${newVal} summary`)
+      this.debug(`attribute changed on ${this.index}: ${attrName}, ${oldVal} => ${newVal} summary`)
 
       const changes = {}
 
@@ -146,9 +139,15 @@
 
       this.render()
     }
+
+    debug (msg) {
+      if (this._debug) console.log(msg)
+    }
+
+    static get is () {
+      return 'm-transaction-summary'
+    }
   }
 
-  document.addEventListener('DOMContentLoaded', () => {
-    window.customElements.define('m-transaction-summary', TransactionSummaryComponent)
-  })
+  window.customElements.define(TransactionSummaryComponent.is, TransactionSummaryComponent)
 })(document.currentScript.ownerDocument)

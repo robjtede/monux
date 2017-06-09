@@ -1,7 +1,7 @@
-import * as crypto from 'crypto'
-import * as path from 'path'
-import * as querystring from 'querystring'
-import * as url from 'url'
+import { randomBytes } from 'crypto'
+import { resolve } from 'path'
+import { parse as parseQueryString } from 'querystring'
+import { format, parse as parseUrl } from 'url'
 
 import { oneLineTrim } from 'common-tags'
 import * as Debug from 'debug'
@@ -24,11 +24,11 @@ const debug = Debug('app:app.js')
 console.info(`starting ${app.getName()} version ${app.getVersion()}`)
 
 const appInfo = {
-  client_id: config.get('client_id'),
-  client_secret: config.get('client_secret'),
+  client_id: config.get('client_id') as string,
+  client_secret: config.get('client_secret') as string,
   redirect_uri: 'monux://auth/',
   response_type: 'code',
-  state: crypto.randomBytes(512).toString('hex')
+  state: randomBytes(512).toString('hex')
 }
 
 enableLiveReload()
@@ -128,8 +128,8 @@ const createWindow = (): void => {
 
   Menu.setApplicationMenu(Menu.buildFromTemplate(template))
 
-  mainWindow.loadURL(url.format({
-    pathname: path.resolve(__dirname, '..', 'app', 'index.html'),
+  mainWindow.loadURL(format({
+    pathname: resolve(__dirname, '..', 'app', 'index.html'),
     protocol: 'file:',
     slashes: true
   }))
@@ -220,8 +220,8 @@ const clientDetails = async () => {
 
   Menu.setApplicationMenu(Menu.buildFromTemplate(template))
 
-  clientDetailsWindow.loadURL(url.format({
-    pathname: path.resolve(__dirname, '..', 'app', 'get-client-info.html'),
+  clientDetailsWindow.loadURL(format({
+    pathname: resolve(__dirname, '..', 'app', 'get-client-info.html'),
     protocol: 'file:',
     slashes: true
   }))
@@ -277,8 +277,8 @@ app.on('open-url', async (_, forwardedUrl) => {
 
   if (authWindow) authWindow.close()
 
-  const query = url.parse(forwardedUrl).query
-  const authResponse = querystring.parse(query)
+  const query = parseUrl(forwardedUrl).query
+  const authResponse = parseQueryString(query)
 
   if (authResponse.state !== appInfo.state) {
     console.error('auth state mismatch')

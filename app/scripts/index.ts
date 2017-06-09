@@ -44,6 +44,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   if (transactions) {
     $txList.txs = JSON.parse(transactions)
+      // .filter((tx, index) => index < 5)
       .map((tx, index) =>
         new Transaction(undefined, undefined, tx, index))
 
