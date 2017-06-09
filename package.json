@@ -20,6 +20,7 @@
     "electron-contextmenu-middleware": "^1.0.3",
     "electron-image-menu": "^1.0.1",
     "electron-window-state": "^4.1.1",
+    "img-exif": "^0.1.0",
     "request": "^2.81.0",
     "request-promise-native": "^1.0.4",
     "undefsafe": "^2.0.1"
@@ -31,10 +32,10 @@
     "@types/electron-window-state": "^2.0.28",
     "@types/request-promise-native": "^1.0.5",
     "electron-forge": "^3.0.2",
-    "electron-prebuilt-compile": "1.7.1",
+    "electron-prebuilt-compile": "1.7.3",
     "eslint": "^3.19.0",
     "tslib": "^1.7.1",
-    "tslint": "^5.4.2",
+    "tslint": "^5.4.3",
     "typescript": "^2.3.4"
   },
   "config": {
