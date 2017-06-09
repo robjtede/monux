@@ -77,6 +77,8 @@
         if (this.tx.amount.foreign) {
           $amountWrap.innerHTML += this.tx.amount.exchanged.html(true, 0)
         }
+      } else {
+        $amountWrap.innerHTML = ''
       }
     }
 
