@@ -126,7 +126,7 @@ const createWindow = (): void => {
     }
   })
 
-  Menu.setApplicationMenu(Menu.buildFromTemplate(template))
+  Menu.setApplicationMenu(Menu.buildFromTemplate(menuTemplate))
 
   mainWindow.loadURL(format({
     pathname: resolve(__dirname, '..', 'app', 'index.html'),
@@ -149,7 +149,9 @@ const requestAuth = (): void => {
     height: 700
   })
 
-  Menu.setApplicationMenu(Menu.buildFromTemplate(template))
+  Menu.setApplicationMenu(Menu.buildFromTemplate(menuTemplate))
+
+  const appInfo = await getAppInfo()
 
   // get auth token
   const url = oneLineTrim`
@@ -218,7 +220,7 @@ const clientDetails = async () => {
     height: 600
   })
 
-  Menu.setApplicationMenu(Menu.buildFromTemplate(template))
+  Menu.setApplicationMenu(Menu.buildFromTemplate(menuTemplate))
 
   clientDetailsWindow.loadURL(format({
     pathname: resolve(__dirname, '..', 'app', 'get-client-info.html'),
