@@ -2,7 +2,10 @@
 <html>
 <head>
   <meta charset="utf-8">
+  
   <title>Enter Monzo Client ID and Secret</title>
+  
+  <script src="./get-client-info" async></script>
 </head>
 <body>
   <p>Client ID</p>
@@ -17,19 +20,5 @@
   <button type="button" name="button">Save Client Details</button>
 
   <div class="message"></div>
-
-  <script>
-    const Config = require('electron-config')
-    const config = new Config()
-
-    document.querySelector('button').addEventListener('click', () => {
-      config.set('client_id', document.querySelector('#client_id').value)
-      config.set('client_secret', document.querySelector('#client_secret').value)
-
-      document.querySelector('.message').textContent = 'Close this window to continue.'
-    })
-
-
-  </script>
 </body>
 </html>

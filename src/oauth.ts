@@ -23,17 +23,20 @@ export const getAccessToken = async (appInfo: IAppInfo, authCode: string) => {
 
   try {
     const res = await rp(opts)
+    debug('getAccessToken =>', res)
 
-    debug(`getAccessToken => ${typeof res}: ${res}`)
-    return res
+    return {
+      accessToken: res.access_token,
+      refreshToken: res.refresh_token
+    }
   } catch (err) {
     console.error(`getAccessToken => ${err.code}`)
-    throw err
+    throw new Error(err)
   }
 }
 
 export const verifyAccess = async (token: string) => {
-  debug(`verifyAccess with: ${token}`)
+  debug('verifyAccess with =>', token)
 
   const opts = {
     uri: 'https://api.monzo.com/ping/whoami',
@@ -45,16 +48,13 @@ export const verifyAccess = async (token: string) => {
 
   try {
     const res = await rp(opts)
-    debug(`verifyAccess => ${typeof res}: ${res}`)
+    debug('verifyAccess =>', res)
 
-    if (res && 'authenticated' in res && res.authenticated) {
-      return true
-    } else {
-      return false
-    }
+    const verified = res && 'authenticated' in res && res.authenticated
+    return verified
   } catch (err) {
-    console.error('verifyAccess => ', err)
-    throw err
+    console.error('verifyAccess failed =>', err)
+    throw new Error(err)
   }
 }
 

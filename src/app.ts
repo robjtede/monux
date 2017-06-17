@@ -6,104 +6,58 @@ import { format, parse as parseUrl } from 'url'
 import { oneLineTrim } from 'common-tags'
 import * as Debug from 'debug'
 
-import {
-  app,
-  BrowserWindow,
-  Menu,
-  shell
-} from 'electron'
-
+import { app, BrowserWindow, Menu } from 'electron'
 import { enableLiveReload } from 'electron-compile'
-import * as Config from 'electron-config'
-import * as rp from 'request-promise-native'
 import windowState = require('electron-window-state')
 
-const config = new Config()
+import { deletePassword, getPassword, setPassword } from './keychain'
+import { getAccessToken, refreshAccess, verifyAccess } from './oauth'
+import menuTemplate from './menu-template'
+
 const debug = Debug('app:app.js')
 
-console.info(`starting ${app.getName()} version ${app.getVersion()}`)
+debug(`starting ${app.getName()} version ${app.getVersion()}`)
 
-const appInfo = {
-  client_id: config.get('client_id') as string,
-  client_secret: config.get('client_secret') as string,
-  redirect_uri: 'monux://auth/',
-  response_type: 'code',
-  state: randomBytes(512).toString('hex')
+export interface IAppInfo {
+  client_id: string
+  client_secret: string
+  redirect_uri: string
+  response_type: string
+  state: string
 }
+
+const getAppInfo = (() => {
+  const clientId = getPassword({
+    account: 'Monux',
+    service: 'monux.monzo.client_id'
+  })
+  const clientSecret = getPassword({
+    account: 'Monux',
+    service: 'monux.monzo.client_secret'
+  })
+  const state = new Promise<string>((resolve, reject) => {
+    randomBytes(512, (err, buf) => {
+      if (err) reject(err)
+      resolve(buf.toString('hex'))
+    })
+  })
+
+  return async (): Promise<IAppInfo> => {
+    return {
+      client_id: await clientId,
+      client_secret: await clientSecret,
+      redirect_uri: 'monux://auth/',
+      response_type: 'code',
+      state: await state
+    }
+  }
+})()
 
 enableLiveReload()
 
 let mainWindow: Electron.BrowserWindow | undefined
 let authWindow: Electron.BrowserWindow | undefined
 let clientDetailsWindow: Electron.BrowserWindow | undefined
-
-const template: Electron.MenuItemOptions[] = [
-  {
-    label: 'Application',
-    submenu: [
-      { role: 'about' },
-      { type: 'separator' },
-      { role: 'hide' },
-      { role: 'hideothers' },
-      { role: 'unhide' },
-      { role: 'quit' }
-    ]
-  }, {
-    label: 'Edit',
-    submenu: [
-      { role: 'undo' },
-      { role: 'redo' },
-      { type: 'separator' },
-      { role: 'cut' },
-      { role: 'copy' },
-      { role: 'paste' },
-      { role: 'selectall' }
-    ]
-  }, {
-    label: 'View',
-    submenu: [
-      { role: 'reload' },
-      { role: 'toggledevtools' },
-      { type: 'separator' },
-      { role: 'zoomin' },
-      { role: 'zoomout' },
-      { role: 'resetzoom' }
-    ]
-  }, {
-    role: 'window',
-    submenu: [
-      { role: 'minimize' },
-      { role: 'close' }
-    ]
-  }, {
-    role: 'help',
-    submenu: [
-      { label: 'Monux GitHub Repo', click: () => shell.openExternal('https://github.com/robjtede/monux') },
-      { label: 'Learn More About Electron', click: () => shell.openExternal('http://electron.atom.io') }
-    ]
-  }
-]
-
-const checkAccess = (): boolean => {
-  debug('checkAccess')
-
-  if (!config.has('accessToken')) {
-    debug('=> no access token')
-    return false
-  }
-
-  if (config.has('authTime') && config.has('authExpires')) return checkAuthTimeout()
-  else return false
-}
-
-const checkAuthTimeout = (): boolean => {
-  debug('checkAuthTimeout')
-
-  const valid = config.get('authTime') + config.get('authExpires') > Date.now()
-
-  if (!valid) debug('=> access token expired')
-  return valid
-}
 
 const createWindow = (): void => {
   debug('createWindow')
@@ -128,18 +82,22 @@ const createWindow = (): void => {
 
   Menu.setApplicationMenu(Menu.buildFromTemplate(menuTemplate))
 
-  mainWindow.loadURL(format({
-    pathname: resolve(__dirname, '..', 'app', 'index.html'),
-    protocol: 'file:',
-    slashes: true
-  }))
+  mainWindow.loadURL(
+    format({
+      pathname: resolve(__dirname, '..', 'app', 'index.html'),
+      protocol: 'file:',
+      slashes: true
+    })
+  )
 
   mainWindowState.manage(mainWindow)
 
-  mainWindow.on('closed', () => { mainWindow = undefined })
+  mainWindow.on('closed', () => {
+    mainWindow = undefined
+  })
 }
 
-const requestAuth = (): void => {
+const requestAuth = async () => {
   debug('requestAuth')
 
   debug('clearing auth details')
@@ -165,56 +123,7 @@ const requestAuth = (): void => {
   authWindow.loadURL(url)
 }
 
-const getAccessToken = async () => {
-  debug('getAccessToken')
-
-  const opts = {
-    uri: 'https://api.monzo.com/oauth2/token',
-    method: 'post',
-    form: {
-      grant_type: 'authorization_code',
-      client_id: appInfo.client_id,
-      client_secret: appInfo.client_secret,
-      redirect_uri: appInfo.redirect_uri,
-      code: config.get('authCode')
-    },
-    json: true
-  }
-
-  try {
-    const res = await rp(opts)
-
-    debug(`getAccessToken => ${typeof res}: ${res}`)
-    return res
-  } catch (err) {
-    console.error(`getAccessToken => ${err.code}`)
-    throw err
-  }
-}
-
-const verifyAccess = async () => {
-  debug(`verifyAccess with: ${config.get('accessToken')}`)
-
-  const opts = {
-    uri: 'https://api.monzo.com/ping/whoami',
-    headers: {
-      Authorization: `Bearer ${config.get('accessToken')}`
-    },
-    json: true
-  }
-
-  try {
-    const res = await rp(opts)
-
-    debug(`verifyAccess => ${typeof res}: ${res}`)
-    return res
-  } catch (err) {
-    console.error('verifyAccess =>', err)
-    throw err
-  }
-}
-
-const clientDetails = async () => {
+const getClientDetails = async () => {
   clientDetailsWindow = new BrowserWindow({
     width: 400,
     height: 600
@@ -222,30 +131,32 @@ const clientDetails = async () => {
 
   Menu.setApplicationMenu(Menu.buildFromTemplate(menuTemplate))
 
-  clientDetailsWindow.loadURL(format({
-    pathname: resolve(__dirname, '..', 'app', 'get-client-info.html'),
-    protocol: 'file:',
-    slashes: true
-  }))
+  clientDetailsWindow.loadURL(
+    format({
+      pathname: resolve(__dirname, '..', 'app', 'get-client-info.html'),
+      protocol: 'file:',
+      slashes: true
+    })
+  )
 
   clientDetailsWindow.on('closed', async () => {
     clientDetailsWindow = undefined
 
-    appInfo.client_id = config.get('client_id')
-    appInfo.client_secret = config.get('client_secret')
+    // requestAuth()
 
-    if (!checkAccess()) {
-      requestAuth()
-      return
-    }
+    const token = await getPassword({
+      account: 'Monux',
+      service: 'monux.monzo.access_token'
+    })
 
     try {
-      const res = await verifyAccess()
+      const res = await verifyAccess(token)
 
-      if (res && 'authenticated' in res && res.authenticated) createWindow()
+      if (res) createWindow()
       else requestAuth()
     } catch (err) {
-      console.error(err.message)
+      console.error(err)
+      throw new Error(err)
     }
   })
 }
@@ -253,29 +164,27 @@ const clientDetails = async () => {
 app.on('ready', async () => {
   debug('ready event')
 
-  if (!(config.has('client_id') && config.has('client_secret'))) {
-    config.clear()
-    clientDetails()
-    return
-  }
-
-  if (!checkAccess()) {
-    requestAuth()
-    return
-  }
-
   try {
-    const res = await verifyAccess()
+    const appInfo = await getAppInfo()
+    const savedToken = await getPassword({
+      account: 'Monux',
+      service: 'monux.monzo.access_token'
+    })
 
-    if (res && 'authenticated' in res && res.authenticated) createWindow()
-    else requestAuth()
-  } catch (err)  {
-    console.error(err.message)
+    debug('monzo client =>', appInfo.client_id)
+
+    if (await verifyAccess(savedToken)) {
+      createWindow()
+    }
+  } catch (err) {
+    await requestAuth()
   }
 })
 
 app.on('open-url', async (_, forwardedUrl) => {
   debug('open-url event')
+
+  const appInfo = await getAppInfo()
 
   if (authWindow) authWindow.close()
 
@@ -287,26 +196,28 @@ app.on('open-url', async (_, forwardedUrl) => {
     throw new Error('auth state mismatch')
   }
 
-  debug(`authResponse code => ${authResponse.code}`)
-
-  config.set('authCode', authResponse.code)
+  const authCode = authResponse.code
+  debug('authcode =>', authCode)
 
   try {
-    const res = await getAccessToken()
+    const { accessToken, refreshToken } = await getAccessToken(
+      appInfo,
+      authCode
+    )
 
-    config.set({
-      accessToken: res.access_token,
-      authExpires: res.expires_in * 1000,
-      authTime: +new Date()
+    const access = await verifyAccess(accessToken)
+    debug('token =>', accessToken)
+
+    await setPassword({
+      account: 'Monux',
+      service: 'monux.monzo.access_token',
+      password: accessToken
     })
 
-    await verifyAccess()
-
-    debug('open-url event => verifyAccess.then')
-
     createWindow()
-  } catch (err)  {
-    console.error(err.message)
+  } catch (err) {
+    console.error(err)
+    throw new Error(err)
   }
 })
 

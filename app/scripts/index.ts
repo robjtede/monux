@@ -5,21 +5,28 @@ import { remote } from 'electron'
 const { TouchBar } = remote.require('electron')
 const { TouchBarLabel, TouchBarButton, TouchBarSpacer } = TouchBar
 
-import * as Config from 'electron-config'
-const config = new Config()
-
 import context = require('electron-contextmenu-middleware')
 import imageMenu = require('electron-image-menu')
 context.use(imageMenu)
 context.activate()
 
 import { Monzo, Transaction } from '../../lib/monzo'
+import { getPassword } from '../../src/keychain'
 
-const monzo = new Monzo(config.get('accessToken'))
+const getMonzo = (() => {
+  const accessToken = getPassword({
+    account: 'Monux',
+    service: 'monux.monzo.access_token'
+  })
+
+  return async (): Promise<Monzo> => {
+    return new Monzo(await accessToken)
+  }
+})()
 
 const debug = true
 
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
   const $app = document.querySelector('main') as HTMLElement
   const $header = document.querySelector('header') as HTMLElement
   const $nav = document.querySelector('nav') as HTMLElement
@@ -35,7 +42,7 @@ document.addEventListener('DOMContentLoaded', () => {
   ) as HTMLHeadingElement
   const $accDescription = $nav.querySelector('.person') as HTMLDivElement
 
-  const accounts = monzo.accounts
+  const accounts = (await getMonzo()).accounts
 
   const transactions = localStorage.getItem('transactions')
 
