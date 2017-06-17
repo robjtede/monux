@@ -58,6 +58,4 @@ export const verifyAccess = async (token: string) => {
   }
 }
 
-export const refreshAccess = async () => {
-  return
-}
+export const refreshAccess = async () => {}

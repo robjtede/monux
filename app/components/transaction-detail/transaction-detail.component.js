@@ -1,5 +1,4 @@
 'use strict'
-
 ;(function (thisDoc) {
   const strftime = require('date-fns').format
 
@@ -10,14 +9,14 @@
       this._debug = false
       this.debug('constructing')
 
-      this.root = this.attachShadow({mode: 'open'})
+      this.root = this.attachShadow({ mode: 'open' })
 
       const template = thisDoc.querySelector('template')
       this.root.appendChild(document.importNode(template.content, true))
     }
 
     connectedCallback () {
-      this.debug(`connected detail`)
+      this.debug('connected detail')
 
       if (this.tx) {
         this.dataset.category = this.tx.category
@@ -28,12 +27,15 @@
       this.$scrollInner = this.$attachments.querySelector('.scroll-inner')
       this.$newAttachment = this.root.querySelector('input.new-attachment')
 
-      this.$newAttachment.addEventListener('change', this.uploadAttachment.bind(this))
+      this.$newAttachment.addEventListener(
+        'change',
+        this.uploadAttachment.bind(this)
+      )
     }
 
     render () {
       if (!this.tx) return
-      this.debug(`rendering detail`)
+      this.debug('rendering detail')
 
       this.renderCategory()
       this.renderIcon()
@@ -101,7 +103,9 @@
     renderDeclined () {
       if (this.tx.declined) {
         this.classList.add('declined')
-        this.root.querySelector('.decline-reason').textContent = this.tx.declineReason
+        this.root.querySelector(
+          '.decline-reason'
+        ).textContent = this.tx.declineReason
       } else {
         this.classList.remove('declined')
       }
@@ -245,7 +249,10 @@
 
       if (!uploadRes.ok) throw new Error('Not able to upload')
 
-      const registerRes = await this.tx.registerAttachment(urls.file_url, contentType)
+      const registerRes = await this.tx.registerAttachment(
+        urls.file_url,
+        contentType
+      )
       this.debug('registered attachment')
 
       const $attachment = document.createElement('m-transaction-attachment')
@@ -265,11 +272,11 @@
     }
 
     disconnectedCallback () {
-      this.debug(`disconnection detail`)
+      this.debug('disconnection detail')
     }
 
     adoptedCallback () {
-      this.debug(`adopted detail`)
+      this.debug('adopted detail')
     }
 
     static get observedAttributes () {
@@ -277,10 +284,14 @@
     }
 
     attributeChangedCallback (attrName, oldVal, newVal) {
-      this.debug(`attribute changed on detail: ${attrName}, ${oldVal} => ${newVal}`)
+      this.debug(
+        `attribute changed on detail: ${attrName}, ${oldVal} => ${newVal}`
+      )
 
       const changes = {
-        offline: () => { if (oldVal !== newVal) this.render() }
+        offline: () => {
+          if (oldVal !== newVal) this.render()
+        }
       }
 
       if (attrName in changes) changes[attrName]()
@@ -295,5 +306,8 @@
     }
   }
 
-  window.customElements.define(TransactionDetailComponent.is, TransactionDetailComponent)
+  window.customElements.define(
+    TransactionDetailComponent.is,
+    TransactionDetailComponent
+  )
 })(document.currentScript.ownerDocument)

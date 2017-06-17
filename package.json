@@ -9,14 +9,29 @@
   "scripts": {
     "start": "electron-forge start",
     "package": "electron-forge package",
-    "make": "electron-forge make"
+    "make": "electron-forge make",
+    "precommit": "lint-staged"
+  },
+  "lint-staged": {
+    "*.js": [
+      "prettier --write --no-semi --single-quote",
+      "eslint --fix",
+      "git add"
+    ],
+    "*.ts": [
+      "prettier --write --no-semi --single-quote",
+      "git add"
+    ],
+    "*.css": [
+      "prettier --write",
+      "git add"
+    ]
   },
   "dependencies": {
     "common-tags": "^1.4.0",
     "date-fns": "^1.28.5",
     "debug": "^2.6.8",
     "electron-compile": "^6.4.1",
-    "electron-config": "^1.0.0",
     "electron-contextmenu-middleware": "^1.0.3",
     "electron-image-menu": "^1.0.1",
     "electron-window-state": "^4.1.1",
@@ -32,9 +47,17 @@
     "@types/electron-config": "^0.2.1",
     "@types/electron-window-state": "^2.0.28",
     "@types/request-promise-native": "^1.0.5",
-    "electron-forge": "^3.0.4",
+    "electron-forge": "^3.0.5",
     "electron-prebuilt-compile": "1.7.1",
     "eslint": "^4.0.0",
+    "eslint-config-standard": "^10.2.1",
+    "eslint-plugin-import": "^2.3.0",
+    "eslint-plugin-node": "^5.0.0",
+    "eslint-plugin-promise": "^3.5.0",
+    "eslint-plugin-standard": "^3.0.1",
+    "husky": "^0.13.4",
+    "lint-staged": "^3.6.1",
+    "prettier": "^1.4.4",
     "tslib": "^1.7.1",
     "tslint": "^5.4.3",
     "typescript": "^2.4.0"

@@ -1,5 +1,4 @@
 'use strict'
-
 ;(function (ownerDocument) {
   class TransactionAttachmentComponent extends HTMLElement {
     constructor () {
@@ -8,14 +7,14 @@
       this._debug = false
       this.debug('attachment')
 
-      this.root = this.attachShadow({mode: 'open'})
+      this.root = this.attachShadow({ mode: 'open' })
 
       const template = ownerDocument.querySelector('template')
       this.root.appendChild(document.importNode(template.content, true))
     }
 
     connectedCallback () {
-      this.debug(`connected attachment`)
+      this.debug('connected attachment')
 
       this.$img = this.root.querySelector('img-exif')
       this.$lightbox = document.querySelector('.lightbox')
@@ -29,7 +28,7 @@
     }
 
     render () {
-      this.debug(`rendering attachment`)
+      this.debug('rendering attachment')
 
       this.$delete.addEventListener('click', async ev => {
         ev.preventDefault()
@@ -63,11 +62,11 @@
     }
 
     disconnectedCallback () {
-      this.debug(`disconnection attachment`)
+      this.debug('disconnection attachment')
     }
 
     adoptedCallback () {
-      this.debug(`adopted attachment`)
+      this.debug('adopted attachment')
     }
 
     static get observedAttributes () {
@@ -75,10 +74,14 @@
     }
 
     attributeChangedCallback (attrName, oldVal, newVal) {
-      this.debug(`attribute changed on attachment: ${attrName}, ${oldVal} => ${newVal}`)
+      this.debug(
+        `attribute changed on attachment: ${attrName}, ${oldVal} => ${newVal}`
+      )
 
       const changes = {
-        src: () => { if (oldVal !== newVal) this.render() }
+        src: () => {
+          if (oldVal !== newVal) this.render()
+        }
       }
 
       if (attrName in changes) changes[attrName]()
@@ -93,5 +96,8 @@
     }
   }
 
-  window.customElements.define(TransactionAttachmentComponent.is, TransactionAttachmentComponent)
+  window.customElements.define(
+    TransactionAttachmentComponent.is,
+    TransactionAttachmentComponent
+  )
 })(document.currentScript.ownerDocument)

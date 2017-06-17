@@ -1,8 +1,8 @@
 import undefsafe = require('undefsafe')
 
 export interface IMonzoApiMerchant {
-  id: string,
-  group_id: string,
+  id: string
+  group_id: string
   [propName: string]: any
 }
 

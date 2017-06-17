@@ -1,5 +1,4 @@
 'use strict'
-
 ;(function (ownerDocument) {
   class TransactionSummaryComponent extends HTMLElement {
     constructor () {
@@ -8,7 +7,7 @@
       this._debug = false
       this.debug('constructing summary')
 
-      this.root = this.attachShadow({mode: 'open'})
+      this.root = this.attachShadow({ mode: 'open' })
 
       const template = ownerDocument.querySelector('template')
       this.root.appendChild(document.importNode(template.content, true))
@@ -129,7 +128,10 @@
     }
 
     attributeChangedCallback (attrName, oldVal, newVal) {
-      this.debug(`attribute changed on ${this.index}: ${attrName}, ${oldVal} => ${newVal} summary`)
+      this.debug(
+        `attribute changed on ${this
+          .index}: ${attrName}, ${oldVal} => ${newVal} summary`
+      )
 
       const changes = {}
 
@@ -147,5 +149,8 @@
     }
   }
 
-  window.customElements.define(TransactionSummaryComponent.is, TransactionSummaryComponent)
+  window.customElements.define(
+    TransactionSummaryComponent.is,
+    TransactionSummaryComponent
+  )
 })(document.currentScript.ownerDocument)

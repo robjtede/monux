@@ -1,13 +1,7 @@
 'use strict'
-
 ;(function (ownerDocument) {
   const strftime = require('date-fns').format
-  const {
-    startOfDay,
-    isToday,
-    isYesterday,
-    isThisYear
-  } = require('date-fns')
+  const { startOfDay, isToday, isYesterday, isThisYear } = require('date-fns')
 
   class TransactionListComponent extends HTMLElement {
     constructor () {
@@ -16,7 +10,7 @@
       this._debug = false
       this.debug('constructing list')
 
-      this.attachShadow({mode: 'open'})
+      this.attachShadow({ mode: 'open' })
       this.root = this.shadowRoot
 
       const template = ownerDocument.querySelector('template')
@@ -26,7 +20,7 @@
     }
 
     connectedCallback () {
-      this.debug(`connected list`)
+      this.debug('connected list')
 
       const $groupBy = this.root.querySelector('.group-by')
       const $filterCategory = this.root.querySelector('.filter-category')
@@ -44,12 +38,16 @@
     }
 
     render () {
-      this.debug(`rendering list`)
-      Array.from(this.root.querySelectorAll('m-transaction-group')).forEach(group => {
+      this.debug('rendering list')
+      Array.from(
+        this.root.querySelectorAll('m-transaction-group')
+      ).forEach(group => {
         group.parentNode.removeChild(group)
       })
 
-      if (this.filterCategory) this.root.querySelector('.filter-category').value = this.filterCategory
+      if (this.filterCategory) {
+        this.root.querySelector('.filter-category').value = this.filterCategory
+      }
 
       const filtered = this.txs.filter(tx => {
         if (!this.showHidden && tx.hidden) return false
@@ -67,7 +65,9 @@
         },
 
         merchant: (groups, tx, index) => {
-          return tx.tx.merchant ? tx.tx.merchant.group_id : tx.tx.counterparty.user_id ? 'monzo-contacts' : 'top-ups'
+          return tx.tx.merchant
+            ? tx.tx.merchant.group_id
+            : tx.tx.counterparty.user_id ? 'monzo-contacts' : 'top-ups'
         },
 
         none: (groups, tx, index) => {
@@ -88,25 +88,23 @@
         day: (a, b) => b[0] - a[0],
 
         merchant: (a, b) => {
-          const atot = a[1].filter(tx => {
-            if (tx.is.metaAction || tx.declined) return false
-            return true
-          })
-          .reduce((sum, tx) => {
-            return tx.amount.positive
-            ? sum
-            : sum + tx.amount.raw
-          }, 0)
+          const atot = a[1]
+            .filter(tx => {
+              if (tx.is.metaAction || tx.declined) return false
+              return true
+            })
+            .reduce((sum, tx) => {
+              return tx.amount.positive ? sum : sum + tx.amount.raw
+            }, 0)
 
-          const btot = b[1].filter(tx => {
-            if (tx.is.metaAction || tx.declined) return false
-            return true
-          })
-          .reduce((sum, tx) => {
-            return tx.amount.positive
-            ? sum
-            : sum + tx.amount.raw
-          }, 0)
+          const btot = b[1]
+            .filter(tx => {
+              if (tx.is.metaAction || tx.declined) return false
+              return true
+            })
+            .reduce((sum, tx) => {
+              return tx.amount.positive ? sum : sum + tx.amount.raw
+            }, 0)
 
           return atot - btot
         },
@@ -140,7 +138,9 @@
             },
 
             merchant: tx => {
-              return tx.tx.merchant ? tx.merchant.name : tx.tx.counterparty.user_id ? 'Monzo Contacts' : 'Top Ups'
+              return tx.tx.merchant
+                ? tx.merchant.name
+                : tx.tx.counterparty.user_id ? 'Monzo Contacts' : 'Top Ups'
             },
 
             none: tx => {
@@ -172,29 +172,43 @@
 
     get allTransactions () {
       return Array.from(this.root.querySelectorAll('m-transaction-group'))
-        .map(group => Array.from(group.shadowRoot.querySelectorAll('m-transaction-summary')))
+        .map(group =>
+          Array.from(group.shadowRoot.querySelectorAll('m-transaction-summary'))
+        )
         .reduce((groups, group) => [...groups, ...group], [])
     }
 
     get selectedTransaction () {
-      const $selectedGroup = Array.from(this.root.querySelectorAll('m-transaction-group'))
-        .find(group => group.shadowRoot.querySelector('m-transaction-summary.selected'))
+      const $selectedGroup = Array.from(
+        this.root.querySelectorAll('m-transaction-group')
+      ).find(group =>
+        group.shadowRoot.querySelector('m-transaction-summary.selected')
+      )
 
       let $selectedTx
       if ($selectedGroup) {
-        $selectedTx = $selectedGroup.shadowRoot.querySelector('m-transaction-summary.selected')
+        $selectedTx = $selectedGroup.shadowRoot.querySelector(
+          'm-transaction-summary.selected'
+        )
       }
 
       return $selectedTx
     }
 
     getTransactionByIndex (index = 0) {
-      const $selectedGroup = Array.from(this.root.querySelectorAll('m-transaction-group'))
-        .find(group => group.shadowRoot.querySelector(`m-transaction-summary[data-index="${index}"]`))
+      const $selectedGroup = Array.from(
+        this.root.querySelectorAll('m-transaction-group')
+      ).find(group =>
+        group.shadowRoot.querySelector(
+          `m-transaction-summary[data-index="${index}"]`
+        )
+      )
 
       let $tx
       if ($selectedGroup) {
-        $tx = $selectedGroup.shadowRoot.querySelector(`m-transaction-summary[data-index="${index}"]`)
+        $tx = $selectedGroup.shadowRoot.querySelector(
+          `m-transaction-summary[data-index="${index}"]`
+        )
       }
 
       return $tx
@@ -212,7 +226,8 @@
           if (!this.selectedTransaction) {
             return this.allTransactions[this.allTransactions.length - 1]
           } else {
-            const index = this.allTransactions.indexOf(this.selectedTransaction) - 1
+            const index =
+              this.allTransactions.indexOf(this.selectedTransaction) - 1
             return this.allTransactions[index]
           }
         },
@@ -221,7 +236,8 @@
           if (!this.selectedTransaction) {
             return this.allTransactions[0]
           } else {
-            const index = this.allTransactions.indexOf(this.selectedTransaction) + 1
+            const index =
+              this.allTransactions.indexOf(this.selectedTransaction) + 1
             return this.allTransactions[index]
           }
         }
@@ -254,11 +270,11 @@
     }
 
     disconnectedCallback () {
-      this.debug(`disconnection list`)
+      this.debug('disconnection list')
     }
 
     adoptedCallback () {
-      this.debug(`adopted list`)
+      this.debug('adopted list')
     }
 
     static get observedAttributes () {
@@ -266,7 +282,10 @@
     }
 
     attributeChangedCallback (attrName, oldVal, newVal) {
-      this.debug(`attribute changed on list: ${attrName}, ${oldVal} => ${newVal || 'undefined'}`)
+      this.debug(
+        `attribute changed on list: ${attrName}, ${oldVal} => ${newVal ||
+          'undefined'}`
+      )
 
       const changes = {
         'group-headings': () => {
@@ -298,5 +317,8 @@
     }
   }
 
-  window.customElements.define(TransactionListComponent.is, TransactionListComponent)
+  window.customElements.define(
+    TransactionListComponent.is,
+    TransactionListComponent
+  )
 })(document.currentScript.ownerDocument)
