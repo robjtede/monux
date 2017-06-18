@@ -173,7 +173,7 @@ export default class Transaction {
   }
 
   get iconFallback(): string {
-    return `./icons/${this.tx.category}.png`
+    return `./icons/${this.category}.png`
   }
 
   get id(): string {
@@ -181,7 +181,7 @@ export default class Transaction {
   }
 
   get is() {
-    const cash = this.tx.category === 'cash'
+    const cash = this.category === 'cash'
     const zero = +this.tx.amount === 0
 
     const metaAction = zero && !this.inSpending
