@@ -236,7 +236,7 @@ export default class Transaction {
     if (this.is.cash) return false
 
     // all income and zero amounts seems to be exempt
-    // could change when currect accounts release
+    // NOTE: could change when current accounts release
     if (this.tx.amount >= 0) return false
 
     // if settled does not exists
@@ -251,10 +251,11 @@ export default class Transaction {
 
   get settled(): string {
     if (this.pending) return 'Pending'
-    else
+    else {
       return `Settled: ${strftime(
         new Date(this.tx.settled),
         'h:mma - Do MMMM YYYY'
       )}`
+    }
   }
 }

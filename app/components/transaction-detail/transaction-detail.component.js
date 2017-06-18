@@ -48,6 +48,7 @@
       this.renderDate()
       this.renderId()
       this.renderDescription()
+      this.renderSettled()
     }
 
     renderBalance () {
