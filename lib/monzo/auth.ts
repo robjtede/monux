@@ -2,11 +2,49 @@ import * as Debug from 'debug'
 
 import * as rp from 'request-promise-native'
 
-import { IAppInfo } from './app'
+import { IAppInfo } from '../../src/app'
+import { getPassword, setPassword } from '../keychain'
 
 const debug = Debug('app:oauth.js')
 
-export const getAccessToken = async (appInfo: IAppInfo, authCode: string) => {
+const ACCOUNT = 'Monux'
+const SERVICE = 'monux'
+const MONZO_SERVICE = `${SERVICE}.monzo`
+
+export type EMonzoSaveableCodes =
+  | 'client_id'
+  | 'client_secret'
+  | 'access_token'
+  | 'refresh_token'
+
+export const getSavedCode = async (
+  code: EMonzoSaveableCodes
+): Promise<string> => {
+  debug('getting code =>', `${MONZO_SERVICE}.${code}`)
+
+  return getPassword({
+    account: ACCOUNT,
+    service: `${MONZO_SERVICE}.${code}`
+  })
+}
+
+export const saveCode = async (
+  code: EMonzoSaveableCodes,
+  value: string
+): Promise<{}> => {
+  debug('saving code =>', `${MONZO_SERVICE}.${code}`)
+
+  return setPassword({
+    account: ACCOUNT,
+    service: `${MONZO_SERVICE}.${code}`,
+    password: value
+  })
+}
+
+export const getAccessToken = async (
+  appInfo: IAppInfo,
+  authCode: string
+): Promise<{ accessToken: string; refreshToken: string }> => {
   debug('getAccessToken')
 
   const opts = {
@@ -84,7 +122,10 @@ export const verifyAccess = async (accessToken: string) => {
       ...opts,
       simple: false
     })
-    debug('verifyAccess =>', res)
+    debug(
+      'verifyAccess =>',
+      res && 'authenticated' in res && res.authenticated ? '✓' : '✘'
+    )
 
     return res && 'authenticated' in res && res.authenticated
   } catch (err) {

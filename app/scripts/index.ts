@@ -11,13 +11,10 @@ context.use(imageMenu)
 context.activate()
 
 import { Monzo, Transaction } from '../../lib/monzo'
-import { getPassword } from '../../src/keychain'
+import { getSavedCode } from '../../lib/monzo/auth'
 
 const getMonzo = (() => {
-  const accessToken = getPassword({
-    account: 'Monux',
-    service: 'monux.monzo.access_token'
-  })
+  const accessToken = getSavedCode('access_token')
 
   return async (): Promise<Monzo> => {
     return new Monzo(await accessToken)

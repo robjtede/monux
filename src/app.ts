@@ -6,8 +6,13 @@ import * as Debug from 'debug'
 import { app } from 'electron'
 import { enableLiveReload } from 'electron-compile'
 
-import { deletePassword, getPassword, setPassword } from './keychain'
-import { getAccessToken, refreshAccess, verifyAccess } from './oauth'
+import {
+  getAccessToken,
+  refreshAccess,
+  verifyAccess,
+  getSavedCode,
+  saveCode
+} from '../lib/monzo/auth'
 import WindowManager from './window-manager'
 
 const debug = Debug('app:app')
@@ -25,14 +30,6 @@ export interface IAppInfo {
 }
 
 const getAppInfo = (() => {
-  const clientId = getPassword({
-    account: 'Monux',
-    service: 'monux.monzo.client_id'
-  })
-  const clientSecret = getPassword({
-    account: 'Monux',
-    service: 'monux.monzo.client_secret'
-  })
   const state = new Promise<string>((resolve, reject) => {
     randomBytes(512, (err, buf) => {
       if (err) reject(err)
@@ -42,8 +39,8 @@ const getAppInfo = (() => {
 
   return async (): Promise<IAppInfo> => {
     return {
-      client_id: await clientId,
-      client_secret: await clientSecret,
+      client_id: await getSavedCode('client_id'),
+      client_secret: await getSavedCode('client_secret'),
       redirect_uri: 'monux://auth/',
       response_type: 'code',
       state: await state
@@ -58,20 +55,14 @@ app.on('ready', async () => {
     const appInfo = await getAppInfo()
 
     try {
-      const accessToken = await getPassword({
-        account: 'Monux',
-        service: 'monux.monzo.access_token'
-      })
+      const accessToken = await getSavedCode('access_token')
 
       debug('monzo client =>', appInfo.client_id)
 
       if (await verifyAccess(accessToken)) {
         mainWindow.goToMonux()
       } else {
-        const refreshToken = await getPassword({
-          account: 'Monux',
-          service: 'monux.monzo.refresh_token'
-        })
+        const refreshToken = await getSavedCode('refresh_token')
 
         const {
           accessToken: newAccessToken,
@@ -79,17 +70,8 @@ app.on('ready', async () => {
         } = await refreshAccess(appInfo, refreshToken)
 
         if (await verifyAccess(newAccessToken)) {
-          await setPassword({
-            account: 'Monux',
-            service: 'monux.monzo.access_token',
-            password: newAccessToken
-          })
-
-          await setPassword({
-            account: 'Monux',
-            service: 'monux.monzo.refresh_token',
-            password: newRefreshToken
-          })
+          await saveCode('access_token', newAccessToken)
+          await saveCode('refresh_token', newRefreshToken)
 
           mainWindow.goToMonux()
         } else {
@@ -133,17 +115,8 @@ app.on('open-url', async (_, forwardedUrl) => {
 
     debug('token =>', accessToken)
     if (await verifyAccess(accessToken)) {
-      await setPassword({
-        account: 'Monux',
-        service: 'monux.monzo.access_token',
-        password: accessToken
-      })
-
-      await setPassword({
-        account: 'Monux',
-        service: 'monux.monzo.refresh_token',
-        password: refreshToken
-      })
+      await saveCode('access_token', accessToken)
+      await saveCode('refresh_token', refreshToken)
 
       mainWindow.goToMonux()
     } else {

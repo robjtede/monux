@@ -49,7 +49,7 @@ export default class WindowManager {
   }
 
   set location(path: string) {
-    debug('set window location to', path.slice(0, 50))
+    debug('set window location =>', path)
     this.window.loadURL(path)
   }
 

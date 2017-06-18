@@ -1,17 +1,11 @@
-const { setPassword } = require('../src/keychain')
+const { saveCode } = require('../lib/monzo/auth')
 
 document.querySelector('button').addEventListener('click', async () => {
-  await setPassword({
-    account: 'Monux',
-    service: 'client_id',
-    password: document.querySelector('#client_id').value
-  })
-
-  await setPassword({
-    account: 'Monux',
-    service: 'client_secret',
-    password: document.querySelector('#client_secret').value
-  })
+  await saveCode('client_id', document.querySelector('#client_id').value)
+  await saveCode(
+    'client_secret',
+    document.querySelector('#client_secret').value
+  )
 
   document.querySelector('.message').textContent =
     'Close this window to continue.'
