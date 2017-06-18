@@ -78,6 +78,7 @@
       },
       "electronPackagerConfig": {
         "icon": "monux",
+        "asar": true,
         "protocols": [
           {
             "schemes": [
