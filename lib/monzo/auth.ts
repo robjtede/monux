@@ -3,7 +3,7 @@ import * as Debug from 'debug'
 import * as rp from 'request-promise-native'
 
 import { IAppInfo } from '../../src/app'
-import { getPassword, setPassword } from '../keychain'
+import { getPassword, setPassword, deletePassword } from '../keychain'
 
 const debug = Debug('monzo:auth')
 
@@ -38,6 +38,17 @@ export const saveCode = async (
     account: ACCOUNT,
     service: `${MONZO_SERVICE}.${code}`,
     password: value
+  })
+}
+
+export const deleteSavedCode = async (
+  code: EMonzoSaveableCodes
+): Promise<{}> => {
+  debug('deleting code =>', `${MONZO_SERVICE}.${code}`)
+
+  return deletePassword({
+    account: ACCOUNT,
+    service: `${MONZO_SERVICE}.${code}`
   })
 }
 

@@ -172,6 +172,26 @@ nav {
   height: 0;
 }
 
+.logout {
+  padding: 0.4em 0.8em;
+  margin-right: auto;
+  margin-left: 1ch;
+
+  border: var(--thin-border);
+  border-radius: 8px;
+
+  color: var(--off-white);
+  font-size: 0.9rem;
+
+  cursor: pointer;
+}
+
+.logout:hover {
+  background-color: var(--off-white);
+
+  color: var(--monzo-blue);
+}
+
 .tabgroup {
   overflow: hidden;
 
