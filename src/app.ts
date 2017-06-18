@@ -19,7 +19,7 @@ const debug = Debug('app:app')
 const mainWindow = new WindowManager()
 enableLiveReload()
 
-debug(`starting ${app.getName()} version ${app.getVersion()}`)
+debug(`starting`, app.getName(), 'version', app.getVersion())
 
 export interface IAppInfo {
   client_id: string
@@ -56,8 +56,6 @@ app.on('ready', async () => {
 
     try {
       const accessToken = await getSavedCode('access_token')
-
-      debug('monzo client =>', appInfo.client_id)
 
       if (await verifyAccess(accessToken)) {
         mainWindow.goToMonux()

@@ -31,7 +31,7 @@ export default class Monzo {
     return rp(opts)
   }
 
-  get accounts() {
+  get accounts(): Promise<Account[]> {
     return this.request('/accounts').then(accs =>
       accs.accounts.map((acc: IMonzoApiAccount) => new Account(this, acc))
     )

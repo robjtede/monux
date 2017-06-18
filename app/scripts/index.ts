@@ -1,17 +1,15 @@
-import * as path from 'path'
-
-import { remote } from 'electron'
-
-const { TouchBar } = remote.require('electron')
-const { TouchBarLabel, TouchBarButton, TouchBarSpacer } = TouchBar
+import * as Debug from 'debug'
 
 import context = require('electron-contextmenu-middleware')
 import imageMenu = require('electron-image-menu')
+
+import { Amount, Monzo, Transaction } from '../../lib/monzo'
+import { getSavedCode } from '../../lib/monzo/auth'
+
+import setTouchBar from './touchbar'
+
 context.use(imageMenu)
 context.activate()
-
-import { Monzo, Transaction } from '../../lib/monzo'
-import { getSavedCode } from '../../lib/monzo/auth'
 
 const getMonzo = (() => {
   const accessToken = getSavedCode('access_token')
@@ -21,7 +19,7 @@ const getMonzo = (() => {
   }
 })()
 
-const debug = true
+const debug = Debug('app:renderer:index')
 
 document.addEventListener('DOMContentLoaded', async () => {
   const $app = document.querySelector('main') as HTMLElement
@@ -48,14 +46,14 @@ document.addEventListener('DOMContentLoaded', async () => {
       // .filter((tx, index) => index > 420 && index < 425)
       .map((tx, index) => new Transaction(undefined, undefined, tx, index))
 
-    if (debug) console.info($txList.txs)
+    debug('cached transactions =>', $txList.txs)
 
     $txList.classList.remove('inactive')
     $txList.render()
   }
 
   accounts.then(accs => accs[0].transactions).then(txs => {
-    if (debug) console.dir(txs)
+    debug('HTTP transactions =>', txs)
 
     const $selectedTx = $txList.selectedTransaction
 
@@ -77,89 +75,41 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
   })
 
-  const balance = localStorage.getItem('balance')
-  const spentToday = localStorage.getItem('spentToday')
-  const accDescription = localStorage.getItem('accDescription')
+  try {
+    const acc = (await accounts)[0]
+    const { balance, spentToday } = await acc.balance
 
-  if (accDescription) $accDescription.textContent = accDescription
-  if (balance) $balance.innerHTML = balance
-  if (spentToday) $spentToday.innerHTML = spentToday
+    const lsBalance = localStorage.getItem('balance')
+    const lsSpentToday = localStorage.getItem('spentToday')
+    const accDescription = localStorage.getItem('accDescription')
 
-  const tbBalance = new TouchBarLabel({
-    label: 'Balance: $--.--'
-  })
-  const tbSpent = new TouchBarLabel({
-    label: 'Spent Today: $--.--'
-  })
+    if (accDescription) $accDescription.textContent = accDescription
+    if (lsBalance) $balance.innerHTML = lsBalance
+    if (lsSpentToday) $spentToday.innerHTML = lsSpentToday
 
-  const escKey = new TouchBarButton({
-    icon: path.resolve(
-      path.join(path.resolve('.'), 'app', 'icons', 'monzo.touchbar.png')
-    ),
-    label: 'Monux',
-    iconPosition: 'left',
-    backgroundColor: '#15233C'
-  })
+    localStorage.setItem('accDescription', acc.description)
+    $accDescription.textContent = localStorage.getItem('accDescription')
 
-  const touchBar = new TouchBar({
-    items: [tbBalance, new TouchBarSpacer({ size: 'large' }), tbSpent],
-    escapeItem: escKey
-  })
-  remote.getCurrentWindow().setTouchBar(touchBar)
+    if (!balance.foreign) {
+      localStorage.setItem('balance', balance.html(true, 0))
+      localStorage.setItem('spentToday', spentToday.html(true, 0))
+    } else {
+      localStorage.setItem(
+        'balance',
+        (balance.exchanged as Amount).html(true, 0) + balance.html(true, 0)
+      )
+      localStorage.setItem(
+        'spentToday',
+        (spentToday.exchanged as Amount).html(true, 0) +
+          spentToday.html(true, 0)
+      )
+    }
 
-  accounts
-    .then(accs => accs[0])
-    .then(acc => {
-      if (debug) console.log(acc)
+    $balance.innerHTML = localStorage.getItem('balance') as string
+    $spentToday.innerHTML = localStorage.getItem('spentToday') as string
 
-      localStorage.setItem('accDescription', acc.description)
-      $accDescription.textContent = localStorage.getItem('accDescription')
-
-      return acc.balance
-    })
-    .then(({ balance, spentToday }) => {
-      if (debug) console.info(balance)
-      if (debug) console.info(spentToday)
-
-      tbBalance.label = `Balance: ${balance.format('%y%a')}`
-      tbSpent.label = `Spent Today: ${spentToday.format('%y%a')}`
-
-      if (!balance.foreign) {
-        localStorage.setItem('balance', balance.html(true, 0))
-        localStorage.setItem('spentToday', spentToday.html(true, 0))
-      } else {
-        localStorage.setItem(
-          'balance',
-          balance.exchanged.html(true, 0) + '' + balance.html(true, 0)
-        )
-        localStorage.setItem(
-          'spentToday',
-          spentToday.exchanged.html(true, 0) + '' + spentToday.html(true, 0)
-        )
-      }
-
-      $balance.innerHTML = localStorage.getItem('balance') as string
-      $spentToday.innerHTML = localStorage.getItem('spentToday') as string
-    })
-
-  const allTabs = Array.from($nav.querySelectorAll('.tab')) as HTMLElement[]
-  const allPanes = Array.from(
-    $app.querySelectorAll('.app-pane')
-  ) as HTMLElement[]
-
-  allTabs.forEach((tab: HTMLElement) => {
-    tab.addEventListener('click', (ev: MouseEvent) => {
-      ev.stopPropagation()
-
-      const pane = $app.querySelector(
-        `.app-pane.${tab.dataset.pane}-pane`
-      ) as HTMLElement
-
-      allTabs.forEach(tab => tab.classList.remove('active'))
-      allPanes.forEach(pane => pane.classList.remove('active'))
-
-      tab.classList.add('active')
-      pane.classList.add('active')
-    })
-  })
+    setTouchBar(balance, spentToday)
+  } catch (err) {
+    console.error(err.error)
+  }
 })

@@ -7,7 +7,7 @@
     "forceConsistentCasingInFileNames": true,
     "importHelpers": true,
     "inlineSourceMap": true,
-    "lib": ["esnext", "dom"],
+    "lib?": ["esnext", "dom"],
     "module": "commonjs",
     "moduleResolution": "node",
     "noEmitHelpers": true,
