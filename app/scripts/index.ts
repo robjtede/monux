@@ -48,7 +48,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   if (transactions) {
     $txList.txs = JSON.parse(transactions)
-      .filter((tx, index) => index > 420 && index < 425)
+      // .filter((tx, index) => index > 420 && index < 425)
       .map((tx, index) => new Transaction(undefined, undefined, tx, index))
 
     if (debug) console.info($txList.txs)

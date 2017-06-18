@@ -1,4 +1,5 @@
 import * as Debug from 'debug'
+
 import * as rp from 'request-promise-native'
 
 import { IAppInfo } from './app'
@@ -30,32 +31,64 @@ export const getAccessToken = async (appInfo: IAppInfo, authCode: string) => {
       refreshToken: res.refresh_token
     }
   } catch (err) {
-    console.error(`getAccessToken => ${err.code}`)
+    console.error('getAccessToken failed =>', err.error)
     throw new Error(err)
   }
 }
 
-export const verifyAccess = async (token: string) => {
-  debug('verifyAccess with =>', token)
+export const refreshAccess = async (
+  appInfo: IAppInfo,
+  refreshToken: string
+) => {
+  debug('refreshAccess')
 
   const opts = {
-    uri: 'https://api.monzo.com/ping/whoami',
-    headers: {
-      Authorization: `Bearer ${token}`
+    uri: 'https://api.monzo.com/oauth2/token',
+    method: 'post',
+    form: {
+      grant_type: 'refresh_token',
+      client_id: appInfo.client_id,
+      client_secret: appInfo.client_secret,
+      refresh_token: refreshToken
     },
     json: true
   }
 
   try {
     const res = await rp(opts)
-    debug('verifyAccess =>', res)
+    debug('refreshAccess =>', res)
 
-    const verified = res && 'authenticated' in res && res.authenticated
-    return verified
+    return {
+      accessToken: res.access_token,
+      refreshToken: res.refresh_token
+    }
   } catch (err) {
-    console.error('verifyAccess failed =>', err)
+    console.error('refreshAccess failed =>', err.error)
     throw new Error(err)
   }
 }
 
-export const refreshAccess = async () => {}
+export const verifyAccess = async (accessToken: string) => {
+  debug('verifyAccess with =>', accessToken)
+
+  const opts = {
+    uri: 'https://api.monzo.com/ping/whoami',
+    headers: {
+      Authorization: `Bearer ${accessToken}`
+    },
+    json: true
+  }
+
+  try {
+    const res = await rp({
+      ...opts,
+      simple: false
+    })
+    debug('verifyAccess =>', res)
+
+    return res && 'authenticated' in res && res.authenticated
+  } catch (err) {
+    console.error('verifyAccess failed =>', err.error)
+    throw new Error(err)
+  }
+}
