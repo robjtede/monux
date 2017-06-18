@@ -14,7 +14,7 @@ export interface IKeychainSet extends IKeychain {
 }
 
 export const getPassword = (opts: IKeychain): Promise<string> => {
-  debug('getPassword =>', opts.account, opts.service)
+  debug('getPassword =>', opts.account, ':', opts.service)
 
   return new Promise((resolve, reject) => {
     keychain.getPassword(opts, (err: Error | null, pass: string) => {
@@ -25,7 +25,7 @@ export const getPassword = (opts: IKeychain): Promise<string> => {
 }
 
 export const setPassword = (opts: IKeychainSet) => {
-  debug('set password =>', opts.account, opts.service)
+  debug('set password =>', opts.account, ':', opts.service)
 
   return new Promise((resolve, reject) => {
     keychain.setPassword(opts, (err: Error | null) => {
@@ -36,7 +36,7 @@ export const setPassword = (opts: IKeychainSet) => {
 }
 
 export const deletePassword = (opts: IKeychain) => {
-  debug('delete password =>', opts.account, opts.service)
+  debug('delete password =>', opts.account, ':', opts.service)
 
   return new Promise((resolve, reject) => {
     keychain.deletePassword(opts, (err: Error | null) => {
