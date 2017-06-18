@@ -16,10 +16,7 @@
   <link rel="import" href="./components/transaction-list/transaction-list.component.html">
   
   <!-- Scripts -->
-  <script async>
-    import './scripts/index'
-    import './scripts/lightbox'
-  </script>
+  <script>import './scripts/init';</script>
 </head>
 <body>
   <header class="balances">
@@ -34,6 +31,7 @@
 
   <nav class="tabs">
     <div class="person">--- ---</div>
+    <div class="logout">Log Out</div>
 
     <div class="tabgroup">
       <div data-pane="transaction" class="tab active">Transactions</div>
@@ -45,7 +43,7 @@
 
   <main class="app">
     <div class="app-pane transaction-pane active">
-      <m-transaction-list group-headings show-hidden group-by="day" class="inactive"></m-transaction-list>
+      <m-transaction-list group-headings group-by="day" class="inactive"></m-transaction-list>
 
       <div class="transaction-detail-pane inactive">
         <m-transaction-detail offline></m-transaction-detail>

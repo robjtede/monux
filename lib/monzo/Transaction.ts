@@ -1,13 +1,7 @@
 import { format as strftime } from 'date-fns'
 import undefsafe = require('undefsafe')
 
-import {
-  Account,
-  Amount,
-  IAmount,
-  Merchant,
-  Monzo
-} from './'
+import { Account, Amount, IAmount, Merchant, Monzo } from './'
 
 export interface IMonzoApiTransaction {
   [propName: string]: any
@@ -20,7 +14,12 @@ export default class Transaction {
   private acc: Account | undefined
   private tx: IMonzoApiTransaction
 
-  constructor(monzo: Monzo | undefined, acc: Account | undefined, tx: IMonzoApiTransaction, index = -1) {
+  constructor(
+    monzo: Monzo | undefined,
+    acc: Account | undefined,
+    tx: IMonzoApiTransaction,
+    index = -1
+  ) {
     this.monzo = monzo
     this.acc = acc
     this.tx = tx
@@ -44,7 +43,6 @@ export default class Transaction {
     } else {
       return new Amount(native)
     }
-
   }
 
   public async annotate(key: string, val: string) {
@@ -53,14 +51,16 @@ export default class Transaction {
     const metaKey = `metadata[${key}]`
 
     try {
-      return await this.monzo
-        .request(`/transactions/${this.id}`, {
+      return await this.monzo.request(
+        `/transactions/${this.id}`,
+        {
           [metaKey]: val
-        }, 'PATCH')
+        },
+        'PATCH'
+      )
     } catch (err) {
       console.error(err)
     }
-
   }
 
   get attachments() {
@@ -70,31 +70,40 @@ export default class Transaction {
   public async requestAttachmentUpload(contentType = 'image/jpeg') {
     if (!this.monzo) throw new Error('Monzo account is undefined')
 
-    return await this.monzo
-      .request('/attachment/upload', {
+    return await this.monzo.request(
+      '/attachment/upload',
+      {
         file_name: 'monux-attachment.jpg',
         file_type: contentType
-      }, 'POST')
+      },
+      'POST'
+    )
   }
 
   public async registerAttachment(fileUrl: string, contentType = 'image/jpeg') {
     if (!this.monzo) throw new Error('Monzo account is undefined')
 
-    return await this.monzo
-      .request('/attachment/register', {
+    return await this.monzo.request(
+      '/attachment/register',
+      {
         external_id: this.tx.id,
         file_url: fileUrl,
         file_type: contentType
-      }, 'POST')
+      },
+      'POST'
+    )
   }
 
   public async deregisterAttachment(attachmentId: string) {
     if (!this.monzo) throw new Error('Monzo account is undefined')
 
-    return await this.monzo
-      .request('/attachment/deregister', {
+    return await this.monzo.request(
+      '/attachment/deregister',
+      {
         id: attachmentId
-      }, 'POST')
+      },
+      'POST'
+    )
   }
 
   get balance(): Amount {
@@ -129,7 +138,9 @@ export default class Transaction {
   }
 
   get declineReason(): string {
-    return this.declined ? this.tx.decline_reason.replace('_', ' ').toLowerCase() : ''
+    return this.declined
+      ? this.tx.decline_reason.replace('_', ' ').toLowerCase()
+      : ''
   }
 
   get description(): string {
@@ -162,7 +173,7 @@ export default class Transaction {
   }
 
   get iconFallback(): string {
-    return `./icons/${this.tx.category}.png`
+    return `./icons/${this.category}.png`
   }
 
   get id(): string {
@@ -170,7 +181,7 @@ export default class Transaction {
   }
 
   get is() {
-    const cash = this.tx.category === 'cash'
+    const cash = this.category === 'cash'
     const zero = +this.tx.amount === 0
 
     const metaAction = zero && !this.inSpending
@@ -240,6 +251,10 @@ export default class Transaction {
 
   get settled(): string {
     if (this.pending) return 'Pending'
-    else return `Settled: ${strftime(new Date(this.tx.settled), 'h:mma - Do MMMM YYYY')}`
+    else
+      return `Settled: ${strftime(
+        new Date(this.tx.settled),
+        'h:mma - Do MMMM YYYY'
+      )}`
   }
 }

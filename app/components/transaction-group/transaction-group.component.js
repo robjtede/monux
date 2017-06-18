@@ -1,5 +1,4 @@
 'use strict'
-
 ;(function (ownerDocument) {
   const { Amount } = require('../lib/monzo')
 
@@ -10,7 +9,7 @@
       this._debug = false
       this.debug('constructing group')
 
-      this.root = this.attachShadow({mode: 'open'})
+      this.root = this.attachShadow({ mode: 'open' })
 
       const template = ownerDocument.querySelector('template')
       this.root.appendChild(document.importNode(template.content, true))
@@ -43,15 +42,13 @@
       heading.textContent = this.label
 
       const subtotal = this.txs
-      .filter(tx => {
-        if (tx.is.metaAction || tx.declined) return false
-        return true
-      })
-      .reduce((sum, tx) => {
-        return tx.amount.positive
-        ? sum
-        : sum + tx.amount.native.amount
-      }, 0)
+        .filter(tx => {
+          if (tx.is.metaAction || tx.declined) return false
+          return true
+        })
+        .reduce((sum, tx) => {
+          return tx.amount.positive ? sum : sum + tx.amount.native.amount
+        }, 0)
 
       this.subtotal = new Amount({
         amount: subtotal,
@@ -65,17 +62,15 @@
     }
 
     renderTransactions () {
-      this.txs
-        .sort((a, b) => b.created - a.created)
-        .forEach(tx => {
-          const $tx = document.createElement('m-transaction-summary')
+      this.txs.sort((a, b) => b.created - a.created).forEach(tx => {
+        const $tx = document.createElement('m-transaction-summary')
 
-          $tx.$list = this.$list
-          $tx.$group = this
-          $tx.tx = tx
+        $tx.$list = this.$list
+        $tx.$group = this
+        $tx.tx = tx
 
-          this.root.appendChild($tx)
-        })
+        this.root.appendChild($tx)
+      })
     }
 
     disconnectedCallback () {
@@ -91,7 +86,10 @@
     }
 
     attributeChangedCallback (attrName, oldVal, newVal) {
-      this.debug(`attribute changed on ${this.index}: ${attrName}, ${oldVal} => ${newVal} group`)
+      this.debug(
+        `attribute changed on ${this
+          .index}: ${attrName}, ${oldVal} => ${newVal} group`
+      )
 
       const changes = {}
 
@@ -109,5 +107,8 @@
     }
   }
 
-  window.customElements.define(TransactionGroupComponent.is, TransactionGroupComponent)
+  window.customElements.define(
+    TransactionGroupComponent.is,
+    TransactionGroupComponent
+  )
 })(document.currentScript.ownerDocument)

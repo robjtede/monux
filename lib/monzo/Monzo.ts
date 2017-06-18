@@ -1,9 +1,6 @@
 import * as rp from 'request-promise-native'
 
-import {
-  Account,
-  IMonzoApiAccount
-} from './'
+import { Account, IMonzoApiAccount } from './'
 
 export default class Monzo {
   private proto: string
@@ -34,11 +31,9 @@ export default class Monzo {
     return rp(opts)
   }
 
-  get accounts() {
-    return this
-      .request('/accounts')
-      .then(accs => accs.accounts
-        .map((acc: IMonzoApiAccount) => new Account(this, acc))
-      )
+  get accounts(): Promise<Account[]> {
+    return this.request('/accounts').then(accs =>
+      accs.accounts.map((acc: IMonzoApiAccount) => new Account(this, acc))
+    )
   }
 }

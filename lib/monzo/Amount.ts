@@ -8,7 +8,7 @@ export interface ICurrencies {
 }
 
 export interface IAmount {
-  amount: number,
+  amount: number
   currency: string
 }
 
@@ -35,7 +35,7 @@ export default class Amount {
   get exchanged(): Amount | undefined {
     if (this.local) return new Amount(this.local)
     else return
- }
+  }
 
   // returns true if negative amount
   get negative(): boolean {
@@ -64,12 +64,16 @@ export default class Amount {
 
   // returns currency symbol
   get symbol(): string {
-    return this.native.currency in currencies ? currencies[this.native.currency].symbol : ''
+    return this.native.currency in currencies
+      ? currencies[this.native.currency].symbol
+      : ''
   }
 
   // return currency separator
   get separator(): string {
-    return this.native.currency in currencies ? currencies[this.native.currency].separator : ''
+    return this.native.currency in currencies
+      ? currencies[this.native.currency].separator
+      : ''
   }
 
   // returns amount in major units (no truncation)
