@@ -1,4 +1,4 @@
-import * as keychain from 'keychain'
+import * as keychain from 'keytar'
 import * as Debug from 'debug'
 
 const debug = Debug('app:keychain')
@@ -6,42 +6,30 @@ const debug = Debug('app:keychain')
 export interface IKeychain {
   account: string
   service: string
-  type?: string
 }
 
 export interface IKeychainSet extends IKeychain {
   password: string
 }
 
-export const getPassword = (opts: IKeychain): Promise<string> => {
-  debug('getPassword =>', opts.account, ':', opts.service)
+export const getPassword = async (opts: IKeychain): Promise<string> => {
+  debug('get password =>', opts.account, ':', opts.service)
 
-  return new Promise((resolve, reject) => {
-    keychain.getPassword(opts, (err: Error | null, pass: string) => {
-      if (err) reject(err)
-      resolve(pass)
-    })
-  })
+  const password = await keychain.getPassword(opts.service, opts.account)
+
+  if (password) {
+    return password
+  } else {
+    throw new Error(`Password ${opts.account} : ${opts.service} does not exist`)
+  }
 }
 
-export const setPassword = (opts: IKeychainSet) => {
+export const setPassword = async (opts: IKeychainSet): Promise<void> => {
   debug('set password =>', opts.account, ':', opts.service)
-
-  return new Promise((resolve, reject) => {
-    keychain.setPassword(opts, (err: Error | null) => {
-      if (err) reject(err)
-      resolve()
-    })
-  })
+  return keychain.setPassword(opts.service, opts.account, opts.password)
 }
 
-export const deletePassword = (opts: IKeychain) => {
+export const deletePassword = async (opts: IKeychain): Promise<boolean> => {
   debug('delete password =>', opts.account, ':', opts.service)
-
-  return new Promise((resolve, reject) => {
-    keychain.deletePassword(opts, (err: Error | null) => {
-      if (err) reject(err)
-      resolve()
-    })
-  })
+  return keychain.deletePassword(opts.service, opts.account)
 }

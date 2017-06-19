@@ -118,8 +118,8 @@ app.on('open-url', async (_, forwardedUrl) => {
 
       mainWindow.goToMonux()
     } else {
-      console.error('invalid access token')
-      throw new Error('invalid access token')
+      console.error('Invalid access token')
+      throw new Error('Invalid access token')
     }
   } catch (err) {
     console.error(err)

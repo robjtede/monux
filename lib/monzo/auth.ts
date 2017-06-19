@@ -31,7 +31,7 @@ export const getSavedCode = async (
 export const saveCode = async (
   code: EMonzoSaveableCodes,
   value: string
-): Promise<{}> => {
+): Promise<void> => {
   debug('saving code =>', `${MONZO_SERVICE}.${code}`)
 
   return setPassword({
