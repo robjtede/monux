@@ -8,7 +8,7 @@ import { Amount, Monzo, Transaction } from '../../lib/monzo'
 import { getSavedCode } from '../../lib/monzo/auth'
 
 import setTouchBar from './touchbar'
-import cache from './cache'
+import cache, { ICacheTransaction } from './cache'
 
 context.use(imageMenu)
 context.activate()
@@ -37,47 +37,27 @@ document.addEventListener('DOMContentLoaded', async () => {
   ) as HTMLHeadingElement
   const $accDescription = $nav.querySelector('.person') as HTMLDivElement
 
-  const accounts = (await getMonzo()).accounts
+  const accounts = await (await getMonzo()).accounts
 
   console.time('render cached transaction list')
-  // const transactions = localStorage.getItem('transactions')
-  //
-  // if (transactions) {
-  //   $txList.txs = JSON.parse(transactions)
-  //     // .filter((tx, index) => index > 420 && index < 425)
-  //     .map((tx, index) => new Transaction(undefined, undefined, tx, index))
-  //
-  //   debug('cached transactions =>', $txList.txs)
-  //
-  //   $txList.classList.remove('inactive')
-  //   $txList.render()
-  // }
-
   try {
-    await cache.open()
+    const cachedTxs = await cache.transactions.toArray()
+    const txs = cachedTxs.map((tx: ICacheTransaction, index: number) => {
+      return new Transaction(undefined, undefined, JSON.parse(tx.json), index)
+    })
 
-    console.log(await cache.transactions.toArray())
+    $txList.txs = txs
+    debug('cached transactions =>', $txList.txs)
+
+    $txList.classList.remove('inactive')
+    $txList.render()
   } catch (err) {
     console.error(err)
   }
-
   console.timeEnd('render cached transaction list')
 
-  console.time('render new transaction list')
-  accounts
-    .then(accs => accs[0].transactions)
-    .then(async txs => {
-      await forEach(txs, async (tx: Transaction) => {
-        try {
-          await cache.transactions.add({
-            id: tx.id,
-            json: tx.json
-          })
-        } catch (err) {}
-      })
-
-      return txs
-    })
+  console.time('render HTTP transaction list')
+  accounts[0].transactions
     .then(txs => {
       debug('HTTP transactions =>', txs)
 
@@ -100,11 +80,26 @@ document.addEventListener('DOMContentLoaded', async () => {
         $txDetail.render()
       }
 
-      console.timeEnd('render new transaction list')
+      console.timeEnd('render HTTP transaction list')
+      return txs
+    })
+    .then(async txs => {
+      await forEach(txs, async (tx: Transaction) => {
+        try {
+          await cache.transactions.add({
+            id: tx.id,
+            json: tx.json
+          })
+        } catch (err) {
+          console.error('index exists')
+        }
+      })
+
+      return txs
     })
 
   try {
-    const acc = (await accounts)[0]
+    const acc = accounts[0]
     const { balance, spentToday } = await acc.balance
 
     const lsBalance = localStorage.getItem('balance')

@@ -14,7 +14,7 @@ class IDBCache extends Dexie {
   }
 }
 
-interface ICacheTransaction {
+export interface ICacheTransaction {
   id: string
   json: string
 }
