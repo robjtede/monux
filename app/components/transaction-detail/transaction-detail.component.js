@@ -1,6 +1,6 @@
 'use strict'
 ;(function (thisDoc) {
-  const strftime = require('date-fns').format
+  const format = require('date-fns/format')
 
   class TransactionDetailComponent extends HTMLElement {
     constructor () {
@@ -57,7 +57,7 @@
     }
 
     renderDate () {
-      const date = strftime(this.tx.created, 'h:mma - Do MMMM YYYY')
+      const date = format(this.tx.created, 'h:mma - Do MMMM YYYY')
       this.root.querySelector('.date').textContent = date
     }
 

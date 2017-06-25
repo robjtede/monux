@@ -1,4 +1,4 @@
-import { format as strftime } from 'date-fns'
+import { format } from 'date-fns'
 import undefsafe = require('undefsafe')
 
 import { Account, Amount, IAmount, Merchant, Monzo } from './'
@@ -252,7 +252,7 @@ export default class Transaction {
   get settled(): string {
     if (this.pending) return 'Pending'
     else {
-      return `Settled: ${strftime(
+      return `Settled: ${format(
         new Date(this.tx.settled),
         'h:mma - Do MMMM YYYY'
       )}`

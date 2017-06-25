@@ -1,7 +1,7 @@
 'use strict'
 ;(function (ownerDocument) {
-  const strftime = require('date-fns').format
-  const { startOfDay, isToday, isYesterday, isThisYear } = require('date-fns')
+  const format = require('date-fns/format')
+  const { startOfDay, isSameDay, subDays, isSameYear } = require('date-fns')
 
   class TransactionListComponent extends HTMLElement {
     constructor () {
@@ -126,14 +126,14 @@
             day: tx => {
               const created = startOfDay(tx.created)
 
-              if (isToday(created)) {
+              if (isSameDay(new Date(), created)) {
                 return 'Today'
-              } else if (isYesterday(created)) {
+              } else if (isSameDay(created, subDays(new Date(), 1))) {
                 return 'Yesterday'
-              } else if (isThisYear(created)) {
-                return strftime(created, 'dddd, Do MMMM')
+              } else if (isSameYear(created, new Date())) {
+                return format(created, 'dddd, Do MMMM')
               } else {
-                return strftime(created, 'dddd, Do MMMM YYYY')
+                return format(created, 'dddd, Do MMMM YYYY')
               }
             },
 
