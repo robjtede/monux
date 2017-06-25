@@ -80,8 +80,6 @@ export default class Account {
         'expand[]': 'merchant'
       })
       .then(txs => {
-        localStorage.setItem('transactions', JSON.stringify(txs.transactions))
-
         return txs.transactions.map(
           (tx: IMonzoApiTransaction, index: number) => {
             return new Transaction(this.monzo, this, tx, index)

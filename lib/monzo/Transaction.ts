@@ -201,6 +201,10 @@ export default class Transaction {
     return this.tx.include_in_spending || false
   }
 
+  get json(): string {
+    return JSON.stringify(this.tx)
+  }
+
   get location(): string {
     if (
       this.tx &&

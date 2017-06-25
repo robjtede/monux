@@ -1,4 +1,5 @@
 import * as Debug from 'debug'
+import { forEach } from 'p-iteration'
 
 import context = require('electron-contextmenu-middleware')
 import imageMenu = require('electron-image-menu')
@@ -7,9 +8,12 @@ import { Amount, Monzo, Transaction } from '../../lib/monzo'
 import { getSavedCode } from '../../lib/monzo/auth'
 
 import setTouchBar from './touchbar'
+import cache from './cache'
 
 context.use(imageMenu)
 context.activate()
+
+const debug = Debug('app:renderer:index')
 
 const getMonzo = (() => {
   const accessToken = getSavedCode('access_token')
@@ -18,8 +22,6 @@ const getMonzo = (() => {
     return new Monzo(await accessToken)
   }
 })()
-
-const debug = Debug('app:renderer:index')
 
 document.addEventListener('DOMContentLoaded', async () => {
   const $app = document.querySelector('main') as HTMLElement
@@ -37,7 +39,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   const accounts = (await getMonzo()).accounts
 
-  // console.time('render cached transaction list')
+  console.time('render cached transaction list')
   // const transactions = localStorage.getItem('transactions')
   //
   // if (transactions) {
@@ -50,33 +52,56 @@ document.addEventListener('DOMContentLoaded', async () => {
   //   $txList.classList.remove('inactive')
   //   $txList.render()
   // }
-  // console.timeEnd('render cached transaction list')
+
+  try {
+    await cache.open()
+
+    console.log(await cache.transactions.toArray())
+  } catch (err) {
+    console.error(err)
+  }
+
+  console.timeEnd('render cached transaction list')
 
   console.time('render new transaction list')
-  accounts.then(accs => accs[0].transactions).then(txs => {
-    debug('HTTP transactions =>', txs)
+  accounts
+    .then(accs => accs[0].transactions)
+    .then(async txs => {
+      await forEach(txs, async (tx: Transaction) => {
+        try {
+          await cache.transactions.add({
+            id: tx.id,
+            json: tx.json
+          })
+        } catch (err) {}
+      })
 
-    const $selectedTx = $txList.selectedTransaction
+      return txs
+    })
+    .then(txs => {
+      debug('HTTP transactions =>', txs)
 
-    $txList.txs = txs
-    $txList.classList.remove('inactive')
-    $txList.render()
+      const $selectedTx = $txList.selectedTransaction
 
-    $txDetail.removeAttribute('offline')
+      $txList.txs = txs
+      $txList.classList.remove('inactive')
+      $txList.render()
 
-    if ($selectedTx) {
-      const $tx = $txList.getTransactionByIndex($selectedTx.index)
-      $tx.classList.add('selected')
-      $tx.render()
+      $txDetail.removeAttribute('offline')
 
-      $txDetail.$summary = $tx
-      $txDetail.tx = $tx.tx
-      $txDetail.dataset.category = $tx.tx.category
-      $txDetail.render()
-    }
+      if ($selectedTx) {
+        const $tx = $txList.getTransactionByIndex($selectedTx.index)
+        $tx.classList.add('selected')
+        $tx.render()
 
-    console.timeEnd('render new transaction list')
-  })
+        $txDetail.$summary = $tx
+        $txDetail.tx = $tx.tx
+        $txDetail.dataset.category = $tx.tx.category
+        $txDetail.render()
+      }
+
+      console.timeEnd('render new transaction list')
+    })
 
   try {
     const acc = (await accounts)[0]
