@@ -1,7 +1,12 @@
 'use strict'
 ;(function (ownerDocument) {
-  const format = require('date-fns/format')
-  const { startOfDay, isSameDay, subDays, isSameYear } = require('date-fns')
+  const {
+    startOfDay,
+    isSameDay,
+    subDays,
+    isSameYear,
+    format
+  } = require('date-fns')
 
   class TransactionListComponent extends HTMLElement {
     constructor () {

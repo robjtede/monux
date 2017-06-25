@@ -129,7 +129,7 @@ export default class Transaction {
     return {
       raw,
       formatted,
-      toString: () => raw
+      toString: (): string => raw
     }
   }
 

@@ -25,10 +25,8 @@ document.addEventListener('DOMContentLoaded', async () => {
   const $app = document.querySelector('main') as HTMLElement
   const $header = document.querySelector('header') as HTMLElement
   const $nav = document.querySelector('nav') as HTMLElement
-  const $txList = document.querySelector('m-transaction-list') as HTMLElement
-  const $txDetail = document.querySelector(
-    'm-transaction-detail'
-  ) as HTMLElement
+  const $txList = $app.querySelector('m-transaction-list') as HTMLElement
+  const $txDetail = $app.querySelector('m-transaction-detail') as HTMLElement
   const $balance = $header.querySelector(
     '.card-balance h2'
   ) as HTMLHeadingElement
@@ -39,19 +37,22 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   const accounts = (await getMonzo()).accounts
 
-  const transactions = localStorage.getItem('transactions')
+  // console.time('render cached transaction list')
+  // const transactions = localStorage.getItem('transactions')
+  //
+  // if (transactions) {
+  //   $txList.txs = JSON.parse(transactions)
+  //     // .filter((tx, index) => index > 420 && index < 425)
+  //     .map((tx, index) => new Transaction(undefined, undefined, tx, index))
+  //
+  //   debug('cached transactions =>', $txList.txs)
+  //
+  //   $txList.classList.remove('inactive')
+  //   $txList.render()
+  // }
+  // console.timeEnd('render cached transaction list')
 
-  if (transactions) {
-    $txList.txs = JSON.parse(transactions)
-      // .filter((tx, index) => index > 420 && index < 425)
-      .map((tx, index) => new Transaction(undefined, undefined, tx, index))
-
-    debug('cached transactions =>', $txList.txs)
-
-    $txList.classList.remove('inactive')
-    $txList.render()
-  }
-
+  console.time('render new transaction list')
   accounts.then(accs => accs[0].transactions).then(txs => {
     debug('HTTP transactions =>', txs)
 
@@ -73,6 +74,8 @@ document.addEventListener('DOMContentLoaded', async () => {
       $txDetail.dataset.category = $tx.tx.category
       $txDetail.render()
     }
+
+    console.timeEnd('render new transaction list')
   })
 
   try {
