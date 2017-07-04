@@ -13,23 +13,22 @@
     "precommit": "lint-staged"
   },
   "lint-staged": {
-    "*": [
+    "!*.{js,ts,css}": [
       "eclint fix",
       "git add"
     ],
     "*.js": [
+      "eclint fix",
       "prettier --write --no-semi --single-quote",
       "eslint --fix",
       "git add"
     ],
     "*.ts": [
+      "eclint fix",
       "prettier --write --no-semi --single-quote",
       "git add"
     ],
-    "*.css": [
-      "prettier --write",
-      "git add"
-    ]
+    "*.css": ["eclint fix", "prettier --write", "git add"]
   },
   "dependencies": {
     "common-tags": "^1.4.0",
@@ -71,25 +70,16 @@
   "config": {
     "forge": {
       "make_targets": {
-        "win32": [
-          "squirrel"
-        ],
-        "darwin": [
-          "zip"
-        ],
-        "linux": [
-          "deb",
-          "rpm"
-        ]
+        "win32": ["squirrel"],
+        "darwin": ["zip"],
+        "linux": ["deb", "rpm"]
       },
       "electronPackagerConfig": {
         "icon": "monux",
         "asar": true,
         "protocols": [
           {
-            "schemes": [
-              "monux"
-            ],
+            "schemes": ["monux"],
             "name": "Monux"
           }
         ]
