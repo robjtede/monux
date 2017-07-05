@@ -12,7 +12,6 @@ export {
   Monzo,
   Transaction,
   // class options
-
   // monzo api schemas
   IMonzoApiAccount,
   IMonzoApiMerchant,

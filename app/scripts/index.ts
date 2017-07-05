@@ -8,7 +8,7 @@ import { Amount, Monzo, Transaction } from '../../lib/monzo'
 import { getSavedCode } from '../../lib/monzo/auth'
 
 import setTouchBar from './touchbar'
-import cache, { ICacheTransaction } from './cache'
+import cache, { ICacheTransaction, ICacheBank } from './cache'
 
 context.use(imageMenu)
 context.activate()
@@ -56,83 +56,96 @@ document.addEventListener('DOMContentLoaded', async () => {
   }
   console.timeEnd('render cached transaction list')
 
+  console.time('render cached balance')
+  try {
+    const cachedBank = (await cache.banks.limit(1).toArray())[0]
+    const { native, local } = JSON.parse(cachedBank.balance)
+    const balance = new Amount(native, local)
+
+    $accDescription.textContent = cachedBank.name
+
+    if (!balance.foreign) {
+      $balance.innerHTML = balance.html(true, 0)
+    } else {
+      $balance.innerHTML =
+        (balance.exchanged as Amount).html(true, 0) + balance.html(true, 0)
+    }
+
+    setTouchBar(balance)
+  } catch (err) {
+    console.error(err)
+  }
+  console.timeEnd('render cached balance')
+
   console.time('render HTTP transaction list')
-  accounts[0].transactions
-    .then(txs => {
-      debug('HTTP transactions =>', txs)
+  try {
+    const txs = await accounts[0].transactions
 
-      const $selectedTx = $txList.selectedTransaction
+    debug('HTTP transactions =>', txs)
 
-      $txList.txs = txs
-      $txList.classList.remove('inactive')
-      $txList.render()
+    const $selectedTx = $txList.selectedTransaction
 
-      $txDetail.removeAttribute('offline')
+    $txList.txs = txs
+    $txList.classList.remove('inactive')
+    $txList.render()
 
-      if ($selectedTx) {
-        const $tx = $txList.getTransactionByIndex($selectedTx.index)
-        $tx.classList.add('selected')
-        $tx.render()
+    $txDetail.removeAttribute('offline')
 
-        $txDetail.$summary = $tx
-        $txDetail.tx = $tx.tx
-        $txDetail.dataset.category = $tx.tx.category
-        $txDetail.render()
+    if ($selectedTx) {
+      const $tx = $txList.getTransactionByIndex($selectedTx.index)
+      $tx.classList.add('selected')
+      $tx.render()
+
+      $txDetail.$summary = $tx
+      $txDetail.tx = $tx.tx
+      $txDetail.dataset.category = $tx.tx.category
+      $txDetail.render()
+    }
+    console.timeEnd('render HTTP transaction list')
+
+    await forEach(txs, async (tx: Transaction) => {
+      try {
+        await cache.transactions.put({
+          id: tx.id,
+          accId: accounts[0].id,
+          json: tx.json
+        })
+      } catch (err) {
+        console.error(err)
       }
-
-      console.timeEnd('render HTTP transaction list')
-      return txs
     })
-    .then(async txs => {
-      await forEach(txs, async (tx: Transaction) => {
-        try {
-          await cache.transactions.add({
-            id: tx.id,
-            json: tx.json
-          })
-        } catch (err) {
-          console.error('index exists')
-        }
-      })
+  } catch (err) {
+    console.error(err)
+  }
 
-      return txs
-    })
-
+  console.time('render HTTP balance')
   try {
     const acc = accounts[0]
     const { balance, spentToday } = await acc.balance
 
-    const lsBalance = localStorage.getItem('balance')
-    const lsSpentToday = localStorage.getItem('spentToday')
-    const accDescription = localStorage.getItem('accDescription')
+    await cache.banks.put({
+      accId: acc.id,
+      balance: balance.json,
+      name: acc.name,
+      type: 'Monzo'
+    })
 
-    if (accDescription) $accDescription.textContent = accDescription
-    if (lsBalance) $balance.innerHTML = lsBalance
-    if (lsSpentToday) $spentToday.innerHTML = lsSpentToday
-
-    localStorage.setItem('accDescription', acc.description)
-    $accDescription.textContent = localStorage.getItem('accDescription')
+    $accDescription.textContent = acc.name
 
     if (!balance.foreign) {
-      localStorage.setItem('balance', balance.html(true, 0))
-      localStorage.setItem('spentToday', spentToday.html(true, 0))
+      $balance.innerHTML = balance.html(true, 0)
+      $spentToday.innerHTML = spentToday.html(true, 0)
     } else {
-      localStorage.setItem(
-        'balance',
+      $balance.innerHTML =
         (balance.exchanged as Amount).html(true, 0) + balance.html(true, 0)
-      )
-      localStorage.setItem(
-        'spentToday',
+      $spentToday.innerHTML =
         (spentToday.exchanged as Amount).html(true, 0) +
-          spentToday.html(true, 0)
-      )
+        spentToday.html(true, 0)
     }
-
-    $balance.innerHTML = localStorage.getItem('balance') as string
-    $spentToday.innerHTML = localStorage.getItem('spentToday') as string
 
     setTouchBar(balance, spentToday)
   } catch (err) {
     console.error(err)
   }
+  console.timeEnd('render HTTP balance')
 })

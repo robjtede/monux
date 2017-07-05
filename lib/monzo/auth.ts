@@ -105,7 +105,14 @@ export const refreshAccess = async (
 
   try {
     const res = await rp(opts)
-    debug('refreshAccess =>', res)
+    debug(
+      'refreshAccess =>',
+      res &&
+      ('refresh_token' in res && res.refresh_token) &&
+      ('access_token' in res && res.access_token)
+        ? '✓'
+        : '✘'
+    )
 
     return {
       accessToken: res.access_token,

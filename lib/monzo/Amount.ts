@@ -106,6 +106,13 @@ export default class Amount {
     return 100
   }
 
+  get json(): string {
+    return JSON.stringify({
+      native: this.native,
+      local: this.local
+    })
+  }
+
   // returns html formatted string
   public html(showCurrency = true, signMode = 1): string {
     let str = '<span class="major">%j</span>'

@@ -45,7 +45,7 @@
     "electron-window-state": "^4.1.1",
     "img-exif": "^0.2.0",
     "keytar": "^4.0.3",
-    "p-iteration": "^1.0.0",
+    "p-iteration": "^1.1.1",
     "request": "^2.81.0",
     "request-promise-native": "^1.0.4"
   },
@@ -59,18 +59,18 @@
     "eclint": "^2.2.0",
     "electron-forge": "^3.0.5",
     "electron-prebuilt-compile": "1.7.1",
-    "eslint": "^4.1.0",
+    "eslint": "^4.1.1",
     "eslint-config-standard": "^10.2.1",
-    "eslint-plugin-import": "^2.6.0",
-    "eslint-plugin-node": "^5.0.0",
+    "eslint-plugin-import": "^2.6.1",
+    "eslint-plugin-node": "^5.1.0",
     "eslint-plugin-promise": "^3.5.0",
     "eslint-plugin-standard": "^3.0.1",
-    "husky": "^0.14.3",
+    "husky": "^0.14.2",
     "lint-staged": "^4.0.0",
-    "prettier": "^1.4.4",
+    "prettier": "^1.5.2",
     "tslib": "^1.7.1",
-    "tslint": "^5.5.0",
-    "typescript": "^2.4.0"
+    "tslint": "^5.4.3",
+    "typescript": "^2.4.1"
   },
   "config": {
     "forge": {
