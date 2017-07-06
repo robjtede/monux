@@ -8,14 +8,15 @@ class IDBCache extends Dexie {
     super('IDBCache')
 
     this.version(1).stores({
-      transactions: 'id, bankId, json',
-      banks: 'accId, name, type, balance'
+      transactions: 'id, created_at, accId',
+      banks: 'accId, name, type'
     })
   }
 }
 
 export interface ICacheTransaction {
   id: string
+  created_at: Date
   accId: string
   json: string
 }

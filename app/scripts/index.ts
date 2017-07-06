@@ -79,13 +79,19 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   console.time('render HTTP transaction list')
   try {
-    const txs = await accounts[0].transactions
+    // TODO: Table#orderBy
+    const cachedTxs = await cache.transactions.reverse().sortBy('created_at')
+    const anyCached = cachedTxs.length > 0
+
+    const txs = anyCached
+      ? await accounts[0].transactionsSince(cachedTxs[0].id)
+      : await accounts[0].transactions
 
     debug('HTTP transactions =>', txs)
 
     const $selectedTx = $txList.selectedTransaction
 
-    $txList.txs = txs
+    Array.prototype.push.apply($txList.txs, txs)
     $txList.classList.remove('inactive')
     $txList.render()
 
@@ -103,10 +109,12 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
     console.timeEnd('render HTTP transaction list')
 
+    // TODO: bulkPut
     await forEach(txs, async (tx: Transaction) => {
       try {
         await cache.transactions.put({
           id: tx.id,
+          created_at: tx.created,
           accId: accounts[0].id,
           json: tx.json
         })

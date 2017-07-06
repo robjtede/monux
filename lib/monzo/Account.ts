@@ -54,9 +54,10 @@ export default class Account {
           }
 
           const localSpend: IAmount = {
-            amount: bal.local_spend.length > 0
-              ? bal.local_spend[0].spend_today * bal.local_exchange_rate
-              : 0,
+            amount:
+              bal.local_spend.length > 0
+                ? bal.local_spend[0].spend_today * bal.local_exchange_rate
+                : 0,
             currency: bal.local_currency
           }
 
@@ -77,6 +78,22 @@ export default class Account {
     return this.monzo
       .request('/transactions', {
         account_id: this.id,
+        'expand[]': 'merchant'
+      })
+      .then(txs => {
+        return txs.transactions.map(
+          (tx: IMonzoApiTransaction, index: number) => {
+            return new Transaction(this.monzo, this, tx, index)
+          }
+        )
+      })
+  }
+
+  transactionsSince(since: string): Promise<Transaction[]> {
+    return this.monzo
+      .request('/transactions', {
+        account_id: this.id,
+        since: since,
         'expand[]': 'merchant'
       })
       .then(txs => {
