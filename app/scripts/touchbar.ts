@@ -35,8 +35,8 @@ const setTouchBar = async (balance: Amount, spentToday: Amount) => {
   debug('balance =>', balance)
   debug('spent today =>', spentToday)
 
-  tbBalance.label = `Balance: ${balance.format('%y%a')}`
-  tbSpent.label = `Spent Today: ${spentToday.format('%y%a')}`
+  tbBalance.label = `Balance: ${balance.format('%y%m')}`
+  tbSpent.label = `Spent Today: ${spentToday.format('%y%m')}`
 }
 
 export default setTouchBar

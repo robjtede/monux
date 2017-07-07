@@ -114,6 +114,7 @@ export default class Amount {
 
     if (showCurrency) str = '<span class="currency">%y</span>' + str
 
+    // TODO: enum-ify
     const signModes = [
       '',
       '<span class="sign">%s</span>',
@@ -159,6 +160,7 @@ export default class Amount {
 
     str = str.replace(/%r/g, String(this.native.amount))
     str = str.replace(/%a/g, String(this.amount))
+    str = str.replace(/%m/g, String(this.normalize))
 
     str = str.replace(/%j/g, this.major)
     str = str.replace(/%n/g, this.minor)

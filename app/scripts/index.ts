@@ -110,6 +110,6 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     setTouchBar(balance, spentToday)
   } catch (err) {
-    console.error(err.error)
+    console.error(err)
   }
 })
