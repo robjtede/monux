@@ -1,9 +1,18 @@
+import { format } from 'date-fns'
+
 import { Amount, IAmount, IMonzoApiTransaction, Monzo, Transaction } from './'
 
 export interface IMonzoApiAccount {
   id: string
   description: string
   created: string
+}
+
+interface IMonzoApiTransactionOptions {
+  account_id: string
+  'expand[]'?: string
+  since?: string
+  before?: string
 }
 
 export default class Account {
@@ -74,34 +83,42 @@ export default class Account {
       })
   }
 
-  get transactions(): Promise<Transaction[]> {
-    return this.monzo
-      .request('/transactions', {
-        account_id: this.id,
-        'expand[]': 'merchant'
-      })
-      .then(txs => {
-        return txs.transactions.map(
-          (tx: IMonzoApiTransaction, index: number) => {
-            return new Transaction(this.monzo, this, tx, index)
-          }
-        )
-      })
+  async transaction(txId: string) {
+    const tx = await this.monzo.request('/transactions', {
+      account_id: this.id,
+      id: txId,
+      'expand[]': 'merchant'
+    })
+
+    return new Transaction(this.monzo, this, tx, undefined)
   }
 
-  transactionsSince(since: string): Promise<Transaction[]> {
-    return this.monzo
-      .request('/transactions', {
-        account_id: this.id,
-        since: since,
-        'expand[]': 'merchant'
-      })
-      .then(txs => {
-        return txs.transactions.map(
-          (tx: IMonzoApiTransaction, index: number) => {
-            return new Transaction(this.monzo, this, tx, index)
-          }
-        )
-      })
+  async transactions(
+    options: { since?: Date | string; before?: Date } = {}
+  ): Promise<Transaction[]> {
+    const opts = {
+      account_id: this.id,
+      'expand[]': 'merchant'
+    } as IMonzoApiTransactionOptions
+
+    if (options.since) {
+      if (options.since instanceof Date) {
+        // TODO: correct format
+        opts.since = format(options.since, 'DD MM YY')
+      } else {
+        opts.since = options.since
+      }
+    }
+
+    if (options.before) {
+      // TODO: correct format
+      opts.before = format(options.before, 'DD MM YY')
+    }
+
+    const txs = await this.monzo.request('/transactions', opts)
+
+    return txs.transactions.map((tx: IMonzoApiTransaction, index: number) => {
+      return new Transaction(this.monzo, this, tx, index)
+    })
   }
 }

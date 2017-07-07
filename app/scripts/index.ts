@@ -84,8 +84,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     const anyCached = cachedTxs.length > 0
 
     const txs = anyCached
-      ? await accounts[0].transactionsSince(cachedTxs[0].id)
-      : await accounts[0].transactions
+      ? await accounts[0].transactions({ since: cachedTxs[0].id })
+      : await accounts[0].transactions()
 
     debug('HTTP transactions =>', txs)
 
