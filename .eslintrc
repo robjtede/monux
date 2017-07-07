@@ -11,6 +11,12 @@
   "extends": "standard",
   "rules": {
     "quotes": ["error", "single"],
-    "semi": ["error", "never"]
+    "semi": ["error", "never"],
+    "no-unused-vars": [
+      "warn", {
+        "vars": "all",
+        "args": "none"
+      }
+    ]
   }
 }

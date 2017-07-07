@@ -67,7 +67,7 @@
       border-radius: 25%;
     }
 
-    .info {
+    .info-wrap {
       flex: 7 3;
 
       display: flex;
@@ -78,17 +78,43 @@
       word-break: break-all;
     }
 
+    .info {
+      display: flex;
+      flex-flow: row wrap;
+      justify-content: left;
+      align-items: flex-start;
+    }
+
     .merchant {
       margin: 0;
 
       font-size: 1rem;
     }
 
-    :host(.pending) .merchant::after {
-      content: '\25f7';
-      padding-left: 0.5em;
+    .meta {
+      margin-left: 1ch;
 
       color: var(--label-grey);
+    }
+
+    .meta-pending {
+      display: none;
+    }
+
+    .meta-attachments {
+      display: none;
+    }
+
+    :host(.pending) .meta-pending {
+      display: inline;
+    }
+
+    :host(.attachments) .meta-attachments {
+      display: inline;
+    }
+
+    :host(.attachments) .meta-attachments::after {
+      content: attr(data-attachments);
     }
 
     .notes {
@@ -151,8 +177,14 @@
 
   <div class="icon-wrap"><img class="icon"></div>
 
-  <div class="info">
-    <p class="merchant"></p>
+  <div class="info-wrap">
+    <div class="info">
+      <p class="merchant"></p>
+      <div class="meta">
+        <span class="meta-pending">&#x1f553;</span>
+        <span class="meta-attachments">&#x1f4ce;</span>
+      </div>
+    </div>
     <p class="notes"></p>
   </div>
 

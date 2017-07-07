@@ -63,6 +63,7 @@ export default class Transaction {
   }
 
   get attachments() {
+    // TODO: this alaways returns an array
     if (this.tx && 'attachments' in this.tx) {
       return this.tx.attachments
     } else {

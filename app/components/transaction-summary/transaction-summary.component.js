@@ -34,6 +34,8 @@
       const $merchant = this.root.querySelector('.merchant')
       const $notes = this.root.querySelector('.notes')
 
+      const $metaAttachments = this.root.querySelector('.meta-attachments')
+
       $merchant.textContent = this.tx.displayName
 
       if (this.tx.notes.short.trim()) {
@@ -80,6 +82,15 @@
         this.classList.add('declined')
         $notes.classList.add('noted')
         $notes.textContent = this.tx.declineReason
+      }
+
+      if (this.tx.attachments.length) {
+        this.classList.add('attachments')
+
+        $metaAttachments.setAttribute(
+          'data-attachments',
+          this.tx.attachments.length
+        )
       }
     }
 
