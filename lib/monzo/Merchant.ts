@@ -1,5 +1,3 @@
-import undefsafe = require('undefsafe')
-
 export interface IMonzoApiMerchant {
   id: string
   group_id: string
@@ -7,30 +5,50 @@ export interface IMonzoApiMerchant {
 }
 
 export default class Merchant {
-  private merchant: IMonzoApiMerchant | null
+  private merchant: IMonzoApiMerchant
 
-  constructor(merchant: IMonzoApiMerchant | null) {
+  constructor(merchant: IMonzoApiMerchant) {
     this.merchant = merchant
   }
 
   get id(): string {
-    return undefsafe(this, 'merchant.id')
+    if (this.merchant && 'id' in this.merchant) {
+      return this.merchant.id
+    } else {
+      return ''
+    }
   }
 
   get groupId(): string {
-    return undefsafe(this, 'merchant.group_id')
+    if (this.merchant && 'group_id' in this.merchant) {
+      return this.merchant.group_id
+    } else {
+      return ''
+    }
   }
 
   get emoji(): string {
-    return undefsafe(this, 'merchant.emoji')
+    if (this.merchant && 'emoji' in this.merchant) {
+      return this.merchant.emoji
+    } else {
+      return ''
+    }
   }
 
-  get name(): string | undefined {
-    return undefsafe(this, 'merchant.name')
+  get name(): string {
+    if (this.merchant && 'name' in this.merchant) {
+      return this.merchant.name
+    } else {
+      return ''
+    }
   }
 
-  get logo(): string | undefined {
-    return undefsafe(this, 'merchant.logo')
+  get logo(): string {
+    if (this.merchant && 'logo' in this.merchant) {
+      return this.merchant.logo
+    } else {
+      return ''
+    }
   }
 
   public equals(merchant: IMonzoApiMerchant) {
@@ -44,6 +62,6 @@ export default class Merchant {
   }
 
   public toString() {
-    return undefsafe(this, 'merchant.name')
+    return this.name
   }
 }

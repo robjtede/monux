@@ -45,8 +45,7 @@
     "img-exif": "^0.2.0",
     "keytar": "^4.0.3",
     "request": "^2.81.0",
-    "request-promise-native": "^1.0.4",
-    "undefsafe": "^2.0.1"
+    "request-promise-native": "^1.0.4"
   },
   "devDependencies": {
     "@types/common-tags": "^1.2.5",

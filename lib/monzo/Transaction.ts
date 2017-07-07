@@ -1,5 +1,4 @@
 import { format } from 'date-fns'
-import undefsafe = require('undefsafe')
 
 import { Account, Amount, IAmount, Merchant, Monzo } from './'
 
@@ -64,7 +63,11 @@ export default class Transaction {
   }
 
   get attachments() {
-    return undefsafe(this, 'tx.attachments')
+    if (this.tx && 'attachments' in this.tx) {
+      return this.tx.attachments
+    } else {
+      return ''
+    }
   }
 
   public async requestAttachmentUpload(contentType = 'image/jpeg') {
@@ -181,7 +184,7 @@ export default class Transaction {
   }
 
   get is() {
-    const cash = this.category === 'cash'
+    const cash = String(this.category) === 'cash'
     const zero = +this.tx.amount === 0
 
     const metaAction = zero && !this.inSpending
@@ -197,11 +200,25 @@ export default class Transaction {
     return this.tx.include_in_spending || false
   }
 
-  get location(): string | undefined {
-    if (undefsafe(this, 'tx.merchant.online')) {
+  get location(): string {
+    if (
+      this.tx &&
+      'merchant' in this.tx &&
+      this.tx.merchant &&
+      'online' in this.tx.merchant
+    ) {
       return 'Online'
+    } else if (
+      this.tx &&
+      'merchant' in this.tx &&
+      this.tx.merchant &&
+      'address' in this.tx.merchant &&
+      this.tx.merchant.address &&
+      'short_formatted' in this.tx.merchant
+    ) {
+      return this.tx.merchant.address.short_formatted
     } else {
-      return undefsafe(this, 'tx.merchant.address.short_formatted')
+      return ''
     }
   }
 
@@ -225,7 +242,13 @@ export default class Transaction {
   }
 
   get online(): boolean {
-    return !!undefsafe(this, 'tx.merchange.online')
+    return (
+      this.tx &&
+      'merchant' in this.tx &&
+      this.tx.merchant &&
+      'online' in this.tx.merchant &&
+      this.tx.merchant.online
+    )
   }
 
   get pending(): boolean {
