@@ -104,6 +104,18 @@
       const $detailPane = document.querySelector('.transaction-detail-pane')
       const $txDetail = document.querySelector('m-transaction-detail')
 
+      if (this.tx.acc) {
+        this.tx.acc.transaction(this.tx.id).then(tx => {
+          this.tx = tx
+          this.render()
+
+          $txDetail.tx = this.tx
+          $txDetail.dataset.category = this.tx.category
+          $txDetail.dataset.index = this.index
+          $txDetail.render()
+        })
+      }
+
       $txDetail.$summary = this
       $txDetail.tx = this.tx
       $txDetail.dataset.category = this.tx.category
