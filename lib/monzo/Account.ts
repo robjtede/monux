@@ -13,6 +13,7 @@ interface IMonzoApiTransactionOptions {
   'expand[]'?: string
   since?: string
   before?: string
+  limit?: number
 }
 
 export default class Account {
@@ -92,7 +93,7 @@ export default class Account {
   }
 
   async transactions(
-    options: { since?: Date | string; before?: Date } = {}
+    options: { since?: Date | string; before?: Date; limit?: number } = {}
   ): Promise<Transaction[]> {
     const opts = {
       account_id: this.id,
@@ -101,16 +102,18 @@ export default class Account {
 
     if (options.since) {
       if (options.since instanceof Date) {
-        // TODO: correct format
-        opts.since = format(options.since, 'DD MM YY')
+        opts.since = format(options.since, 'YYYY-MM-DDTHH:mm:ss.SSSZ')
       } else {
         opts.since = options.since
       }
     }
 
     if (options.before) {
-      // TODO: correct format
-      opts.before = format(options.before, 'DD MM YY')
+      opts.before = format(options.before, 'YYYY-MM-DDTHH:mm:ss.SSSZ')
+    }
+
+    if (options.limit) {
+      opts.limit = options.limit
     }
 
     const txs = await this.monzo.request('/transactions', opts)
