@@ -84,13 +84,11 @@ export default class Account {
   }
 
   async transaction(txId: string) {
-    const tx = await this.monzo.request('/transactions', {
-      account_id: this.id,
-      id: txId,
+    const res = await this.monzo.request(`/transactions/${txId}`, {
       'expand[]': 'merchant'
     })
 
-    return new Transaction(this.monzo, this, tx, undefined)
+    return new Transaction(this.monzo, this, res.transaction, undefined)
   }
 
   async transactions(

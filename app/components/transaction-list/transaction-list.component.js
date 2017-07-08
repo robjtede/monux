@@ -15,8 +15,7 @@
       this._debug = false
       this.debug('constructing list')
 
-      this.attachShadow({ mode: 'open' })
-      this.root = this.shadowRoot
+      this.root = this.attachShadow({ mode: 'open' })
 
       const template = ownerDocument.querySelector('template')
       this.root.appendChild(document.importNode(template.content, true))
@@ -178,7 +177,7 @@
     get allTransactions () {
       return Array.from(this.root.querySelectorAll('m-transaction-group'))
         .map(group =>
-          Array.from(group.shadowRoot.querySelectorAll('m-transaction-summary'))
+          Array.from(group.root.querySelectorAll('m-transaction-summary'))
         )
         .reduce((groups, group) => [...groups, ...group], [])
     }
@@ -187,12 +186,12 @@
       const $selectedGroup = Array.from(
         this.root.querySelectorAll('m-transaction-group')
       ).find(group =>
-        group.shadowRoot.querySelector('m-transaction-summary.selected')
+        group.root.querySelector('m-transaction-summary.selected')
       )
 
       let $selectedTx
       if ($selectedGroup) {
-        $selectedTx = $selectedGroup.shadowRoot.querySelector(
+        $selectedTx = $selectedGroup.root.querySelector(
           'm-transaction-summary.selected'
         )
       }
@@ -204,14 +203,12 @@
       const $selectedGroup = Array.from(
         this.root.querySelectorAll('m-transaction-group')
       ).find(group =>
-        group.shadowRoot.querySelector(
-          `m-transaction-summary[data-index="${index}"]`
-        )
+        group.root.querySelector(`m-transaction-summary[data-index="${index}"]`)
       )
 
       let $tx
       if ($selectedGroup) {
-        $tx = $selectedGroup.shadowRoot.querySelector(
+        $tx = $selectedGroup.root.querySelector(
           `m-transaction-summary[data-index="${index}"]`
         )
       }

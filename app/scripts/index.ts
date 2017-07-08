@@ -89,13 +89,18 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     debug('HTTP transactions =>', txs)
 
-    const $selectedTx = $txList.selectedTransaction
+    $txList.txs.forEach(($tx: Transaction) => {
+      $tx.monzo = accounts[0].monzo
+      $tx.acc = accounts[0]
+    })
 
     Array.prototype.push.apply($txList.txs, txs)
     $txList.classList.remove('inactive')
     $txList.render()
 
     $txDetail.removeAttribute('offline')
+
+    const $selectedTx = $txList.selectedTransaction
 
     if ($selectedTx) {
       const $tx = $txList.getTransactionByIndex($selectedTx.index)
