@@ -11,7 +11,7 @@ const { TouchBarLabel, TouchBarButton, TouchBarSpacer } = TouchBar
 
 const debug = Debug('app:renderer:touchbar')
 
-const setTouchBar = async (balance: Amount, spentToday: Amount) => {
+const setTouchBar = (balance?: Amount, spentToday?: Amount) => {
   const tbBalance = new TouchBarLabel({
     label: 'Balance: $--.--'
   })
@@ -35,8 +35,8 @@ const setTouchBar = async (balance: Amount, spentToday: Amount) => {
   debug('balance =>', balance)
   debug('spent today =>', spentToday)
 
-  tbBalance.label = `Balance: ${balance.format('%y%m')}`
-  tbSpent.label = `Spent Today: ${spentToday.format('%y%m')}`
+  if (balance) tbBalance.label = `Balance: ${balance.format('%y%m')}`
+  if (spentToday) tbSpent.label = `Spent Today: ${spentToday.format('%y%m')}`
 }
 
 export default setTouchBar

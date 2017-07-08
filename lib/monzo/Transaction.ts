@@ -129,7 +129,7 @@ export default class Transaction {
     return {
       raw,
       formatted,
-      toString: () => raw
+      toString: (): string => raw
     }
   }
 
@@ -199,6 +199,10 @@ export default class Transaction {
 
   get inSpending(): boolean {
     return this.tx.include_in_spending || false
+  }
+
+  get json(): string {
+    return JSON.stringify(this.tx)
   }
 
   get location(): string {

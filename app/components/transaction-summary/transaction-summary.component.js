@@ -1,5 +1,7 @@
 'use strict'
 ;(function (ownerDocument) {
+  const { default: db } = require('./scripts/cache')
+
   class TransactionSummaryComponent extends HTMLElement {
     constructor () {
       super()
@@ -103,6 +105,35 @@
 
       const $detailPane = document.querySelector('.transaction-detail-pane')
       const $txDetail = document.querySelector('m-transaction-detail')
+
+      if (this.tx.acc) {
+        this.debug(`updating transaction ${this.tx.id}`)
+
+        this.tx.acc
+          .transaction(this.tx.id)
+          .then(tx => {
+            this.tx = tx
+            this.render()
+
+            $txDetail.tx = this.tx
+            $txDetail.dataset.category = this.tx.category
+            $txDetail.dataset.index = this.index
+            $txDetail.render()
+
+            return db.transactions.put({
+              id: tx.id,
+              created_at: tx.created,
+              accId: tx.acc.id,
+              json: tx.json
+            })
+          })
+          .then(cache => {
+            this.debug(`updated cached ${this.tx.id}`)
+          })
+          .catch(err => {
+            console.error(err)
+          })
+      }
 
       $txDetail.$summary = this
       $txDetail.tx = this.tx

@@ -1,9 +1,19 @@
+import { format } from 'date-fns'
+
 import { Amount, IAmount, IMonzoApiTransaction, Monzo, Transaction } from './'
 
 export interface IMonzoApiAccount {
   id: string
   description: string
   created: string
+}
+
+interface IMonzoApiTransactionOptions {
+  account_id: string
+  'expand[]'?: string
+  since?: string
+  before?: string
+  limit?: number
 }
 
 export default class Account {
@@ -54,9 +64,10 @@ export default class Account {
           }
 
           const localSpend: IAmount = {
-            amount: bal.local_spend.length > 0
-              ? bal.local_spend[0].spend_today * bal.local_exchange_rate
-              : 0,
+            amount:
+              bal.local_spend.length > 0
+                ? bal.local_spend[0].spend_today * bal.local_exchange_rate
+                : 0,
             currency: bal.local_currency
           }
 
@@ -73,20 +84,42 @@ export default class Account {
       })
   }
 
-  get transactions(): Promise<Transaction[]> {
-    return this.monzo
-      .request('/transactions', {
-        account_id: this.id,
-        'expand[]': 'merchant'
-      })
-      .then(txs => {
-        localStorage.setItem('transactions', JSON.stringify(txs.transactions))
+  async transaction(txId: string) {
+    const res = await this.monzo.request(`/transactions/${txId}`, {
+      'expand[]': 'merchant'
+    })
 
-        return txs.transactions.map(
-          (tx: IMonzoApiTransaction, index: number) => {
-            return new Transaction(this.monzo, this, tx, index)
-          }
-        )
-      })
+    return new Transaction(this.monzo, this, res.transaction, undefined)
+  }
+
+  async transactions(
+    options: { since?: Date | string; before?: Date; limit?: number } = {}
+  ): Promise<Transaction[]> {
+    const opts = {
+      account_id: this.id,
+      'expand[]': 'merchant'
+    } as IMonzoApiTransactionOptions
+
+    if (options.since) {
+      if (options.since instanceof Date) {
+        opts.since = format(options.since, 'YYYY-MM-DDTHH:mm:ss.SSSZ')
+      } else {
+        opts.since = options.since
+      }
+    }
+
+    if (options.before) {
+      opts.before = format(options.before, 'YYYY-MM-DDTHH:mm:ss.SSSZ')
+    }
+
+    if (options.limit) {
+      opts.limit = options.limit
+    }
+
+    const txs = await this.monzo.request('/transactions', opts)
+
+    return txs.transactions.map((tx: IMonzoApiTransaction, index: number) => {
+      return new Transaction(this.monzo, this, tx, index)
+    })
   }
 }
