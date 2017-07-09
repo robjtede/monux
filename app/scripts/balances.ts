@@ -12,16 +12,16 @@ const getMonzo = (() => {
   }
 })()
 
-export const getCachedBank = (() => {
-  const cachedBank = cache.banks.limit(1).toArray()
+export const getCachedAccount = (() => {
+  const cachedAccount = cache.banks.limit(1).toArray()
 
   return async (): Promise<ICacheBank> => {
-    return (await cachedBank)[0]
+    return (await cachedAccount)[0]
   }
 })()
 
 export const getCachedBalance = (() => {
-  const cachedBank = getCachedBank()
+  const cachedBank = getCachedAccount()
 
   return async (): Promise<Amount> => {
     const { native, local } = JSON.parse((await cachedBank).balance)
@@ -72,28 +72,35 @@ document.addEventListener('DOMContentLoaded', async () => {
     $accDescription.textContent = account.name
   }
 
-  console.time('render cached balance')
-  try {
-    const cachedBank = await getCachedBank()
-    updateAccountInfo(cachedBank)
+  const renderCachedBalance = async () => {
+    console.time('render cached balance')
+    try {
+      const cachedBank = await getCachedAccount()
+      updateAccountInfo(cachedBank)
 
-    const cachedBalance = await getCachedBalance()
-    updateBalances(cachedBalance)
-  } catch (err) {
-    console.error(err)
+      const cachedBalance = await getCachedBalance()
+      updateBalances(cachedBalance)
+    } catch (err) {
+      console.error(err)
+    }
+    console.timeEnd('render cached balance')
   }
-  console.timeEnd('render cached balance')
 
-  console.time('render HTTP balance')
-  try {
-    const acc = (await (await getMonzo()).accounts)[0]
-    const { balance, spentToday } = await acc.balance
+  const renderHTTPBalance = async () => {
+    console.time('render HTTP balance')
+    try {
+      const acc = (await (await getMonzo()).accounts)[0]
+      const { balance, spentToday } = await acc.balance
 
-    updateAccountCache(acc, balance)
-    updateAccountInfo(acc)
-    updateBalances(balance, spentToday)
-  } catch (err) {
-    console.error(err)
+      updateAccountCache(acc, balance)
+      updateAccountInfo(acc)
+      updateBalances(balance, spentToday)
+    } catch (err) {
+      console.error(err)
+    }
+    console.timeEnd('render HTTP balance')
   }
-  console.timeEnd('render HTTP balance')
+
+  renderCachedBalance()
+  renderHTTPBalance()
 })
