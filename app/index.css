@@ -16,23 +16,17 @@
   --main-height: calc(100vh - (var(--header-height) + var(--nav-height)));
 }
 
-*, *::before, *::after {
+*,
+*::before,
+*::after {
   box-sizing: inherit;
 }
 
 :root {
   box-sizing: border-box;
 
-  font-family: -apple-system,
-    BlinkMacSystemFont,
-    "Segoe UI",
-    "Roboto",
-    "Oxygen",
-    "Ubuntu",
-    "Cantarell",
-    "Fira Sans",
-    "Droid Sans",
-    "Helvetica Neue",
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
+    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
     sans-serif;
   line-height: 1.5;
   font-size: 20px;
@@ -91,25 +85,29 @@ header {
   text-align: right;
 }
 
-.card-balance h2, .spent-today h2 {
+.card-balance h2,
+.spent-today h2 {
   margin: 0;
 
   font-weight: 300;
   font-size: 1.5rem;
 }
 
-.card-balance .amount, .spent-today .amount {
+.card-balance .amount,
+.spent-today .amount {
   line-height: 1;
 
   -webkit-app-region: no-drag;
   -webkit-user-select: initial;
 }
 
-.card-balance h2 .major, .spent-today h2 .major {
+.card-balance h2 .major,
+.spent-today h2 .major {
   font-size: 2em;
 }
 
-.card-balance::after, .spent-today::after {
+.card-balance::after,
+.spent-today::after {
   content: var(--label-text);
   display: block;
   margin-top: 0.4em;
@@ -123,7 +121,8 @@ header {
   cursor: default;
 }
 
-.card-balance h2 .amount + .amount, .spent-today h2 .amount + .amount {
+.card-balance h2 .amount + .amount,
+.spent-today h2 .amount + .amount {
   display: block;
 
   color: var(--light-grey);
@@ -251,6 +250,42 @@ main {
 
 .app-pane.active {
   display: flex;
+}
+
+.map-pane,
+.spending-pane,
+.export-pane {
+  padding-top: calc(var(--main-height) * 0.2);
+  justify-content: center;
+
+  text-align: center;
+}
+
+.map-pane h1,
+.spending-pane h1,
+.export-pane h1 {
+  margin-bottom: 0;
+
+  color: var(--dark-grey);
+  font-weight: normal;
+}
+
+.map-pane h2,
+.spending-pane h2,
+.export-pane h2 {
+  margin-top: 0;
+
+  color: var(--medium-grey);
+  font-weight: normal;
+}
+
+.map-pane h3,
+.spending-pane h3,
+.export-pane h3 {
+  margin-top: 0;
+
+  color: var(--label-grey);
+  font-weight: normal;
 }
 
 m-transaction-list {
