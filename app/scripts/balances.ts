@@ -2,7 +2,7 @@ import { Account, Amount, Monzo } from '../../lib/monzo'
 import { getSavedCode } from '../../lib/monzo/auth'
 
 import setTouchBar from './touchbar'
-import cache, { ICacheBank } from './cache'
+import cache, { ICacheAccount } from './cache'
 
 const getMonzo = (() => {
   const accessToken = getSavedCode('access_token')
@@ -13,9 +13,9 @@ const getMonzo = (() => {
 })()
 
 export const getCachedAccount = (() => {
-  const cachedAccount = cache.banks.limit(1).toArray()
+  const cachedAccount = cache.accounts.limit(1).toArray()
 
-  return async (): Promise<ICacheBank> => {
+  return async (): Promise<ICacheAccount> => {
     return (await cachedAccount)[0]
   }
 })()
@@ -30,8 +30,8 @@ export const getCachedBalance = (() => {
 })()
 
 export const updateAccountCache = async (acc: Account, balance: Amount) => {
-  return cache.banks.put({
-    accId: acc.id,
+  return cache.accounts.put({
+    id: acc.id,
     balance: balance.json,
     name: acc.name,
     type: 'Monzo'
@@ -68,7 +68,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     setTouchBar(balance, spentToday)
   }
 
-  const updateAccountInfo = (account: ICacheBank | Account) => {
+  const updateAccountInfo = (account: ICacheAccount | Account) => {
     $accDescription.textContent = account.name
   }
 

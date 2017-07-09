@@ -4,7 +4,7 @@ import { forEach } from 'p-iteration'
 import { Account, Monzo, Transaction } from '../../lib/monzo'
 import { getSavedCode } from '../../lib/monzo/auth'
 
-import cache, { ICacheTransaction, ICacheBank } from './cache'
+import cache, { ICacheTransaction, ICacheAccount } from './cache'
 
 const debug = Debug('app:renderer:index')
 
@@ -17,9 +17,9 @@ const getMonzo = (() => {
 })()
 
 export const getCachedAccount = (() => {
-  const cachedBank = cache.banks.limit(1).toArray()
+  const cachedBank = cache.accounts.limit(1).toArray()
 
-  return async (): Promise<ICacheBank> => {
+  return async (): Promise<ICacheAccount> => {
     return (await cachedBank)[0]
   }
 })()
