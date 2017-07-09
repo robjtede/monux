@@ -148,6 +148,8 @@ export const verifyAccess = async (accessToken: string) => {
     return res && 'authenticated' in res && res.authenticated
   } catch (err) {
     console.error('verifyAccess failed =>', err.error)
-    throw new Error(err)
+
+    if (err.name === 'RequestError') throw err
+    else throw new Error(err)
   }
 }

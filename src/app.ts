@@ -58,25 +58,33 @@ app.on('ready', async () => {
     try {
       const accessToken = await getSavedCode('access_token')
 
-      if (await verifyAccess(accessToken)) {
-        mainWindow.goToMonux()
-      } else {
-        const refreshToken = await getSavedCode('refresh_token')
+      try {
+        const access = await verifyAccess(accessToken)
 
-        const {
-          accessToken: newAccessToken,
-          refreshToken: newRefreshToken
-        } = await refreshAccess(appInfo, refreshToken)
-
-        if (await verifyAccess(newAccessToken)) {
-          await saveCode('access_token', newAccessToken)
-          await saveCode('refresh_token', newRefreshToken)
-
+        if (access) {
           mainWindow.goToMonux()
         } else {
-          console.error('invalid refresh token')
-          throw new Error('invalid refresh token')
+          const refreshToken = await getSavedCode('refresh_token')
+
+          const {
+            accessToken: newAccessToken,
+            refreshToken: newRefreshToken
+          } = await refreshAccess(appInfo, refreshToken)
+
+          if (await verifyAccess(newAccessToken)) {
+            await saveCode('access_token', newAccessToken)
+            await saveCode('refresh_token', newRefreshToken)
+
+            mainWindow.goToMonux()
+          } else {
+            console.error('Invalid refresh token')
+            throw new Error('Invalid refresh token')
+          }
         }
+      } catch (err) {
+        console.log(err.name)
+        if (err.name === 'RequestError') mainWindow.goToMonux()
+        else throw new Error(err)
       }
     } catch (err) {
       mainWindow.goToAuthRequest(appInfo)
@@ -91,16 +99,12 @@ app.on('open-url', async (_, forwardedUrl) => {
 
   const appInfo = await getAppInfo()
 
-  if (mainWindow) {
-    // create window
-  }
-
   const query = parseUrl(forwardedUrl).query
   const authResponse = parseQueryString(query)
 
   if (authResponse.state !== appInfo.state) {
-    console.error('auth state mismatch')
-    throw new Error('auth state mismatch')
+    console.error('Auth state mismatch')
+    throw new Error('Auth state mismatch')
   }
 
   const authCode = authResponse.code
