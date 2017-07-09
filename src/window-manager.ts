@@ -13,11 +13,17 @@ import menuTemplate from './menu-template'
 const debug = Debug('app:window-manager')
 
 export default class WindowManager {
-  _window: Electron.BrowserWindow | undefined
+  private _window: Electron.BrowserWindow | undefined
 
-  constructor() {}
+  focus() {
+    if (this._window) this._window.focus()
+  }
 
-  get window() {
+  get hasWindow(): boolean {
+    return !!this._window
+  }
+
+  get window(): Electron.BrowserWindow {
     debug('get window')
     if (this._window) return this._window
 

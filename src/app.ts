@@ -17,6 +17,7 @@ import WindowManager from './window-manager'
 
 const debug = Debug('app:app')
 const mainWindow = new WindowManager()
+
 enableLiveReload()
 
 debug(`starting`, app.getName(), 'version', app.getVersion())
@@ -136,5 +137,6 @@ app.on('window-all-closed', () => {
 
 app.on('activate', () => {
   debug('activate event')
-  if (mainWindow.window) mainWindow.goToMonux()
+  if (mainWindow.hasWindow) mainWindow.focus()
+  else mainWindow.goToMonux()
 })
