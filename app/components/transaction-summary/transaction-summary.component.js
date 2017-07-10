@@ -78,7 +78,11 @@
         icon.src = this.tx.iconFallback
       })
 
-      if (this.tx.pending) this.classList.add('pending')
+      if (this.tx.pending) {
+        this.classList.add('pending')
+      } else {
+        this.classList.remove('pending')
+      }
 
       if (this.tx.declined) {
         this.classList.add('declined')
@@ -93,6 +97,10 @@
           'data-attachments',
           this.tx.attachments.length
         )
+      } else {
+        this.classList.remove('attachments')
+
+        $metaAttachments.removeAttribute('data-attachments')
       }
     }
 
