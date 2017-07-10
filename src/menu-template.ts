@@ -52,4 +52,4 @@ export default [
       }
     ]
   }
-] as Electron.MenuItemOptions[]
+] as Electron.MenuItemConstructorOptions[]

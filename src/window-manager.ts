@@ -59,7 +59,7 @@ export default class WindowManager {
     this.window.loadURL(path)
   }
 
-  set menu(menu: Electron.MenuItemOptions[]) {
+  set menu(menu: Electron.MenuItemConstructorOptions[]) {
     debug('set menu')
     Menu.setApplicationMenu(Menu.buildFromTemplate(menu))
   }
