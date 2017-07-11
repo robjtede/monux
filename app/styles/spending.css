@@ -1,0 +1,14 @@
+.spending-list {
+  flex: 1;
+
+  border-right: var(--thin-border);
+}
+
+.spending-vis {
+  flex: 2;
+}
+
+.spending-vis svg {
+  width: 100%;
+  height: var(--main-height);
+}

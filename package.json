@@ -36,6 +36,7 @@
   },
   "dependencies": {
     "common-tags": "^1.4.0",
+    "d3": "^4.9.1",
     "date-fns": "^2.0.0-alpha.1",
     "debug": "^2.6.8",
     "dexie": "^2.0.0-beta.11",
@@ -51,6 +52,7 @@
   },
   "devDependencies": {
     "@types/common-tags": "^1.2.5",
+    "@types/d3": "^4.9.0",
     "@types/debug": "0.0.29",
     "@types/electron-config": "^0.2.1",
     "@types/electron-window-state": "^2.0.28",
