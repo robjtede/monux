@@ -106,22 +106,25 @@ const drawGroupStats = async groups => {
     .sort(null)
 
   const group = svg
-    .append('g')
+    .select('g')
     .attr('transform', `translate(${WIDTH / 2},${HEIGHT / 2})`)
 
   const label = group
-    .append('text')
+    .select('text')
     .attr('transform', 'translate(0, 250)')
     .attr('text-anchor', 'middle')
 
-  const segment = group
-    .selectAll('g.arc')
-    .data(pie(groups))
+  const gdata = group.selectAll('.arc').data(pie(groups))
+
+  const segment = gdata
     .enter()
-    .append('g')
+    .append('path')
+    .merge(gdata)
+    .attr('d', d => arc(d))
+    .attr('fill', (_, i) => color(i))
     .classed('arc', true)
 
-  segment.append('path').attr('d', d => arc(d)).attr('fill', (_, i) => color(i))
+  gdata.exit().remove()
 
   segment.on('mouseover', d => {
     label.html(d.data.name + ': ' + d.data.spent.format('%y%j%p%n'))
