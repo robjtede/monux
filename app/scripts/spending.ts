@@ -46,7 +46,7 @@ const groupSort = (a: [string, Transaction[]], b: [string, Transaction[]]) => {
   return atot - btot
 }
 
-const groups = async () => {
+const groups = async (months: number) => {
   await getCachedTransactions()
 
   const cachedTxs = await cache.transactions.toArray()
@@ -55,7 +55,7 @@ const groups = async () => {
   })
 
   const currentMonth = txs.filter(tx => {
-    return isSameMonth(tx.created, subMonths(new Date(), 1))
+    return isSameMonth(tx.created, subMonths(new Date(), months))
   })
 
   const groups = currentMonth.reduce((groups, tx) => {
@@ -79,7 +79,7 @@ const groups = async () => {
     })
 }
 
-groups().then(groups => {
+const drawGroupStats = async groups => {
   const sum = d3.sum(groups, d => Math.abs(d.spent.raw))
 
   const WIDTH = 500
@@ -129,5 +129,18 @@ groups().then(groups => {
 
   segment.on('mouseout', d => {
     label.html('')
+  })
+}
+
+document.addEventListener('DOMContentLoaded', async () => {
+  const els = Array.from(document.querySelectorAll('.spending-month'))
+
+  console.log(els)
+
+  els.forEach((el: HTMLElement) => {
+    el.addEventListener('click', async () => {
+      console.log('click', el)
+      await drawGroupStats(await groups(Number(el.dataset.monthdiff)))
+    })
   })
 })
