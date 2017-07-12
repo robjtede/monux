@@ -1,6 +1,11 @@
 import * as Debug from 'debug'
-import { isSameMonth, subMonths } from 'date-fns'
 import * as d3 from 'd3'
+import {
+  isSameMonth,
+  subMonths,
+  differenceInCalendarMonths,
+  format
+} from 'date-fns'
 
 import cache, { ICacheTransaction } from './cache'
 import { Amount, Transaction } from '../../lib/monzo'
@@ -58,7 +63,7 @@ const groups = async (months: number) => {
     return isSameMonth(tx.created, subMonths(new Date(), months))
   })
 
-  const groups = currentMonth.reduce((groups, tx) => {
+  return currentMonth.reduce((groups, tx) => {
     // const groups = txs.reduce((groups, tx) => {
     const groupId = tx.category.raw
 
@@ -67,7 +72,9 @@ const groups = async (months: number) => {
 
     return groups
   }, {} as { [groupId: string]: Transaction[] })
+}
 
+const groupStats = groups => {
   return Object.entries(groups)
     .sort(groupSort)
     .map(([_, txs]) => txs)
@@ -136,14 +143,58 @@ const drawGroupStats = async groups => {
 }
 
 document.addEventListener('DOMContentLoaded', async () => {
-  const els = Array.from(document.querySelectorAll('.spending-month'))
+  const txs = await getCachedTransactions()
 
-  console.log(els)
+  const longAgo = differenceInCalendarMonths(
+    new Date(),
+    txs.sort((a, b) => {
+      return +a.created - +b.created
+    })[0].created
+  )
+
+  const $spList = document.querySelector('.spending-list') as HTMLDivElement
+
+  for (let i = 0; i < longAgo; i++) {
+    const $spMonth = document.createElement('div')
+    $spMonth.classList.add('spending-month')
+    $spMonth.dataset.monthdiff = String(i)
+
+    const $mthTitle = document.createElement('h2')
+    const $txCount = document.createElement('p')
+    const $mthSpending = document.createElement('p')
+
+    $mthTitle.textContent = format(subMonths(new Date(), i), 'MMM YYYY')
+    // <h2>May 2017</h2>
+
+    const txCount = Object.values(await groups(i)).reduce((tot, group) => {
+      return tot + group.length
+    }, 0)
+    $txCount.classList.add('transaction-count')
+    $txCount.textContent = `${txCount} transactions`
+
+    const mthSpending = groupStats(await groups(i)).reduce((tot, spent) => {
+      return tot + spent.spent.raw
+    }, 0)
+    $txCount.classList.add('month-spending')
+    $mthSpending.textContent = new Amount({
+      amount: mthSpending,
+      currency: 'GBP'
+    }).format('%y%j%p%n')
+
+    $spMonth.appendChild($mthTitle)
+    $spMonth.appendChild($txCount)
+    $spMonth.appendChild($mthSpending)
+
+    $spList.appendChild($spMonth)
+  }
+
+  const els = Array.from(document.querySelectorAll('.spending-month'))
 
   els.forEach((el: HTMLElement) => {
     el.addEventListener('click', async () => {
-      console.log('click', el)
-      await drawGroupStats(await groups(Number(el.dataset.monthdiff)))
+      await drawGroupStats(
+        groupStats(await groups(Number(el.dataset.monthdiff)))
+      )
     })
   })
 })
