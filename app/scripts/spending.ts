@@ -163,19 +163,20 @@ document.addEventListener('DOMContentLoaded', async () => {
     const $txCount = document.createElement('p')
     const $mthSpending = document.createElement('p')
 
+    $txCount.classList.add('transaction-count')
+    $mthSpending.classList.add('month-spending')
+
     $mthTitle.textContent = format(subMonths(new Date(), i), 'MMM YYYY')
     // <h2>May 2017</h2>
 
     const txCount = Object.values(await groups(i)).reduce((tot, group) => {
       return tot + group.length
     }, 0)
-    $txCount.classList.add('transaction-count')
     $txCount.textContent = `${txCount} transactions`
 
     const mthSpending = groupStats(await groups(i)).reduce((tot, spent) => {
       return tot + spent.spent.raw
     }, 0)
-    $txCount.classList.add('month-spending')
     $mthSpending.textContent = new Amount({
       amount: mthSpending,
       currency: 'GBP'
