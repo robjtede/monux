@@ -126,12 +126,25 @@ const drawGroupStats = async groups => {
   const segment = gdata
     .enter()
     .append('path')
+    .each(function(d) {
+      this._current = d
+    })
     .merge(gdata)
     .attr('d', d => arc(d))
     .attr('fill', (_, i) => color(i))
     .classed('arc', true)
 
   gdata.exit().remove()
+
+  gdata.transition().duration(750).attrTween('d', function(d) {
+    const interpolate = d3.interpolate(this._current, d)
+
+    this._current = interpolate(0)
+
+    return function(time) {
+      return arc(interpolate(time))
+    }
+  })
 
   segment.on('mouseover', d => {
     label.html(d.data.name + ': ' + d.data.spent.format('%y%j%p%n'))
@@ -189,12 +202,24 @@ document.addEventListener('DOMContentLoaded', async () => {
     $spList.appendChild($spMonth)
   }
 
-  const els = Array.from(document.querySelectorAll('.spending-month'))
+  const $title = document.querySelector('.spending-vis h1') as HTMLElement
+  const $els = Array.from(document.querySelectorAll('.spending-month'))
 
-  els.forEach((el: HTMLElement) => {
+  $els.forEach((el: HTMLElement) => {
     el.addEventListener('click', async () => {
       await drawGroupStats(
         groupStats(await groups(Number(el.dataset.monthdiff)))
+      )
+
+      $els.forEach($el => {
+        $el.classList.remove('active')
+      })
+
+      el.classList.add('active')
+
+      $title.textContent = format(
+        subMonths(new Date(), Number(el.dataset.monthdiff)),
+        'MMM YYYY'
       )
     })
   })

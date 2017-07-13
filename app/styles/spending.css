@@ -7,6 +7,7 @@
 }
 
 .spending-list h1 {
+  margin: 0.2em 0;
   padding: 0 0.5em;
 }
 
@@ -35,6 +36,10 @@
   font-weight: normal;
 }
 
+.spending-month.active {
+  background: var(--off-white);
+}
+
 .transaction-count {
   grid-area: 2 / 2 / span 1 / span 1;
 
@@ -51,6 +56,11 @@
 
 .spending-vis {
   flex: 2;
+}
+
+.spending-vis h1 {
+  margin: 0.2em 0;
+  padding: 0 0.5em;
 }
 
 .spending-vis svg {
