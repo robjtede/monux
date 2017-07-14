@@ -4,7 +4,7 @@ import { forEach } from 'p-iteration'
 import { Account, Monzo, Transaction } from '../../lib/monzo'
 import { getSavedCode } from '../../lib/monzo/auth'
 
-import cache, { ICacheTransaction, ICacheAccount } from './cache'
+import db, { ICacheTransaction, ICacheAccount } from './cache'
 
 const debug = Debug('app:renderer:index')
 
@@ -17,7 +17,7 @@ const getMonzo = (() => {
 })()
 
 export const getCachedAccount = (() => {
-  const cachedBank = cache.accounts.limit(1).toArray()
+  const cachedBank = db.accounts.limit(1).toArray()
 
   return async (): Promise<ICacheAccount> => {
     return (await cachedBank)[0]
@@ -25,7 +25,7 @@ export const getCachedAccount = (() => {
 })()
 
 export const getCachedTransactions = (() => {
-  const cachedTxs = cache.transactions.toArray()
+  const cachedTxs = db.transactions.toArray()
 
   return async (): Promise<Transaction[]> => {
     try {
@@ -41,7 +41,7 @@ export const getCachedTransactions = (() => {
 
 const updateTransactionCache = async (acc: Account, tx: Transaction) => {
   try {
-    await cache.transactions.put({
+    await db.transactions.put({
       id: tx.id,
       created_at: tx.created,
       accId: acc.id,
@@ -78,7 +78,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       const account = (await (await getMonzo()).accounts)[0]
 
       // TODO: Table#orderBy
-      const cachedTxs = await cache.transactions.reverse().sortBy('created_at')
+      const cachedTxs = await db.transactions.reverse().sortBy('created_at')
       const anyCached = cachedTxs.length > 0
 
       const txs = anyCached
@@ -120,6 +120,41 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
   }
 
-  renderCachedTransactions()
-  renderHTTPTransactions()
+  const updatePendingTransactions = async () => {
+    const toUpdate = $txList.allTransactions
+      .filter(($tx: HTMLElement) => {
+        return $tx.tx.pending
+      })
+      .forEach($tx => {
+        console.log($tx)
+
+        $tx.tx.acc
+          .transaction($tx.tx.id)
+          .then(tx => {
+            $tx.tx = tx
+            $tx.render()
+
+            $txDetail.tx = $tx.tx
+            $txDetail.dataset.category = $tx.tx.category
+            $txDetail.dataset.index = $tx.index
+            $txDetail.render()
+
+            return db.transactions.put({
+              id: tx.id,
+              created_at: tx.created,
+              accId: tx.acc.id,
+              json: tx.json
+            })
+          })
+          .then(cache => {
+            $tx.debug(`updated cached ${$tx.tx.id}`)
+          })
+          .catch(err => {
+            console.error(err)
+          })
+      })
+  }
+
+  await Promise.all([renderCachedTransactions(), renderHTTPTransactions()])
+  updatePendingTransactions()
 })
