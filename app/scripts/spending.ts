@@ -141,7 +141,7 @@ const drawGroupStats = async groups => {
     .attr('fill', (_, i) => color(i))
     .classed('arc', true)
 
-  gdata.transition().duration(750).attrTween('d', function(d) {
+  gdata.transition().duration(400).attrTween('d', function(d) {
     const interpolate = d3.interpolate(this._current, d)
 
     this._current = interpolate(0)
