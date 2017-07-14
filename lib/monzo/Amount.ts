@@ -106,6 +106,10 @@ export default class Amount {
     return 100
   }
 
+  get raw(): number {
+    return this.native.amount
+  }
+
   get json(): string {
     return JSON.stringify({
       native: this.native,
@@ -165,7 +169,7 @@ export default class Amount {
     str = str.replace(/%\+/g, this.signIfPositive)
     str = str.replace(/%-/g, this.signIfNegative)
 
-    str = str.replace(/%r/g, String(this.native.amount))
+    str = str.replace(/%r/g, String(this.raw))
     str = str.replace(/%a/g, String(this.amount))
     str = str.replace(/%m/g, String(this.normalize))
 

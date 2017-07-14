@@ -1,0 +1,78 @@
+.spending-list {
+  flex: 1;
+
+  overflow-y: scroll;
+  overflow-x: hidden;
+  border-right: var(--thin-border);
+}
+
+.spending-list h1 {
+  margin: 0.2em 0;
+  padding: 0 0.5em;
+}
+
+.spending-month {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-auto-columns: auto;
+
+  padding: 0.5rem 1rem;
+}
+
+.spending-month:not(:last-of-type) {
+  border-bottom: var(--thin-border);
+}
+
+.spending-month:first-of-type {
+  border-top: var(--thin-border);
+}
+
+.spending-month h2 {
+  grid-area: 1 / 1 / span 1 / span 2;
+
+  margin: 0;
+  margin-bottom: 0.2em;
+
+  font-weight: normal;
+}
+
+.spending-month.active {
+  background: var(--off-white);
+}
+
+.transaction-count {
+  grid-area: 2 / 2 / span 1 / span 1;
+
+  margin: 0;
+
+  text-align: right;
+}
+
+.month-spending {
+  grid-area: 2 / 1 / span 1 / span 1;
+
+  margin: 0;
+}
+
+.spending-vis {
+  flex: 2;
+}
+
+.spending-vis h1 {
+  margin: 0.2em auto;
+  padding: 0 0.5em;
+  text-align: center;
+}
+
+.spending-vis svg {
+  display: block;
+  margin: 0 auto;
+}
+
+.spending-vis svg .arc {
+  transition: transform 100ms ease;
+}
+
+.spending-vis svg .arc.active {
+  transform: scale(1.1);
+}

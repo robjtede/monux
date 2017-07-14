@@ -133,6 +133,10 @@ export default class Transaction {
     }
   }
 
+  get counterparty() {
+    return this.tx.counterparty
+  }
+
   get created(): Date {
     return new Date(this.tx.created)
   }

@@ -1,3 +1,5 @@
+@import './styles/spending.css';
+
 :root {
   --white: rgba(255, 255, 255, 1.0);
   --off-white: rgba(240, 240, 240, 1.0);
@@ -253,7 +255,6 @@ main {
 }
 
 .map-pane,
-.spending-pane,
 .export-pane {
   padding-top: calc(var(--main-height) * 0.2);
   justify-content: center;
@@ -262,7 +263,6 @@ main {
 }
 
 .map-pane h1,
-.spending-pane h1,
 .export-pane h1 {
   margin-bottom: 0;
 
@@ -271,7 +271,6 @@ main {
 }
 
 .map-pane h2,
-.spending-pane h2,
 .export-pane h2 {
   margin-top: 0;
 
@@ -280,7 +279,6 @@ main {
 }
 
 .map-pane h3,
-.spending-pane h3,
 .export-pane h3 {
   margin-top: 0;
 
