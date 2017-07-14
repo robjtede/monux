@@ -1,10 +1,15 @@
+<center>
 # Monux
 
-Banking Client for MacOS (currently Monzo only)
+<img alt="Monux Logo" height="200" src="https://raw.githubusercontent.com/robjtede/monux/master/monux.png">
 
-<img alt="Monux Logo" height="200" src="https://github.com/robjtede/monux/blob/master/monux.png">
+Banking Client for MacOS.
+</center>
 
-**Monux is MacOS only for now.**
+## Support
+
+Monux is being designed to support all platforms and any bank with a public API. For now, Monux supports [Monzo](https://monzo.com) on MacOS, only.
+
 
 ## Download
 
@@ -27,6 +32,7 @@ Banking Client for MacOS (currently Monzo only)
 ## Features
 - [x] View balance / spend today
 - [x] Transaction list view
+- [x] Month-by-month spending breakdowns
 - [x] Transaction detail view
 - [x] Full notes and attachments
 - [x] Edit notes
@@ -39,8 +45,9 @@ Banking Client for MacOS (currently Monzo only)
 [![](https://m131jyck4m.execute-api.us-west-2.amazonaws.com/prod/poll/01BM7TWYY0DN4K8DS0DTV3V07B/Transaction%20location%20on%20map)](https://m131jyck4m.execute-api.us-west-2.amazonaws.com/prod/poll/01BM7TWYY0DN4K8DS0DTV3V07B/Transaction%20location%20on%20map/vote)
 [![](https://m131jyck4m.execute-api.us-west-2.amazonaws.com/prod/poll/01BM7TWYY0DN4K8DS0DTV3V07B/Search%20transactions)](https://m131jyck4m.execute-api.us-west-2.amazonaws.com/prod/poll/01BM7TWYY0DN4K8DS0DTV3V07B/Search%20transactions/vote)
 [![](https://m131jyck4m.execute-api.us-west-2.amazonaws.com/prod/poll/01BM7TWYY0DN4K8DS0DTV3V07B/Graph%20balance%20over%20time)](https://m131jyck4m.execute-api.us-west-2.amazonaws.com/prod/poll/01BM7TWYY0DN4K8DS0DTV3V07B/Graph%20balance%20over%20time/vote)
-[![](https://m131jyck4m.execute-api.us-west-2.amazonaws.com/prod/poll/01BM7TWYY0DN4K8DS0DTV3V07B/Month-by-month%20spending%20break-downs)](https://m131jyck4m.execute-api.us-west-2.amazonaws.com/prod/poll/01BM7TWYY0DN4K8DS0DTV3V07B/Month-by-month%20spending%20break-downs/vote)
 [![](https://m131jyck4m.execute-api.us-west-2.amazonaws.com/prod/poll/01BM7TWYY0DN4K8DS0DTV3V07B/CSV%20JSON%20Excel%20export)](https://m131jyck4m.execute-api.us-west-2.amazonaws.com/prod/poll/01BM7TWYY0DN4K8DS0DTV3V07B/CSV%20JSON%20Excel%20export/vote)
+
+_(complete goals have been removed so numbers may be inaccurate)_
 
 
 ### Future Goals (Pending Monzo Support)
@@ -50,5 +57,6 @@ Banking Client for MacOS (currently Monzo only)
 [![](https://m131jyck4m.execute-api.us-west-2.amazonaws.com/prod/poll/01BM7TWYY0DN4K8DS0DTV3V07B/View%20spending%20targets)](https://m131jyck4m.execute-api.us-west-2.amazonaws.com/prod/poll/01BM7TWYY0DN4K8DS0DTV3V07B/View%20spending%20targets/vote)
 
 
-## Screenshot
-![Preview](http://i.imgur.com/xZFeXDj.png)
+## Screenshots
+![List Preview](http://i.imgur.com/DL0PHSe.png)
+![Spending Preview](http://i.imgur.com/1GFdvGf.png)
