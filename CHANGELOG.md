@@ -5,6 +5,10 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
 
+## [0.9.1] - 2017-07-14
+### Fixed
+- Client info was not being saved correctly.
+
 ## [0.9.0] - 2017-07-14
 ### Added
 - **Spending pane** (month-my-month breakdowns)
@@ -134,6 +138,7 @@ Bugs fixed (and probably some introduced).
 - View transaction list.
 - View limited transaction details.
 
+[0.9.1]: https://github.com/robjtede/monux/compare/v0.9.0...v0.9.1
 [0.9.0]: https://github.com/robjtede/monux/compare/v0.8.0...v0.9.0
 [0.8.0]: https://github.com/robjtede/monux/compare/v0.7.0...v0.8.0
 [0.7.0]: https://github.com/robjtede/monux/compare/v0.6.0...v0.7.0
