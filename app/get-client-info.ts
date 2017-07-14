@@ -9,5 +9,6 @@ $submit.addEventListener('click', async () => {
   await saveCode('client_id', $id.value)
   await saveCode('client_secret', $secret.value)
 
-  $message.textContent = 'Close this window to continue.'
+  $message.textContent =
+    'Close this window and launch from the dock to continue.'
 })
