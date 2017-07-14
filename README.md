@@ -16,7 +16,7 @@ Monux is being designed to support all OSes and any bank with a public API. For 
 
 ## Download
 
-#### [The latest release can be downloaded here →](https://github.com/robjtede/monux/releases/download/v0.9.0/Monux-0.9.0-mac.zip)
+#### [The latest release can be downloaded here →](https://github.com/robjtede/monux/releases/download/v0.9.1/Monux-0.9.1-mac.zip)
 
 [See releases for older versions →](https://github.com/robjtede/monux/releases)
 
