@@ -67,3 +67,11 @@
   width: 100%;
   height: var(--main-height);
 }
+
+.spending-vis svg .arc {
+  transition: transform 100ms ease;
+}
+
+.spending-vis svg .arc.active {
+  transform: scale(1.1);
+}

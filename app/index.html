@@ -42,7 +42,7 @@
   </nav>
 
   <main class="app">
-    <div class="app-pane transaction-pane active">
+    <div class="app-pane transaction-pane">
       <m-transaction-list group-headings group-by="day" class="inactive"></m-transaction-list>
 
       <div class="transaction-detail-pane inactive">
@@ -58,7 +58,8 @@
         <h1>This Month</h1>
         <svg>
           <g>
-            <text></text>
+            <text class="label"></text>
+            <text class="amount"></text>
           </g>
         </svg>
       </div>

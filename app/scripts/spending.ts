@@ -117,9 +117,16 @@ const drawGroupStats = async groups => {
     .attr('transform', `translate(${WIDTH / 2},${HEIGHT / 2})`)
 
   const label = group
-    .select('text')
-    .attr('transform', 'translate(0, 10)')
+    .select('.label')
+    .attr('transform', 'translate(0, -25)')
     .attr('text-anchor', 'middle')
+    .attr('font-size', '25px')
+
+  const amount = group
+    .select('.amount')
+    .attr('transform', 'translate(0, 30)')
+    .attr('text-anchor', 'middle')
+    .attr('font-size', '40px')
 
   const gdata = group.selectAll('.arc').data(pie(groups))
 
@@ -134,9 +141,6 @@ const drawGroupStats = async groups => {
     .attr('fill', (_, i) => color(i))
     .classed('arc', true)
 
-  // transition to 0
-  gdata.exit().remove()
-
   gdata.transition().duration(750).attrTween('d', function(d) {
     const interpolate = d3.interpolate(this._current, d)
 
@@ -147,12 +151,15 @@ const drawGroupStats = async groups => {
     }
   })
 
-  segment.on('mouseover', d => {
-    label.html(d.data.name + ': ' + d.data.spent.format('%y%j%p%n'))
-  })
-
-  segment.on('mouseout', d => {
+  segment.on('mouseover', (d, i, segments) => {
     label.html('')
+    segments.forEach(segment => {
+      segment.classList.remove('active')
+    })
+
+    segments[i].classList.add('active')
+    label.html(d.data.name)
+    amount.html(d.data.spent.format('%y%j%p%n'))
   })
 }
 
@@ -181,7 +188,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     $mthSpending.classList.add('month-spending')
 
     $mthTitle.textContent = format(subMonths(new Date(), i), 'MMM YYYY')
-    // <h2>May 2017</h2>
 
     const txCount = Object.values(await groups(i)).reduce((tot, group) => {
       return tot + group.length
@@ -214,6 +220,12 @@ document.addEventListener('DOMContentLoaded', async () => {
 
       $els.forEach($el => {
         $el.classList.remove('active')
+      })
+
+      Array.from(
+        document.querySelectorAll('.spending-vis svg .arc')
+      ).forEach(arc => {
+        arc.classList.remove('active')
       })
 
       el.classList.add('active')
