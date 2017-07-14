@@ -59,13 +59,14 @@
 }
 
 .spending-vis h1 {
-  margin: 0.2em 0;
+  margin: 0.2em auto;
   padding: 0 0.5em;
+  text-align: center;
 }
 
 .spending-vis svg {
-  width: 100%;
-  height: var(--main-height);
+  display: block;
+  margin: 0 auto;
 }
 
 .spending-vis svg .arc {

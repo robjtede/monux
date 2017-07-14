@@ -210,7 +210,9 @@ document.addEventListener('DOMContentLoaded', async () => {
   }
 
   const $title = document.querySelector('.spending-vis h1') as HTMLElement
-  const $els = Array.from(document.querySelectorAll('.spending-month'))
+  const $els = Array.from(
+    document.querySelectorAll('.spending-month') as NodeListOf<HTMLElement>
+  )
 
   $els.forEach((el: HTMLElement) => {
     el.addEventListener('click', async () => {
@@ -236,4 +238,6 @@ document.addEventListener('DOMContentLoaded', async () => {
       )
     })
   })
+
+  $els[0].click()
 })
