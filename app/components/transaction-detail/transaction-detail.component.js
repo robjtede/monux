@@ -199,7 +199,7 @@
       $notes.addEventListener('paste', calcSize)
 
       const editHandler = async ev => {
-        console.log('edit handler')
+        // console.log('edit handler')
 
         await this.tx.setNotes($notes.value.trim())
 

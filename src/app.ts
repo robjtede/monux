@@ -82,7 +82,7 @@ app.on('ready', async () => {
           }
         }
       } catch (err) {
-        console.log(err.name)
+        console.warn(err.name)
         if (err.name === 'RequestError') mainWindow.goToMonux()
         else throw new Error(err)
       }

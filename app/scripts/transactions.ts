@@ -126,8 +126,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         return $tx.tx.pending
       })
       .forEach($tx => {
-        console.log($tx)
-
         $tx.tx.acc
           .transaction($tx.tx.id)
           .then(tx => {
