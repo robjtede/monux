@@ -118,7 +118,7 @@ const drawGroupStats = async groups => {
 
   const label = group
     .select('text')
-    .attr('transform', 'translate(0, 250)')
+    .attr('transform', 'translate(0, 10)')
     .attr('text-anchor', 'middle')
 
   const gdata = group.selectAll('.arc').data(pie(groups))
@@ -134,6 +134,7 @@ const drawGroupStats = async groups => {
     .attr('fill', (_, i) => color(i))
     .classed('arc', true)
 
+  // transition to 0
   gdata.exit().remove()
 
   gdata.transition().duration(750).attrTween('d', function(d) {
