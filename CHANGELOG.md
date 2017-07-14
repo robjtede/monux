@@ -5,6 +5,26 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
 
+## [0.9.0] - 2017-07-14
+### Added
+- **Spending pane** (month-my-month breakdowns)
+- Attachment hints on transaction summaries.
+
+### Changed
+- Only new transaction are requested.
+- Transactions are updated on click.
+- Pending transactions are updated automatically.
+- Improved cache performance.
+- Incomplete tabs/panes show summary of future functionality.
+
+### Fixed
+- List became scrollable horizontally when a transaction summary has a long description.
+- Touch bar amounts were truncated for round amounts.
+- Clicking the dock icon would always refresh the open window.
+
+[0.9.0 Milestone](https://github.com/robjtede/monux/milestone/6?closed=1)
+
+
 ## [0.8.0] - 2017-06-18
 ### Added
 - Touch Bar support.
@@ -114,6 +134,7 @@ Bugs fixed (and probably some introduced).
 - View transaction list.
 - View limited transaction details.
 
+[0.9.0]: https://github.com/robjtede/monux/compare/v0.8.0...v0.9.0
 [0.8.0]: https://github.com/robjtede/monux/compare/v0.7.0...v0.8.0
 [0.7.0]: https://github.com/robjtede/monux/compare/v0.6.0...v0.7.0
 [0.6.0]: https://github.com/robjtede/monux/compare/v0.5.0...v0.6.0
