@@ -1,6 +1,6 @@
 {
   "name": "Monux",
-  "version": "0.9.0",
+  "version": "0.9.1",
   "description": "Unoffical Monzo Client for Desktop",
   "main": "src/app.ts",
   "repository": "https://github.com/robjtede/monux",
