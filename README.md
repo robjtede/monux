@@ -1,19 +1,24 @@
-<center>
-# Monux
+<h1 align="center">Monux</h1>
 
-<img alt="Monux Logo" height="200" src="https://raw.githubusercontent.com/robjtede/monux/master/monux.png">
+<p align="center">
+  <img alt="Monux Logo" height="200" src="https://raw.githubusercontent.com/robjtede/monux/master/monux.png">
+</p>
 
-Banking Client for MacOS.
-</center>
+<p align="center">
+  Desktop Banking Client
+</p>
 
-## Support
 
-Monux is being designed to support all platforms and any bank with a public API. For now, Monux supports [Monzo](https://monzo.com) on MacOS, only.
+## Vision
+
+Monux is being designed to support all OSes and any bank with a public API. For now, Monux supports [Monzo](https://monzo.com) on MacOS, only.
 
 
 ## Download
 
-[See releases →](https://github.com/robjtede/monux/releases)
+#### [The latest release can be downloaded here →](https://github.com/robjtede/monux/releases/download/v0.9.0/Monux-0.9.0-mac.zip)
+
+[See releases for older versions →](https://github.com/robjtede/monux/releases)
 
 
 ## Usage
