@@ -27,6 +27,7 @@ Monux is being designed to support all OSes and any bank with a public API. For 
 - The `Redirect URLs` must be `monux://auth/` for the application to collect the auth tokens correctly and `Confidentiality` must to set to `Confidential`.
 - Copy the `Client ID` and `Client secret` over to the input fields when launching.
 - Follow instructions and follow standard Monzo auth flow.
+- For now, you must use a native email client to log-in with due to security restrictions imposed by email providers.
 
 
 ## Support this project
