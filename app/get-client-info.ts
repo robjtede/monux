@@ -1,14 +1,18 @@
-const { saveCode } = require('../lib/monzo/auth')
+import { remote } from 'electron'
+import { saveCode } from '../lib/monzo/auth'
 
-const $submit = document.querySelector('button') as HTMLButtonElement
-const $id = document.querySelector('#client_id') as HTMLInputElement
-const $secret = document.querySelector('#client_secret') as HTMLInputElement
-const $message = document.querySelector('.message') as HTMLDivElement
+const { app } = remote.require('electron')
 
-$submit.addEventListener('click', async () => {
-  await saveCode('client_id', $id.value)
-  await saveCode('client_secret', $secret.value)
+document.addEventListener('DOMContentLoaded', () => {
+  const $submit = document.querySelector('button') as HTMLButtonElement
+  const $id = document.querySelector('#client_id') as HTMLInputElement
+  const $secret = document.querySelector('#client_secret') as HTMLInputElement
 
-  $message.textContent =
-    'Close this window and launch from the dock to continue.'
+  $submit.addEventListener('click', async () => {
+    await saveCode('client_id', $id.value)
+    await saveCode('client_secret', $secret.value)
+
+    app.relaunch()
+    app.quit()
+  })
 })
