@@ -32,7 +32,7 @@ export interface IAppInfo {
 
 const getAppInfo = (() => {
   const state = new Promise<string>((resolve, reject) => {
-    randomBytes(512, (err, buf) => {
+    randomBytes(128, (err, buf) => {
       if (err) reject(err)
       resolve(buf.toString('hex'))
     })
