@@ -91,13 +91,12 @@ async function parseAuthUrl(forwardedUrl) {
   }
 }
 
-app.on('ready', async () => {
-  debug('ready event')
-
-  try {
-    const appInfo = await getAppInfo()
-	
-	if( process.platform === 'win32' && process.argv.length > 1) {
+const isSecondInstance = app.makeSingleInstance(async (commandLine, workingDirectory) => {
+  // Someone tried to run a second instance, we should focus our window.
+  if (mainWindow) {
+    if (mainWindow.isMinimized()) myWindow.restore()
+    mainWindow.focus()
+    if( process.platform === 'win32' && process.argv.length > 1) {
 	  console.warn('getting command line arguments')
 	  console.warn(process.argv)
 	  var urlParams = process.argv.filter(function(param){
@@ -115,7 +114,19 @@ app.on('ready', async () => {
         await parseAuthUrl(urlParams[0])
 	  }
 	}
+  }
+})
 
+if (isSecondInstance) {
+  app.quit()
+}
+
+app.on('ready', async () => {
+  debug('ready event')
+
+  try {
+    const appInfo = await getAppInfo()
+	
     try {
       const accessToken = await getSavedCode('access_token')
 
