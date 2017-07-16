@@ -111,7 +111,8 @@ app.on('ready', async () => {
 	  
 	  if(urlParams.length == 1) {
 		console.warn('auth url found')
-        await parseAuthUrl(forwardedUrl)
+		console.warn(urlParams[0])
+        await parseAuthUrl(urlParams[0])
 	  }
 	}
 
