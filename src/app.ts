@@ -32,7 +32,7 @@ export interface IAppInfo {
 
 const getAppInfo = (() => {
   const state = new Promise<string>((resolve, reject) => {
-    randomBytes(512, (err, buf) => {
+    randomBytes(128, (err, buf) => {
       if (err) reject(err)
       resolve(buf.toString('hex'))
     })
@@ -42,7 +42,7 @@ const getAppInfo = (() => {
     return {
       client_id: await getSavedCode('client_id'),
       client_secret: await getSavedCode('client_secret'),
-      redirect_uri: 'monux://auth/',
+      redirect_uri: 'https://monux.robjte.de/auth/',
       response_type: 'code',
       state: await state
     }
@@ -64,21 +64,26 @@ app.on('ready', async () => {
         if (access) {
           mainWindow.goToMonux()
         } else {
-          const refreshToken = await getSavedCode('refresh_token')
+          try {
+            const refreshToken = await getSavedCode('refresh_token')
 
-          const {
-            accessToken: newAccessToken,
-            refreshToken: newRefreshToken
-          } = await refreshAccess(appInfo, refreshToken)
+            const {
+              accessToken: newAccessToken,
+              refreshToken: newRefreshToken
+            } = await refreshAccess(appInfo, refreshToken)
 
-          if (await verifyAccess(newAccessToken)) {
-            await saveCode('access_token', newAccessToken)
-            await saveCode('refresh_token', newRefreshToken)
+            if (await verifyAccess(newAccessToken)) {
+              await saveCode('access_token', newAccessToken)
+              await saveCode('refresh_token', newRefreshToken)
 
-            mainWindow.goToMonux()
-          } else {
-            console.error('Invalid refresh token')
-            throw new Error('Invalid refresh token')
+              mainWindow.goToMonux()
+            } else {
+              console.error('Invalid refresh token')
+              throw new Error('Invalid refresh token')
+            }
+          } catch (err) {
+            debug('no refresh token found')
+            mainWindow.goToAuthRequest(appInfo)
           }
         }
       } catch (err) {
@@ -87,9 +92,11 @@ app.on('ready', async () => {
         else throw new Error(err)
       }
     } catch (err) {
+      debug('no access token found')
       mainWindow.goToAuthRequest(appInfo)
     }
   } catch (err) {
+    debug('no client info found')
     mainWindow.goToClientInfo()
   }
 })
@@ -119,7 +126,9 @@ app.on('open-url', async (_, forwardedUrl) => {
     debug('token =>', accessToken)
     if (await verifyAccess(accessToken)) {
       await saveCode('access_token', accessToken)
-      await saveCode('refresh_token', refreshToken)
+
+      if (refreshToken) await saveCode('refresh_token', refreshToken)
+      else debug('no refresh token sent')
 
       mainWindow.goToMonux()
     } else {
