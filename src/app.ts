@@ -20,6 +20,11 @@ const mainWindow = new WindowManager()
 
 enableLiveReload()
 
+if(!app.isDefaultProtocolClient(app.getName())
+{
+    app.setAsDefaultProtocolClient(app.getName())
+}
+
 debug(`starting`, app.getName(), 'version', app.getVersion())
 
 export interface IAppInfo {
@@ -49,11 +54,66 @@ const getAppInfo = (() => {
   }
 })()
 
+async function parseAuthUrl(forwardedUrl) {
+  const appInfo = await getAppInfo()
+  const query = parseUrl(forwardedUrl).query
+  const authResponse = parseQueryString(query)
+
+  if (authResponse.state !== appInfo.state) {
+	console.error('Auth state mismatch')
+	console.error(authResponse.state)
+	console.error(appInfo.state)
+	throw new Error('Auth state mismatch')
+  }
+
+  const authCode = authResponse.code
+  debug('authcode =>', authCode)
+
+  try {
+	const { accessToken, refreshToken } = await getAccessToken(
+	  appInfo,
+	  authCode
+	)
+
+	debug('token =>', accessToken)
+	if (await verifyAccess(accessToken)) {
+	  await saveCode('access_token', accessToken)
+	  await saveCode('refresh_token', refreshToken)
+
+	  mainWindow.goToMonux()
+	} else {
+	  console.error('Invalid access token')
+	  throw new Error('Invalid access token')
+	}
+  } catch (err) {
+	console.error(err)
+	throw new Error(err)
+  }
+}
+
 app.on('ready', async () => {
   debug('ready event')
 
   try {
     const appInfo = await getAppInfo()
+	
+	if( process.platform === 'win32' && process.argv.length > 1) {
+	  console.warn('getting command line arguments')
+	  console.warn(process.argv)
+	  var urlParams = process.argv.filter(function(param){
+	    return param.startsWith('monux://')
+	  })
+	  
+	  if(urlParams.length > 1) {
+	    console.err('Invalid number of auth urls')
+	    throw new Error('Invalid number of auth urls')
+	  }
+	  
+	  if(urlParams.length == 1) {
+		console.warn('auth url found')
+        await parseAuthUrl(forwardedUrl)
+	  }
+	}
 
     try {
       const accessToken = await getSavedCode('access_token')
@@ -97,46 +157,14 @@ app.on('ready', async () => {
 app.on('open-url', async (_, forwardedUrl) => {
   debug('open-url event')
 
-  const appInfo = await getAppInfo()
-
-  const query = parseUrl(forwardedUrl).query
-  const authResponse = parseQueryString(query)
-
-  if (authResponse.state !== appInfo.state) {
-    console.error('Auth state mismatch')
-    throw new Error('Auth state mismatch')
-  }
-
-  const authCode = authResponse.code
-  debug('authcode =>', authCode)
-
-  try {
-    const { accessToken, refreshToken } = await getAccessToken(
-      appInfo,
-      authCode
-    )
-
-    debug('token =>', accessToken)
-    if (await verifyAccess(accessToken)) {
-      await saveCode('access_token', accessToken)
-      await saveCode('refresh_token', refreshToken)
-
-      mainWindow.goToMonux()
-    } else {
-      console.error('Invalid access token')
-      throw new Error('Invalid access token')
-    }
-  } catch (err) {
-    console.error(err)
-    throw new Error(err)
-  }
+  await parseAuthUrl(forwardedUrl)
 })
 
 app.on('window-all-closed', () => {
   debug('window-all-closed event')
 
   // conflicts with auth strategy for now
-  // if (process.platform !== 'darwin') app.quit()
+  if (process.platform !== 'darwin') app.quit()
 })
 
 app.on('activate', () => {
