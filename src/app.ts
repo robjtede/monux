@@ -42,7 +42,7 @@ const getAppInfo = (() => {
     return {
       client_id: await getSavedCode('client_id'),
       client_secret: await getSavedCode('client_secret'),
-      redirect_uri: 'monux://auth/',
+      redirect_uri: 'https://monux.robjte.de/auth/',
       response_type: 'code',
       state: await state
     }
