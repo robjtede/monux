@@ -96,10 +96,10 @@ const isSecondInstance = app.makeSingleInstance(async (commandLine, workingDirec
   if (mainWindow) {
     if (mainWindow.isMinimized()) myWindow.restore()
     mainWindow.focus()
-    if( process.platform === 'win32' && process.argv.length > 1) {
+    if( process.platform === 'win32' && commandLine.length > 1) {
 	  console.warn('getting command line arguments')
-	  console.warn(process.argv)
-	  var urlParams = process.argv.filter(function(param){
+	  console.warn(commandLine)
+	  var urlParams = commandLine.filter(function(param){
 	    return param.startsWith('monux://')
 	  })
 	  
