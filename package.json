@@ -36,7 +36,7 @@
   },
   "dependencies": {
     "common-tags": "^1.4.0",
-    "d3": "^4.9.1",
+    "d3": "^4.10.0",
     "date-fns": "^2.0.0-alpha.1",
     "debug": "^2.6.8",
     "dexie": "^2.0.0-beta.11",
@@ -46,7 +46,7 @@
     "electron-window-state": "^4.1.1",
     "img-exif": "^0.2.0",
     "keytar": "^4.0.3",
-    "p-iteration": "^1.1.1",
+    "p-iteration": "^1.1.2",
     "request": "^2.81.0",
     "request-promise-native": "^1.0.4"
   },
@@ -69,7 +69,7 @@
     "eslint-plugin-standard": "^3.0.1",
     "husky": "^0.14.3",
     "lint-staged": "^4.0.1",
-    "prettier": "^1.5.2",
+    "prettier": "^1.5.3",
     "tslib": "^1.7.1",
     "tslint": "^5.4.3",
     "typescript": "^2.4.1"
