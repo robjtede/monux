@@ -20,9 +20,8 @@ const mainWindow = new WindowManager()
 
 enableLiveReload()
 
-if(!app.isDefaultProtocolClient(app.getName())
-{
-    app.setAsDefaultProtocolClient(app.getName())
+if (!app.isDefaultProtocolClient(app.getName())) {
+  app.setAsDefaultProtocolClient(app.getName())
 }
 
 debug(`starting`, app.getName(), 'version', app.getVersion())
@@ -60,56 +59,58 @@ async function parseAuthUrl(forwardedUrl) {
   const authResponse = parseQueryString(query)
 
   if (authResponse.state !== appInfo.state) {
-	console.error('Auth state mismatch')
-	throw new Error('Auth state mismatch')
+    console.error('Auth state mismatch')
+    throw new Error('Auth state mismatch')
   }
 
   const authCode = authResponse.code
   debug('authcode =>', authCode)
 
   try {
-	const { accessToken, refreshToken } = await getAccessToken(
-	  appInfo,
-	  authCode
-	)
+    const { accessToken, refreshToken } = await getAccessToken(
+      appInfo,
+      authCode
+    )
 
-	debug('token =>', accessToken)
-	if (await verifyAccess(accessToken)) {
-	  await saveCode('access_token', accessToken)
-	  await saveCode('refresh_token', refreshToken)
+    debug('token =>', accessToken)
+    if (await verifyAccess(accessToken)) {
+      await saveCode('access_token', accessToken)
+      await saveCode('refresh_token', refreshToken)
 
-	  mainWindow.goToMonux()
-	} else {
-	  console.error('Invalid access token')
-	  throw new Error('Invalid access token')
-	}
+      mainWindow.goToMonux()
+    } else {
+      console.error('Invalid access token')
+      throw new Error('Invalid access token')
+    }
   } catch (err) {
-	console.error(err)
-	throw new Error(err)
+    console.error(err)
+    throw new Error(err)
   }
 }
 
-const isSecondInstance = app.makeSingleInstance(async (commandLine, workingDirectory) => {
-  // Someone tried to run a second instance, we should focus our window.
-  if (mainWindow) {
-    if (mainWindow.hasWindow) mainWindow.focus()
-    mainWindow.focus()
-    if( process.platform === 'win32' && commandLine.length > 1) {
-	  var urlParams = commandLine.filter(function(param){
-	    return param.startsWith('monux://')
-	  })
-	  
-	  if(urlParams.length > 1) {
-	    console.err('Invalid number of auth urls')
-	    throw new Error('Invalid number of auth urls')
-	  }
-	  
-	  if(urlParams.length == 1) {
-        await parseAuthUrl(urlParams[0])
-	  }
-	}
+const isSecondInstance = app.makeSingleInstance(
+  async (commandLine, workingDirectory) => {
+    // Someone tried to run a second instance, we should focus our window.
+    if (mainWindow) {
+      if (mainWindow.hasWindow) mainWindow.focus()
+      mainWindow.focus()
+      if (process.platform === 'win32' && commandLine.length > 1) {
+        var urlParams = commandLine.filter(function(param) {
+          return param.startsWith('monux://')
+        })
+
+        if (urlParams.length > 1) {
+          console.err('Invalid number of auth urls')
+          throw new Error('Invalid number of auth urls')
+        }
+
+        if (urlParams.length == 1) {
+          await parseAuthUrl(urlParams[0])
+        }
+      }
+    }
   }
-})
+)
 
 if (isSecondInstance) {
   app.quit()
@@ -120,7 +121,7 @@ app.on('ready', async () => {
 
   try {
     const appInfo = await getAppInfo()
-	
+
     try {
       const accessToken = await getSavedCode('access_token')
 
