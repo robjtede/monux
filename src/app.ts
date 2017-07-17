@@ -61,8 +61,6 @@ async function parseAuthUrl(forwardedUrl) {
 
   if (authResponse.state !== appInfo.state) {
 	console.error('Auth state mismatch')
-	console.error(authResponse.state)
-	console.error(appInfo.state)
 	throw new Error('Auth state mismatch')
   }
 
@@ -97,8 +95,6 @@ const isSecondInstance = app.makeSingleInstance(async (commandLine, workingDirec
     if (mainWindow.hasWindow) mainWindow.focus()
     mainWindow.focus()
     if( process.platform === 'win32' && commandLine.length > 1) {
-	  console.warn('getting command line arguments')
-	  console.warn(commandLine)
 	  var urlParams = commandLine.filter(function(param){
 	    return param.startsWith('monux://')
 	  })
@@ -109,8 +105,6 @@ const isSecondInstance = app.makeSingleInstance(async (commandLine, workingDirec
 	  }
 	  
 	  if(urlParams.length == 1) {
-		console.warn('auth url found')
-		console.warn(urlParams[0])
         await parseAuthUrl(urlParams[0])
 	  }
 	}
