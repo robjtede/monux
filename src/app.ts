@@ -94,7 +94,7 @@ async function parseAuthUrl(forwardedUrl) {
 const isSecondInstance = app.makeSingleInstance(async (commandLine, workingDirectory) => {
   // Someone tried to run a second instance, we should focus our window.
   if (mainWindow) {
-    if (mainWindow.isMinimized()) myWindow.restore()
+    if (mainWindow.hasWindow) mainWindow.focus()
     mainWindow.focus()
     if( process.platform === 'win32' && commandLine.length > 1) {
 	  console.warn('getting command line arguments')
