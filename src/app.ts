@@ -20,6 +20,10 @@ const mainWindow = new WindowManager()
 
 enableLiveReload()
 
+if (!app.isDefaultProtocolClient(app.getName().toLowerCase())) {
+  app.setAsDefaultProtocolClient(app.getName().toLowerCase())
+}
+
 debug(`starting`, app.getName(), 'version', app.getVersion())
 
 export interface IAppInfo {
@@ -48,6 +52,69 @@ const getAppInfo = (() => {
     }
   }
 })()
+
+const parseAuthUrl = async forwardedUrl => {
+  const appInfo = await getAppInfo()
+  const query = parseUrl(forwardedUrl).query
+  const authResponse = parseQueryString(query)
+
+  if (authResponse.state !== appInfo.state) {
+    console.error('Auth state mismatch')
+    debug('app state:' + appInfo.state)
+    debug('auth state:' + authResponse.state)
+    throw new Error('Auth state mismatch')
+  }
+
+  const authCode = authResponse.code
+  debug('authcode =>', authCode)
+
+  try {
+    const { accessToken, refreshToken } = await getAccessToken(
+      appInfo,
+      authCode
+    )
+
+    debug('token =>', accessToken)
+    if (await verifyAccess(accessToken)) {
+      await saveCode('access_token', accessToken)
+      await saveCode('refresh_token', refreshToken)
+
+      mainWindow.goToMonux()
+    } else {
+      console.error('Invalid access token')
+      throw new Error('Invalid access token')
+    }
+  } catch (err) {
+    console.error(err)
+    throw new Error(err)
+  }
+}
+
+const isSecondInstance = app.makeSingleInstance(
+  (commandLine, workingDirectory) => {
+    // Someone tried to run a second instance, we should focus our window.
+    if (mainWindow) {
+      if (mainWindow.hasWindow) mainWindow.focus()
+      mainWindow.focus()
+      if (process.platform === 'win32' && commandLine.length > 1) {
+        const authUrl = commandLine.find(function(param) {
+          return param.toLowerCase().startsWith('monux://')
+        })
+
+        if (authUrl) {
+          parseAuthUrl(authUrl).then()
+        } else {
+          console.error('Invalid number of auth urls')
+          throw new Error('Invalid number of auth urls')
+        }
+      }
+    }
+  }
+)
+
+if (isSecondInstance) {
+  app.quit()
+}
 
 app.on('ready', async () => {
   debug('ready event')
@@ -104,48 +171,14 @@ app.on('ready', async () => {
 app.on('open-url', async (_, forwardedUrl) => {
   debug('open-url event')
 
-  const appInfo = await getAppInfo()
-
-  const query = parseUrl(forwardedUrl).query
-  const authResponse = parseQueryString(query)
-
-  if (authResponse.state !== appInfo.state) {
-    console.error('Auth state mismatch')
-    throw new Error('Auth state mismatch')
-  }
-
-  const authCode = authResponse.code
-  debug('authcode =>', authCode)
-
-  try {
-    const { accessToken, refreshToken } = await getAccessToken(
-      appInfo,
-      authCode
-    )
-
-    debug('token =>', accessToken)
-    if (await verifyAccess(accessToken)) {
-      await saveCode('access_token', accessToken)
-
-      if (refreshToken) await saveCode('refresh_token', refreshToken)
-      else debug('no refresh token sent')
-
-      mainWindow.goToMonux()
-    } else {
-      console.error('Invalid access token')
-      throw new Error('Invalid access token')
-    }
-  } catch (err) {
-    console.error(err)
-    throw new Error(err)
-  }
+  await parseAuthUrl(forwardedUrl)
 })
 
 app.on('window-all-closed', () => {
   debug('window-all-closed event')
 
   // conflicts with auth strategy for now
-  // if (process.platform !== 'darwin') app.quit()
+  if (process.platform !== 'darwin') app.quit()
 })
 
 app.on('activate', () => {
