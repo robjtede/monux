@@ -18,6 +18,7 @@
 - [Support this project](#support-this-project)
 - [Goals](#goals)
 - [Screenshots](#screenshots)
+- [Contributors](#contributors)
 
 
 ## Vision
@@ -90,3 +91,8 @@ _(complete goals have been removed so numbers may be inaccurate)_
 
 ![List Preview](http://i.imgur.com/DL0PHSe.png)
 ![Spending Preview](http://i.imgur.com/1GFdvGf.png)
+
+
+## Contributors
+- [Rob Ede](https://github.com/robjtede)
+- [Andrew Schofield](https://github.com/andrew-schofield)
