@@ -53,13 +53,15 @@ const getAppInfo = (() => {
   }
 })()
 
-async function parseAuthUrl(forwardedUrl) {
+const parseAuthUrl = async forwardedUrl => {
   const appInfo = await getAppInfo()
   const query = parseUrl(forwardedUrl).query
   const authResponse = parseQueryString(query)
 
   if (authResponse.state !== appInfo.state) {
     console.error('Auth state mismatch')
+    debug('app state:' + appInfo.state)
+    debug('auth state:' + authResponse.state)
     throw new Error('Auth state mismatch')
   }
 
@@ -95,17 +97,15 @@ const isSecondInstance = app.makeSingleInstance(
       if (mainWindow.hasWindow) mainWindow.focus()
       mainWindow.focus()
       if (process.platform === 'win32' && commandLine.length > 1) {
-        var urlParams = commandLine.filter(function(param) {
-          return param.startsWith('monux://')
+        const authUrl = commandLine.find(function(param) {
+          return param.toLowerCase().startsWith('monux://')
         })
 
-        if (urlParams.length > 1) {
-          console.err('Invalid number of auth urls')
+        if (authUrl) {
+          await parseAuthUrl(authUrl)
+        } else {
+          console.error('Invalid number of auth urls')
           throw new Error('Invalid number of auth urls')
-        }
-
-        if (urlParams.length == 1) {
-          await parseAuthUrl(urlParams[0])
         }
       }
     }
