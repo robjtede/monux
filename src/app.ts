@@ -53,7 +53,7 @@ const getAppInfo = (() => {
   }
 })()
 
-const parseAuthUrl = async forwardedUrl => {
+const parseAuthUrl = async (forwardedUrl: string) => {
   const appInfo = await getAppInfo()
   const query = parseUrl(forwardedUrl).query
   const authResponse = parseQueryString(query)
@@ -90,27 +90,31 @@ const parseAuthUrl = async forwardedUrl => {
   }
 }
 
-const isSecondInstance = app.makeSingleInstance(
-  (commandLine, workingDirectory) => {
-    // Someone tried to run a second instance, we should focus our window.
-    if (mainWindow) {
-      if (mainWindow.hasWindow) mainWindow.focus()
-      mainWindow.focus()
-      if (process.platform === 'win32' && commandLine.length > 1) {
-        const authUrl = commandLine.find(function(param) {
-          return param.toLowerCase().startsWith('monux://')
-        })
+const isSecondInstance = app.makeSingleInstance(async (argv, cwd) => {
+  // Someone tried to run a second instance, we should focus our window.
+  if (mainWindow.hasWindow && mainWindow.window.isMinimized()) {
+    mainWindow.window.restore()
+  }
+  mainWindow.focus()
 
-        if (authUrl) {
-          parseAuthUrl(authUrl).then()
-        } else {
-          console.error('Invalid number of auth urls')
-          throw new Error('Invalid number of auth urls')
-        }
+  if (process.platform === 'win32' && argv.length > 1) {
+    const authUrl = argv.find(function(param) {
+      return param.toLowerCase().startsWith('monux://')
+    })
+
+    if (authUrl) {
+      try {
+        await parseAuthUrl(authUrl)
+      } catch (err) {
+        console.error(err)
+        throw new Error(err)
       }
+    } else {
+      console.error('Auth url not found')
+      throw new Error('Auth url not found')
     }
   }
-)
+})
 
 if (isSecondInstance) {
   app.quit()
