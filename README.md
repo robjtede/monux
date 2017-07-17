@@ -9,6 +9,17 @@
 </p>
 
 
+## Contents
+
+- [Vision](#vision)
+- [Download](#download)
+- [Features](#features)
+- [Usage](#usage)
+- [Support this project](#support-this-project)
+- [Goals](#goals)
+- [Screenshots](#screenshots)
+
+
 ## Vision
 
 Monux is being designed to support all OSes and any bank with a public API. For now, Monux supports [Monzo](https://monzo.com) on MacOS, only.
@@ -16,25 +27,13 @@ Monux is being designed to support all OSes and any bank with a public API. For 
 
 ## Download
 
-#### [The latest release can be downloaded here →](https://github.com/robjtede/monux/releases/download/v0.9.2/Monux-0.9.2-mac.zip)
+#### [The latest release can be downloaded here →](https://github.com/robjtede/monux/releases/download/v0.9.3/Monux-0.9.3-mac.zip)
 
 [See releases for older versions →](https://github.com/robjtede/monux/releases)
 
 
-## Usage
-
-- [Create a new OAuth client](https://developers.monzo.com/apps/home) on the Monzo developer site. The name, logo and description can be anything you like but...
-- The `Redirect URLs` must be `monux://auth/` for the application to collect the auth tokens correctly and `Confidentiality` must to set to `Confidential`.
-- Copy the `Client ID` and `Client secret` over to the input fields when launching.
-- Follow instructions and follow standard Monzo auth flow.
-
-
-## Support this project
-
-[https://monzo.me/robertede](https://monzo.me/robertede/5.00?d=Thanks%20for%20making%20Monux!)
-
-
 ## Features
+
 - [x] View balance / spend today
 - [x] Transaction list view
 - [x] Month-by-month spending breakdowns
@@ -45,7 +44,32 @@ Monux is being designed to support all OSes and any bank with a public API. For 
 - [x] Filter transactions
 
 
-## Goals (Vote on what you want to see next)
+## Usage
+
+### Create a client
+
+- [Create a new OAuth client](https://developers.monzo.com/apps/home) on the Monzo developer site. The name, logo and description can be anything you like.
+- The `Redirect URLs` must be `https://monux.robjte.de/auth/` for the application to collect the auth tokens correctly. **Note this proxy is secure and CAN NOT access your account.**
+- `Confidentiality` can be set to `Confidential` or `Non-confidential`. Confidential clients are recommended as you will not have to log back in every 6 hours. Tokens are stored securely on your machine.
+
+### Logging In
+
+- Launch Monux. You will be presented with a form to enter the client details.
+- Copy the `Client ID` and `Client secret` over to the input fields and click "Save client details".
+- The app will restart and you should be presented with a standard Monzo login prompt to enter your email address.
+- After clicking "Submit" you should see "Check your email". (If this does not appear, you should check your email address and try again. If the problem persists, you may have exceeded the API request limit; wait an hour and try again. If it still does not work, there may be a bug in Monux.)
+- You will receive an email with a login link. This link will direct you to `https://monux.robjte.de/auth/...` where there will be a link that says "Click here to log in to Monux →". Clicking this may prompt you with something like "Do you want to allow this page to open Monux.app?" Click "Allow".
+- If all has gone well, Monux should open with its main interface. There may be some keychain prompts during this process. It is safe to allow access to helper processes.
+
+
+## Support this project
+
+#### [https://monzo.me/robertede](https://monzo.me/robertede/5.00?d=Thanks%20for%20making%20Monux!)
+
+
+## Goals
+
+### (Vote on what you want to see next)
 
 [![](https://m131jyck4m.execute-api.us-west-2.amazonaws.com/prod/poll/01BM7TWYY0DN4K8DS0DTV3V07B/Transaction%20location%20on%20map)](https://m131jyck4m.execute-api.us-west-2.amazonaws.com/prod/poll/01BM7TWYY0DN4K8DS0DTV3V07B/Transaction%20location%20on%20map/vote)
 [![](https://m131jyck4m.execute-api.us-west-2.amazonaws.com/prod/poll/01BM7TWYY0DN4K8DS0DTV3V07B/Search%20transactions)](https://m131jyck4m.execute-api.us-west-2.amazonaws.com/prod/poll/01BM7TWYY0DN4K8DS0DTV3V07B/Search%20transactions/vote)
@@ -63,5 +87,6 @@ _(complete goals have been removed so numbers may be inaccurate)_
 
 
 ## Screenshots
+
 ![List Preview](http://i.imgur.com/DL0PHSe.png)
 ![Spending Preview](http://i.imgur.com/1GFdvGf.png)
