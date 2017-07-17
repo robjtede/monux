@@ -20,8 +20,8 @@ const mainWindow = new WindowManager()
 
 enableLiveReload()
 
-if (!app.isDefaultProtocolClient(app.getName())) {
-  app.setAsDefaultProtocolClient(app.getName())
+if (!app.isDefaultProtocolClient(app.getName().toLowerCase())) {
+  app.setAsDefaultProtocolClient(app.getName().toLowerCase())
 }
 
 debug(`starting`, app.getName(), 'version', app.getVersion())
