@@ -91,7 +91,7 @@ const parseAuthUrl = async forwardedUrl => {
 }
 
 const isSecondInstance = app.makeSingleInstance(
-  async (commandLine, workingDirectory) => {
+  (commandLine, workingDirectory) => {
     // Someone tried to run a second instance, we should focus our window.
     if (mainWindow) {
       if (mainWindow.hasWindow) mainWindow.focus()
@@ -102,7 +102,7 @@ const isSecondInstance = app.makeSingleInstance(
         })
 
         if (authUrl) {
-          await parseAuthUrl(authUrl)
+          parseAuthUrl(authUrl).then()
         } else {
           console.error('Invalid number of auth urls')
           throw new Error('Invalid number of auth urls')
