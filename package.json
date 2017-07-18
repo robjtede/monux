@@ -78,40 +78,18 @@
   "config": {
     "forge": {
       "make_targets": {
-        "win32": [
-          "squirrel"
-        ],
-        "darwin": [
-          "zip"
-        ],
-        "linux": [
-          "deb",
-          "rpm"
-        ]
+        "win32": ["zip"],
+        "darwin": ["zip"]
       },
       "electronPackagerConfig": {
         "icon": "monux",
         "asar": true,
         "protocols": [
           {
-            "schemes": [
-              "monux"
-            ],
+            "schemes": ["monux"],
             "name": "Monux"
           }
         ]
-      },
-      "electronWinstallerConfig": {
-        "name": ""
-      },
-      "electronInstallerDebian": {},
-      "electronInstallerRedhat": {},
-      "github_repository": {
-        "owner": "",
-        "name": ""
-      },
-      "windowsStoreConfig": {
-        "packageName": ""
       }
     }
   }
