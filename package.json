@@ -2,6 +2,7 @@
   "name": "Monux",
   "version": "0.9.3",
   "description": "Unoffical Monzo Client for Desktop",
+  "private": true,
   "main": "src/app.ts",
   "repository": "https://github.com/robjtede/monux",
   "author": "robjtede",
