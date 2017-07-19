@@ -3,6 +3,64 @@ import { getSavedCode } from '../../lib/monzo/auth'
 
 import setTouchBar from './touchbar'
 import cache, { ICacheAccount } from './cache'
+import { IAmountOptions } from '../../lib/monzo'
+
+import { createStore, Action, Store, Reducer, ReducersMapObject } from 'redux'
+
+interface IState {
+  balance: IAmountOptions
+  spent?: IAmountOptions
+}
+
+enum EActions {
+  SET_SPENT = 'SET_SPENT',
+  SET_BALANCE = 'SET_BALANCE'
+}
+
+interface IAction extends Action {
+  type: EActions
+}
+
+interface ISetSpentAction extends IAction {
+  type: EActions.SET_SPENT
+  amount: IAmountOptions
+}
+
+interface ISetBalanceAction extends IAction {
+  type: EActions.SET_BALANCE
+  amount: IAmountOptions
+}
+
+const initialState: IState = {
+  balance: {
+    native: {
+      amount: 0,
+      currency: 'GBP'
+    },
+    local: undefined
+  }
+}
+
+const reducer: Reducer<IState> = (state = initialState, action) => {
+  const types = {
+    [EActions.SET_SPENT]: (state: IState, action: ISetSpentAction) => {
+      return {
+        ...state,
+        spent: action.amount
+      }
+    },
+    [EActions.SET_BALANCE]: (state: IState, action: ISetBalanceAction) => {
+      return {
+        ...state,
+        balance: action.amount
+      }
+    }
+  } as ReducersMapObject
+
+  return action.type in types ? types[action.type](state, action) : state
+}
+
+const store: Store<IState> = createStore(reducer)
 
 const getMonzo = (() => {
   const accessToken = getSavedCode('access_token')
@@ -25,6 +83,7 @@ export const getCachedBalance = (() => {
 
   return async (): Promise<Amount> => {
     const { native, local } = JSON.parse((await cachedBank).balance)
+
     return new Amount(native, local)
   }
 })()
@@ -32,7 +91,7 @@ export const getCachedBalance = (() => {
 export const updateAccountCache = async (acc: Account, balance: Amount) => {
   return cache.accounts.put({
     id: acc.id,
-    balance: balance.json,
+    balance: balance.stringify,
     name: acc.name,
     type: 'Monzo'
   })
@@ -49,7 +108,14 @@ document.addEventListener('DOMContentLoaded', async () => {
   ) as HTMLHeadingElement
   const $accDescription = $nav.querySelector('.person') as HTMLDivElement
 
-  const updateBalances = (balance?: Amount, spentToday?: Amount) => {
+  store.subscribe(() => {
+    const state = store.getState()
+
+    const balance = new Amount(state.balance.native, state.balance.local)
+    const spentToday = state.spent
+      ? new Amount(state.spent.native, state.spent.local)
+      : undefined
+
     if ((balance && !balance.foreign) || (spentToday && !spentToday.foreign)) {
       if (balance) $balance.innerHTML = balance.html(true, 0)
       if (spentToday) $spentToday.innerHTML = spentToday.html(true, 0)
@@ -66,7 +132,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     setTouchBar(balance, spentToday)
-  }
+  })
 
   const updateAccountInfo = (account: ICacheAccount | Account) => {
     $accDescription.textContent = account.name
@@ -79,7 +145,12 @@ document.addEventListener('DOMContentLoaded', async () => {
       updateAccountInfo(cachedBank)
 
       const cachedBalance = await getCachedBalance()
-      updateBalances(cachedBalance)
+      store.dispatch(
+        {
+          type: EActions.SET_BALANCE,
+          amount: cachedBalance.json
+        } as ISetBalanceAction
+      )
     } catch (err) {
       console.error(err)
     }
@@ -94,7 +165,20 @@ document.addEventListener('DOMContentLoaded', async () => {
 
       updateAccountCache(acc, balance)
       updateAccountInfo(acc)
-      updateBalances(balance, spentToday)
+
+      store.dispatch(
+        {
+          type: EActions.SET_BALANCE,
+          amount: balance.json
+        } as ISetBalanceAction
+      )
+
+      store.dispatch(
+        {
+          type: EActions.SET_SPENT,
+          amount: spentToday.json
+        } as ISetSpentAction
+      )
     } catch (err) {
       console.error(err)
     }

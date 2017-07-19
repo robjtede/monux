@@ -12,6 +12,11 @@ export interface IAmount {
   currency: string
 }
 
+export interface IAmountOptions {
+  native: IAmount
+  local?: IAmount
+}
+
 const currencies: ICurrencies = {
   EUR: { symbol: '€', separator: '.' },
   GBP: { symbol: '£', separator: '.' },
@@ -110,11 +115,15 @@ export default class Amount {
     return this.native.amount
   }
 
-  get json(): string {
-    return JSON.stringify({
+  get json(): IAmountOptions {
+    return {
       native: this.native,
       local: this.local
-    })
+    }
+  }
+
+  get stringify(): string {
+    return JSON.stringify(this.json)
   }
 
   // returns html formatted string

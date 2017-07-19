@@ -1,5 +1,10 @@
 import Account, { IMonzoApiAccount } from './Account'
-import Amount, { IAmount, ICurrencies, ICurrency } from './Amount'
+import Amount, {
+  IAmount,
+  ICurrencies,
+  ICurrency,
+  IAmountOptions
+} from './Amount'
 import Merchant, { IMonzoApiMerchant } from './Merchant'
 import Transaction, { IMonzoApiTransaction } from './Transaction'
 import Monzo from './Monzo'
@@ -18,6 +23,7 @@ export {
   IMonzoApiTransaction,
   // helpers
   IAmount,
+  IAmountOptions,
   ICurrency,
   ICurrencies
 }
