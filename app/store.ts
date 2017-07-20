@@ -3,9 +3,6 @@ import { createStore, Store } from 'redux'
 import { IAmountOptions } from '../lib/monzo'
 import { reducer } from './reducers'
 
-const store: Store<IState> = createStore(reducer)
-export default store
-
 export const initialState: IState = {
   balance: {
     native: {
@@ -20,3 +17,6 @@ export interface IState {
   balance: IAmountOptions
   spent?: IAmountOptions
 }
+
+const store: Store<IState> = createStore(reducer)
+export default store
