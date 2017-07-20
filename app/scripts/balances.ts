@@ -3,64 +3,9 @@ import { getSavedCode } from '../../lib/monzo/auth'
 
 import setTouchBar from './touchbar'
 import cache, { ICacheAccount } from './cache'
-import { IAmountOptions } from '../../lib/monzo'
 
-import { createStore, Action, Store, Reducer, ReducersMapObject } from 'redux'
-
-interface IState {
-  balance: IAmountOptions
-  spent?: IAmountOptions
-}
-
-enum EActions {
-  SET_SPENT = 'SET_SPENT',
-  SET_BALANCE = 'SET_BALANCE'
-}
-
-interface IAction extends Action {
-  type: EActions
-}
-
-interface ISetSpentAction extends IAction {
-  type: EActions.SET_SPENT
-  amount: IAmountOptions
-}
-
-interface ISetBalanceAction extends IAction {
-  type: EActions.SET_BALANCE
-  amount: IAmountOptions
-}
-
-const initialState: IState = {
-  balance: {
-    native: {
-      amount: 0,
-      currency: 'GBP'
-    },
-    local: undefined
-  }
-}
-
-const reducer: Reducer<IState> = (state = initialState, action) => {
-  const types = {
-    [EActions.SET_SPENT]: (state: IState, action: ISetSpentAction) => {
-      return {
-        ...state,
-        spent: action.amount
-      }
-    },
-    [EActions.SET_BALANCE]: (state: IState, action: ISetBalanceAction) => {
-      return {
-        ...state,
-        balance: action.amount
-      }
-    }
-  } as ReducersMapObject
-
-  return action.type in types ? types[action.type](state, action) : state
-}
-
-const store: Store<IState> = createStore(reducer)
+import { setBalance, setSpent } from '../actions'
+import store from '../store'
 
 const getMonzo = (() => {
   const accessToken = getSavedCode('access_token')
@@ -145,12 +90,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       updateAccountInfo(cachedBank)
 
       const cachedBalance = await getCachedBalance()
-      store.dispatch(
-        {
-          type: EActions.SET_BALANCE,
-          amount: cachedBalance.json
-        } as ISetBalanceAction
-      )
+      store.dispatch(setBalance(cachedBalance.json))
     } catch (err) {
       console.error(err)
     }
@@ -166,19 +106,8 @@ document.addEventListener('DOMContentLoaded', async () => {
       updateAccountCache(acc, balance)
       updateAccountInfo(acc)
 
-      store.dispatch(
-        {
-          type: EActions.SET_BALANCE,
-          amount: balance.json
-        } as ISetBalanceAction
-      )
-
-      store.dispatch(
-        {
-          type: EActions.SET_SPENT,
-          amount: spentToday.json
-        } as ISetSpentAction
-      )
+      store.dispatch(setBalance(balance.json))
+      store.dispatch(setSpent(spentToday.json))
     } catch (err) {
       console.error(err)
     }
