@@ -1,22 +1,15 @@
 import { createStore, Store } from 'redux'
 
 import { IAmountOptions } from '../lib/monzo'
-import { reducer } from './reducers'
+import reducer from './reducers'
 
-export const initialState: IState = {
-  balance: {
-    native: {
-      amount: 0,
-      currency: 'GBP'
-    },
-    local: undefined
-  }
-}
+export interface IBalanceState extends IAmountOptions {}
+export interface ISpentState extends IAmountOptions {}
 
 export interface IState {
-  balance: IAmountOptions
-  spent?: IAmountOptions
+  balance: IBalanceState
+  spent: ISpentState
 }
 
-const store: Store<IState> = createStore(reducer)
+export const store: Store<IState> = createStore<IState>(reducer)
 export default store
