@@ -47,7 +47,7 @@
     "electron-window-state": "^4.1.1",
     "img-exif": "^0.2.0",
     "keytar": "^4.0.3",
-    "p-iteration": "^1.1.2",
+    "p-iteration": "^1.1.4",
     "request": "^2.81.0",
     "request-promise-native": "^1.0.4"
   },
@@ -62,31 +62,37 @@
     "eclint": "^2.3.0",
     "electron-forge": "^3.0.5",
     "electron-prebuilt-compile": "1.7.4",
-    "eslint": "^4.2.0",
+    "eslint": "^4.3.0",
     "eslint-config-standard": "^10.2.1",
     "eslint-plugin-import": "^2.7.0",
-    "eslint-plugin-node": "^5.1.0",
+    "eslint-plugin-node": "^5.1.1",
     "eslint-plugin-promise": "^3.5.0",
     "eslint-plugin-standard": "^3.0.1",
     "husky": "^0.14.3",
-    "lint-staged": "^4.0.1",
+    "lint-staged": "^4.0.2",
     "prettier": "^1.5.3",
     "tslib": "^1.7.1",
     "tslint": "^5.4.3",
-    "typescript": "^2.4.1"
+    "typescript": "^2.4.2"
   },
   "config": {
     "forge": {
       "make_targets": {
-        "win32": ["zip"],
-        "darwin": ["zip"]
+        "win32": [
+          "zip"
+        ],
+        "darwin": [
+          "zip"
+        ]
       },
       "electronPackagerConfig": {
         "icon": "monux",
         "asar": true,
         "protocols": [
           {
-            "schemes": ["monux"],
+            "schemes": [
+              "monux"
+            ],
             "name": "Monux"
           }
         ]
