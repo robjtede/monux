@@ -10,35 +10,27 @@ context.activate()
 document.addEventListener('DOMContentLoaded', async () => {
   const $header = document.querySelector('header') as HTMLElement
   const $balance = $header.querySelector(
-    '.card-balance h2'
-  ) as HTMLHeadingElement
-  const $spentToday = $header.querySelector(
-    '.spent-today h2'
-  ) as HTMLHeadingElement
+    '.card-balance m-amount'
+  ) as HTMLElement
+  const $spent = $header.querySelector('.spent-today m-amount') as HTMLElement
 
   store.subscribe(() => {
-    const state = store.getState()
+    const { balance, spent } = store.getState()
 
-    const balance = new Amount(state.balance.native, state.balance.local)
-    const spentToday = state.spent
-      ? new Amount(state.spent.native, state.spent.local)
-      : undefined
-
-    if ((balance && !balance.foreign) || (spentToday && !spentToday.foreign)) {
-      if (balance) $balance.innerHTML = balance.html(true, 0)
-      if (spentToday) $spentToday.innerHTML = spentToday.html(true, 0)
-    } else {
-      if (balance) {
-        $balance.innerHTML =
-          (balance.exchanged as Amount).html(true, 0) + balance.html(true, 0)
-      }
-      if (spentToday) {
-        $spentToday.innerHTML =
-          (spentToday.exchanged as Amount).html(true, 0) +
-          spentToday.html(true, 0)
-      }
+    $balance.setAttribute('amount', balance.native.amount.toFixed())
+    $balance.setAttribute('currency', balance.native.currency)
+    if (balance.local) {
+      $balance.setAttribute('localAmount', balance.local.amount.toFixed())
+      $balance.setAttribute('localCurrency', balance.local.currency)
     }
 
-    setTouchBar(balance, spentToday)
+    $spent.setAttribute('amount', spent.native.amount.toFixed())
+    $spent.setAttribute('currency', spent.native.currency)
+    if (spent.local) {
+      $spent.setAttribute('localAmount', spent.local.amount.toFixed())
+      $spent.setAttribute('localCurrency', spent.local.currency)
+    }
+
+    // setTouchBar(balance, spent)
   })
 })

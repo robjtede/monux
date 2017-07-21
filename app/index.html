@@ -9,6 +9,7 @@
 
   <!-- Components -->
   <link rel="import" href="../node_modules/img-exif/img-exif.html">
+  <link rel="import" href="./components/amount/amount.component.html">
   <link rel="import" href="./components/transaction-attachment/transaction-attachment.component.html">
   <link rel="import" href="./components/transaction-detail/transaction-detail.component.html">
   <link rel="import" href="./components/transaction-summary/transaction-summary.component.html">
@@ -21,11 +22,11 @@
 <body>
   <header class="balances">
     <div class="card-balance">
-      <h2>$<span class="major">--</span>.--</h2>
+      <m-amount></m-amount>
     </div>
 
     <div class="spent-today">
-      <h2>$<span class="major">--</span>.--</h2>
+      <m-amount></m-amount>
     </div>
   </header>
 
