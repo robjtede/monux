@@ -1,7 +1,6 @@
 import { Account, Amount, Monzo } from '../../lib/monzo'
 import { getSavedCode } from '../../lib/monzo/auth'
 
-import setTouchBar from './touchbar'
 import cache, { ICacheAccount } from './cache'
 
 import { setBalance, setSpent } from '../actions'
@@ -43,12 +42,35 @@ export const updateAccountCache = async (acc: Account, balance: Amount) => {
 }
 
 document.addEventListener('DOMContentLoaded', async () => {
+  const $header = document.querySelector('header') as HTMLElement
+  const $balance = $header.querySelector(
+    '.card-balance m-amount'
+  ) as HTMLElement
+  const $spent = $header.querySelector('.spent-today m-amount') as HTMLElement
   const $nav = document.querySelector('nav') as HTMLElement
   const $accDescription = $nav.querySelector('.person') as HTMLDivElement
 
   const updateAccountInfo = (account: ICacheAccount | Account) => {
     $accDescription.textContent = account.name
   }
+
+  store.subscribe(() => {
+    const { balance, spent } = store.getState()
+
+    $balance.setAttribute('amount', balance.native.amount.toFixed())
+    $balance.setAttribute('currency', balance.native.currency)
+    if (balance.local) {
+      $balance.setAttribute('localAmount', balance.local.amount.toFixed())
+      $balance.setAttribute('localCurrency', balance.local.currency)
+    }
+
+    $spent.setAttribute('amount', spent.native.amount.toFixed())
+    $spent.setAttribute('currency', spent.native.currency)
+    if (spent.local) {
+      $spent.setAttribute('localAmount', spent.local.amount.toFixed())
+      $spent.setAttribute('localCurrency', spent.local.currency)
+    }
+  })
 
   const renderCachedBalance = async () => {
     console.time('render cached balance')
