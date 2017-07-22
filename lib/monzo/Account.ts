@@ -122,4 +122,28 @@ export default class Account {
       return new Transaction(this.monzo, this, tx, index)
     })
   }
+
+  get targets(): Promise<{}> {
+    const opts = {
+      account_id: this.id
+    }
+
+    return this.monzo.request('/targets', opts)
+  }
+
+  get limits(): Promise<{}> {
+    const opts = {
+      account_id: this.id
+    }
+
+    return this.monzo.request('/balance/limits', opts)
+  }
+
+  get cards(): Promise<{}> {
+    const opts = {
+      account_id: this.id
+    }
+
+    return this.monzo.request('/card/list', opts)
+  }
 }
