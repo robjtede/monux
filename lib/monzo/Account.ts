@@ -146,4 +146,22 @@ export default class Account {
 
     return this.monzo.request('/card/list', opts)
   }
+
+  async freezeCard(cardId: string): Promise<{}> {
+    const opts = {
+      card_id: cardId,
+      status: 'INACTIVE'
+    }
+
+    return this.monzo.request('/card/toggle', opts, 'PUT')
+  }
+
+  async defrostCard(cardId: string): Promise<{}> {
+    const opts = {
+      card_id: cardId,
+      status: 'ACTIVE'
+    }
+
+    return this.monzo.request('/card/toggle', opts, 'PUT')
+  }
 }
