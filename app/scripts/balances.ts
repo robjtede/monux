@@ -3,7 +3,7 @@ import { getSavedCode } from '../../lib/monzo/auth'
 
 import cache, { ICacheAccount } from './cache'
 
-import { setBalance, setSpent } from '../actions'
+import { setBalance, setSpent, setAccount } from '../actions'
 import store from '../store'
 
 const getMonzo = (() => {
@@ -47,12 +47,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     '.card-balance m-amount'
   ) as HTMLElement
   const $spent = $header.querySelector('.spent-today m-amount') as HTMLElement
-  const $nav = document.querySelector('nav') as HTMLElement
-  const $accDescription = $nav.querySelector('.person') as HTMLDivElement
-
-  const updateAccountInfo = (account: ICacheAccount | Account) => {
-    $accDescription.textContent = account.name
-  }
 
   store.subscribe(() => {
     const { balance, spent } = store.getState()
@@ -76,9 +70,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     console.time('render cached balance')
     try {
       const cachedBank = await getCachedAccount()
-      updateAccountInfo(cachedBank)
-
       const cachedBalance = await getCachedBalance()
+
+      store.dispatch(setAccount(cachedBank.name, cachedBank.type))
       store.dispatch(setBalance(cachedBalance.json))
     } catch (err) {
       console.error(err)
@@ -93,7 +87,6 @@ document.addEventListener('DOMContentLoaded', async () => {
       const { balance, spentToday } = await acc.balance
 
       updateAccountCache(acc, balance)
-      updateAccountInfo(acc)
 
       store.dispatch(setBalance(balance.json))
       store.dispatch(setSpent(spentToday.json))

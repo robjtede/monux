@@ -150,27 +150,6 @@ nav {
   -webkit-user-select: none;
 }
 
-.person {
-  padding: 0.4em 0.8em;
-
-  background: url('./icons/monzo.png') 5px center no-repeat;
-  background-size: contain;
-  border: var(--thin-border);
-  border-radius: 8px;
-
-  color: var(--off-white);
-  font-size: 0.9rem;
-
-  cursor: default;
-}
-
-.person::before {
-  content: '';
-  display: inline-block;
-  width: 40px;
-  height: 0;
-}
-
 .logout {
   padding: 0.4em 0.8em;
   margin-right: auto;
