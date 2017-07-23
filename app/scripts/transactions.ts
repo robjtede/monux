@@ -98,18 +98,18 @@ document.addEventListener('DOMContentLoaded', async () => {
 
       $txDetail.removeAttribute('offline')
 
-      const $selectedTx = $txList.selectedTransaction
-
-      if ($selectedTx) {
-        const $tx = $txList.getTransactionByIndex($selectedTx.index)
-        $tx.classList.add('selected')
-        $tx.render()
-
-        $txDetail.$summary = $tx
-        $txDetail.tx = $tx.tx
-        $txDetail.dataset.category = $tx.tx.category
-        $txDetail.render()
-      }
+      // const $selectedTx = $txList.selectedTransaction
+      //
+      // if ($selectedTx) {
+      //   const $tx = $txList.getTransactionByIndex($selectedTx.index)
+      //   $tx.classList.add('selected')
+      //   $tx.render()
+      //
+      //   $txDetail.$summary = $tx
+      //   $txDetail.tx = $tx.tx
+      //   $txDetail.dataset.category = $tx.tx.category
+      //   $txDetail.render()
+      // }
       console.timeEnd('render HTTP transaction list')
 
       // TODO: bulkPut

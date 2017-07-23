@@ -6,11 +6,13 @@ import balance from './balance'
 import spent from './spent'
 import pane from './pane'
 import transactions from './transactions'
+import selectedTransaction from './selectedTransaction'
 
 export default combineReducers<IState>({
   balance,
   spent,
   account,
   activePane: pane,
-  transactions
+  transactions,
+  selectedTransaction
 })

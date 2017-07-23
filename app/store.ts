@@ -8,6 +8,7 @@ export type IPaneState = string
 export type IBalanceState = IAmountOptions
 export type ISpentState = IAmountOptions
 export type ITransactionsState = IMonzoApiTransaction[]
+export type ISelectedTransactionsState = string
 export interface IAccountState {
   name: string
   bank: string
@@ -19,6 +20,7 @@ export interface IState {
   spent: ISpentState
   account: IAccountState
   transactions: ITransactionsState
+  selectedTransaction: ISelectedTransactionsState
 }
 
 interface ReduxWindow extends Window {

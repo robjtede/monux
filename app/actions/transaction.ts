@@ -72,3 +72,17 @@ export const updateTransactions: ActionCreator<IUpdateTransactionsAction> = (
     transactions
   }
 }
+
+export interface ISelectTransactionAction extends IAction {
+  type: EActions.SELECT_TRANSACTION
+  txId: string
+}
+
+export const selectTransaction: ActionCreator<ISelectTransactionAction> = (
+  txId: string
+) => {
+  return {
+    type: EActions.SELECT_TRANSACTION,
+    txId
+  }
+}

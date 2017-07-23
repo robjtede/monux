@@ -1,6 +1,8 @@
 'use strict'
 ;(function (ownerDocument) {
   const { default: db } = require('./scripts/cache')
+  const { updateTransaction, selectTransaction } = require('./actions')
+  const { store } = require('./store')
 
   class TransactionSummaryComponent extends HTMLElement {
     constructor () {
@@ -23,13 +25,22 @@
       this.dataset.category = this.tx.category
       this.dataset.index = this.tx.index
 
-      this.render()
+      store.subscribe(() => {
+        this.render()
+      })
 
       this.addEventListener('click', this.clickHandler.bind(this))
+
+      this.render()
     }
 
     render () {
       this.debug(`rendering ${this.index} summary`)
+
+      const { selectedTransaction } = store.getState()
+
+      if (selectedTransaction === this.tx.id) this.classList.add('selected')
+      else this.classList.remove('selected')
 
       const $amountWrap = this.root.querySelector('.amount-wrap')
       const $amount = this.root.querySelector('.amount')
@@ -111,22 +122,25 @@
     clickHandler () {
       this.debug(`clicked ${this.index} summary`)
 
-      const $detailPane = document.querySelector('.transaction-detail-pane')
-      const $txDetail = document.querySelector('m-transaction-detail')
+      store.dispatch(selectTransaction(this.tx.id))
 
+      const $detailPane = document.querySelector('.transaction-detail-pane')
+      // const $txDetail = document.querySelector('m-transaction-detail')
+
+      // TODO: this only fires first time because `monzo` and `acc` are side
+      // effects in `scripts/transactions.ts`
       if (this.tx.acc) {
         this.debug(`updating transaction ${this.tx.id}`)
 
         this.tx.acc
           .transaction(this.tx.id)
           .then(tx => {
-            this.tx = tx
-            this.render()
+            store.dispatch(updateTransaction(tx.json))
 
-            $txDetail.tx = this.tx
-            $txDetail.dataset.category = this.tx.category
-            $txDetail.dataset.index = this.index
-            $txDetail.render()
+            // $txDetail.tx = this.tx
+            // $txDetail.dataset.category = this.tx.category
+            // $txDetail.dataset.index = this.index
+            // $txDetail.render()
 
             return db.transactions.put({
               id: tx.id,
@@ -143,18 +157,18 @@
           })
       }
 
-      $txDetail.$summary = this
-      $txDetail.tx = this.tx
-      $txDetail.dataset.category = this.tx.category
-      $txDetail.dataset.index = this.index
-      $txDetail.render()
+      // $txDetail.$summary = this
+      // $txDetail.tx = this.tx
+      // $txDetail.dataset.category = this.tx.category
+      // $txDetail.dataset.index = this.index
+      // $txDetail.render()
 
       $detailPane.classList.remove('inactive')
 
-      const $selectedTx = this.$txlist.selectedTransaction
+      // const $selectedTx = this.$txlist.selectedTransaction
 
-      if ($selectedTx) $selectedTx.classList.remove('selected')
-      this.classList.add('selected')
+      // if ($selectedTx) $selectedTx.classList.remove('selected')
+      // this.classList.add('selected')
     }
 
     async hide () {

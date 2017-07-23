@@ -9,7 +9,8 @@ export enum EActions {
   ADD_TRANSACTION = 'ADD_TRANSACTION',
   ADD_TRANSACTIONS = 'ADD_TRANSACTIONS',
   UPDATE_TRANSACTION = 'UPDATE_TRANSACTION',
-  UPDATE_TRANSACTIONS = 'UPDATE_TRANSACTIONS'
+  UPDATE_TRANSACTIONS = 'UPDATE_TRANSACTIONS',
+  SELECT_TRANSACTION = 'SELECT_TRANSACTION'
 }
 
 export interface IAction extends Action {
@@ -38,7 +39,9 @@ import {
   updateTransaction,
   IUpdateTransactionAction,
   updateTransactions,
-  IUpdateTransactionsAction
+  IUpdateTransactionsAction,
+  selectTransaction,
+  ISelectTransactionAction
 } from './transaction'
 export {
   setTransactions,
@@ -50,5 +53,7 @@ export {
   updateTransaction,
   IUpdateTransactionAction,
   updateTransactions,
-  IUpdateTransactionsAction
+  IUpdateTransactionsAction,
+  selectTransaction,
+  ISelectTransactionAction
 }

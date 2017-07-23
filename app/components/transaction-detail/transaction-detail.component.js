@@ -2,6 +2,9 @@
 ;(function (thisDoc) {
   const format = require('date-fns/format')
 
+  const { Transaction } = require('../lib/monzo')
+  const { store } = require('./store')
+
   class TransactionDetailComponent extends HTMLElement {
     constructor () {
       super()
@@ -18,14 +21,24 @@
     connectedCallback () {
       this.debug('connected detail')
 
-      if (this.tx) {
-        this.dataset.category = this.tx.category
-        this.render()
-      }
-
       this.$attachments = this.root.querySelector('.attachments')
       this.$scrollInner = this.$attachments.querySelector('.scroll-inner')
       this.$newAttachment = this.root.querySelector('input.new-attachment')
+
+      store.subscribe(() => {
+        const { transactions, selectedTransaction } = store.getState()
+
+        if (selectedTransaction) {
+          this.tx = new Transaction(
+            undefined,
+            undefined,
+            transactions.find(tx => tx.id === selectedTransaction),
+            undefined
+          )
+        }
+
+        this.render()
+      })
 
       this.$newAttachment.addEventListener(
         'change',
@@ -36,6 +49,8 @@
     render () {
       if (!this.tx) return
       this.debug('rendering detail')
+
+      this.dataset.category = this.tx.category
 
       this.renderCategory()
       this.renderIcon()
