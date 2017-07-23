@@ -17,10 +17,10 @@ const getMonzo = (() => {
 })()
 
 export const getCachedAccount = (() => {
-  const cachedBank = db.accounts.limit(1).toArray()
+  const cachedAccount = db.accounts.limit(1).toArray()
 
   return async (): Promise<ICacheAccount> => {
-    return (await cachedBank)[0]
+    return (await cachedAccount)[0]
   }
 })()
 

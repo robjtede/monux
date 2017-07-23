@@ -23,10 +23,10 @@ export const getCachedAccount = (() => {
 })()
 
 export const getCachedBalance = (() => {
-  const cachedBank = getCachedAccount()
+  const cachedAccount = getCachedAccount()
 
   return async (): Promise<Amount> => {
-    const { native, local } = JSON.parse((await cachedBank).balance)
+    const { native, local } = JSON.parse((await cachedAccount).balance)
 
     return new Amount(native, local)
   }
@@ -69,10 +69,10 @@ document.addEventListener('DOMContentLoaded', async () => {
   const renderCachedBalance = async () => {
     console.time('render cached balance')
     try {
-      const cachedBank = await getCachedAccount()
+      const cachedAccount = await getCachedAccount()
       const cachedBalance = await getCachedBalance()
 
-      store.dispatch(setAccount(cachedBank.name, cachedBank.type))
+      store.dispatch(setAccount(cachedAccount.name, cachedAccount.type))
       store.dispatch(setBalance(cachedBalance.json))
     } catch (err) {
       console.error(err)

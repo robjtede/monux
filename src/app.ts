@@ -5,6 +5,7 @@ import * as Debug from 'debug'
 
 import { app } from 'electron'
 import { enableLiveReload } from 'electron-compile'
+import installExtension, { REDUX_DEVTOOLS } from 'electron-devtools-installer'
 
 import {
   getAccessToken,
@@ -92,7 +93,7 @@ const parseAuthUrl = async (forwardedUrl: string) => {
   }
 }
 
-const isSecondInstance = app.makeSingleInstance(async (argv, cwd) => {
+const isSecondInstance = app.makeSingleInstance(async (argv, _) => {
   // Someone tried to run a second instance, we should focus our window.
   if (mainWindow.hasWindow && mainWindow.window.isMinimized()) {
     mainWindow.window.restore()
@@ -124,6 +125,10 @@ if (isSecondInstance) {
 
 app.on('ready', async () => {
   debug('ready event')
+
+  installExtension(REDUX_DEVTOOLS)
+    .then((name: string) => console.log('Added Extension:', name))
+    .catch((err: Error) => console.log('An error occurred:', err))
 
   try {
     const appInfo = await getAppInfo()

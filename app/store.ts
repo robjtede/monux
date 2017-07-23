@@ -1,7 +1,8 @@
-import { createStore, Store } from 'redux'
+import { applyMiddleware, createStore, Store, compose } from 'redux'
 
 import { IAmountOptions } from '../lib/monzo'
 import reducer from './reducers'
+import middleware from './middleware'
 
 export interface IAccountState {
   name: string
@@ -16,5 +17,15 @@ export interface IState {
   account: IAccountState
 }
 
-export const store: Store<IState> = createStore<IState>(reducer)
+interface ReduxWindow extends Window {
+  __REDUX_DEVTOOLS_EXTENSION_COMPOSE__: any
+}
+
+const composeEnhancers =
+  (window as ReduxWindow).__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose
+
+export const store: Store<IState> = createStore<IState>(
+  reducer,
+  composeEnhancers(applyMiddleware(...middleware))
+)
 export default store
