@@ -36,7 +36,7 @@
     <div class="logout">Log Out</div>
 
     <div class="tabgroup">
-      <div data-pane="transaction" class="tab active">Transactions</div>
+      <div data-pane="transaction" class="tab">Transactions</div>
       <div data-pane="spending" class="tab">Spending</div>
       <div data-pane="map" class="tab">Map</div>
       <div data-pane="export" class="tab">Export</div>
@@ -44,7 +44,7 @@
   </nav>
 
   <main class="app">
-    <div class="app-pane transaction-pane active">
+    <div class="pane transaction-pane">
       <m-transaction-list group-headings group-by="day" class="inactive"></m-transaction-list>
 
       <div class="transaction-detail-pane inactive">
@@ -52,7 +52,7 @@
       </div>
     </div>
 
-    <div class="app-pane spending-pane">
+    <div class="pane spending-pane">
       <div class="spending-list">
         <h1>Months</h1>
       </div>
@@ -68,7 +68,7 @@
       <!-- <m-spending></m-spending> -->
     </div>
 
-    <div class="app-pane map-pane">
+    <div class="pane map-pane">
       <div>
         <h1>🗺️ Map View</h1>
         <h2>View the location of all your transactions on one map.</h2>
@@ -78,7 +78,7 @@
       <!-- <m-map></m-map> -->
     </div>
 
-    <div class="app-pane export-pane">
+    <div class="pane export-pane">
       <div>
         <h1>📒️ Export</h1>
         <h2>Generate reports and export to CSV or Excel.</h2>

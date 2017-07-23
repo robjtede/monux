@@ -85,27 +85,6 @@ header {
   text-align: right;
 }
 
-.card-balance h2,
-.spent-today h2 {
-  margin: 0;
-
-  font-weight: 300;
-  font-size: 1.5rem;
-}
-
-.card-balance .amount,
-.spent-today .amount {
-  line-height: 1;
-
-  -webkit-app-region: no-drag;
-  -webkit-user-select: initial;
-}
-
-.card-balance h2 .major,
-.spent-today h2 .major {
-  font-size: 2em;
-}
-
 .card-balance::after,
 .spent-today::after {
   content: var(--label-text);
@@ -119,19 +98,6 @@ header {
   text-transform: uppercase;
 
   cursor: default;
-}
-
-.card-balance h2 .amount + .amount,
-.spent-today h2 .amount + .amount {
-  display: block;
-
-  color: var(--light-grey);
-  font-size: 0.8em;
-}
-
-.card-balance h2 .amount + .amount .major,
-.spent-today h2 .amount + .amount .major {
-  font-size: 1em;
 }
 
 nav {
@@ -218,7 +184,7 @@ main {
   max-height: var(--main-height);
 }
 
-.app-pane {
+.pane {
   display: none;
   flex: 1 0 auto;
   flex-flow: row nowrap;
@@ -227,7 +193,7 @@ main {
   max-width: 100%;
 }
 
-.app-pane.active {
+.pane.active {
   display: flex;
 }
 
