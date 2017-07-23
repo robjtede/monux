@@ -4,7 +4,7 @@ import { IAmountOptions, IMonzoApiTransaction } from '../lib/monzo'
 import reducer from './reducers'
 import middleware from './middleware'
 
-export type IPaneState = string
+export type IActivePaneState = string
 export type IBalanceState = IAmountOptions
 export type ISpentState = IAmountOptions
 export type ITransactionsState = IMonzoApiTransaction[]
@@ -15,7 +15,7 @@ export interface IAccountState {
 }
 
 export interface IState {
-  activePane: IPaneState
+  activePane: IActivePaneState
   balance: IBalanceState
   spent: ISpentState
   account: IAccountState
