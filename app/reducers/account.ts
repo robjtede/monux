@@ -1,7 +1,7 @@
 import { Reducer, ReducersMapObject } from 'redux'
 
 import { EActions } from '../actions/index'
-import { ISetAccountAction } from '../actions/setAccount'
+import { ISetAccountAction } from '../actions/account'
 import { IAccountState } from '../store'
 
 const initialState: IAccountState = {
