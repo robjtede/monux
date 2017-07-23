@@ -4,7 +4,11 @@ export enum EActions {
   SET_SPENT = 'SET_SPENT',
   SET_BALANCE = 'SET_BALANCE',
   SET_ACCOUNT = 'SET_ACCOUNT',
-  SET_PANE = 'SET_PANE'
+  SET_PANE = 'SET_PANE',
+  SET_TRANSACTIONS = 'SET_TRANSACTIONS',
+  ADD_TRANSACTION = 'ADD_TRANSACTION',
+  ADD_TRANSACTIONS = 'ADD_TRANSACTIONS',
+  UPDATE_TRANSACTION = 'UPDATE_TRANSACTION'
 }
 
 export interface IAction extends Action {
@@ -22,3 +26,24 @@ export { setAccount, ISetAccountAction }
 
 import { setPane, ISetPaneAction } from './pane'
 export { setPane, ISetPaneAction }
+
+import {
+  setTransactions,
+  ISetTransactionsAction,
+  addTransaction,
+  IAddTransactionAction,
+  addTransactions,
+  IAddTransactionsAction,
+  updateTransaction,
+  IUpdateTransactionsAction
+} from './transaction'
+export {
+  setTransactions,
+  ISetTransactionsAction,
+  addTransaction,
+  IAddTransactionAction,
+  addTransactions,
+  IAddTransactionsAction,
+  updateTransaction,
+  IUpdateTransactionsAction
+}

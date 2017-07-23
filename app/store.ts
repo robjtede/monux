@@ -1,22 +1,24 @@
 import { applyMiddleware, createStore, Store, compose } from 'redux'
 
-import { IAmountOptions } from '../lib/monzo'
+import { IAmountOptions, IMonzoApiTransaction } from '../lib/monzo'
 import reducer from './reducers'
 import middleware from './middleware'
 
 export type IPaneState = string
+export type IBalanceState = IAmountOptions
+export type ISpentState = IAmountOptions
+export type ITransactionsState = IMonzoApiTransaction[]
 export interface IAccountState {
   name: string
   bank: string
 }
-export interface IBalanceState extends IAmountOptions {}
-export interface ISpentState extends IAmountOptions {}
 
 export interface IState {
   activePane: IPaneState
   balance: IBalanceState
   spent: ISpentState
   account: IAccountState
+  transactions: ITransactionsState
 }
 
 interface ReduxWindow extends Window {

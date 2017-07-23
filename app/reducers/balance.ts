@@ -1,7 +1,7 @@
 import { Reducer, ReducersMapObject } from 'redux'
 
 import { EActions } from '../actions/index'
-import { ISetBalanceAction } from '../actions/balance'
+import { ISetBalanceAction } from '../actions'
 import { IBalanceState } from '../store'
 
 const initialState: IBalanceState = {

@@ -56,7 +56,7 @@ const groups = async (months: number) => {
 
   const cachedTxs = await cache.transactions.toArray()
   const txs = cachedTxs.map((tx: ICacheTransaction, index: number) => {
-    return new Transaction(undefined, undefined, JSON.parse(tx.json), index)
+    return new Transaction(undefined, undefined, tx.json, index)
   })
 
   const currentMonth = txs.filter(tx => {

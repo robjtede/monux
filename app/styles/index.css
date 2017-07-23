@@ -1,3 +1,5 @@
+@import './spending.css';
+
 :root {
   --white: rgba(255, 255, 255, 1.0);
   --off-white: rgba(240, 240, 240, 1.0);
@@ -290,5 +292,3 @@ m-transaction-list {
   max-width: 80vw;
   max-height: 80vh;
 }
-
-@import './spending.css';

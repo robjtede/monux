@@ -1,7 +1,7 @@
 import { Reducer, ReducersMapObject } from 'redux'
 
 import { EActions } from '../actions/index'
-import { ISetPaneAction } from '../actions/pane'
+import { ISetPaneAction } from '../actions'
 import { IPaneState } from '../store'
 
 const initialState: IPaneState = 'transaction'

@@ -1,7 +1,7 @@
 import { Reducer, ReducersMapObject } from 'redux'
 
 import { EActions } from '../actions/index'
-import { ISetSpentAction } from '../actions/spent'
+import { ISetSpentAction } from '../actions'
 import { ISpentState } from '../store'
 
 const initialState: ISpentState = {

@@ -6,6 +6,9 @@ import { getSavedCode } from '../../lib/monzo/auth'
 
 import db, { ICacheTransaction, ICacheAccount } from './cache'
 
+import { setTransactions, addTransactions } from '../actions'
+import store from '../store'
+
 const debug = Debug('app:renderer:index')
 
 const getMonzo = (() => {
@@ -45,7 +48,7 @@ const updateTransactionCache = async (acc: Account, tx: Transaction) => {
       id: tx.id,
       created_at: tx.created,
       accId: acc.id,
-      json: tx.json
+      json: tx.stringify
     })
   } catch (err) {
     console.error(err)
@@ -67,6 +70,10 @@ document.addEventListener('DOMContentLoaded', async () => {
     console.time('render cached transaction list')
     const txs = await getCachedTransactions()
     debug('cached transactions =>', txs)
+
+    const rawtxs = txs.map(tx => tx.json)
+    console.log(rawtxs)
+    store.dispatch(setTransactions(rawtxs))
 
     renderTransactions(txs)
     console.timeEnd('render cached transaction list')
@@ -141,7 +148,7 @@ document.addEventListener('DOMContentLoaded', async () => {
               id: tx.id,
               created_at: tx.created,
               accId: tx.acc.id,
-              json: tx.json
+              json: tx.stringify
             })
           })
           .then(cache => {

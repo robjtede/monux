@@ -132,7 +132,7 @@
               id: tx.id,
               created_at: tx.created,
               accId: tx.acc.id,
-              json: tx.json
+              json: tx.stringify
             })
           })
           .then(cache => {
