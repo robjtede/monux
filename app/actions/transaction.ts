@@ -45,16 +45,30 @@ export const addTransactions: ActionCreator<IAddTransactionsAction> = (
   }
 }
 
-export interface IUpdateTransactionsAction extends IAction {
+export interface IUpdateTransactionAction extends IAction {
   type: EActions.UPDATE_TRANSACTION
   transaction: IMonzoApiTransaction
 }
 
-export const updateTransaction: ActionCreator<IUpdateTransactionsAction> = (
-  transaction: IMonzoApiTransaction[]
+export const updateTransaction: ActionCreator<IUpdateTransactionAction> = (
+  transaction: IMonzoApiTransaction
 ) => {
   return {
     type: EActions.UPDATE_TRANSACTION,
     transaction
+  }
+}
+
+export interface IUpdateTransactionsAction extends IAction {
+  type: EActions.UPDATE_TRANSACTIONS
+  transactions: IMonzoApiTransaction[]
+}
+
+export const updateTransactions: ActionCreator<IUpdateTransactionsAction> = (
+  transactions: IMonzoApiTransaction[]
+) => {
+  return {
+    type: EActions.UPDATE_TRANSACTIONS,
+    transactions
   }
 }

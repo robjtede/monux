@@ -160,6 +160,6 @@ document.addEventListener('DOMContentLoaded', async () => {
       })
   }
 
-  await Promise.all([renderCachedTransactions(), renderHTTPTransactions()])
-  updatePendingTransactions()
+  // await Promise.all([renderCachedTransactions(), renderHTTPTransactions()])
+  // updatePendingTransactions()
 })
