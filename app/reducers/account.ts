@@ -6,7 +6,7 @@ import { IAccountState } from '../store'
 
 const initialState: IAccountState = {
   name: '--- ---',
-  type: 'monzo'
+  bank: 'monzo'
 }
 
 export const reducer: Reducer<IAccountState> = (
@@ -20,8 +20,8 @@ export const reducer: Reducer<IAccountState> = (
     ) => {
       return {
         name: action.name,
-        bank: action.bank
-      }
+        bank: action.bank.toLowerCase()
+      } as IAccountState
     }
   } as ReducersMapObject
 

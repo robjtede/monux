@@ -16,7 +16,7 @@ export const reducer: Reducer<ISpentState> = (state = initialState, action) => {
     [EActions.SET_SPENT]: (state: ISpentState, action: ISetSpentAction) => {
       return {
         ...action.amount
-      }
+      } as ISpentState
     }
   } as ReducersMapObject
 

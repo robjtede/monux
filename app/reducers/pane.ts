@@ -9,7 +9,7 @@ const initialState: IPaneState = 'transaction'
 export const reducer: Reducer<IPaneState> = (state = initialState, action) => {
   const types = {
     [EActions.SET_PANE]: (state: IPaneState, action: ISetPaneAction) => {
-      return action.pane
+      return action.pane as IPaneState
     }
   } as ReducersMapObject
 

@@ -30,7 +30,7 @@
       if (!(this.name && this.bank)) return
 
       this.body.textContent = this.name
-      this.body.dataset.bank = this.bank.toLowerCase()
+      this.body.dataset.bank = this.bank
     }
 
     get name () {

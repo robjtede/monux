@@ -7,7 +7,7 @@ import middleware from './middleware'
 export type IPaneState = string
 export interface IAccountState {
   name: string
-  type: string
+  bank: string
 }
 export interface IBalanceState extends IAmountOptions {}
 export interface ISpentState extends IAmountOptions {}

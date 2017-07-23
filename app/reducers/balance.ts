@@ -22,7 +22,7 @@ export const reducer: Reducer<IBalanceState> = (
     ) => {
       return {
         ...action.amount
-      }
+      } as IBalanceState
     }
   } as ReducersMapObject
 
