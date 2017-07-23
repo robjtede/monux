@@ -8,6 +8,9 @@
     format
   } = require('date-fns')
 
+  const { Transaction } = require('../lib/monzo')
+  const { store } = require('./store')
+
   class TransactionListComponent extends HTMLElement {
     constructor () {
       super()
@@ -38,11 +41,25 @@
       })
       window.addEventListener('keydown', this.keyHandler.bind(this))
 
+      store.subscribe(() => {
+        const state = store.getState()
+
+        this.txs = state.transactions.map((tx, index) => {
+          return new Transaction(undefined, undefined, tx, index)
+        })
+
+        this.render()
+      })
+
       this.render()
     }
 
     render () {
       this.debug('rendering list')
+
+      if (this.txs) this.classList.remove('inactive')
+      else this.classList.add('inactive')
+
       Array.from(
         this.root.querySelectorAll('m-transaction-group')
       ).forEach(group => {

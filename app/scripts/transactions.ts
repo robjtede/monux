@@ -60,22 +60,15 @@ document.addEventListener('DOMContentLoaded', async () => {
   const $txList = $app.querySelector('m-transaction-list') as HTMLElement
   const $txDetail = $app.querySelector('m-transaction-detail') as HTMLElement
 
-  const renderTransactions = (txs: Transaction[], append: boolean = false) => {
-    $txList.txs = append ? $txList.txs.concat(txs) : txs
-    $txList.classList.remove('inactive')
-    $txList.render()
-  }
-
   const renderCachedTransactions = async () => {
     console.time('render cached transaction list')
     const txs = await getCachedTransactions()
     debug('cached transactions =>', txs)
 
     const rawtxs = txs.map(tx => tx.json)
-    console.log(rawtxs)
     store.dispatch(setTransactions(rawtxs))
 
-    renderTransactions(txs)
+    // renderTransactions(txs)
     console.timeEnd('render cached transaction list')
   }
 
@@ -94,13 +87,14 @@ document.addEventListener('DOMContentLoaded', async () => {
 
       debug('HTTP transactions =>', txs)
 
+      const rawtxs = txs.map(tx => tx.json)
+      store.dispatch(addTransactions(rawtxs))
+
       // apply new online objects to existing txs
       $txList.txs.forEach(($tx: Transaction) => {
         $tx.monzo = account.monzo
         $tx.acc = account
       })
-
-      renderTransactions(txs, true)
 
       $txDetail.removeAttribute('offline')
 
@@ -160,6 +154,6 @@ document.addEventListener('DOMContentLoaded', async () => {
       })
   }
 
-  // await Promise.all([renderCachedTransactions(), renderHTTPTransactions()])
-  // updatePendingTransactions()
+  await Promise.all([renderCachedTransactions(), renderHTTPTransactions()])
+  updatePendingTransactions()
 })
