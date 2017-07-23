@@ -8,7 +8,9 @@ export interface ISetSpentAction extends IAction {
   amount: IAmountOptions
 }
 
-export const setSpent: ActionCreator<ISetSpentAction> = spent => {
+export const setSpent: ActionCreator<ISetSpentAction> = (
+  spent: IAmountOptions
+) => {
   return {
     type: EActions.SET_SPENT,
     amount: spent

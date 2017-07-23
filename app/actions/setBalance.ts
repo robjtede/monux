@@ -8,7 +8,9 @@ export interface ISetBalanceAction extends IAction {
   amount: IAmountOptions
 }
 
-export const setBalance: ActionCreator<ISetBalanceAction> = balance => {
+export const setBalance: ActionCreator<ISetBalanceAction> = (
+  balance: IAmountOptions
+) => {
   return {
     type: EActions.SET_BALANCE,
     amount: balance
