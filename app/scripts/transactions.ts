@@ -1,5 +1,5 @@
 import * as Debug from 'debug'
-import { forEach, map } from 'p-iteration'
+import { map } from 'p-iteration'
 
 import { Account, Monzo, Transaction } from '../../lib/monzo'
 import { getSavedCode } from '../../lib/monzo/auth'
@@ -46,14 +46,19 @@ export const getCachedTransactions = (() => {
   }
 })()
 
-const updateTransactionCache = async (acc: Account, tx: Transaction) => {
+// TODO: redux middleware
+const updateTransactionCache = async (acc: Account, txs: Transaction[]) => {
   try {
-    await db.transactions.put({
-      id: tx.id,
-      created_at: tx.created,
-      accId: acc.id,
-      json: tx.stringify
-    })
+    await db.transactions.bulkPut(
+      txs.map(tx => {
+        return {
+          id: tx.id,
+          created_at: tx.created,
+          accId: acc.id,
+          json: tx.stringify
+        }
+      })
+    )
   } catch (err) {
     console.error(err)
   }
@@ -81,19 +86,21 @@ document.addEventListener('DOMContentLoaded', async () => {
     try {
       const account = (await (await getMonzo()).accounts)[0]
 
-      // TODO: Table#orderBy
-      const cachedTxs = await db.transactions.reverse().sortBy('created_at')
-      const anyCached = cachedTxs.length > 0
+      const cachedTxs = await db.transactions
+        .orderBy('created_at')
+        .reverse()
+        .toArray()
 
-      const txs = anyCached
-        ? await account.transactions({ since: cachedTxs[0].id })
-        : await account.transactions()
+      const txs =
+        cachedTxs.length > 0
+          ? await account.transactions({ since: cachedTxs[0].id })
+          : await account.transactions()
 
       debug('HTTP transactions =>', txs)
 
-      const rawtxs = txs.map(tx => tx.json)
-      store.dispatch(addTransactions(rawtxs))
+      store.dispatch(addTransactions(txs.map(tx => tx.json)))
 
+      // TODO: remove
       // apply new online objects to existing txs
       $txList.txs.forEach(($tx: Transaction) => {
         $tx.monzo = account.monzo
@@ -104,10 +111,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
       console.timeEnd('render HTTP transaction list')
 
-      // TODO: bulkPut
-      await forEach(txs, async (tx: Transaction) => {
-        updateTransactionCache(account, tx)
-      })
+      updateTransactionCache(account, txs)
     } catch (err) {
       console.error(err)
     }
@@ -126,26 +130,20 @@ document.addEventListener('DOMContentLoaded', async () => {
         return tx.pending
       })
 
-    // TODO: dispatch updateTransactions
-    // TODO: also check equivilancy in reducer
-
-    const updatedTxs = await map(toUpdate, async (tx: Transaction) => {
-      try {
-        const updatedTx = await acc.transaction(tx.id)
-
-        updateTransactionCache(acc, updatedTx)
-        debug('updated cached txs', tx.id)
-
-        return updatedTx
-      } catch (err) {
-        console.error(err)
-        return
+    const updatedTxs: Transaction[] = await map(
+      toUpdate,
+      async (tx: Transaction) => {
+        try {
+          return await acc.transaction(tx.id)
+        } catch (err) {
+          console.error(err)
+          return
+        }
       }
-    })
-
-    store.dispatch(
-      updateTransactions(updatedTxs.map((tx: Transaction) => tx.json))
     )
+
+    store.dispatch(updateTransactions(updatedTxs.map(tx => tx.json)))
+    updateTransactionCache(acc, updatedTxs)
   }
 
   await Promise.all([renderCachedTransactions(), renderHTTPTransactions()])
