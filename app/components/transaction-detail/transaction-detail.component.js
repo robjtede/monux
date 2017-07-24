@@ -9,7 +9,7 @@
     constructor () {
       super()
 
-      this._debug = true
+      this._debug = false
       this.debug('constructing')
 
       this.root = this.attachShadow({ mode: 'open' })

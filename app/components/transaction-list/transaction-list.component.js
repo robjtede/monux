@@ -42,13 +42,16 @@
       window.addEventListener('keydown', this.keyHandler.bind(this))
 
       store.subscribe(() => {
-        const state = store.getState()
+        const { transactions } = store.getState()
 
-        this.txs = state.transactions.map((tx, index) => {
-          return new Transaction(undefined, undefined, tx, index)
-        })
+        if (this.rawtxs !== transactions) {
+          this.rawtxs = transactions
+          this.txs = transactions.map((tx, index) => {
+            return new Transaction(undefined, undefined, tx, index)
+          })
 
-        this.render()
+          this.render()
+        }
       })
     }
 
