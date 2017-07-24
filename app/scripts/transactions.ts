@@ -1,12 +1,16 @@
 import * as Debug from 'debug'
-import { forEach } from 'p-iteration'
+import { forEach, map } from 'p-iteration'
 
 import { Account, Monzo, Transaction } from '../../lib/monzo'
 import { getSavedCode } from '../../lib/monzo/auth'
 
 import db, { ICacheTransaction, ICacheAccount } from './cache'
 
-import { setTransactions, addTransactions, updateTransaction } from '../actions'
+import {
+  setTransactions,
+  addTransactions,
+  updateTransactions
+} from '../actions'
 import store from '../store'
 
 const debug = Debug('app:renderer:transactions')
@@ -122,24 +126,26 @@ document.addEventListener('DOMContentLoaded', async () => {
         return tx.pending
       })
 
-    toUpdate.forEach(async tx => {
+    // TODO: dispatch updateTransactions
+    // TODO: also check equivilancy in reducer
+
+    const updatedTxs = await map(toUpdate, async (tx: Transaction) => {
       try {
         const updatedTx = await acc.transaction(tx.id)
 
-        store.dispatch(updateTransaction(updatedTx.json))
+        updateTransactionCache(acc, updatedTx)
+        debug('updated cached txs', tx.id)
 
-        await db.transactions.put({
-          id: tx.id,
-          created_at: tx.created,
-          accId: acc.id,
-          json: tx.stringify
-        })
-
-        debug('updated cached tx', tx.id)
+        return updatedTx
       } catch (err) {
         console.error(err)
+        return
       }
     })
+
+    store.dispatch(
+      updateTransactions(updatedTxs.map((tx: Transaction) => tx.json))
+    )
   }
 
   await Promise.all([renderCachedTransactions(), renderHTTPTransactions()])
