@@ -25,10 +25,6 @@
       this.dataset.category = this.tx.category
       this.dataset.index = this.tx.index
 
-      store.subscribe(() => {
-        this.render()
-      })
-
       this.addEventListener('click', this.clickHandler.bind(this))
 
       this.render()
@@ -125,7 +121,6 @@
       store.dispatch(selectTransaction(this.tx.id))
 
       const $detailPane = document.querySelector('.transaction-detail-pane')
-      // const $txDetail = document.querySelector('m-transaction-detail')
 
       // TODO: this only fires first time because `monzo` and `acc` are side
       // effects in `scripts/transactions.ts`
@@ -136,11 +131,6 @@
           .transaction(this.tx.id)
           .then(tx => {
             store.dispatch(updateTransaction(tx.json))
-
-            // $txDetail.tx = this.tx
-            // $txDetail.dataset.category = this.tx.category
-            // $txDetail.dataset.index = this.index
-            // $txDetail.render()
 
             return db.transactions.put({
               id: tx.id,
@@ -157,18 +147,7 @@
           })
       }
 
-      // $txDetail.$summary = this
-      // $txDetail.tx = this.tx
-      // $txDetail.dataset.category = this.tx.category
-      // $txDetail.dataset.index = this.index
-      // $txDetail.render()
-
       $detailPane.classList.remove('inactive')
-
-      // const $selectedTx = this.$txlist.selectedTransaction
-
-      // if ($selectedTx) $selectedTx.classList.remove('selected')
-      // this.classList.add('selected')
     }
 
     async hide () {

@@ -50,8 +50,6 @@
 
         this.render()
       })
-
-      this.render()
     }
 
     render () {

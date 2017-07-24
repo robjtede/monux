@@ -6,10 +6,10 @@ import { getSavedCode } from '../../lib/monzo/auth'
 
 import db, { ICacheTransaction, ICacheAccount } from './cache'
 
-import { setTransactions, addTransactions } from '../actions'
+import { setTransactions, addTransactions, updateTransaction } from '../actions'
 import store from '../store'
 
-const debug = Debug('app:renderer:index')
+const debug = Debug('app:renderer:transactions')
 
 const getMonzo = (() => {
   const accessToken = getSavedCode('access_token')
@@ -98,18 +98,6 @@ document.addEventListener('DOMContentLoaded', async () => {
 
       $txDetail.removeAttribute('offline')
 
-      // const $selectedTx = $txList.selectedTransaction
-      //
-      // if ($selectedTx) {
-      //   const $tx = $txList.getTransactionByIndex($selectedTx.index)
-      //   $tx.classList.add('selected')
-      //   $tx.render()
-      //
-      //   $txDetail.$summary = $tx
-      //   $txDetail.tx = $tx.tx
-      //   $txDetail.dataset.category = $tx.tx.category
-      //   $txDetail.render()
-      // }
       console.timeEnd('render HTTP transaction list')
 
       // TODO: bulkPut
@@ -122,36 +110,36 @@ document.addEventListener('DOMContentLoaded', async () => {
   }
 
   const updatePendingTransactions = async () => {
-    const toUpdate = $txList.allTransactions
-      .filter(($tx: HTMLElement) => {
-        return $tx.tx.pending
-      })
-      .forEach($tx => {
-        $tx.tx.acc
-          .transaction($tx.tx.id)
-          .then(tx => {
-            $tx.tx = tx
-            $tx.render()
+    const monzo = await getMonzo()
+    const acc = (await monzo.accounts)[0]
 
-            $txDetail.tx = $tx.tx
-            $txDetail.dataset.category = $tx.tx.category
-            $txDetail.dataset.index = $tx.index
-            $txDetail.render()
-
-            return db.transactions.put({
-              id: tx.id,
-              created_at: tx.created,
-              accId: tx.acc.id,
-              json: tx.stringify
-            })
-          })
-          .then(cache => {
-            $tx.debug(`updated cached ${$tx.tx.id}`)
-          })
-          .catch(err => {
-            console.error(err)
-          })
+    const toUpdate = store
+      .getState()
+      .transactions.map(tx => {
+        return new Transaction(monzo, acc, tx)
       })
+      .filter(tx => {
+        return tx.pending
+      })
+
+    toUpdate.forEach(async tx => {
+      try {
+        const updatedTx = await acc.transaction(tx.id)
+
+        store.dispatch(updateTransaction(updatedTx.json))
+
+        await db.transactions.put({
+          id: tx.id,
+          created_at: tx.created,
+          accId: acc.id,
+          json: tx.stringify
+        })
+
+        debug('updated cached tx', tx.id)
+      } catch (err) {
+        console.error(err)
+      }
+    })
   }
 
   await Promise.all([renderCachedTransactions(), renderHTTPTransactions()])

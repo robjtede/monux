@@ -9,7 +9,7 @@
     constructor () {
       super()
 
-      this._debug = false
+      this._debug = true
       this.debug('constructing')
 
       this.root = this.attachShadow({ mode: 'open' })
@@ -29,15 +29,25 @@
         const { transactions, selectedTransaction } = store.getState()
 
         if (selectedTransaction) {
-          this.tx = new Transaction(
+          const tx = new Transaction(
             undefined,
             undefined,
             transactions.find(tx => tx.id === selectedTransaction),
             undefined
           )
-        }
 
-        this.render()
+          if (this.tx) {
+            if (this.tx.id !== selectedTransaction) {
+              this.tx = tx
+              this.render()
+            } else {
+              // same tx
+            }
+          } else {
+            this.tx = tx
+            this.render()
+          }
+        }
       })
 
       this.$newAttachment.addEventListener(
