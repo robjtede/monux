@@ -23,6 +23,7 @@
       const template = ownerDocument.querySelector('template')
       this.root.appendChild(document.importNode(template.content, true))
 
+      this.rawtxs = []
       this.txs = []
     }
 
@@ -190,48 +191,6 @@
 
     get filterCategory () {
       return this.getAttribute('filter-category')
-    }
-
-    get allTransactions () {
-      return Array.from(this.root.querySelectorAll('m-transaction-group'))
-        .map(group =>
-          Array.from(group.root.querySelectorAll('m-transaction-summary'))
-        )
-        .reduce((groups, group) => [...groups, ...group], [])
-    }
-
-    get selectedTransaction () {
-      const $selectedGroup = Array.from(
-        this.root.querySelectorAll('m-transaction-group')
-      ).find(group =>
-        group.root.querySelector('m-transaction-summary.selected')
-      )
-
-      let $selectedTx
-      if ($selectedGroup) {
-        $selectedTx = $selectedGroup.root.querySelector(
-          'm-transaction-summary.selected'
-        )
-      }
-
-      return $selectedTx
-    }
-
-    getTransactionByIndex (index = 0) {
-      const $selectedGroup = Array.from(
-        this.root.querySelectorAll('m-transaction-group')
-      ).find(group =>
-        group.root.querySelector(`m-transaction-summary[data-index="${index}"]`)
-      )
-
-      let $tx
-      if ($selectedGroup) {
-        $tx = $selectedGroup.root.querySelector(
-          `m-transaction-summary[data-index="${index}"]`
-        )
-      }
-
-      return $tx
     }
 
     keyHandler (ev) {

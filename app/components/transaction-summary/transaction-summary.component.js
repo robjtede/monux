@@ -27,16 +27,20 @@
 
       this.addEventListener('click', this.clickHandler.bind(this))
 
+      store.subscribe(() => {
+        const { selectedTransaction } = store.getState()
+
+        if (selectedTransaction === this.tx.id) this.classList.add('selected')
+        else this.classList.remove('selected')
+
+        this.render()
+      })
+
       this.render()
     }
 
     render () {
       this.debug(`rendering ${this.index} summary`)
-
-      const { selectedTransaction } = store.getState()
-
-      if (selectedTransaction === this.tx.id) this.classList.add('selected')
-      else this.classList.remove('selected')
 
       const $amountWrap = this.root.querySelector('.amount-wrap')
       const $amount = this.root.querySelector('.amount')
