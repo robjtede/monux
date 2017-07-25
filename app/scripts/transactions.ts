@@ -137,7 +137,7 @@ document.addEventListener('DOMContentLoaded', async () => {
           return await acc.transaction(tx.id)
         } catch (err) {
           console.error(err)
-          return
+          throw new Error(err)
         }
       }
     )

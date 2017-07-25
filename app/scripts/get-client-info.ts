@@ -1,5 +1,5 @@
 import { remote } from 'electron'
-import { saveCode } from '../lib/monzo/auth'
+import { saveCode } from '../../lib/monzo/auth'
 
 const { app } = remote.require('electron')
 

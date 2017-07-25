@@ -164,6 +164,8 @@ const drawGroupStats = async groups => {
 }
 
 document.addEventListener('DOMContentLoaded', async () => {
+  debug('compiling spending stats')
+
   const txs = await getCachedTransactions()
 
   const longAgo = differenceInCalendarMonths(

@@ -1,3 +1,5 @@
+import * as Debug from 'debug'
+
 import { Account, Amount, Monzo } from '../../lib/monzo'
 import { getSavedCode } from '../../lib/monzo/auth'
 
@@ -5,6 +7,8 @@ import cache, { ICacheAccount } from './cache'
 
 import { setBalance, setSpent, setAccount } from '../actions'
 import store from '../store'
+
+const debug = Debug('app:renderer:balance')
 
 const getMonzo = (() => {
   const accessToken = getSavedCode('access_token')
@@ -72,6 +76,8 @@ document.addEventListener('DOMContentLoaded', async () => {
       const cachedAccount = await getCachedAccount()
       const cachedBalance = await getCachedBalance()
 
+      debug('cached balance =>', cachedBalance)
+
       store.dispatch(setAccount(cachedAccount.name, cachedAccount.type))
       store.dispatch(setBalance(cachedBalance.json))
     } catch (err) {
@@ -87,6 +93,8 @@ document.addEventListener('DOMContentLoaded', async () => {
       const { balance, spentToday } = await acc.balance
 
       updateAccountCache(acc, balance)
+
+      debug('HTTP balance =>', balance)
 
       store.dispatch(setBalance(balance.json))
       store.dispatch(setSpent(spentToday.json))
