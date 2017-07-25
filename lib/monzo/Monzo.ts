@@ -1,6 +1,7 @@
 import * as rp from 'request-promise-native'
 
 import { Account, IMonzoApiAccount } from './'
+import { getSavedCode } from './auth'
 
 export default class Monzo {
   private proto: string
@@ -37,3 +38,11 @@ export default class Monzo {
     )
   }
 }
+
+export const getMonzo = (() => {
+  const accessToken = getSavedCode('access_token')
+
+  return async (): Promise<Monzo> => {
+    return new Monzo(await accessToken)
+  }
+})()

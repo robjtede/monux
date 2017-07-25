@@ -1,49 +1,12 @@
 import * as Debug from 'debug'
 
-import { Account, Amount, Monzo } from '../../lib/monzo'
-import { getSavedCode } from '../../lib/monzo/auth'
-
-import cache, { ICacheAccount } from './cache'
+import { getMonzo } from '../../lib/monzo'
+import { getCachedAccount, getCachedBalance, updateAccountCache } from './cache'
 
 import { setBalance, setSpent, setAccount } from '../actions'
 import store from '../store'
 
 const debug = Debug('app:renderer:balance')
-
-const getMonzo = (() => {
-  const accessToken = getSavedCode('access_token')
-
-  return async (): Promise<Monzo> => {
-    return new Monzo(await accessToken)
-  }
-})()
-
-export const getCachedAccount = (() => {
-  const cachedAccount = cache.accounts.limit(1).toArray()
-
-  return async (): Promise<ICacheAccount> => {
-    return (await cachedAccount)[0]
-  }
-})()
-
-export const getCachedBalance = (() => {
-  const cachedAccount = getCachedAccount()
-
-  return async (): Promise<Amount> => {
-    const { native, local } = JSON.parse((await cachedAccount).balance)
-
-    return new Amount(native, local)
-  }
-})()
-
-export const updateAccountCache = async (acc: Account, balance: Amount) => {
-  return cache.accounts.put({
-    id: acc.id,
-    balance: balance.stringify,
-    name: acc.name,
-    type: 'Monzo'
-  })
-}
 
 document.addEventListener('DOMContentLoaded', async () => {
   const $header = document.querySelector('header') as HTMLElement

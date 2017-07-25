@@ -1,10 +1,9 @@
 import * as Debug from 'debug'
 import { map } from 'p-iteration'
 
-import { Account, Monzo, Transaction } from '../../lib/monzo'
-import { getSavedCode } from '../../lib/monzo/auth'
+import { getMonzo, Transaction } from '../../lib/monzo'
 
-import db, { ICacheTransaction, ICacheAccount } from './cache'
+import db, { getCachedTransactions, updateTransactionCache } from './cache'
 
 import {
   setTransactions,
@@ -14,55 +13,6 @@ import {
 import store from '../store'
 
 const debug = Debug('app:renderer:transactions')
-
-const getMonzo = (() => {
-  const accessToken = getSavedCode('access_token')
-
-  return async (): Promise<Monzo> => {
-    return new Monzo(await accessToken)
-  }
-})()
-
-export const getCachedAccount = (() => {
-  const cachedAccount = db.accounts.limit(1).toArray()
-
-  return async (): Promise<ICacheAccount> => {
-    return (await cachedAccount)[0]
-  }
-})()
-
-export const getCachedTransactions = (() => {
-  const cachedTxs = db.transactions.toArray()
-
-  return async (): Promise<Transaction[]> => {
-    try {
-      return (await cachedTxs).map((tx: ICacheTransaction, index: number) => {
-        return new Transaction(undefined, undefined, JSON.parse(tx.json), index)
-      })
-    } catch (err) {
-      console.error(err)
-      throw new Error(err)
-    }
-  }
-})()
-
-// TODO: redux middleware
-const updateTransactionCache = async (acc: Account, txs: Transaction[]) => {
-  try {
-    await db.transactions.bulkPut(
-      txs.map(tx => {
-        return {
-          id: tx.id,
-          created_at: tx.created,
-          accId: acc.id,
-          json: tx.stringify
-        }
-      })
-    )
-  } catch (err) {
-    console.error(err)
-  }
-}
 
 document.addEventListener('DOMContentLoaded', async () => {
   const $app = document.querySelector('main') as HTMLElement
@@ -86,10 +36,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     try {
       const account = (await (await getMonzo()).accounts)[0]
 
-      const cachedTxs = await db.transactions
-        .orderBy('created_at')
-        .reverse()
-        .toArray()
+      const cachedTxs = await getCachedTransactions()
 
       const txs =
         cachedTxs.length > 0
