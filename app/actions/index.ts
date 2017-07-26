@@ -11,43 +11,31 @@ export enum EActions {
   SELECT_TRANSACTION = 'SELECT_TRANSACTION'
 }
 
-import { setBalance, ISetBalanceAction } from './balance'
-export { setBalance, ISetBalanceAction }
+import { setBalance, ISetBalancePayload } from './balance'
+export { setBalance, ISetBalancePayload }
 
-import { setSpent, ISetSpentAction } from './spent'
-export { setSpent, ISetSpentAction }
+import { setSpent } from './spent'
+export { setSpent }
 
-import { setAccount } from './account'
-export { setAccount }
+import { setAccount, ISetAccountPayload } from './account'
+export { setAccount, ISetAccountPayload }
 
-import { setPane, ISetPaneAction } from './pane'
-export { setPane, ISetPaneAction }
+import { setPane } from './pane'
+export { setPane }
 
 import {
   setTransactions,
-  ISetTransactionsAction,
   addTransaction,
-  IAddTransactionAction,
   addTransactions,
-  IAddTransactionsAction,
   updateTransaction,
-  IUpdateTransactionAction,
   updateTransactions,
-  IUpdateTransactionsAction,
-  selectTransaction,
-  ISelectTransactionAction
+  selectTransaction
 } from './transaction'
 export {
   setTransactions,
-  ISetTransactionsAction,
   addTransaction,
-  IAddTransactionAction,
   addTransactions,
-  IAddTransactionsAction,
   updateTransaction,
-  IUpdateTransactionAction,
   updateTransactions,
-  IUpdateTransactionsAction,
-  selectTransaction,
-  ISelectTransactionAction
+  selectTransaction
 }

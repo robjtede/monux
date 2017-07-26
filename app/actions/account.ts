@@ -2,10 +2,16 @@ import { createAction } from 'redux-actions'
 
 import { EActions } from './index'
 
-export const setAccount = createAction(
-  EActions.SET_ACCOUNT,
-  (name: string, bank: string) => ({
-    name,
-    bank
-  })
-)
+export interface ISetAccountPayload {
+  name: string
+  bank: string
+}
+
+export const setAccount = createAction<
+  ISetAccountPayload,
+  string,
+  string
+>(EActions.SET_ACCOUNT, (name, bank) => ({
+  name,
+  bank
+}))

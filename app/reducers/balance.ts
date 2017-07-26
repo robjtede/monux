@@ -1,7 +1,6 @@
-import { Reducer, ReducersMapObject } from 'redux'
+import { handleActions } from 'redux-actions'
 
-import { EActions } from '../actions/index'
-import { ISetBalanceAction } from '../actions'
+import { setBalance, ISetBalancePayload } from '../actions'
 import { IBalanceState } from '../store'
 
 const initialState: IBalanceState = {
@@ -11,22 +10,15 @@ const initialState: IBalanceState = {
   }
 }
 
-export const reducer: Reducer<IBalanceState> = (
-  state = initialState,
-  action
-) => {
-  const types = {
-    [EActions.SET_BALANCE]: (
-      state: IBalanceState,
-      action: ISetBalanceAction
-    ) => {
-      return {
-        ...action.amount
-      } as IBalanceState
-    }
-  } as ReducersMapObject
+export const reducer = handleActions<IBalanceState, ISetBalancePayload>(
+  {
+    [setBalance.toString()]: (_, action) => {
+      if (!action.payload) throw new TypeError('A payload is required')
 
-  return action.type in types ? types[action.type](state, action) : state
-}
+      return action.payload.amount
+    }
+  },
+  initialState
+)
 
 export default reducer
