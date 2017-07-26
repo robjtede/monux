@@ -1,7 +1,7 @@
 'use strict'
 ;(function (ownerDocument) {
   const { default: db } = require('./scripts/cache')
-  const { updateTransaction, selectTransaction } = require('./actions')
+  const { updateTransactions, selectTransaction } = require('./actions')
   const { store } = require('./store')
 
   class TransactionSummaryComponent extends HTMLElement {
@@ -134,7 +134,7 @@
         this.tx.acc
           .transaction(this.tx.id)
           .then(tx => {
-            store.dispatch(updateTransaction(tx.json))
+            store.dispatch(updateTransactions([tx.json]))
 
             return db.transactions.put({
               id: tx.id,

@@ -1,25 +1,22 @@
-import { Reducer, ReducersMapObject } from 'redux'
+import { handleActions } from 'redux-actions'
 
-import { EActions } from '../actions/index'
-import { ISelectTransactionAction } from '../actions'
 import { ISelectedTransactionsState } from '../store'
+import { selectTransaction, ISelectTransactionPayload } from '../actions'
 
 const initialState: ISelectedTransactionsState = ''
 
-export const reducer: Reducer<ISelectedTransactionsState> = (
-  state = initialState,
-  action
-) => {
-  const types = {
-    [EActions.SELECT_TRANSACTION]: (
-      state: ISelectedTransactionsState,
-      action: ISelectTransactionAction
-    ) => {
-      return action.txId as ISelectedTransactionsState
-    }
-  } as ReducersMapObject
+export const reducer = handleActions<
+  ISelectedTransactionsState,
+  ISelectTransactionPayload
+>(
+  {
+    [selectTransaction.toString()]: (_, { payload }) => {
+      if (!payload) throw new TypeError('A payload is required')
 
-  return action.type in types ? types[action.type](state, action) : state
-}
+      return payload.txId
+    }
+  },
+  initialState
+)
 
 export default reducer

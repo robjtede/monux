@@ -29,7 +29,7 @@ import {
   updateTransactions,
   IUpdateTransactionsPayload,
   selectTransaction,
-  ISelectTransactionsPayload,
+  ISelectTransactionPayload,
   IModifyTransactionsPayloads
 } from './transaction'
 export {
@@ -40,6 +40,6 @@ export {
   updateTransactions,
   IUpdateTransactionsPayload,
   selectTransaction,
-  ISelectTransactionsPayload,
+  ISelectTransactionPayload,
   IModifyTransactionsPayloads
 }

@@ -1,6 +1,5 @@
 import { handleActions } from 'redux-actions'
 
-import { EActions } from '../actions/index'
 import {
   setTransactions,
   addTransactions,

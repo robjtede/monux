@@ -15,7 +15,7 @@ export interface IUpdateTransactionsPayload {
   txs: IMonzoApiTransaction[]
 }
 
-export interface ISelectTransactionsPayload {
+export interface ISelectTransactionPayload {
   txId: string
 }
 
@@ -46,7 +46,7 @@ export const updateTransactions = createAction<
 }))
 
 export const selectTransaction = createAction<
-  ISelectTransactionsPayload,
+  ISelectTransactionPayload,
   string
 >(EActions.SELECT_TRANSACTION, txId => ({
   txId
