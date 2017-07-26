@@ -9,7 +9,7 @@ export type IBalanceState = IAmountOptions
 export type ISpentState = IAmountOptions
 export type ITransactionsState = IMonzoApiTransaction[]
 export type ISelectedTransactionsState = string
-export interface IAccountState {
+export type IAccountState = {
   name: string
   bank: string
 }

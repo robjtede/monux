@@ -1,88 +1,53 @@
-import { ActionCreator } from 'redux'
+import { createAction } from 'redux-actions'
 
-import { IAction, EActions } from './index'
+import { EActions } from './index'
 import { IMonzoApiTransaction } from '../../lib/monzo'
 
-export interface ISetTransactionsAction extends IAction {
-  type: EActions.SET_TRANSACTIONS
-  transactions: IMonzoApiTransaction[]
+export interface ISetTransactionsPayload {
+  txs: IMonzoApiTransaction[]
 }
 
-export const setTransactions: ActionCreator<ISetTransactionsAction> = (
-  transactions: IMonzoApiTransaction[]
-) => {
-  return {
-    type: EActions.SET_TRANSACTIONS,
-    transactions
-  }
+export interface IAddTransactionsPayload {
+  txs: IMonzoApiTransaction[]
 }
 
-export interface IAddTransactionAction extends IAction {
-  type: EActions.ADD_TRANSACTION
-  transaction: IMonzoApiTransaction
+export interface IUpdateTransactionsPayload {
+  txs: IMonzoApiTransaction[]
 }
 
-export const addTransaction: ActionCreator<IAddTransactionAction> = (
-  transaction: IMonzoApiTransaction
-) => {
-  return {
-    type: EActions.ADD_TRANSACTION,
-    transaction
-  }
-}
-
-export interface IAddTransactionsAction extends IAction {
-  type: EActions.ADD_TRANSACTIONS
-  transactions: IMonzoApiTransaction[]
-}
-
-export const addTransactions: ActionCreator<IAddTransactionsAction> = (
-  transactions: IMonzoApiTransaction[]
-) => {
-  return {
-    type: EActions.ADD_TRANSACTIONS,
-    transactions
-  }
-}
-
-export interface IUpdateTransactionAction extends IAction {
-  type: EActions.UPDATE_TRANSACTION
-  transaction: IMonzoApiTransaction
-}
-
-export const updateTransaction: ActionCreator<IUpdateTransactionAction> = (
-  transaction: IMonzoApiTransaction
-) => {
-  return {
-    type: EActions.UPDATE_TRANSACTION,
-    transaction
-  }
-}
-
-export interface IUpdateTransactionsAction extends IAction {
-  type: EActions.UPDATE_TRANSACTIONS
-  transactions: IMonzoApiTransaction[]
-}
-
-export const updateTransactions: ActionCreator<IUpdateTransactionsAction> = (
-  transactions: IMonzoApiTransaction[]
-) => {
-  return {
-    type: EActions.UPDATE_TRANSACTIONS,
-    transactions
-  }
-}
-
-export interface ISelectTransactionAction extends IAction {
-  type: EActions.SELECT_TRANSACTION
+export interface ISelectTransactionsPayload {
   txId: string
 }
 
-export const selectTransaction: ActionCreator<ISelectTransactionAction> = (
-  txId: string
-) => {
-  return {
-    type: EActions.SELECT_TRANSACTION,
-    txId
-  }
-}
+export type IModifyTransactionsPayloads =
+  | ISetTransactionsPayload
+  | IAddTransactionsPayload
+  | IUpdateTransactionsPayload
+
+export const setTransactions = createAction<
+  ISetTransactionsPayload,
+  IMonzoApiTransaction[]
+>(EActions.SET_TRANSACTIONS, txs => ({
+  txs
+}))
+
+export const addTransactions = createAction<
+  IAddTransactionsPayload,
+  IMonzoApiTransaction[]
+>(EActions.ADD_TRANSACTIONS, txs => ({
+  txs
+}))
+
+export const updateTransactions = createAction<
+  IUpdateTransactionsPayload,
+  IMonzoApiTransaction[]
+>(EActions.UPDATE_TRANSACTIONS, txs => ({
+  txs
+}))
+
+export const selectTransaction = createAction<
+  ISelectTransactionsPayload,
+  string
+>(EActions.SELECT_TRANSACTION, txId => ({
+  txId
+}))

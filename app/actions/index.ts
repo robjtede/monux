@@ -4,9 +4,7 @@ export enum EActions {
   SET_ACCOUNT = 'SET_ACCOUNT',
   SET_PANE = 'SET_PANE',
   SET_TRANSACTIONS = 'SET_TRANSACTIONS',
-  ADD_TRANSACTION = 'ADD_TRANSACTION',
   ADD_TRANSACTIONS = 'ADD_TRANSACTIONS',
-  UPDATE_TRANSACTION = 'UPDATE_TRANSACTION',
   UPDATE_TRANSACTIONS = 'UPDATE_TRANSACTIONS',
   SELECT_TRANSACTION = 'SELECT_TRANSACTION'
 }
@@ -25,17 +23,23 @@ export { setPane }
 
 import {
   setTransactions,
-  addTransaction,
+  ISetTransactionsPayload,
   addTransactions,
-  updateTransaction,
+  IAddTransactionsPayload,
   updateTransactions,
-  selectTransaction
+  IUpdateTransactionsPayload,
+  selectTransaction,
+  ISelectTransactionsPayload,
+  IModifyTransactionsPayloads
 } from './transaction'
 export {
   setTransactions,
-  addTransaction,
+  ISetTransactionsPayload,
   addTransactions,
-  updateTransaction,
+  IAddTransactionsPayload,
   updateTransactions,
-  selectTransaction
+  IUpdateTransactionsPayload,
+  selectTransaction,
+  ISelectTransactionsPayload,
+  IModifyTransactionsPayloads
 }

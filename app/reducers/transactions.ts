@@ -1,69 +1,46 @@
-import { Reducer, ReducersMapObject } from 'redux'
+import { handleActions } from 'redux-actions'
 
 import { EActions } from '../actions/index'
 import {
-  ISetTransactionsAction,
-  IAddTransactionAction,
-  IAddTransactionsAction,
-  IUpdateTransactionAction,
-  IUpdateTransactionsAction
+  setTransactions,
+  addTransactions,
+  updateTransactions,
+  IModifyTransactionsPayloads
 } from '../actions'
 import { ITransactionsState } from '../store'
 
 const initialState: ITransactionsState = []
 
-export const reducer: Reducer<ITransactionsState> = (
-  state = initialState,
-  action
-) => {
-  const types = {
-    [EActions.SET_TRANSACTIONS]: (
-      state: ITransactionsState,
-      action: ISetTransactionsAction
-    ) => {
-      return action.transactions as ITransactionsState
+export const reducer = handleActions<
+  ITransactionsState,
+  IModifyTransactionsPayloads
+>(
+  {
+    [setTransactions.toString()]: (_, { payload }) => {
+      if (!payload) throw new TypeError('A payload is required')
+
+      return payload.txs
     },
 
-    [EActions.ADD_TRANSACTION]: (
-      state: ITransactionsState,
-      action: IAddTransactionAction
-    ) => {
-      return [...state, action.transaction] as ITransactionsState
+    [addTransactions.toString()]: (state, { payload }) => {
+      if (!payload) throw new TypeError('A payload is required')
+
+      return [...state, ...payload.txs]
     },
 
-    [EActions.ADD_TRANSACTIONS]: (
-      state: ITransactionsState,
-      action: IAddTransactionsAction
-    ) => {
-      return [...state, ...action.transactions] as ITransactionsState
-    },
+    [updateTransactions.toString()]: (state, { payload }) => {
+      if (!payload) throw new TypeError('A payload is required')
 
-    [EActions.UPDATE_TRANSACTION]: (
-      state: ITransactionsState,
-      action: IUpdateTransactionAction
-    ) => {
-      const txFilter = state.filter(tx => {
-        return tx.id !== action.transaction.id
-      })
-
-      return [...txFilter, action.transaction] as ITransactionsState
-    },
-
-    [EActions.UPDATE_TRANSACTIONS]: (
-      state: ITransactionsState,
-      action: IUpdateTransactionsAction
-    ) => {
-      const txIds = action.transactions.map(tx => tx.id)
+      const txIds = payload.txs.map(tx => tx.id)
 
       const txFilter = state.filter(tx => {
         return !txIds.includes(tx.id)
       })
 
-      return [...txFilter, ...action.transactions] as ITransactionsState
+      return [...txFilter, ...payload.txs]
     }
-  } as ReducersMapObject
-
-  return action.type in types ? types[action.type](state, action) : state
-}
+  },
+  initialState
+)
 
 export default reducer
