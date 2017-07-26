@@ -1,7 +1,6 @@
-import { Reducer, ReducersMapObject } from 'redux'
+import { handleActions } from 'redux-actions'
 
-import { EActions } from '../actions/index'
-import { ISetSpentAction } from '../actions'
+import { setSpent, ISetSpentPayload } from '../actions'
 import { ISpentState } from '../store'
 
 const initialState: ISpentState = {
@@ -11,16 +10,15 @@ const initialState: ISpentState = {
   }
 }
 
-export const reducer: Reducer<ISpentState> = (state = initialState, action) => {
-  const types = {
-    [EActions.SET_SPENT]: (state: ISpentState, action: ISetSpentAction) => {
-      return {
-        ...action.amount
-      } as ISpentState
-    }
-  } as ReducersMapObject
+export const reducer = handleActions<ISpentState, ISetSpentPayload>(
+  {
+    [setSpent.toString()]: (_, action) => {
+      if (!action.payload) throw new TypeError('A payload is required')
 
-  return action.type in types ? types[action.type](state, action) : state
-}
+      return action.payload.amount
+    }
+  },
+  initialState
+)
 
 export default reducer

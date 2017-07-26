@@ -14,8 +14,8 @@ export enum EActions {
 import { setBalance, ISetBalancePayload } from './balance'
 export { setBalance, ISetBalancePayload }
 
-import { setSpent } from './spent'
-export { setSpent }
+import { setSpent, ISetSpentPayload } from './spent'
+export { setSpent, ISetSpentPayload }
 
 import { setAccount, ISetAccountPayload } from './account'
 export { setAccount, ISetAccountPayload }

@@ -1,18 +1,15 @@
-import { ActionCreator } from 'redux'
+import { createAction } from 'redux-actions'
 
-import { IAction, EActions } from './index'
+import { EActions } from './index'
 import { IAmountOptions } from '../../lib/monzo'
 
-export interface ISetSpentAction extends IAction {
-  type: EActions.SET_SPENT
+export interface ISetSpentPayload {
   amount: IAmountOptions
 }
 
-export const setSpent: ActionCreator<ISetSpentAction> = (
-  spent: IAmountOptions
-) => {
-  return {
-    type: EActions.SET_SPENT,
-    amount: spent
-  }
-}
+export const setSpent = createAction<
+  ISetSpentPayload,
+  IAmountOptions
+>(EActions.SET_SPENT, spent => ({
+  amount: spent
+}))
