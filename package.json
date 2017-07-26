@@ -50,6 +50,7 @@
     "keytar": "^4.0.4",
     "p-iteration": "^1.1.5",
     "redux": "^3.7.2",
+    "redux-actions": "^2.2.1",
     "request": "^2.81.0",
     "request-promise-native": "^1.0.4"
   },
@@ -61,6 +62,7 @@
     "@types/electron-devtools-installer": "^2.0.2",
     "@types/electron-window-state": "^2.0.29",
     "@types/keytar": "^4.0.0",
+    "@types/redux-actions": "^1.2.7",
     "@types/request-promise-native": "^1.0.6",
     "devtron": "^1.4.0",
     "eclint": "^2.3.0",

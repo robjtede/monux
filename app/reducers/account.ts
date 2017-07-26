@@ -1,31 +1,25 @@
-import { Reducer, ReducersMapObject } from 'redux'
+import { handleActions } from 'redux-actions'
 
-import { EActions } from '../actions/index'
-import { ISetAccountAction } from '../actions'
+import { setAccount } from '../actions'
 import { IAccountState } from '../store'
 
 const initialState: IAccountState = {
-  name: '--- ---',
-  bank: 'monzo'
+  name: '',
+  bank: ''
 }
 
-export const reducer: Reducer<IAccountState> = (
-  state = initialState,
-  action
-) => {
-  const types = {
-    [EActions.SET_ACCOUNT]: (
-      state: IAccountState,
-      action: ISetAccountAction
-    ) => {
+const reducer = handleActions(
+  {
+    [setAccount.toString()]: (_, action) => {
+      if (!action.payload) throw new TypeError('A payload is required')
+
       return {
-        name: action.name,
-        bank: action.bank.toLowerCase()
-      } as IAccountState
+        name: action.payload.name,
+        bank: action.payload.bank.toLowerCase()
+      }
     }
-  } as ReducersMapObject
-
-  return action.type in types ? types[action.type](state, action) : state
-}
+  },
+  initialState
+)
 
 export default reducer

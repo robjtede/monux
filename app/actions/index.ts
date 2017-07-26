@@ -1,5 +1,3 @@
-import { Action } from 'redux'
-
 export enum EActions {
   SET_SPENT = 'SET_SPENT',
   SET_BALANCE = 'SET_BALANCE',
@@ -13,18 +11,14 @@ export enum EActions {
   SELECT_TRANSACTION = 'SELECT_TRANSACTION'
 }
 
-export interface IAction extends Action {
-  type: EActions
-}
-
 import { setBalance, ISetBalanceAction } from './balance'
 export { setBalance, ISetBalanceAction }
 
 import { setSpent, ISetSpentAction } from './spent'
 export { setSpent, ISetSpentAction }
 
-import { setAccount, ISetAccountAction } from './account'
-export { setAccount, ISetAccountAction }
+import { setAccount } from './account'
+export { setAccount }
 
 import { setPane, ISetPaneAction } from './pane'
 export { setPane, ISetPaneAction }
