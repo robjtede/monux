@@ -1,22 +1,19 @@
-import { Reducer, ReducersMapObject } from 'redux'
+import { handleActions } from 'redux-actions'
 
-import { EActions } from '../actions/index'
-import { ISetPaneAction } from '../actions'
+import { setPane, ISetPanePayload } from '../actions'
 import { IActivePaneState } from '../store'
 
 const initialState: IActivePaneState = 'transaction'
 
-export const reducer: Reducer<IActivePaneState> = (
-  state = initialState,
-  action
-) => {
-  const types = {
-    [EActions.SET_PANE]: (state: IActivePaneState, action: ISetPaneAction) => {
-      return action.pane as IActivePaneState
-    }
-  } as ReducersMapObject
+export const reducer = handleActions<IActivePaneState, ISetPanePayload>(
+  {
+    [setPane.toString()]: (_, { payload }) => {
+      if (!payload) throw new TypeError('A payload is required')
 
-  return action.type in types ? types[action.type](state, action) : state
-}
+      return payload.pane
+    }
+  },
+  initialState
+)
 
 export default reducer

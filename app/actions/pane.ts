@@ -1,15 +1,14 @@
-import { ActionCreator } from 'redux'
+import { createAction } from 'redux-actions'
 
-import { IAction, EActions } from './index'
+import { EActions } from './index'
 
-export interface ISetPaneAction extends IAction {
-  type: EActions.SET_PANE
+export interface ISetPanePayload {
   pane: string
 }
 
-export const setPane: ActionCreator<ISetPaneAction> = (pane: string) => {
-  return {
-    type: EActions.SET_PANE,
-    pane
-  }
-}
+export const setPane = createAction<
+  ISetPanePayload,
+  string
+>(EActions.SET_PANE, pane => ({
+  pane
+}))

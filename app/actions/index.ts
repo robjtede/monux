@@ -18,8 +18,8 @@ export { setSpent, ISetSpentPayload }
 import { setAccount, ISetAccountPayload } from './account'
 export { setAccount, ISetAccountPayload }
 
-import { setPane } from './pane'
-export { setPane }
+import { setPane, ISetPanePayload } from './pane'
+export { setPane, ISetPanePayload }
 
 import {
   setTransactions,
