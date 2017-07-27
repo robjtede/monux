@@ -19,6 +19,10 @@ export interface ISelectTransactionPayload {
   txId: string
 }
 
+export interface IHideTransactionPayload {
+  txId: string
+}
+
 export type IModifyTransactionsPayloads =
   | ISetTransactionsPayload
   | IAddTransactionsPayload
@@ -49,5 +53,12 @@ export const selectTransaction = createAction<
   ISelectTransactionPayload,
   string
 >(EActions.SELECT_TRANSACTION, txId => ({
+  txId
+}))
+
+export const hideTransaction = createAction<
+  ISelectTransactionPayload,
+  string
+>(EActions.HIDE_TRANSACTION, txId => ({
   txId
 }))
