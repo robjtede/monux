@@ -7,7 +7,8 @@ export enum EActions {
   ADD_TRANSACTIONS = 'ADD_TRANSACTIONS',
   UPDATE_TRANSACTIONS = 'UPDATE_TRANSACTIONS',
   SELECT_TRANSACTION = 'SELECT_TRANSACTION',
-  HIDE_TRANSACTION = 'HIDE_TRANSACTION'
+  HIDE_TRANSACTION = 'HIDE_TRANSACTION',
+  UNHIDE_TRANSACTION = 'UNHIDE_TRANSACTION'
 }
 
 import { setBalance, ISetBalancePayload } from './balance'
@@ -31,9 +32,10 @@ import {
   IUpdateTransactionsPayload,
   selectTransaction,
   ISelectTransactionPayload,
-  IModifyTransactionsPayloads,
   hideTransaction,
-  IHideTransactionPayload
+  IHideTransactionPayload,
+  unhideTransaction,
+  IUnhideTransactionPayload
 } from './transaction'
 export {
   setTransactions,
@@ -44,7 +46,8 @@ export {
   IUpdateTransactionsPayload,
   selectTransaction,
   ISelectTransactionPayload,
-  IModifyTransactionsPayloads,
   hideTransaction,
-  IHideTransactionPayload
+  IHideTransactionPayload,
+  unhideTransaction,
+  IUnhideTransactionPayload
 }

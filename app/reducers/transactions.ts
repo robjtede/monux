@@ -5,10 +5,23 @@ import {
   addTransactions,
   updateTransactions,
   hideTransaction,
-  IModifyTransactionsPayloads,
-  IHideTransactionPayload
+  unhideTransaction,
+  ISetTransactionsPayload,
+  IAddTransactionsPayload,
+  IUpdateTransactionsPayload,
+  IHideTransactionPayload,
+  IUnhideTransactionPayload
 } from '../actions'
 import { ITransactionsState } from '../store'
+
+export type IModifyTransactionsPayloads =
+  | ISetTransactionsPayload
+  | IAddTransactionsPayload
+  | IUpdateTransactionsPayload
+
+export type IVisibilityTransactionsPayloads =
+  | IHideTransactionPayload
+  | IUnhideTransactionPayload
 
 const initialState: ITransactionsState = []
 
@@ -41,7 +54,10 @@ const modifyReducer: ReducerMap<
   }
 }
 
-const hideReducer: ReducerMap<ITransactionsState, IHideTransactionPayload> = {
+const hideReducer: ReducerMap<
+  ITransactionsState,
+  IVisibilityTransactionsPayloads
+> = {
   [hideTransaction.toString()]: (state, { payload }) => {
     if (!payload) throw new TypeError('A payload is required')
 
@@ -61,12 +77,33 @@ const hideReducer: ReducerMap<ITransactionsState, IHideTransactionPayload> = {
     } else {
       return state
     }
+  },
+
+  [unhideTransaction.toString()]: (state, { payload }) => {
+    if (!payload) throw new TypeError('A payload is required')
+
+    const tx = state.find(tx => tx.id === payload.txId)
+
+    if (tx) {
+      const filteredTxs = state.filter(tx => tx.id !== payload.txId)
+
+      const updatedTx = {
+        ...tx,
+        metadata: {
+          ...tx.metadata,
+          monux_hidden: ''
+        }
+      }
+      return [...filteredTxs, updatedTx]
+    } else {
+      return state
+    }
   }
 }
 
 export default handleActions<
   ITransactionsState,
-  IModifyTransactionsPayloads | IHideTransactionPayload
+  IModifyTransactionsPayloads | IVisibilityTransactionsPayloads
 >(
   {
     ...modifyReducer,

@@ -162,7 +162,7 @@ export default class Transaction {
 
   get hidden(): boolean {
     if ('monux_hidden' in this.tx.metadata) {
-      return this.tx.metadata.monux_hidden !== 'false'
+      return this.tx.metadata.monux_hidden === 'true'
     } else return false
   }
 

@@ -23,10 +23,9 @@ export interface IHideTransactionPayload {
   txId: string
 }
 
-export type IModifyTransactionsPayloads =
-  | ISetTransactionsPayload
-  | IAddTransactionsPayload
-  | IUpdateTransactionsPayload
+export interface IUnhideTransactionPayload {
+  txId: string
+}
 
 export const setTransactions = createAction<
   ISetTransactionsPayload,
@@ -60,5 +59,12 @@ export const hideTransaction = createAction<
   ISelectTransactionPayload,
   string
 >(EActions.HIDE_TRANSACTION, txId => ({
+  txId
+}))
+
+export const unhideTransaction = createAction<
+  ISelectTransactionPayload,
+  string
+>(EActions.UNHIDE_TRANSACTION, txId => ({
   txId
 }))
