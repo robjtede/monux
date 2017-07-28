@@ -41,7 +41,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
       debug('cached balance =>', cachedBalance)
 
-      store.dispatch(setAccount(cachedAccount.name, cachedAccount.type))
+      store.dispatch(setAccount('monzo', cachedAccount.acc))
       store.dispatch(setBalance(cachedBalance.json))
     } catch (err) {
       console.error(err)
@@ -59,6 +59,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
       debug('HTTP balance =>', balance)
 
+      store.dispatch(setAccount('monzo', acc.json))
       store.dispatch(setBalance(balance.json))
       store.dispatch(setSpent(spentToday.json))
     } catch (err) {

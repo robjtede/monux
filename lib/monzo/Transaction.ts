@@ -2,7 +2,11 @@ import { format } from 'date-fns'
 
 import { Account, Amount, IAmount, Merchant, Monzo } from './'
 
+// TODO: complete schema
 export interface IMonzoApiTransaction {
+  id: string
+  created: string
+  description: string
   [propName: string]: any
 }
 

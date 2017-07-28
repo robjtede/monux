@@ -1,6 +1,11 @@
 import { applyMiddleware, createStore, Store, compose } from 'redux'
 
-import { IAmountOptions, IMonzoApiTransaction } from '../lib/monzo'
+import {
+  IAmountOptions,
+  IMonzoApiTransaction,
+  IMonzoApiAccount
+} from '../lib/monzo'
+
 import reducer from './reducers'
 import middleware from './middleware'
 
@@ -9,16 +14,19 @@ export type IBalanceState = IAmountOptions
 export type ISpentState = IAmountOptions
 export type ITransactionsState = IMonzoApiTransaction[]
 export type ISelectedTransactionsState = string
+export type IBankAccess = {
+  monzo?: string
+}
 export type IAccountState = {
-  name: string
-  bank: string
+  monzo?: IMonzoApiAccount
 }
 
 export interface IState {
+  bankAccess: IBankAccess
+  account: IAccountState
   activePane: IActivePaneState
   balance: IBalanceState
   spent: ISpentState
-  account: IAccountState
   transactions: ITransactionsState
   selectedTransaction: ISelectedTransactionsState
 }

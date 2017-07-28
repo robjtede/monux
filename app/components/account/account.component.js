@@ -15,10 +15,12 @@
       this.body = this.root.querySelector('.body')
 
       store.subscribe(() => {
-        const state = store.getState()
+        const { account } = store.getState()
 
-        this.setAttribute('name', state.account.name)
-        this.setAttribute('bank', state.account.bank)
+        if (account.monzo) {
+          this.setAttribute('name', account.monzo.description)
+          this.setAttribute('bank', 'monzo')
+        }
       })
 
       this.render()

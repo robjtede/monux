@@ -1,19 +1,29 @@
 import Dexie from 'dexie'
 
-import { Account, Amount, Transaction } from '../../lib/monzo'
+import {
+  Account,
+  Amount,
+  Transaction,
+  IMonzoApiAccount,
+  IMonzoApiTransaction,
+  IAmountOptions
+} from '../../lib/monzo'
 
 export interface ICacheTransaction {
   id: string
-  created_at: Date
   accId: string
-  json: string
+  tx: IMonzoApiTransaction
+  created_at: Date
+  updated_at: Date
 }
 
 export interface ICacheAccount {
   id: string
-  name: string
-  type: string
-  balance: string
+  type: 'monzo'
+  acc: IMonzoApiAccount
+  balance: IAmountOptions
+  created_at: Date
+  updated_at: Date
 }
 
 class IDBCache extends Dexie {
@@ -26,6 +36,11 @@ class IDBCache extends Dexie {
     this.version(1).stores({
       transactions: 'id, created_at, accId',
       accounts: 'id, name, type'
+    })
+
+    this.version(2).stores({
+      transactions: 'id, accId, created_at, updated_at',
+      accounts: 'id, created_at, updated_at'
     })
   }
 }
@@ -45,7 +60,7 @@ export const getCachedBalance = (() => {
   const cachedAccount = getCachedAccount()
 
   return async (): Promise<Amount> => {
-    const { native, local } = JSON.parse((await cachedAccount).balance)
+    const { native, local } = (await cachedAccount).balance
 
     return new Amount(native, local)
   }
@@ -55,9 +70,11 @@ export const getCachedBalance = (() => {
 export const updateAccountCache = async (acc: Account, balance: Amount) => {
   return db.accounts.put({
     id: acc.id,
-    balance: balance.stringify,
-    name: acc.name,
-    type: 'Monzo'
+    balance: balance.json,
+    type: 'monzo',
+    acc: acc.json,
+    created_at: acc.created,
+    updated_at: new Date()
   })
 }
 
@@ -66,8 +83,8 @@ export const getCachedTransactions = (() => {
 
   return async (): Promise<Transaction[]> => {
     try {
-      return (await cachedTxs).map((tx: ICacheTransaction, index: number) => {
-        return new Transaction(undefined, undefined, JSON.parse(tx.json), index)
+      return (await cachedTxs).map(({ tx }, index) => {
+        return new Transaction(undefined, undefined, tx, index)
       })
     } catch (err) {
       console.error(err)
@@ -86,9 +103,10 @@ export const updateTransactionCache = async (
       txs.map(tx => {
         return {
           id: tx.id,
-          created_at: tx.created,
           accId: acc.id,
-          json: tx.stringify
+          tx: tx.json,
+          created_at: tx.created,
+          updated_at: new Date()
         }
       })
     )

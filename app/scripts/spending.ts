@@ -17,9 +17,11 @@ export const getCachedTransactions = (() => {
 
   return async (): Promise<Transaction[]> => {
     try {
-      return (await cachedTxs).map((tx: ICacheTransaction, index: number) => {
-        return new Transaction(undefined, undefined, JSON.parse(tx.json), index)
-      })
+      return (await cachedTxs).map(
+        ({ tx }: ICacheTransaction, index: number) => {
+          return new Transaction(undefined, undefined, tx, index)
+        }
+      )
     } catch (err) {
       console.error(err)
       throw new Error(err)
@@ -55,8 +57,8 @@ const groups = async (months: number) => {
   await getCachedTransactions()
 
   const cachedTxs = await cache.transactions.toArray()
-  const txs = cachedTxs.map((tx: ICacheTransaction, index: number) => {
-    return new Transaction(undefined, undefined, tx.json, index)
+  const txs = cachedTxs.map(({ tx }: ICacheTransaction, index: number) => {
+    return new Transaction(undefined, undefined, tx, index)
   })
 
   const currentMonth = txs.filter(tx => {
