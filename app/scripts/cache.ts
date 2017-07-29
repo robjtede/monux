@@ -66,7 +66,6 @@ export const getCachedBalance = (() => {
   }
 })()
 
-// TODO: redux middleware
 export const updateAccountCache = async (acc: Account, balance: Amount) => {
   return db.accounts.put({
     id: acc.id,
@@ -82,35 +81,25 @@ export const getCachedTransactions = (() => {
   const cachedTxs = db.transactions.orderBy('created_at').reverse().toArray()
 
   return async (): Promise<Transaction[]> => {
-    try {
-      return (await cachedTxs).map(({ tx }, index) => {
-        return new Transaction(undefined, undefined, tx, index)
-      })
-    } catch (err) {
-      console.error(err)
-      throw new Error(err)
-    }
+    return (await cachedTxs).map(({ tx }, index) => {
+      return new Transaction(undefined, undefined, tx, index)
+    })
   }
 })()
 
-// TODO: redux middleware
 export const updateTransactionCache = async (
   acc: Account,
   txs: Transaction[]
 ) => {
-  try {
-    await db.transactions.bulkPut(
-      txs.map(tx => {
-        return {
-          id: tx.id,
-          accId: acc.id,
-          tx: tx.json,
-          created_at: tx.created,
-          updated_at: new Date()
-        }
-      })
-    )
-  } catch (err) {
-    console.error(err)
-  }
+  await db.transactions.bulkPut(
+    txs.map(tx => {
+      return {
+        id: tx.id,
+        accId: acc.id,
+        tx: tx.json,
+        created_at: tx.created,
+        updated_at: new Date()
+      }
+    })
+  )
 }

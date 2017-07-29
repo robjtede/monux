@@ -93,6 +93,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     updateTransactionCache(acc, updatedTxs)
   }
 
-  await Promise.all([renderCachedTransactions(), renderHTTPTransactions()])
-  updatePendingTransactions()
+  // await Promise.all([renderCachedTransactions(), renderHTTPTransactions()])
+  // updatePendingTransactions()
 })

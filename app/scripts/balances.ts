@@ -32,9 +32,11 @@ document.addEventListener('DOMContentLoaded', async () => {
       $spent.setAttribute('localCurrency', spent.local.currency)
     }
   })
+})
 
-  const renderCachedBalance = async () => {
-    console.time('render cached balance')
+store.dispatch({
+  type: 'CACHE_GET_BALANCE',
+  payload: (async () => {
     try {
       const cachedAccount = await getCachedAccount()
       const cachedBalance = await getCachedBalance()
@@ -46,28 +48,28 @@ document.addEventListener('DOMContentLoaded', async () => {
     } catch (err) {
       console.error(err)
     }
-    console.timeEnd('render cached balance')
-  }
+  })()
+})
 
-  const renderHTTPBalance = async () => {
-    console.time('render HTTP balance')
+store.dispatch({
+  type: 'HTTP_GET_BALANCE',
+  payload: (async () => {
     try {
       const acc = (await (await getMonzo()).accounts)[0]
       const { balance, spentToday } = await acc.balance
-
-      updateAccountCache(acc, balance)
 
       debug('HTTP balance =>', balance)
 
       store.dispatch(setAccount('monzo', acc.json))
       store.dispatch(setBalance(balance.json))
       store.dispatch(setSpent(spentToday.json))
+      store.dispatch({
+        type: 'CACHE_UPDATE_ACCOUNT_BALANCE',
+        payload: updateAccountCache(acc, balance)
+      })
     } catch (err) {
       console.error(err)
+      throw new Error(err)
     }
-    console.timeEnd('render HTTP balance')
-  }
-
-  renderCachedBalance()
-  renderHTTPBalance()
+  })()
 })
