@@ -14,15 +14,11 @@ export type IBalanceState = IAmountOptions
 export type ISpentState = IAmountOptions
 export type ITransactionsState = IMonzoApiTransaction[]
 export type ISelectedTransactionsState = string
-export type IBankAccess = {
-  monzo?: string
-}
 export type IAccountState = {
   monzo?: IMonzoApiAccount
 }
 
 export interface IState {
-  bankAccess: IBankAccess
   account: IAccountState
   activePane: IActivePaneState
   balance: IBalanceState
