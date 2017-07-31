@@ -6,5 +6,3 @@ devtron.install()
 
 context.use(imageMenu)
 context.activate()
-
-// store.dispatch(setAccount())

@@ -1,7 +1,16 @@
 import { createAction } from 'redux-actions'
 
 import { EActions } from './index'
-import { IMonzoApiTransaction } from '../../lib/monzo'
+import { store } from '../store'
+
+import {
+  Account,
+  Transaction,
+  getMonzo,
+  IMonzoApiAccount,
+  IMonzoApiTransaction
+} from '../../lib/monzo'
+import { updateTransactionCache } from '../scripts/cache'
 
 export interface ISetTransactionsPayload {
   txs: IMonzoApiTransaction[]
@@ -21,6 +30,11 @@ export interface ISelectTransactionPayload {
 
 export interface IHideTransactionPayload {
   txId: string
+}
+
+export interface IHideTransactionPromise {
+  promise: Promise<any>
+  data: IHideTransactionPayload
 }
 
 export interface IUnhideTransactionPayload {
@@ -56,14 +70,33 @@ export const selectTransaction = createAction<
 }))
 
 export const hideTransaction = createAction<
-  ISelectTransactionPayload,
-  string
->(EActions.HIDE_TRANSACTION, txId => ({
-  txId
+  IHideTransactionPromise,
+  Transaction,
+  IMonzoApiAccount
+>(EActions.HIDE_TRANSACTION, (tx, acc) => ({
+  promise: (async () => {
+    const monzo = await getMonzo()
+    const account = new Account(monzo, acc)
+
+    tx.monzo = monzo
+    tx.acc = account
+
+    const txHidden = await tx.annotate('monux_hidden', 'true')
+    store.dispatch(updateTransactions([txHidden.transaction]))
+    store.dispatch({
+      type: 'SAVE_TRANSACTIONS',
+      payload: updateTransactionCache(account, [
+        new Transaction(undefined, undefined, txHidden.transaction)
+      ])
+    })
+
+    return txHidden
+  })(),
+  data: { txId: tx.id }
 }))
 
 export const unhideTransaction = createAction<
-  ISelectTransactionPayload,
+  IUnhideTransactionPayload,
   string
 >(EActions.UNHIDE_TRANSACTION, txId => ({
   txId

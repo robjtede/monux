@@ -1,5 +1,5 @@
 import { Middleware, MiddlewareAPI, Dispatch, Action } from 'redux'
-import * as promiseMiddleware from 'redux-promise'
+import promiseMiddleware from 'redux-promise-middleware'
 
 export const logger: Middleware = <S>(store: MiddlewareAPI<S>) => (
   next: Dispatch<S>
@@ -10,5 +10,5 @@ export const logger: Middleware = <S>(store: MiddlewareAPI<S>) => (
   return result
 }
 
-export const middleware: Middleware[] = [promiseMiddleware]
+export const middleware: Middleware[] = [promiseMiddleware()]
 export default middleware

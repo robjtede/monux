@@ -1,7 +1,11 @@
 'use strict'
 ;(function (ownerDocument) {
   const { default: db } = require('./scripts/cache')
-  const { updateTransactions, selectTransaction } = require('./actions')
+  const {
+    updateTransactions,
+    selectTransaction,
+    hideTransaction
+  } = require('./actions')
   const { store } = require('./store')
 
   class TransactionSummaryComponent extends HTMLElement {
@@ -126,8 +130,6 @@
 
       const $detailPane = document.querySelector('.transaction-detail-pane')
 
-      // TODO: this only fires first time because `monzo` and `acc` are side
-      // effects in `scripts/transactions.ts`
       if (this.tx.acc) {
         this.debug(`updating transaction ${this.tx.id}`)
 
@@ -154,12 +156,8 @@
       $detailPane.classList.remove('inactive')
     }
 
-    async hide () {
-      const tx = await this.tx.annotate('monux_hidden', 'true')
-
-      this.parentNode.removeChild(this)
-
-      return tx
+    hide () {
+      store.dispatch(hideTransaction(this.tx, store.getState().account.monzo))
     }
 
     disconnectedCallback () {

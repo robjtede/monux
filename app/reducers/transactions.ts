@@ -23,6 +23,10 @@ export type IVisibilityTransactionsPayloads =
   | IHideTransactionPayload
   | IUnhideTransactionPayload
 
+export type ITransactionsPayloads =
+  | IModifyTransactionsPayloads
+  | IVisibilityTransactionsPayloads
+
 const initialState: ITransactionsState = []
 
 const modifyReducer: ReducerMap<
@@ -101,10 +105,7 @@ const hideReducer: ReducerMap<
   }
 }
 
-export default handleActions<
-  ITransactionsState,
-  IModifyTransactionsPayloads | IVisibilityTransactionsPayloads
->(
+export default handleActions<ITransactionsState, ITransactionsPayloads>(
   {
     ...modifyReducer,
     ...hideReducer

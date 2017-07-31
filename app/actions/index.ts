@@ -1,18 +1,38 @@
 export enum EActions {
   SET_SPENT = 'SET_SPENT',
   SET_BALANCE = 'SET_BALANCE',
+  GET_BALANCE = 'GET_BALANCE',
+  LOAD_BALANCE = 'LOAD_BALANCE',
+  SAVE_BALANCE = 'SAVE_BALANCE',
   SET_ACCOUNT = 'SET_ACCOUNT',
   SET_PANE = 'SET_PANE',
+  LOAD_TRANSACTIONS = 'LOAD_TRANSACTIONS',
+  SAVE_TRANSACTIONS = 'SAVE_TRANSACTIONS',
   SET_TRANSACTIONS = 'SET_TRANSACTIONS',
   ADD_TRANSACTIONS = 'ADD_TRANSACTIONS',
   UPDATE_TRANSACTIONS = 'UPDATE_TRANSACTIONS',
+  POST_TRANSACTION = 'POST_TRANSACTION',
   SELECT_TRANSACTION = 'SELECT_TRANSACTION',
   HIDE_TRANSACTION = 'HIDE_TRANSACTION',
   UNHIDE_TRANSACTION = 'UNHIDE_TRANSACTION'
 }
 
-import { setBalance, ISetBalancePayload } from './balance'
-export { setBalance, ISetBalancePayload }
+import {
+  setBalance,
+  loadBalance,
+  ISetBalancePayload,
+  ILoadBalancePromise,
+  getBalance,
+  IGetBalancePromise
+} from './balance'
+export {
+  setBalance,
+  loadBalance,
+  ISetBalancePayload,
+  ILoadBalancePromise,
+  getBalance,
+  IGetBalancePromise
+}
 
 import { setSpent, ISetSpentPayload } from './spent'
 export { setSpent, ISetSpentPayload }

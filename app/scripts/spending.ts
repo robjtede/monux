@@ -10,7 +10,7 @@ import {
 import cache, { ICacheTransaction } from './cache'
 import { Amount, Transaction } from '../../lib/monzo'
 
-const debug = Debug('app:renderer:spending')
+const debug = Debug('app:scripts:spending')
 
 export const getCachedTransactions = (() => {
   const cachedTxs = cache.transactions.toArray()

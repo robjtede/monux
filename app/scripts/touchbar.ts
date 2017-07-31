@@ -9,7 +9,7 @@ import store from '../store'
 const { TouchBar } = remote.require('electron')
 const { TouchBarLabel, TouchBarButton, TouchBarSpacer } = TouchBar
 
-const debug = Debug('app:renderer:touchbar')
+const debug = Debug('app:scripts:touchbar')
 
 const tbBalance = new TouchBarLabel({
   label: 'Balance: $--.--'

@@ -5,7 +5,7 @@ import { remote } from 'electron'
 import { deleteSavedCode } from '../../lib/monzo/auth'
 import db from '../scripts/cache'
 
-const debug = Debug('app:renderer:logout')
+const debug = Debug('app:scripts:logout')
 
 document.addEventListener('DOMContentLoaded', () => {
   debug('logging out and clearing cache')
