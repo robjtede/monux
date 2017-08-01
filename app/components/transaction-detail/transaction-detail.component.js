@@ -3,6 +3,8 @@
   const format = require('date-fns/format')
 
   const { Transaction } = require('../lib/monzo')
+
+  const { updateTransactionNotes } = require('./actions')
   const { store } = require('./store')
 
   class TransactionDetailComponent extends HTMLElement {
@@ -190,7 +192,7 @@
       const $notes = $notesWrap.querySelector('textarea.notes')
       const $addNote = $notesWrap.querySelector('a')
 
-      $notes.disabled = this.offline
+      // $notes.disabled = this.offline
 
       const updateNotes = () => {
         if (this.tx.notes.full) {
@@ -226,10 +228,15 @@
       const editHandler = async ev => {
         // console.log('edit handler')
 
-        await this.tx.setNotes($notes.value.trim())
+        store.dispatch(
+          updateTransactionNotes(
+            this.tx,
+            store.getState().account.monzo,
+            $notes.value.trim()
+          )
+        )
 
         updateNotes()
-        this.$summary.render()
       }
 
       $notes.addEventListener('blur', editHandler)

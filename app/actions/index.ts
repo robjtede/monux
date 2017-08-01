@@ -14,7 +14,8 @@ export enum EActions {
   POST_TRANSACTION = 'POST_TRANSACTION',
   SELECT_TRANSACTION = 'SELECT_TRANSACTION',
   HIDE_TRANSACTION = 'HIDE_TRANSACTION',
-  UNHIDE_TRANSACTION = 'UNHIDE_TRANSACTION'
+  UNHIDE_TRANSACTION = 'UNHIDE_TRANSACTION',
+  UPDATE_TRANSACTION_NOTES = 'UPDATE_TRANSACTION_NOTES'
 }
 
 import {
@@ -54,8 +55,14 @@ import {
   ISelectTransactionPayload,
   hideTransaction,
   IHideTransactionPayload,
+  IHideTransactionPromise,
   unhideTransaction,
-  IUnhideTransactionPayload
+  IUnhideTransactionPayload,
+  saveTransactions,
+  ISaveTransactionsPromise,
+  updateTransactionNotes,
+  IUpdateTransactionNotesPayload,
+  IUpdateTransactionNotesPromise
 } from './transaction'
 export {
   setTransactions,
@@ -68,6 +75,12 @@ export {
   ISelectTransactionPayload,
   hideTransaction,
   IHideTransactionPayload,
+  IHideTransactionPromise,
   unhideTransaction,
-  IUnhideTransactionPayload
+  IUnhideTransactionPayload,
+  saveTransactions,
+  ISaveTransactionsPromise,
+  updateTransactionNotes,
+  IUpdateTransactionNotesPayload,
+  IUpdateTransactionNotesPromise
 }
