@@ -2,7 +2,11 @@ import { format } from 'date-fns'
 
 import { Account, Amount, IAmount, Merchant, Monzo } from './'
 
+// TODO: complete schema
 export interface IMonzoApiTransaction {
+  id: string
+  created: string
+  description: string
   [propName: string]: any
 }
 
@@ -162,7 +166,7 @@ export default class Transaction {
 
   get hidden(): boolean {
     if ('monux_hidden' in this.tx.metadata) {
-      return this.tx.metadata.monux_hidden !== 'false'
+      return this.tx.metadata.monux_hidden === 'true'
     } else return false
   }
 
@@ -203,10 +207,6 @@ export default class Transaction {
 
   get inSpending(): boolean {
     return this.tx.include_in_spending || false
-  }
-
-  get json(): string {
-    return JSON.stringify(this.tx)
   }
 
   get location(): string {
@@ -289,5 +289,13 @@ export default class Transaction {
         'h:mma - Do MMMM YYYY'
       )}`
     }
+  }
+
+  get json(): IMonzoApiTransaction {
+    return this.tx
+  }
+
+  get stringify(): string {
+    return JSON.stringify(this.tx)
   }
 }

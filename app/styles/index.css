@@ -1,3 +1,5 @@
+@import './spending.css';
+
 :root {
   --white: rgba(255, 255, 255, 1.0);
   --off-white: rgba(240, 240, 240, 1.0);
@@ -85,27 +87,6 @@ header {
   text-align: right;
 }
 
-.card-balance h2,
-.spent-today h2 {
-  margin: 0;
-
-  font-weight: 300;
-  font-size: 1.5rem;
-}
-
-.card-balance .amount,
-.spent-today .amount {
-  line-height: 1;
-
-  -webkit-app-region: no-drag;
-  -webkit-user-select: initial;
-}
-
-.card-balance h2 .major,
-.spent-today h2 .major {
-  font-size: 2em;
-}
-
 .card-balance::after,
 .spent-today::after {
   content: var(--label-text);
@@ -119,19 +100,6 @@ header {
   text-transform: uppercase;
 
   cursor: default;
-}
-
-.card-balance h2 .amount + .amount,
-.spent-today h2 .amount + .amount {
-  display: block;
-
-  color: var(--light-grey);
-  font-size: 0.8em;
-}
-
-.card-balance h2 .amount + .amount .major,
-.spent-today h2 .amount + .amount .major {
-  font-size: 1em;
 }
 
 nav {
@@ -148,27 +116,6 @@ nav {
   border-bottom: var(--thin-border);
 
   -webkit-user-select: none;
-}
-
-.person {
-  padding: 0.4em 0.8em;
-
-  background: url('./icons/monzo.png') 5px center no-repeat;
-  background-size: contain;
-  border: var(--thin-border);
-  border-radius: 8px;
-
-  color: var(--off-white);
-  font-size: 0.9rem;
-
-  cursor: default;
-}
-
-.person::before {
-  content: '';
-  display: inline-block;
-  width: 40px;
-  height: 0;
 }
 
 .logout {
@@ -239,7 +186,7 @@ main {
   max-height: var(--main-height);
 }
 
-.app-pane {
+.pane {
   display: none;
   flex: 1 0 auto;
   flex-flow: row nowrap;
@@ -248,7 +195,7 @@ main {
   max-width: 100%;
 }
 
-.app-pane.active {
+.pane.active {
   display: flex;
 }
 
@@ -345,5 +292,3 @@ m-transaction-list {
   max-width: 80vw;
   max-height: 80vh;
 }
-
-@import './spending.css';

@@ -10,16 +10,18 @@ import {
 import cache, { ICacheTransaction } from './cache'
 import { Amount, Transaction } from '../../lib/monzo'
 
-const debug = Debug('app:renderer:spending')
+const debug = Debug('app:scripts:spending')
 
 export const getCachedTransactions = (() => {
   const cachedTxs = cache.transactions.toArray()
 
   return async (): Promise<Transaction[]> => {
     try {
-      return (await cachedTxs).map((tx: ICacheTransaction, index: number) => {
-        return new Transaction(undefined, undefined, JSON.parse(tx.json), index)
-      })
+      return (await cachedTxs).map(
+        ({ tx }: ICacheTransaction, index: number) => {
+          return new Transaction(undefined, undefined, tx, index)
+        }
+      )
     } catch (err) {
       console.error(err)
       throw new Error(err)
@@ -55,8 +57,8 @@ const groups = async (months: number) => {
   await getCachedTransactions()
 
   const cachedTxs = await cache.transactions.toArray()
-  const txs = cachedTxs.map((tx: ICacheTransaction, index: number) => {
-    return new Transaction(undefined, undefined, JSON.parse(tx.json), index)
+  const txs = cachedTxs.map(({ tx }: ICacheTransaction, index: number) => {
+    return new Transaction(undefined, undefined, tx, index)
   })
 
   const currentMonth = txs.filter(tx => {
@@ -164,6 +166,8 @@ const drawGroupStats = async groups => {
 }
 
 document.addEventListener('DOMContentLoaded', async () => {
+  debug('compiling spending stats')
+
   const txs = await getCachedTransactions()
 
   const longAgo = differenceInCalendarMonths(

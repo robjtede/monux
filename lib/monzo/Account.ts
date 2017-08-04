@@ -6,6 +6,7 @@ export interface IMonzoApiAccount {
   id: string
   description: string
   created: string
+  type: string
 }
 
 interface IMonzoApiTransactionOptions {
@@ -37,8 +38,8 @@ export default class Account {
     return this.acc.description
   }
 
-  get created(): string {
-    return this.acc.created
+  get created(): Date {
+    return new Date(this.acc.created)
   }
 
   get balance(): Promise<{ balance: Amount; spentToday: Amount }> {
@@ -163,5 +164,9 @@ export default class Account {
     }
 
     return this.monzo.request('/card/toggle', opts, 'PUT')
+  }
+
+  get json() {
+    return this.acc
   }
 }

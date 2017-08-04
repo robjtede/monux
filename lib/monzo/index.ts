@@ -1,8 +1,13 @@
 import Account, { IMonzoApiAccount } from './Account'
-import Amount, { IAmount, ICurrencies, ICurrency } from './Amount'
+import Amount, {
+  IAmount,
+  ICurrencies,
+  ICurrency,
+  IAmountOptions
+} from './Amount'
 import Merchant, { IMonzoApiMerchant } from './Merchant'
 import Transaction, { IMonzoApiTransaction } from './Transaction'
-import Monzo from './Monzo'
+import Monzo, { getMonzo } from './Monzo'
 
 export {
   // class
@@ -18,6 +23,9 @@ export {
   IMonzoApiTransaction,
   // helpers
   IAmount,
+  IAmountOptions,
   ICurrency,
-  ICurrencies
+  ICurrencies,
+  // getters
+  getMonzo
 }

@@ -1,6 +1,12 @@
 'use strict'
 ;(function (ownerDocument) {
   const { default: db } = require('./scripts/cache')
+  const {
+    updateTransactions,
+    selectTransaction,
+    hideTransaction
+  } = require('./actions')
+  const { store } = require('./store')
 
   class TransactionSummaryComponent extends HTMLElement {
     constructor () {
@@ -23,9 +29,18 @@
       this.dataset.category = this.tx.category
       this.dataset.index = this.tx.index
 
-      this.render()
-
       this.addEventListener('click', this.clickHandler.bind(this))
+
+      store.subscribe(() => {
+        const { selectedTransaction } = store.getState()
+
+        if (selectedTransaction === this.tx.id) this.classList.add('selected')
+        else this.classList.remove('selected')
+
+        this.render()
+      })
+
+      this.render()
     }
 
     render () {
@@ -111,8 +126,9 @@
     clickHandler () {
       this.debug(`clicked ${this.index} summary`)
 
+      store.dispatch(selectTransaction(this.tx.id))
+
       const $detailPane = document.querySelector('.transaction-detail-pane')
-      const $txDetail = document.querySelector('m-transaction-detail')
 
       if (this.tx.acc) {
         this.debug(`updating transaction ${this.tx.id}`)
@@ -120,19 +136,13 @@
         this.tx.acc
           .transaction(this.tx.id)
           .then(tx => {
-            this.tx = tx
-            this.render()
-
-            $txDetail.tx = this.tx
-            $txDetail.dataset.category = this.tx.category
-            $txDetail.dataset.index = this.index
-            $txDetail.render()
+            store.dispatch(updateTransactions([tx.json]))
 
             return db.transactions.put({
               id: tx.id,
               created_at: tx.created,
               accId: tx.acc.id,
-              json: tx.json
+              json: tx.stringify
             })
           })
           .then(cache => {
@@ -143,26 +153,11 @@
           })
       }
 
-      $txDetail.$summary = this
-      $txDetail.tx = this.tx
-      $txDetail.dataset.category = this.tx.category
-      $txDetail.dataset.index = this.index
-      $txDetail.render()
-
       $detailPane.classList.remove('inactive')
-
-      const $selectedTx = this.$txlist.selectedTransaction
-
-      if ($selectedTx) $selectedTx.classList.remove('selected')
-      this.classList.add('selected')
     }
 
-    async hide () {
-      const tx = await this.tx.annotate('monux_hidden', 'true')
-
-      this.parentNode.removeChild(this)
-
-      return tx
+    hide () {
+      store.dispatch(hideTransaction(this.tx, store.getState().account.monzo))
     }
 
     disconnectedCallback () {

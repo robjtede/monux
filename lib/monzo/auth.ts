@@ -5,7 +5,7 @@ import * as rp from 'request-promise-native'
 import { IAppInfo } from '../../src/app'
 import { getPassword, setPassword, deletePassword } from '../keychain'
 
-const debug = Debug('monzo:auth')
+const debug = Debug('app:monzo:auth')
 
 const ACCOUNT = 'Monux'
 const SERVICE = 'monux'

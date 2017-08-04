@@ -8,6 +8,9 @@
     format
   } = require('date-fns')
 
+  const { Transaction } = require('../lib/monzo')
+  const { store } = require('./store')
+
   class TransactionListComponent extends HTMLElement {
     constructor () {
       super()
@@ -20,6 +23,7 @@
       const template = ownerDocument.querySelector('template')
       this.root.appendChild(document.importNode(template.content, true))
 
+      this.rawtxs = []
       this.txs = []
     }
 
@@ -38,11 +42,26 @@
       })
       window.addEventListener('keydown', this.keyHandler.bind(this))
 
-      this.render()
+      store.subscribe(() => {
+        const { transactions } = store.getState()
+
+        if (this.rawtxs !== transactions) {
+          this.rawtxs = transactions
+          this.txs = transactions.map((tx, index) => {
+            return new Transaction(undefined, undefined, tx, index)
+          })
+
+          this.render()
+        }
+      })
     }
 
     render () {
       this.debug('rendering list')
+
+      if (this.txs) this.classList.remove('inactive')
+      else this.classList.add('inactive')
+
       Array.from(
         this.root.querySelectorAll('m-transaction-group')
       ).forEach(group => {
@@ -172,48 +191,6 @@
 
     get filterCategory () {
       return this.getAttribute('filter-category')
-    }
-
-    get allTransactions () {
-      return Array.from(this.root.querySelectorAll('m-transaction-group'))
-        .map(group =>
-          Array.from(group.root.querySelectorAll('m-transaction-summary'))
-        )
-        .reduce((groups, group) => [...groups, ...group], [])
-    }
-
-    get selectedTransaction () {
-      const $selectedGroup = Array.from(
-        this.root.querySelectorAll('m-transaction-group')
-      ).find(group =>
-        group.root.querySelector('m-transaction-summary.selected')
-      )
-
-      let $selectedTx
-      if ($selectedGroup) {
-        $selectedTx = $selectedGroup.root.querySelector(
-          'm-transaction-summary.selected'
-        )
-      }
-
-      return $selectedTx
-    }
-
-    getTransactionByIndex (index = 0) {
-      const $selectedGroup = Array.from(
-        this.root.querySelectorAll('m-transaction-group')
-      ).find(group =>
-        group.root.querySelector(`m-transaction-summary[data-index="${index}"]`)
-      )
-
-      let $tx
-      if ($selectedGroup) {
-        $tx = $selectedGroup.root.querySelector(
-          `m-transaction-summary[data-index="${index}"]`
-        )
-      }
-
-      return $tx
     }
 
     keyHandler (ev) {
