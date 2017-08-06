@@ -4,7 +4,6 @@ import { parse as parseUrl } from 'url'
 import * as Debug from 'debug'
 
 import { app } from 'electron'
-import { enableLiveReload } from 'electron-compile'
 import installExtension, { REDUX_DEVTOOLS } from 'electron-devtools-installer'
 
 import {
@@ -13,13 +12,11 @@ import {
   verifyAccess,
   getSavedCode,
   saveCode
-} from '../lib/monzo/auth'
+} from './lib/monzo/auth'
 import WindowManager from './window-manager'
 
 const debug = Debug('app:app')
 const mainWindow = new WindowManager()
-
-enableLiveReload()
 
 if (!app.isDefaultProtocolClient(app.getName().toLowerCase())) {
   app.setAsDefaultProtocolClient(app.getName().toLowerCase())

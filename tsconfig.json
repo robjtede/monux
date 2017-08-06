@@ -6,7 +6,7 @@
     "experimentalDecorators": true,
     "forceConsistentCasingInFileNames": true,
     "importHelpers": true,
-    "inlineSourceMap": true,
+    "inlineSources": true,
     "lib": ["esnext", "dom"],
     "module": "commonjs",
     "moduleResolution": "node",
@@ -18,9 +18,9 @@
     "noUnusedParameters": true,
     "preserveConstEnums": true,
     "removeComments": false,
-    "sourceMap": true,
     "strict": true,
-    "target": "es2016"
+    "target": "es2015",
+    "skipLibCheck": true
   },
   "exclude": ["node_modules"]
 }

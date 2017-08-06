@@ -72,7 +72,7 @@ export default class WindowManager {
   goToMonux(): void {
     debug('go to monux')
     this.location = format({
-      pathname: resolve(__dirname, '..', 'app', 'index.html'),
+      pathname: resolve(__dirname, 'app', 'index.html'),
       protocol: 'file:',
       slashes: true
     })
@@ -94,7 +94,7 @@ export default class WindowManager {
   goToClientInfo(): void {
     debug('go to client info')
     this.location = format({
-      pathname: resolve(__dirname, '..', 'app', 'get-client-info.html'),
+      pathname: resolve(__dirname, 'app', 'get-client-info.html'),
       protocol: 'file:',
       slashes: true
     })

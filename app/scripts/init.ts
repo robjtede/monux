@@ -1,8 +1,0 @@
-import './index'
-import './balances'
-import './transactions'
-import './lightbox'
-import './touchbar'
-import './logout'
-import './tabs'
-import './spending'
