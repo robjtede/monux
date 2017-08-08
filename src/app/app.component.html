@@ -7,3 +7,15 @@
     <m-amount [amount]="spent"></m-amount>
   </div>
 </header>
+
+<nav class="tabs">
+  <m-account [account]="accountName"></m-account>
+  <div class="logout">Log Out</div>
+
+  <div class="tabgroup">
+    <div data-pane="transaction" class="tab">Transactions</div>
+    <div data-pane="spending" class="tab">Spending</div>
+    <div data-pane="map" class="tab">Map</div>
+    <div data-pane="export" class="tab">Export</div>
+  </div>
+</nav>

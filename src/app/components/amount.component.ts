@@ -1,18 +1,10 @@
-import {
-  Component,
-  Input,
-  ViewEncapsulation,
-  ChangeDetectionStrategy
-} from '@angular/core'
+import { Component, Input, ChangeDetectionStrategy } from '@angular/core'
 import Amount from '../../lib/monzo/Amount'
-
-import { DomSanitizer } from '@angular/platform-browser'
 
 @Component({
   selector: 'm-amount',
   templateUrl: './amount.component.html',
   styleUrls: ['./amount.component.css'],
-  encapsulation: ViewEncapsulation.Native,
   changeDetection: ChangeDetectionStrategy.Default
 })
 export class AmountComponent {

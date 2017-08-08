@@ -22,8 +22,5 @@
     "skipLibCheck": true,
     "outDir": "./dist"
   },
-  "files": [
-    "./src/app.ts"
-  ],
   "exclude": ["node_modules"]
 }

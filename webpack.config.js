@@ -2,7 +2,10 @@ const webpack = require('webpack')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const ExtractTextPlugin = require('extract-text-webpack-plugin')
 
-const { BaseHrefWebpackPlugin } = require('@angular/cli/plugins/webpack')
+const {
+  BaseHrefWebpackPlugin,
+  GlobCopyWebpackPlugin
+} = require('@angular/cli/plugins/webpack')
 
 const { root } = require('./tools/webpack-helpers')
 
@@ -28,6 +31,11 @@ module.exports = {
   },
 
   devtool: 'inline-source-map',
+
+  watchOptions: {
+    aggregateTimeout: 1000,
+    ignored: ['node_modules', 'dist']
+  },
 
   module: {
     rules: [
@@ -66,11 +74,26 @@ module.exports = {
   },
 
   plugins: [
+    new ProgressPlugin(),
+
+    new GlobCopyWebpackPlugin({
+      patterns: ['assets', 'icons', 'monux.*'],
+      globOptions: {
+        cwd: root('./src'),
+        dot: true,
+        ignore: '**/.gitkeep'
+      }
+    }),
+
     new ContextReplacementPlugin(
       /angular(\\|\/)core(\\|\/)@angular/,
       './src/app',
       {}
     ),
+
+    new HtmlWebpackPlugin({
+      template: './src/app/index.html'
+    }),
 
     new BaseHrefWebpackPlugin({}),
 
@@ -78,12 +101,6 @@ module.exports = {
       name: ['app', 'polyfills']
     }),
 
-    new HtmlWebpackPlugin({
-      template: './src/app/index.html'
-    }),
-
-    new ExtractTextPlugin('[name].css'),
-
-    new ProgressPlugin()
+    new ExtractTextPlugin('[name].css')
   ]
 }

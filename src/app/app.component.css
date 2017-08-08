@@ -58,3 +58,75 @@ header {
 
   cursor: default;
 }
+
+nav {
+  grid-area: nav;
+
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: space-between;
+  align-items: center;
+
+  padding: 10px 15px 20px;
+
+  background: var(--monzo-blue);
+  border-bottom: var(--thin-border);
+
+  -webkit-user-select: none;
+}
+
+.logout {
+  padding: 0.4em 0.8em;
+  margin-right: auto;
+  margin-left: 1ch;
+
+  border: var(--thin-border);
+  border-radius: 8px;
+
+  color: var(--off-white);
+  font-size: 0.9rem;
+
+  cursor: pointer;
+}
+
+.logout:hover {
+  background-color: var(--off-white);
+
+  color: var(--monzo-blue);
+}
+
+.tabgroup {
+  overflow: hidden;
+
+  border: var(--thin-border);
+  border-radius: 5px;
+
+  font-size: 0;
+}
+
+.tab {
+  display: inline-block;
+  padding: 0.4em 0.8em;
+
+  border-color: currentColor;
+
+  color: var(--off-white);
+  font-size: 0.9rem;
+
+  cursor: default;
+}
+
+.tab:not(:last-child) {
+  border-right: var(--thin-border);
+  border-color: currentColor;
+}
+
+.tab.active {
+  color: var(--monzo-blue);
+  background: var(--off-white);
+  border-color: var(--off-white);
+}
+
+.tab:not(.active) {
+  cursor: pointer;
+}
