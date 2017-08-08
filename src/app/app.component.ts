@@ -14,7 +14,7 @@ import '../index.css'
   selector: 'monux-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css'],
-  encapsulation: ViewEncapsulation.Emulated,
+  encapsulation: ViewEncapsulation.Native,
   changeDetection: ChangeDetectionStrategy.Default
 })
 export class AppComponent implements OnInit, OnDestroy {
