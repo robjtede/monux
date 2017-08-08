@@ -1,9 +1,9 @@
 <header class="balances">
   <div class="card-balance">
-    {{ balance }}
+    <m-amount [amount]="balance"></m-amount>
   </div>
 
   <div class="spent-today">
-    {{ spent }}
+    <m-amount [amount]="spent"></m-amount>
   </div>
 </header>

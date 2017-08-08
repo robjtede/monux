@@ -2,9 +2,11 @@ const webpack = require('webpack')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const ExtractTextPlugin = require('extract-text-webpack-plugin')
 
+const { BaseHrefWebpackPlugin } = require('@angular/cli/plugins/webpack')
+
 const { root } = require('./tools/webpack-helpers')
 
-const { ContextReplacementPlugin, optimize } = webpack
+const { ContextReplacementPlugin, ProgressPlugin, optimize } = webpack
 const { CommonsChunkPlugin } = optimize
 
 module.exports = {
@@ -70,6 +72,8 @@ module.exports = {
       {}
     ),
 
+    new BaseHrefWebpackPlugin({}),
+
     new CommonsChunkPlugin({
       name: ['app', 'polyfills']
     }),
@@ -78,6 +82,8 @@ module.exports = {
       template: './src/app/index.html'
     }),
 
-    new ExtractTextPlugin('[name].css')
+    new ExtractTextPlugin('[name].css'),
+
+    new ProgressPlugin()
   ]
 }

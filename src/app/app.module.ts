@@ -3,9 +3,10 @@ import { BrowserModule } from '@angular/platform-browser'
 import { NgReduxModule } from '@angular-redux/store'
 
 import { AppComponent } from './app.component'
+import { AmountComponent } from './components/amount.component'
 
 @NgModule({
-  declarations: [AppComponent],
+  declarations: [AppComponent, AmountComponent],
   imports: [BrowserModule, NgReduxModule],
   providers: [],
   bootstrap: [AppComponent]

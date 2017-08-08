@@ -5,10 +5,8 @@ import {
   ViewEncapsulation,
   ChangeDetectionStrategy
 } from '@angular/core'
-// import { NgRedux } from '@angular-redux/store'
-import { Subscription } from 'rxjs'
 
-import { IAmountOptions } from '../lib/monzo'
+import Amount from '../lib/monzo/Amount'
 
 import '../index.css'
 
@@ -22,26 +20,21 @@ import '../index.css'
 export class AppComponent implements OnInit, OnDestroy {
   public readonly name = 'Monux'
 
-  balance: IAmountOptions
-  spent = '£2.97'
-  subscription: Subscription
+  balance: Amount = new Amount({
+    amount: 1.23,
+    currency: 'GBP'
+  })
 
-  // constructor(private ngRedux: NgRedux<IState>) {
-  //   this.subscription = this.ngRedux
-  //     .select<IBalanceState>('balance')
-  //     .subscribe(newBalance => {
-  //       console.log(newBalance)
-  //       this.balance = newBalance
-  //     })
-  // }
+  spent: Amount = new Amount({
+    amount: 1.23,
+    currency: 'GBP'
+  })
 
   ngOnInit(): void {
     console.log('monux started')
   }
 
   ngOnDestroy(): void {
-    this.subscription.unsubscribe()
-
     console.log('monux stopped')
   }
 }

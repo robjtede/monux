@@ -6,7 +6,6 @@
     "experimentalDecorators": true,
     "forceConsistentCasingInFileNames": true,
     "importHelpers": true,
-    "inlineSources": true,
     "lib": ["esnext", "dom"],
     "module": "commonjs",
     "moduleResolution": "node",
@@ -20,7 +19,11 @@
     "removeComments": false,
     "strict": true,
     "target": "es2015",
-    "skipLibCheck": true
+    "skipLibCheck": true,
+    "outDir": "./dist"
   },
+  "files": [
+    "./src/app.ts"
+  ],
   "exclude": ["node_modules"]
 }
