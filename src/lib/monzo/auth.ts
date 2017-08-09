@@ -4,6 +4,7 @@ import * as rp from 'request-promise-native'
 
 import { IAppInfo } from '../../app'
 import { getPassword, setPassword, deletePassword } from '../keychain'
+import MonzoApi from './api'
 
 const debug = Debug('app:monzo:auth')
 
@@ -51,6 +52,14 @@ export const deleteSavedCode = async (
     service: `${MONZO_SERVICE}.${code}`
   })
 }
+
+export const getSavedMonzo = (() => {
+  const accessToken = getSavedCode('access_token')
+
+  return async (): Promise<MonzoApi> => {
+    return new MonzoApi(await accessToken)
+  }
+})()
 
 export const getAccessToken = async (
   appInfo: IAppInfo,

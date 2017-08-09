@@ -1,33 +1,20 @@
-export interface ICurrency {
-  symbol: string
-  separator: string
+export enum Currencies {
+  EUR = 'EUR',
+  GBP = 'GBP',
+  USD = 'USD'
 }
 
-export interface ICurrencies {
-  [currencyName: string]: ICurrency
-}
-
-export interface IAmount {
-  amount: number
-  currency: string
-}
-
-export interface IAmountOptions {
-  native: IAmount
-  local?: IAmount
-}
-
-const currencies: ICurrencies = {
-  EUR: { symbol: '€', separator: '.' },
-  GBP: { symbol: '£', separator: '.' },
-  USD: { symbol: '$', separator: '.' }
+const currencies = {
+  [Currencies.EUR]: { symbol: '€', separator: '.' },
+  [Currencies.GBP]: { symbol: '£', separator: '.' },
+  [Currencies.USD]: { symbol: '$', separator: '.' }
 }
 
 export default class Amount {
-  private readonly native: IAmount
-  private readonly local?: IAmount
+  private readonly native: SimpleAmount
+  private readonly local?: SimpleAmount
 
-  constructor(native: IAmount, local?: IAmount) {
+  constructor({ native, local }: AmountOpts) {
     this.native = native
     this.local = local
   }
@@ -37,8 +24,9 @@ export default class Amount {
     return !!this.local
   }
 
+  // returns local currency as native currency
   get exchanged(): Amount | undefined {
-    if (this.local) return new Amount(this.local)
+    if (this.local) return new Amount({ native: this.local })
     else return
   }
 
@@ -111,23 +99,13 @@ export default class Amount {
     return 100
   }
 
+  // returns raw amount from api
   get raw(): number {
     return this.native.amount
   }
 
-  get json(): IAmountOptions {
-    return {
-      native: this.native,
-      local: this.local
-    }
-  }
-
-  get stringify(): string {
-    return JSON.stringify(this.json)
-  }
-
   // returns html formatted string
-  public html(showCurrency = true, signMode = 1): string {
+  html(showCurrency = true, signMode = 1): string {
     let str = '<span class="major">%j</span>'
     str += '<span class="separator">%p</span>'
     str += '<span class="minor">%n</span>'
@@ -168,7 +146,7 @@ export default class Amount {
   // %j -> major
   // %n -> minor
   // %p -> separator
-  public format(formatString: string = '%s%y%j%p%n'): string {
+  format(formatString: string = '%s%y%j%p%n'): string {
     let str = formatString
 
     str = str.replace(/%s/g, this.sign)
@@ -189,11 +167,37 @@ export default class Amount {
     return str
   }
 
-  public toString(): string {
+  get json(): AmountOpts {
+    return {
+      native: this.native,
+      local: this.local
+    }
+  }
+
+  get stringify(): string {
+    return JSON.stringify(this.json)
+  }
+
+  toString(): string {
     return this.format()
   }
 
-  public valueOf(): number {
+  valueOf(): number {
     return this.native.amount
   }
+}
+
+export interface CurrencyMetadata {
+  symbol: string
+  separator: string
+}
+
+export interface SimpleAmount {
+  amount: number
+  currency: string
+}
+
+export interface AmountOpts {
+  native: SimpleAmount
+  local?: SimpleAmount
 }

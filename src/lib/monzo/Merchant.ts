@@ -1,67 +1,109 @@
-export interface IMonzoApiMerchant {
-  id: string
-  group_id: string
-  [propName: string]: any
-}
+import { JSONMap } from '../json-types'
 
 export default class Merchant {
-  private merchant: IMonzoApiMerchant
-
-  constructor(merchant: IMonzoApiMerchant) {
-    this.merchant = merchant
-  }
+  constructor(private readonly merchant: MonzoMerchantResponse) {}
 
   get id(): string {
-    if (this.merchant && 'id' in this.merchant) {
-      return this.merchant.id
-    } else {
-      return ''
-    }
+    return this.merchant.id
   }
 
   get groupId(): string {
-    if (this.merchant && 'group_id' in this.merchant) {
-      return this.merchant.group_id
-    } else {
-      return ''
-    }
+    return this.merchant.group_id
   }
 
   get emoji(): string {
-    if (this.merchant && 'emoji' in this.merchant) {
-      return this.merchant.emoji
-    } else {
-      return ''
-    }
+    return this.merchant.emoji
   }
 
   get name(): string {
-    if (this.merchant && 'name' in this.merchant) {
-      return this.merchant.name
-    } else {
-      return ''
-    }
+    return this.merchant.name
   }
 
   get logo(): string {
-    if (this.merchant && 'logo' in this.merchant) {
-      return this.merchant.logo
-    } else {
-      return ''
-    }
+    return this.merchant.logo
   }
 
-  public equals(merchant: IMonzoApiMerchant) {
-    if (!this.id) return false
+  get created(): string {
+    return this.merchant.created
+  }
+
+  get address(): MonzoAddressResponse {
+    return this.merchant.address
+  }
+
+  get category(): string {
+    return this.merchant.category
+  }
+
+  get metadata(): MonzoMerchantMetadataResponse {
+    return this.merchant.metadata
+  }
+
+  equals(merchant: Merchant) {
     return this.id === merchant.id
   }
 
-  public groupEquals(merchant: IMonzoApiMerchant) {
-    if (!this.groupId) return false
-    return this.groupId === merchant.group_id
+  groupEquals(merchant: Merchant) {
+    return this.groupId === merchant.groupId
   }
 
-  public toString() {
+  get json(): MonzoMerchantResponse {
+    return this.merchant
+  }
+
+  get stringify(): string {
+    return JSON.stringify(this.json)
+  }
+
+  toString() {
     return this.name
   }
+}
+
+export interface MonzoMerchantResponse extends JSONMap {
+  address: MonzoAddressResponse
+  atm: boolean
+  // TODO: category enum
+  category: string
+  created: string
+  disable_feedback: boolean
+  emoji: string
+  group_id: string
+  id: string
+  logo: string
+  metadata: MonzoMerchantMetadataResponse
+  name: string
+  online: boolean
+}
+
+export interface MonzoAddressResponse extends JSONMap {
+  address: string
+  approximate: boolean
+  city: string
+  country: string
+  formatted: string
+  latitude: number
+  longitude: number
+  postcode: string
+  region: string
+  short_formatted: string
+  zoom_level: number
+}
+
+export interface MonzoMerchantMetadataResponse extends JSONMap {
+  created_for_merchant: string
+  created_for_transaction: string
+  foursquare_category: string
+  foursquare_category_icon: string
+  foursquare_id: string
+  foursquare_website: string
+  google_places_icon: string
+  google_places_id: string
+  google_places_name: string
+  provider: string
+  provider_id: string
+  suggested_name: string
+  suggested_tags: string
+  twitter_id: string
+  website: string
 }

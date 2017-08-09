@@ -1,126 +1,43 @@
 import { format } from 'date-fns'
 
-import { Account, Amount, IAmount, Merchant, Monzo } from './'
-
-// TODO: complete schema
-export interface IMonzoApiTransaction {
-  id: string
-  created: string
-  description: string
-  [propName: string]: any
-}
+import Amount, { SimpleAmount } from './Amount'
+import Merchant, { MonzoMerchantResponse } from './Merchant'
+import { JSONMap } from '../json-types'
+import { MonzoRequest } from './api'
 
 export default class Transaction {
-  public index: number
-
-  private monzo: Monzo | undefined
-  private acc: Account | undefined
-  private tx: IMonzoApiTransaction
-
-  constructor(
-    monzo: Monzo | undefined,
-    acc: Account | undefined,
-    tx: IMonzoApiTransaction,
-    index = -1
-  ) {
-    this.monzo = monzo
-    this.acc = acc
-    this.tx = tx
-    this.index = index
-  }
+  constructor(private readonly tx: MonzoTransactionResponse) {}
 
   get amount(): Amount {
-    const native: IAmount = {
+    const native: SimpleAmount = {
       amount: this.tx.amount,
       currency: this.tx.currency
     }
 
     // if foreign currency
-    if (this.tx.local_currency !== this.tx.currency) {
-      const local: IAmount = {
+    if (this.tx.currency !== this.tx.local_currency) {
+      const local: SimpleAmount = {
         amount: this.tx.local_amount,
         currency: this.tx.local_currency
       }
 
-      return new Amount(native, local)
+      return new Amount({ native, local })
     } else {
-      return new Amount(native)
+      return new Amount({ native })
     }
   }
 
-  public async annotate(key: string, val: string) {
-    if (!this.monzo) throw new Error('Monzo account is undefined')
-
-    const metaKey = `metadata[${key}]`
-
-    try {
-      return await this.monzo.request(
-        `/transactions/${this.id}`,
-        {
-          [metaKey]: val
-        },
-        'PATCH'
-      )
-    } catch (err) {
-      console.error(err)
-    }
-  }
-
-  get attachments() {
-    // TODO: this alaways returns an array
-    if (this.tx && 'attachments' in this.tx) {
-      return this.tx.attachments
-    } else {
-      return ''
-    }
-  }
-
-  public async requestAttachmentUpload(contentType = 'image/jpeg') {
-    if (!this.monzo) throw new Error('Monzo account is undefined')
-
-    return await this.monzo.request(
-      '/attachment/upload',
-      {
-        file_name: 'monux-attachment.jpg',
-        file_type: contentType
-      },
-      'POST'
-    )
-  }
-
-  public async registerAttachment(fileUrl: string, contentType = 'image/jpeg') {
-    if (!this.monzo) throw new Error('Monzo account is undefined')
-
-    return await this.monzo.request(
-      '/attachment/register',
-      {
-        external_id: this.tx.id,
-        file_url: fileUrl,
-        file_type: contentType
-      },
-      'POST'
-    )
-  }
-
-  public async deregisterAttachment(attachmentId: string) {
-    if (!this.monzo) throw new Error('Monzo account is undefined')
-
-    return await this.monzo.request(
-      '/attachment/deregister',
-      {
-        id: attachmentId
-      },
-      'POST'
-    )
+  get attachments(): MonzoAttachmentResponse[] {
+    return this.tx.attachments
   }
 
   get balance(): Amount {
-    const native: IAmount = {
+    const native: SimpleAmount = {
       amount: this.tx.account_balance,
       currency: this.tx.currency
     }
 
-    return new Amount(native)
+    return new Amount({ native })
   }
 
   get category() {
@@ -160,14 +77,15 @@ export default class Transaction {
   }
 
   get displayName(): string {
-    if (this.merchant.name) return this.merchant.name
-    else return this.description
+    return typeof this.merchant !== 'string' && this.merchant.name
+      ? this.merchant.name
+      : this.description
   }
 
   get hidden(): boolean {
-    if ('monux_hidden' in this.tx.metadata) {
-      return this.tx.metadata.monux_hidden === 'true'
-    } else return false
+    return 'monux_hidden' in this.tx.metadata
+      ? this.tx.metadata.monux_hidden === 'true'
+      : false
   }
 
   get icon(): string {
@@ -179,7 +97,9 @@ export default class Transaction {
       return './icons/peer.png'
     }
 
-    if (this.merchant.logo) return this.merchant.logo
+    if (typeof this.merchant !== 'string' && this.merchant.logo) {
+      return this.merchant.logo
+    }
 
     return this.iconFallback
   }
@@ -211,15 +131,15 @@ export default class Transaction {
 
   get location(): string {
     if (
-      this.tx &&
       'merchant' in this.tx &&
+      typeof this.tx.merchant !== 'string' &&
       this.tx.merchant &&
       'online' in this.tx.merchant
     ) {
       return 'Online'
     } else if (
-      this.tx &&
       'merchant' in this.tx &&
+      typeof this.tx.merchant !== 'string' &&
       this.tx.merchant &&
       'address' in this.tx.merchant &&
       this.tx.merchant.address &&
@@ -231,8 +151,10 @@ export default class Transaction {
     }
   }
 
-  get merchant(): Merchant {
-    return new Merchant(this.tx.merchant)
+  get merchant(): Merchant | string {
+    return typeof this.tx.merchant !== 'string'
+      ? new Merchant(this.tx.merchant)
+      : this.tx.merchant
   }
 
   get notes() {
@@ -243,17 +165,10 @@ export default class Transaction {
     }
   }
 
-  public async setNotes(val: string): Promise<string> {
-    const res = await this.annotate('notes', val)
-
-    this.tx.notes = res.transaction.notes
-    return this.tx.notes
-  }
-
   get online(): boolean {
     return (
-      this.tx &&
       'merchant' in this.tx &&
+      typeof this.tx.merchant !== 'string' &&
       this.tx.merchant &&
       'online' in this.tx.merchant &&
       this.tx.merchant.online
@@ -291,11 +206,112 @@ export default class Transaction {
     }
   }
 
-  get json(): IMonzoApiTransaction {
+  annotateRequest(key: string, val: string | number): MonzoRequest {
+    const metaKey = `metadata[${key}]`
+
+    return {
+      path: `/transactions/${this.id}`,
+      qs: {
+        [metaKey]: val
+      },
+      method: 'PATCH'
+    }
+  }
+
+  setNotesRequest(val: string): MonzoRequest {
+    return this.annotateRequest('notes', val)
+  }
+
+  attachmentUploadRequest(contentType = 'image/jpeg'): MonzoRequest {
+    return {
+      path: '/attachment/upload',
+      qs: {
+        file_name: 'monux-attachment.jpg',
+        file_type: contentType
+      },
+      method: 'POST'
+    }
+  }
+
+  attachmentRegisterRequest(
+    fileUrl: string,
+    contentType = 'image/jpeg'
+  ): MonzoRequest {
+    return {
+      path: '/attachment/register',
+      qs: {
+        external_id: this.tx.id,
+        file_url: fileUrl,
+        file_type: contentType
+      },
+      method: 'POST'
+    }
+  }
+
+  deregisterAttachmentRequest(attachmentId: string): MonzoRequest {
+    return {
+      path: '/attachment/deregister',
+      qs: {
+        id: attachmentId
+      },
+      method: 'POST'
+    }
+  }
+
+  get json(): MonzoTransactionResponse {
     return this.tx
   }
 
   get stringify(): string {
-    return JSON.stringify(this.tx)
+    return JSON.stringify(this.json)
   }
+}
+
+export interface MonzoTransactionResponse extends JSONMap {
+  account_balance: number
+  account_id: string
+  amount: number
+  attachments: MonzoAttachmentResponse[]
+  // TODO: category enum
+  category: string
+  counterparty: MonzoCounterpartyResponse
+  created: string
+  // TODO: full currency code list
+  currency: string
+  decline_reason: string
+  dedupe_id: string
+  description: string
+  id: string
+  include_in_spending: boolean
+  is_load: boolean
+  local_amount: number
+  // TODO: full currency code list
+  local_currency: string
+  merchant: string | MonzoMerchantResponse
+  metadata: JSONMap
+  notes: string
+  originator: false
+  scheme: string
+  settled: string
+  updated: string
+}
+
+export interface MonzoAttachmentResponse extends JSONMap {
+  created: string
+  external_id: string
+  // TODO: full mime-type list
+  file_type: string
+  file_url: string
+  id: string
+  // TODO: full mime-type list
+  type: string
+  url: string
+  user_id: string
+}
+
+export interface MonzoCounterpartyResponse extends JSONMap {
+  name: string
+  number: string
+  prefered_name: string
+  user_id: string
 }

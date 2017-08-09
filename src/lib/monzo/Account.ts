@@ -1,30 +1,9 @@
 import { format } from 'date-fns'
 
-import { Amount, IAmount, IMonzoApiTransaction, Monzo, Transaction } from './'
-
-export interface IMonzoApiAccount {
-  id: string
-  description: string
-  created: string
-  type: string
-}
-
-interface IMonzoApiTransactionOptions {
-  account_id: string
-  'expand[]'?: string
-  since?: string
-  before?: string
-  limit?: number
-}
+import { QueryString, MonzoRequest } from './api'
 
 export default class Account {
-  private monzo: Monzo
-  private acc: IMonzoApiAccount
-
-  constructor(monzo: Monzo, acc: IMonzoApiAccount) {
-    this.monzo = monzo
-    this.acc = acc
-  }
+  constructor(private readonly acc: MonzoAccountResponse) {}
 
   get id(): string {
     return this.acc.id
@@ -42,64 +21,80 @@ export default class Account {
     return new Date(this.acc.created)
   }
 
-  get balance(): Promise<{ balance: Amount; spentToday: Amount }> {
-    return this.monzo
-      .request('/balance', {
+  get balanceRequest(): MonzoRequest {
+    return {
+      path: '/balance',
+      qs: {
         account_id: this.id
-      })
-      .then(bal => {
-        const nativeBalance: IAmount = {
-          amount: bal.balance,
-          currency: bal.currency
-        }
+      }
+    }
 
-        const nativeSpend: IAmount = {
-          amount: bal.spend_today,
-          currency: bal.currency
-        }
-
-        if (bal.local_currency) {
-          const localBalance: IAmount = {
-            amount: bal.balance * bal.local_exchange_rate,
-            currency: bal.local_currency
-          }
-
-          const localSpend: IAmount = {
-            amount:
-              bal.local_spend.length > 0
-                ? bal.local_spend[0].spend_today * bal.local_exchange_rate
-                : 0,
-            currency: bal.local_currency
-          }
-
-          return {
-            balance: new Amount(nativeBalance, localBalance),
-            spentToday: new Amount(nativeSpend, localSpend)
-          }
-        } else {
-          return {
-            balance: new Amount(nativeBalance),
-            spentToday: new Amount(nativeSpend)
-          }
-        }
-      })
+    // TODO: move to service
+    // return this.monzo
+    //   .request('/balance', {
+    //     account_id: this.id
+    //   })
+    //   .then(bal => {
+    //     const nativeBalance: IAmount = {
+    //       amount: bal.balance,
+    //       currency: bal.currency
+    //     }
+    //
+    //     const nativeSpend: IAmount = {
+    //       amount: bal.spend_today,
+    //       currency: bal.currency
+    //     }
+    //
+    //     if (bal.local_currency) {
+    //       const localBalance: IAmount = {
+    //         amount: bal.balance * bal.local_exchange_rate,
+    //         currency: bal.local_currency
+    //       }
+    //
+    //       const localSpend: IAmount = {
+    //         amount:
+    //           bal.local_spend.length > 0
+    //             ? bal.local_spend[0].spend_today * bal.local_exchange_rate
+    //             : 0,
+    //         currency: bal.local_currency
+    //       }
+    //
+    //       return {
+    //         balance: new Amount(nativeBalance, localBalance),
+    //         spentToday: new Amount(nativeSpend, localSpend)
+    //       }
+    //     } else {
+    //       return {
+    //         balance: new Amount(nativeBalance),
+    //         spentToday: new Amount(nativeSpend)
+    //       }
+    //     }
+    //   })
   }
 
-  async transaction(txId: string) {
-    const res = await this.monzo.request(`/transactions/${txId}`, {
-      'expand[]': 'merchant'
-    })
+  transactionRequest(txId: string): MonzoRequest {
+    return {
+      path: `/transactions/${txId}`,
+      qs: {
+        'expand[]': 'merchant'
+      }
+    }
 
-    return new Transaction(this.monzo, this, res.transaction, undefined)
+    // TODO: move to service
+    // const res = await this.monzo.request(`/transactions/${txId}`, {
+    //   'expand[]': 'merchant'
+    // })
+    //
+    // return new Transaction(this.monzo, this, res.transaction, undefined)
   }
 
-  async transactions(
+  transactionsRequest(
     options: { since?: Date | string; before?: Date; limit?: number } = {}
-  ): Promise<Transaction[]> {
-    const opts = {
+  ): MonzoRequest {
+    const opts: MonzoTransactionQuery = {
       account_id: this.id,
       'expand[]': 'merchant'
-    } as IMonzoApiTransactionOptions
+    }
 
     if (options.since) {
       if (options.since instanceof Date) {
@@ -117,56 +112,104 @@ export default class Account {
       opts.limit = options.limit
     }
 
-    const txs = await this.monzo.request('/transactions', opts)
+    return {
+      path: '/transactions',
+      qs: opts
+    }
 
-    return txs.transactions.map((tx: IMonzoApiTransaction, index: number) => {
-      return new Transaction(this.monzo, this, tx, index)
-    })
+    // TODO: move to service
+    // const txs = await this.monzo.request('/transactions', opts)
+    //
+    // return txs.transactions.map((tx: IMonzoApiTransaction, index: number) => {
+    //   return new Transaction(this.monzo, this, tx, index)
+    // })
   }
 
-  get targets(): Promise<{}> {
+  targetsRequest(): MonzoRequest {
+    const opts: QueryString = {
+      account_id: this.id
+    }
+
+    return {
+      path: '/targets',
+      qs: opts
+    }
+  }
+
+  limitsRequest(): MonzoRequest {
     const opts = {
       account_id: this.id
     }
 
-    return this.monzo.request('/targets', opts)
+    return {
+      path: '/balance/limits',
+      qs: opts
+    }
   }
 
-  get limits(): Promise<{}> {
+  cardsRequest(): MonzoRequest {
     const opts = {
       account_id: this.id
     }
 
-    return this.monzo.request('/balance/limits', opts)
-  }
-
-  get cards(): Promise<{}> {
-    const opts = {
-      account_id: this.id
+    return {
+      path: '/card/list',
+      qs: opts
     }
-
-    return this.monzo.request('/card/list', opts)
   }
 
-  async freezeCard(cardId: string): Promise<{}> {
+  freezeCardRequest(cardId: string): MonzoRequest {
     const opts = {
       card_id: cardId,
       status: 'INACTIVE'
     }
 
-    return this.monzo.request('/card/toggle', opts, 'PUT')
+    return {
+      path: '/card/toggle',
+      qs: opts,
+      method: 'PUT'
+    }
   }
 
-  async defrostCard(cardId: string): Promise<{}> {
+  defrostCardRequest(cardId: string): MonzoRequest {
     const opts = {
       card_id: cardId,
       status: 'ACTIVE'
     }
 
-    return this.monzo.request('/card/toggle', opts, 'PUT')
+    return {
+      path: '/card/toggle',
+      qs: opts,
+      method: 'PUT'
+    }
   }
 
-  get json() {
+  get json(): MonzoAccountResponse {
     return this.acc
   }
+
+  get stringify(): string {
+    return JSON.stringify(this.json)
+  }
+
+  static accountsRequest(): MonzoRequest {
+    return {
+      path: '/accounts'
+    }
+  }
+}
+
+export interface MonzoAccountResponse {
+  id: string
+  description: string
+  created: string
+  type: string
+}
+
+interface MonzoTransactionQuery extends QueryString {
+  account_id: string
+  'expand[]'?: string
+  since?: string
+  before?: string
+  limit?: number
 }
