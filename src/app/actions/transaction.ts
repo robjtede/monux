@@ -1,53 +1,11 @@
 import { createAction } from 'redux-actions'
 
 import { EActions } from './index'
-import { store } from '../store'
+// import { store } from '../store'
 
 import { MonzoTransactionResponse } from '../../lib/monzo/Transaction'
 
 // import { updateTransactionCache } from '../scripts/cache'
-
-export interface ISetTransactionsPayload {
-  txs: MonzoTransactionResponse[]
-}
-
-export interface IAddTransactionsPayload {
-  txs: MonzoTransactionResponse[]
-}
-
-export interface IUpdateTransactionsPayload {
-  txs: MonzoTransactionResponse[]
-}
-
-export interface ISelectTransactionPayload {
-  txId: string
-}
-
-export interface IHideTransactionPayload {
-  txId: string
-}
-
-export interface IHideTransactionPromise {
-  promise: Promise<any>
-  data: IHideTransactionPayload
-}
-
-export interface IUnhideTransactionPayload {
-  txId: string
-}
-
-export interface IUpdateTransactionNotesPayload {
-  txId: string
-}
-
-export interface IUpdateTransactionNotesPromise {
-  promise: Promise<{ tx: MonzoTransactionResponse }>
-  data: IUpdateTransactionNotesPayload
-}
-
-export interface ISaveTransactionsPromise {
-  promise: Promise<any>
-}
 
 export const setTransactions = createAction<
   ISetTransactionsPayload,
@@ -142,3 +100,45 @@ export const selectTransaction = createAction<
 //   })(),
 //   data: { txId: tx.id }
 // }))
+
+export interface ISetTransactionsPayload {
+  txs: MonzoTransactionResponse[]
+}
+
+export interface IAddTransactionsPayload {
+  txs: MonzoTransactionResponse[]
+}
+
+export interface IUpdateTransactionsPayload {
+  txs: MonzoTransactionResponse[]
+}
+
+export interface ISelectTransactionPayload {
+  txId: string
+}
+
+export interface IHideTransactionPayload {
+  txId: string
+}
+
+export interface IHideTransactionPromise {
+  promise: Promise<any>
+  data: IHideTransactionPayload
+}
+
+export interface IUnhideTransactionPayload {
+  txId: string
+}
+
+export interface IUpdateTransactionNotesPayload {
+  txId: string
+}
+
+export interface IUpdateTransactionNotesPromise {
+  promise: Promise<{ tx: MonzoTransactionResponse }>
+  data: IUpdateTransactionNotesPayload
+}
+
+export interface ISaveTransactionsPromise {
+  promise: Promise<any>
+}

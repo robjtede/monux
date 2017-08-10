@@ -9,7 +9,7 @@ import { createAction } from 'redux-actions'
 
 import { EActions } from './index'
 // import { store } from '../store'
-import { setAccount, setSpent } from './'
+// import { setAccount, setSpent } from './'
 
 import { AmountOpts } from '../../lib/monzo/Amount'
 

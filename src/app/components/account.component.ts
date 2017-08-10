@@ -1,5 +1,5 @@
 import { Component, Input, ChangeDetectionStrategy } from '@angular/core'
-import { IMonzoApiAccount } from '../../lib/monzo/Account'
+// import { MonzoAccountResponse } from '../../lib/monzo/Account'
 
 @Component({
   selector: 'm-account',

@@ -3,11 +3,6 @@ import { createAction } from 'redux-actions'
 import { EActions } from './index'
 import { MonzoAccountResponse } from '../../lib/monzo/Account'
 
-export interface ISetAccountPayload {
-  bank: string
-  acc: MonzoAccountResponse
-}
-
 export const setAccount = createAction<
   ISetAccountPayload,
   string,
@@ -16,3 +11,8 @@ export const setAccount = createAction<
   bank,
   acc
 }))
+
+export interface ISetAccountPayload {
+  bank: string
+  acc: MonzoAccountResponse
+}
