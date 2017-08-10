@@ -1,10 +1,13 @@
 import { randomBytes } from 'crypto'
 import { parse as parseQueryString } from 'querystring'
 import { parse as parseUrl } from 'url'
-import * as Debug from 'debug'
+import Debug = require('debug')
 
 import { app } from 'electron'
 import installExtension, { REDUX_DEVTOOLS } from 'electron-devtools-installer'
+import reloader = require('electron-reload')
+
+reloader(__dirname)
 
 import {
   getAccessToken,
