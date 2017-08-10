@@ -10,7 +10,7 @@ import { IState } from './store'
 
 import Amount from '../lib/monzo/Amount'
 
-import '../index.css'
+import './style/index.css'
 
 @Component({
   selector: 'monux-root',

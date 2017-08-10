@@ -9,7 +9,12 @@ const {
 
 const { root } = require('./tools/webpack-helpers')
 
-const { ContextReplacementPlugin, ProgressPlugin, optimize } = webpack
+const {
+  HashedModuleIdsPlugin,
+  ContextReplacementPlugin,
+  ProgressPlugin,
+  optimize
+} = webpack
 const { CommonsChunkPlugin } = optimize
 
 module.exports = {
@@ -55,20 +60,44 @@ module.exports = {
       },
       {
         test: /\.(png|jpe?g|gif|svg|woff2?|(t|o)tf|eot|ico)$/,
-        loader: 'file-loader?name=assets/[name].[hash].[ext]'
+        loader: [
+          {
+            loader: 'file-loader',
+            options: { name: 'assets/[name].[hash].[ext]' }
+          }
+        ]
       },
       {
         test: /\.css$/,
-        exclude: root('src', 'app'),
+        include: root('src', 'app', 'style'),
         loader: ExtractTextPlugin.extract({
-          use: 'postcss-loader',
+          use: [
+            {
+              loader: 'css-loader',
+              options: { sourceMap: true, importLoaders: 1 }
+            },
+            {
+              loader: 'postcss-loader',
+              options: { sourceMap: 'inline' }
+            }
+          ],
           fallback: 'style-loader'
         })
       },
       {
         test: /\.css$/,
-        include: root('src', 'app'),
-        loaders: ['raw-loader', 'postcss-loader']
+        exclude: root('src', 'app', 'style'),
+        loaders: [
+          'to-string-loader',
+          {
+            loader: 'css-loader',
+            options: { sourceMap: true, importLoaders: 1 }
+          },
+          {
+            loader: 'postcss-loader',
+            options: { sourceMap: 'inline' }
+          }
+        ]
       }
     ]
   },
@@ -101,6 +130,12 @@ module.exports = {
       name: ['app', 'polyfills']
     }),
 
-    new ExtractTextPlugin('[name].css')
+    new ExtractTextPlugin('[name].css'),
+
+    new HashedModuleIdsPlugin({
+      hashFunction: 'sha256',
+      hashDigest: 'base64',
+      hashDigestLength: 5
+    })
   ]
 }
