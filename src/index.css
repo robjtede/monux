@@ -1,11 +1,11 @@
 :root {
-  --white: rgba(255, 255, 255, 1.0);
-  --off-white: rgba(240, 240, 240, 1.0);
-  --light-grey: rgba(204, 204, 204, 1.0);
-  --label-grey: rgba(170, 170, 170, 1.0);
-  --medium-grey: rgba(136, 136, 136, 1.0);
-  --dark-grey: rgba(80, 80, 80, 1.0);
-  --black: rgba(0, 0, 0, 1.0);
+  --white: gray(100%);
+  --off-white: gray(95%);
+  --light-grey: gray(80%);
+  --label-grey: gray(65%);
+  --medium-grey: gray(55%);
+  --dark-grey: gray(30%);
+  --black: gray(0%);
 
   --monzo-blue: rgba(21, 35, 60, 1.0);
 
@@ -25,9 +25,7 @@
 :root {
   box-sizing: border-box;
 
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
-    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
-    sans-serif;
+  font-family: system-ui;
   line-height: 1.5;
   font-size: 20px;
 }
@@ -39,4 +37,9 @@ body {
   overflow: hidden;
 
   background-color: var(--white);
+}
+
+.test {
+  color: #ffffffff;
+  background-color: rgba(10 10 10 1);
 }

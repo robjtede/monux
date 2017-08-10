@@ -10,10 +10,10 @@
 
   -webkit-app-region: no-drag;
   -webkit-user-select: initial;
-}
 
-.major {
-  font-size: 2em;
+  & .major {
+    font-size: 2em;
+  }
 }
 
 .amount + .amount {
@@ -21,8 +21,8 @@
 
   color: var(--light-grey);
   font-size: 0.8em;
-}
 
-.amount + .amount .major {
-  font-size: 1em;
+  & .major {
+    font-size: 1em;
+  }
 }

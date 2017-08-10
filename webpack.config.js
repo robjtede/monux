@@ -54,21 +54,21 @@ module.exports = {
         loader: 'html-loader'
       },
       {
-        test: /\.(png|jpe?g|gif|svg|woff2?|ttf|eot|ico)$/,
+        test: /\.(png|jpe?g|gif|svg|woff2?|(t|o)tf|eot|ico)$/,
         loader: 'file-loader?name=assets/[name].[hash].[ext]'
       },
       {
         test: /\.css$/,
         exclude: root('src', 'app'),
         loader: ExtractTextPlugin.extract({
-          use: 'css-loader?sourceMap',
+          use: 'postcss-loader',
           fallback: 'style-loader'
         })
       },
       {
         test: /\.css$/,
         include: root('src', 'app'),
-        loader: 'raw-loader'
+        loaders: ['raw-loader', 'postcss-loader']
       }
     ]
   },

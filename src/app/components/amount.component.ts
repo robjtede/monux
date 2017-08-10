@@ -11,8 +11,9 @@ export class AmountComponent {
   @Input() private amount: Amount
 
   getAmountHtml() {
-    return !this.amount.foreign || !this.amount.exchanged
+    return !this.amount.foreign
       ? this.amount.html(true, 0)
-      : this.amount.exchanged.html(true, 0) + this.amount.html(true, 0)
+      : (this.amount.exchanged as Amount).html(true, 0) +
+        this.amount.html(true, 0)
   }
 }
