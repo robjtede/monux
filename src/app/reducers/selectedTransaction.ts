@@ -1,7 +1,10 @@
 import { handleActions } from 'redux-actions'
 
 import { ISelectedTransactionsState } from '../store'
-import { selectTransaction, ISelectTransactionPayload } from '../actions'
+import {
+  selectTransaction,
+  ISelectTransactionPayload
+} from '../actions/transaction'
 
 const initialState: ISelectedTransactionsState = ''
 

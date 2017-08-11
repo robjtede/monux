@@ -11,7 +11,7 @@ import {
   IUpdateTransactionsPayload,
   IHideTransactionPayload,
   IUnhideTransactionPayload
-} from '../actions'
+} from '../actions/transaction'
 import { ITransactionsState } from '../store'
 
 export type IModifyTransactionsPayloads =

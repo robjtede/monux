@@ -1,10 +1,10 @@
 <header class="balances">
   <div class="card-balance">
-    <m-amount [amount]="balance"></m-amount>
+    <m-amount [amount]="balance$ | async"></m-amount>
   </div>
 
   <div class="spent-today">
-    <m-amount [amount]="spent"></m-amount>
+    <m-amount [amount]="spent$ | async"></m-amount>
   </div>
 </header>
 

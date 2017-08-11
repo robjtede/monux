@@ -1,6 +1,6 @@
 import { handleActions } from 'redux-actions'
 
-import { setSpent, ISetSpentPayload } from '../actions'
+import { setSpent, ISetSpentPayload } from '../actions/spent'
 import { ISpentState } from '../store'
 
 const initialState: ISpentState = {

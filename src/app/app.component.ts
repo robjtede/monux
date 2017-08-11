@@ -4,15 +4,15 @@ import {
   OnDestroy,
   ChangeDetectionStrategy
 } from '@angular/core'
-import { NgRedux } from '@angular-redux/store'
+import { NgRedux, select } from '@angular-redux/store'
+import { Observable } from 'rxjs'
 
 import { MonzoService } from './services/monzo.service'
 
-import { IState } from './store'
-import { setAccount } from './actions/account'
+import { AppState } from './store'
+import { BalanceActions } from './actions/balance'
 
 import Amount from '../lib/monzo/Amount'
-import { accountsRequest, MonzoAccountsResponse } from '../lib/monzo/Account'
 
 import './style/index.css'
 
@@ -20,45 +20,32 @@ import './style/index.css'
   selector: 'monux-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css'],
+  providers: [BalanceActions],
   changeDetection: ChangeDetectionStrategy.Default
 })
 export class AppComponent implements OnInit, OnDestroy {
   readonly name = 'Monux'
 
-  readonly balance: Amount = new Amount({
-    native: {
-      amount: 1.23,
-      currency: 'GBP'
-    }
-  })
+  @select(({ balance }: AppState) => new Amount(balance))
+  private readonly balance$: Observable<Amount>
 
-  readonly spent: Amount = new Amount({
-    native: {
-      amount: 1.23,
-      currency: 'GBP'
-    }
-  })
+  @select(({ spent }: AppState) => new Amount(spent))
+  private readonly spent$: Observable<Amount>
 
   constructor(
-    private readonly redux: NgRedux<IState>,
-    private readonly monzo: MonzoService
+    private readonly redux: NgRedux<AppState>,
+    private readonly monzo: MonzoService,
+    private readonly balanceActions: BalanceActions
   ) {}
 
   ngOnInit(): void {
     console.log('monux started')
 
-    this.getAccount()
+    // this.getAccount()
+    this.redux.dispatch(this.balanceActions.getBalance())
   }
 
   ngOnDestroy(): void {
     console.log('monux stopped')
-  }
-
-  async getAccount() {
-    const { accounts } = await this.monzo.request<MonzoAccountsResponse>(
-      accountsRequest
-    )
-
-    this.redux.dispatch(setAccount('monzo', accounts[0]))
   }
 }

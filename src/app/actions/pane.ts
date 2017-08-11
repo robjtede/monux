@@ -1,6 +1,6 @@
 import { createAction } from 'redux-actions'
 
-import { EActions } from './index'
+import { EActions } from './'
 
 export const setPane = createAction<
   ISetPanePayload,

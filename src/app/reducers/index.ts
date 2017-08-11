@@ -1,6 +1,6 @@
 import { combineReducers } from 'redux'
 
-import { IState } from '../store'
+import { AppState } from '../store'
 
 import account from './account'
 import balance from './balance'
@@ -9,7 +9,7 @@ import activePane from './activePane'
 import transactions from './transactions'
 import selectedTransaction from './selectedTransaction'
 
-export default combineReducers<IState>({
+export default combineReducers<AppState>({
   balance,
   spent,
   account,

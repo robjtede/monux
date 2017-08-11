@@ -2,20 +2,20 @@ import { AmountOpts } from '../lib/monzo/Amount'
 import { MonzoTransactionResponse } from '../lib/monzo/Transaction'
 import { MonzoAccountResponse } from '../lib/monzo/Account'
 
-export type IActivePaneState = string
-export type IBalanceState = AmountOpts
-export type ISpentState = AmountOpts
-export type ITransactionsState = MonzoTransactionResponse[]
-export type ISelectedTransactionsState = string
-export type IAccountState = {
+export type ActivePaneState = string
+export type BalanceState = AmountOpts
+export type SpentState = AmountOpts
+export type TransactionsState = MonzoTransactionResponse[]
+export type SelectedTransactionsState = string
+export type AccountState = {
   monzo?: MonzoAccountResponse
 }
 
-export interface IState {
-  account: IAccountState
-  activePane: IActivePaneState
-  balance: IBalanceState
-  spent: ISpentState
-  transactions: ITransactionsState
-  selectedTransaction: ISelectedTransactionsState
+export interface AppState {
+  account: AccountState
+  activePane: ActivePaneState
+  balance: BalanceState
+  spent: SpentState
+  transactions: TransactionsState
+  selectedTransaction: SelectedTransactionsState
 }

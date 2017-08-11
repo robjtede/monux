@@ -39,11 +39,11 @@ export class MonzoService {
 
     if (method === 'GET') {
       return this.http
-        .get(url, {
+        .get<T>(url, {
           headers,
           params
         })
-        .toPromise() as Promise<T>
+        .toPromise()
     } else if (method === 'POST') {
       console.error(`Unhandled HTTP call with ${method} method.`)
       throw new Error(`Unhandled HTTP call with ${method} method.`)

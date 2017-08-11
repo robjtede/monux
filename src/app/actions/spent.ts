@@ -1,6 +1,6 @@
 import { createAction } from 'redux-actions'
 
-import { EActions } from './index'
+import { EActions } from './'
 
 import { AmountOpts } from '../../lib/monzo/Amount'
 

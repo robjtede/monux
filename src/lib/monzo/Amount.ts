@@ -201,3 +201,16 @@ export interface AmountOpts {
   native: SimpleAmount
   local?: SimpleAmount
 }
+
+export interface MonzoBalanceResponse {
+  balance: number
+  // TODO: currency enum-ify
+  currency: string
+  // TODO: currency enum-ify
+  local_currency: string
+  local_exchange_rate: number
+  local_spend: {
+    [currency: string]: number
+  }[]
+  spend_today: number
+}

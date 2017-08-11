@@ -21,7 +21,7 @@ export default class Account {
     return new Date(this.acc.created)
   }
 
-  get balanceRequest(): MonzoRequest {
+  balanceRequest(): MonzoRequest {
     return {
       path: '/balance',
       qs: {
@@ -193,8 +193,8 @@ export default class Account {
   }
 }
 
-export const accountsRequest = {
-  path: '/accounts'
+export const accountsRequest = () => {
+  return { path: '/accounts' }
 }
 
 export interface MonzoAccountsResponse {

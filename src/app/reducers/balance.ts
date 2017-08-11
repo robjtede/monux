@@ -1,6 +1,6 @@
 import { handleActions } from 'redux-actions'
 
-import { setBalance, ISetBalancePayload } from '../actions'
+import { setBalance, ISetBalancePayload } from '../actions/balance'
 import { IBalanceState } from '../store'
 
 const initialState: IBalanceState = {
