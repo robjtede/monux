@@ -197,6 +197,10 @@ export const accountsRequest = {
   path: '/accounts'
 }
 
+export interface MonzoAccountsResponse {
+  accounts: MonzoAccountResponse[]
+}
+
 export interface MonzoAccountResponse {
   id: string
   description: string

@@ -9,7 +9,7 @@
 :root {
   box-sizing: border-box;
 
-  font-family: system-ui;
+  font-family: system-ui, Arial, sans-serif;
   line-height: 1.5;
   font-size: 20px;
 }

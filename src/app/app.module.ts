@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core'
 import { BrowserModule } from '@angular/platform-browser'
 import { HttpClientModule } from '@angular/common/http'
-import { NgReduxModule, NgRedux } from '@angular-redux/store'
+import { NgReduxModule, NgRedux, DevToolsExtension } from '@angular-redux/store'
 
 import reducer from './reducers'
 import middleware from './middleware'
@@ -20,7 +20,15 @@ import { AccountComponent } from './components/account.component'
   bootstrap: [AppComponent]
 })
 export class AppModule {
-  constructor(private ngRedux: NgRedux<IState>) {
-    this.ngRedux.configureStore(reducer, {} as IState, middleware)
+  constructor(
+    private readonly redux: NgRedux<IState>,
+    private readonly devTools: DevToolsExtension
+  ) {
+    // You probably only want to expose this tool in devMode.
+    const enhancers = this.devTools.isEnabled()
+      ? [this.devTools.enhancer()]
+      : []
+
+    this.redux.configureStore(reducer, {} as IState, middleware, enhancers)
   }
 }

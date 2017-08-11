@@ -1,5 +1,9 @@
-import { Component, Input, ChangeDetectionStrategy } from '@angular/core'
-// import { MonzoAccountResponse } from '../../lib/monzo/Account'
+import { Component, ChangeDetectionStrategy } from '@angular/core'
+import { NgRedux, select } from '@angular-redux/store'
+import { Observable } from 'rxjs'
+
+import { IState } from '../store'
+import Account from '../../lib/monzo/Account'
 
 @Component({
   selector: 'm-account',
@@ -8,6 +12,12 @@ import { Component, Input, ChangeDetectionStrategy } from '@angular/core'
   changeDetection: ChangeDetectionStrategy.Default
 })
 export class AccountComponent {
-  @Input() private account: string
-  private bank: string = 'monux'
+  @select(({ account: { monzo } }: IState) => {
+    return monzo ? new Account(monzo).name : 'Loading...'
+  })
+  private readonly holder$: Observable<string>
+
+  private readonly bank: string = 'monux'
+
+  constructor(private readonly redux: NgRedux) {}
 }

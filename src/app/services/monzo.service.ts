@@ -9,28 +9,28 @@ import { getPassword } from '../../lib/keychain'
 
 @Injectable()
 export class MonzoService {
-  private proto: string = 'https://'
-  private apiRoot: string = 'api.monzo.com'
+  private readonly proto: string = 'https://'
+  private readonly apiRoot: string = 'api.monzo.com'
 
-  private accessResponse: Promise<string> = getPassword({
+  private readonly accessToken: Promise<string> = getPassword({
     account: 'Monux',
     service: 'monux.monzo.access_token'
   })
 
-  constructor(private http: HttpClient) {}
+  constructor(private readonly http: HttpClient) {}
 
-  async request(
+  async request<T>(
     {
       path = '/ping/whoami',
       qs = {},
       method = 'GET',
       json = true
     }: MonzoRequest = { path: '/ping/whoami' }
-  ) {
+  ): Promise<T> {
     const url = `${this.proto}${this.apiRoot}${path}`
 
     const headers = new HttpHeaders({
-      Authorization: `Bearer ${await this.accessResponse}`
+      Authorization: `Bearer ${await this.accessToken}`
     })
 
     const params = new HttpParams({
@@ -43,7 +43,7 @@ export class MonzoService {
           headers,
           params
         })
-        .toPromise()
+        .toPromise() as Promise<T>
     } else if (method === 'POST') {
       console.error(`Unhandled HTTP call with ${method} method.`)
       throw new Error(`Unhandled HTTP call with ${method} method.`)
