@@ -49,7 +49,6 @@ export class BalanceActions {
           const bal = await this.monzo.request<MonzoBalanceResponse>(
             acc.balanceRequest()
           )
-          console.log(bal)
 
           const { balance, spent } = (() => {
             const nativeBalance: SimpleAmount = {
@@ -91,7 +90,6 @@ export class BalanceActions {
             }
           })()
 
-          console.log(balance, spent)
           debug('HTTP balance =>', balance)
 
           this.redux.dispatch(setAccount('monzo', acc.json))

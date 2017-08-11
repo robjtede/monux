@@ -130,3 +130,122 @@ nav {
 .tab:not(.active) {
   cursor: pointer;
 }
+
+main {
+  grid-area: main;
+
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: center;
+  align-items: stretch;
+
+  max-width: 100vw;
+  max-height: var(--main-height);
+}
+
+.pane {
+  display: none;
+  flex: 1 0 auto;
+  flex-flow: row nowrap;
+  justify-content: space-between;
+  align-items: stretch;
+  max-width: 100%;
+}
+
+.pane.active {
+  display: flex;
+}
+
+.map-pane,
+.export-pane {
+  padding-top: calc(var(--main-height) * 0.2);
+  justify-content: center;
+
+  text-align: center;
+}
+
+.map-pane h1,
+.export-pane h1 {
+  margin-bottom: 0;
+
+  color: var(--dark-grey);
+  font-weight: normal;
+}
+
+.map-pane h2,
+.export-pane h2 {
+  margin-top: 0;
+
+  color: var(--medium-grey);
+  font-weight: normal;
+}
+
+.map-pane h3,
+.export-pane h3 {
+  margin-top: 0;
+
+  color: var(--label-grey);
+  font-weight: normal;
+}
+
+m-transaction-list {
+  flex: 4;
+}
+
+.transaction-detail-pane {
+  flex: 5;
+  overflow-y: scroll;
+}
+
+.transaction-detail-pane.inactive {
+  background: var(--off-white);
+}
+
+.transaction-detail-pane.inactive::after {
+  content: 'Select transaction from the list to the left.';
+  display: block;
+  width: 100%;
+  padding-top: 150px;
+
+  color: var(--medium-grey);
+  text-align: center;
+
+  -webkit-user-select: none;
+}
+
+.transaction-detail-pane.inactive m-transaction-detail {
+  display: none;
+}
+
+.lightboxable {
+  cursor: pointer;
+}
+
+.lightbox {
+  justify-content: center;
+  align-items: center;
+  flex-wrap: nowrap;
+
+  display: none;
+  position: fixed;
+  z-index: 10;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+
+  background: rgba(0, 0, 0, 0.8);
+
+  -webkit-user-select: none;
+}
+
+.lightbox.show {
+  display: flex;
+}
+
+.lightbox img {
+  width: auto;
+  height: auto;
+  max-width: 80vw;
+  max-height: 80vh;
+}

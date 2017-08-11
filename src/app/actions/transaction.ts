@@ -8,14 +8,14 @@ import { MonzoTransactionResponse } from '../../lib/monzo/Transaction'
 // import { updateTransactionCache } from '../scripts/cache'
 
 export const setTransactions = createAction<
-  ISetTransactionsPayload,
+  SetTransactionsPayload,
   MonzoTransactionResponse[]
 >(EActions.SET_TRANSACTIONS, txs => ({
   txs
 }))
 
 export const addTransactions = createAction<
-  IAddTransactionsPayload,
+  AddTransactionsPayload,
   MonzoTransactionResponse[]
 >(EActions.ADD_TRANSACTIONS, txs => ({
   txs
@@ -101,44 +101,44 @@ export const selectTransaction = createAction<
 //   data: { txId: tx.id }
 // }))
 
-export interface ISetTransactionsPayload {
+export interface SetTransactionsPayload {
   txs: MonzoTransactionResponse[]
 }
 
-export interface IAddTransactionsPayload {
+export interface AddTransactionsPayload {
   txs: MonzoTransactionResponse[]
 }
 
-export interface IUpdateTransactionsPayload {
+export interface UpdateTransactionsPayload {
   txs: MonzoTransactionResponse[]
 }
 
-export interface ISelectTransactionPayload {
+export interface SelectTransactionPayload {
   txId: string
 }
 
-export interface IHideTransactionPayload {
+export interface HideTransactionPayload {
   txId: string
 }
 
-export interface IHideTransactionPromise {
+export interface HideTransactionPromise {
   promise: Promise<any>
-  data: IHideTransactionPayload
+  data: HideTransactionPayload
 }
 
-export interface IUnhideTransactionPayload {
+export interface UnhideTransactionPayload {
   txId: string
 }
 
-export interface IUpdateTransactionNotesPayload {
+export interface UpdateTransactionNotesPayload {
   txId: string
 }
 
-export interface IUpdateTransactionNotesPromise {
+export interface UpdateTransactionNotesPromise {
   promise: Promise<{ tx: MonzoTransactionResponse }>
-  data: IUpdateTransactionNotesPayload
+  data: UpdateTransactionNotesPayload
 }
 
-export interface ISaveTransactionsPromise {
+export interface SaveTransactionsPromise {
   promise: Promise<any>
 }

@@ -1,16 +1,16 @@
 import { handleActions } from 'redux-actions'
 
-import { ISelectedTransactionsState } from '../store'
+import { SelectedTransactionsState } from '../store'
 import {
   selectTransaction,
-  ISelectTransactionPayload
+  SelectTransactionPayload
 } from '../actions/transaction'
 
-const initialState: ISelectedTransactionsState = ''
+const initialState: SelectedTransactionsState = ''
 
 export const reducer = handleActions<
-  ISelectedTransactionsState,
-  ISelectTransactionPayload
+  SelectedTransactionsState,
+  SelectTransactionPayload
 >(
   {
     [selectTransaction.toString()]: (_, { payload }) => {

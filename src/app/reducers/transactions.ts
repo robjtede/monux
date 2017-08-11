@@ -6,32 +6,32 @@ import {
   updateTransactions,
   // hideTransaction,
   // unhideTransaction,
-  ISetTransactionsPayload,
-  IAddTransactionsPayload,
-  IUpdateTransactionsPayload,
-  IHideTransactionPayload,
-  IUnhideTransactionPayload
+  SetTransactionsPayload,
+  AddTransactionsPayload,
+  UpdateTransactionsPayload,
+  HideTransactionPayload,
+  UnhideTransactionPayload
 } from '../actions/transaction'
-import { ITransactionsState } from '../store'
+import { TransactionsState } from '../store'
 
-export type IModifyTransactionsPayloads =
-  | ISetTransactionsPayload
-  | IAddTransactionsPayload
-  | IUpdateTransactionsPayload
+export type ModifyTransactionsPayloads =
+  | SetTransactionsPayload
+  | AddTransactionsPayload
+  | UpdateTransactionsPayload
 
-export type IVisibilityTransactionsPayloads =
-  | IHideTransactionPayload
-  | IUnhideTransactionPayload
+export type VisibilityTransactionsPayloads =
+  | HideTransactionPayload
+  | UnhideTransactionPayload
 
-export type ITransactionsPayloads =
-  | IModifyTransactionsPayloads
-  | IVisibilityTransactionsPayloads
+export type TransactionsPayloads =
+  | ModifyTransactionsPayloads
+  | VisibilityTransactionsPayloads
 
-const initialState: ITransactionsState = []
+const initialState: TransactionsState = []
 
 const modifyReducer: ReducerMap<
-  ITransactionsState,
-  IModifyTransactionsPayloads
+  TransactionsState,
+  ModifyTransactionsPayloads
 > = {
   [setTransactions.toString()]: (_, { payload }) => {
     if (!payload) throw new TypeError('A payload is required')
@@ -59,8 +59,8 @@ const modifyReducer: ReducerMap<
 }
 
 // const hideReducer: ReducerMap<
-//   ITransactionsState,
-//   IVisibilityTransactionsPayloads
+//   TransactionsState,
+//   VisibilityTransactionsPayloads
 // > = {
 //   [hideTransaction.toString()]: (state, { payload }) => {
 //     if (!payload) throw new TypeError('A payload is required')
@@ -105,7 +105,7 @@ const modifyReducer: ReducerMap<
 //   }
 // }
 
-export default handleActions<ITransactionsState, ITransactionsPayloads>(
+export default handleActions<TransactionsState, TransactionsPayloads>(
   {
     ...modifyReducer
     // ...hideReducer

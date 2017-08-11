@@ -1,11 +1,11 @@
 import { handleActions } from 'redux-actions'
 
-import { setPane, ISetPanePayload } from '../actions/pane'
-import { IActivePaneState } from '../store'
+import { setPane, SetPanePayload } from '../actions/pane'
+import { ActivePaneState } from '../store'
 
-const initialState: IActivePaneState = 'transaction'
+const initialState: ActivePaneState = 'transaction'
 
-export const reducer = handleActions<IActivePaneState, ISetPanePayload>(
+export const reducer = handleActions<ActivePaneState, SetPanePayload>(
   {
     [setPane.toString()]: (_, { payload }) => {
       if (!payload) throw new TypeError('A payload is required')

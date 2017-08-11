@@ -1,16 +1,16 @@
 import { handleActions } from 'redux-actions'
 
-import { setSpent, ISetSpentPayload } from '../actions/spent'
-import { ISpentState } from '../store'
+import { setSpent, SetSpentPayload } from '../actions/spent'
+import { SpentState } from '../store'
 
-const initialState: ISpentState = {
+const initialState: SpentState = {
   native: {
     amount: 0,
     currency: 'GBP'
   }
 }
 
-export const reducer = handleActions<ISpentState, ISetSpentPayload>(
+export const reducer = handleActions<SpentState, SetSpentPayload>(
   {
     [setSpent.toString()]: (_, action) => {
       if (!action.payload) throw new TypeError('A payload is required')

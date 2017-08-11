@@ -3,16 +3,16 @@ import * as Debug from 'debug'
 
 const debug = Debug('app:keychain')
 
-export interface IKeychain {
+export interface KeychainOpts {
   account: string
   service: string
 }
 
-export interface IKeychainSet extends IKeychain {
+export interface KeychainSetOpts extends KeychainOpts {
   password: string
 }
 
-export const getPassword = async (opts: IKeychain): Promise<string> => {
+export const getPassword = async (opts: KeychainOpts): Promise<string> => {
   debug('get password =>', opts.account, ':', opts.service)
 
   const password = await keychain.getPassword(opts.service, opts.account)
@@ -24,12 +24,12 @@ export const getPassword = async (opts: IKeychain): Promise<string> => {
   }
 }
 
-export const setPassword = async (opts: IKeychainSet): Promise<void> => {
+export const setPassword = async (opts: KeychainSetOpts): Promise<void> => {
   debug('set password =>', opts.account, ':', opts.service)
   return keychain.setPassword(opts.service, opts.account, opts.password)
 }
 
-export const deletePassword = async (opts: IKeychain): Promise<boolean> => {
+export const deletePassword = async (opts: KeychainOpts): Promise<boolean> => {
   debug('delete password =>', opts.account, ':', opts.service)
   return keychain.deletePassword(opts.service, opts.account)
 }

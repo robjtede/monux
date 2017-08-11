@@ -1,11 +1,11 @@
 import { handleActions } from 'redux-actions'
 
 import { setAccount, SetAccountPayload } from '../actions/account'
-import { IAccountState } from '../store'
+import { AccountState } from '../store'
 
-const initialState: IAccountState = {}
+const initialState: AccountState = {}
 
-const reducer = handleActions<IAccountState, SetAccountPayload>(
+const reducer = handleActions<AccountState, SetAccountPayload>(
   {
     [setAccount.toString()]: (_, action) => {
       if (!action.payload) throw new TypeError('A payload is required')

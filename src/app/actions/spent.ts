@@ -5,12 +5,12 @@ import { EActions } from './'
 import { AmountOpts } from '../../lib/monzo/Amount'
 
 export const setSpent = createAction<
-  ISetSpentPayload,
+  SetSpentPayload,
   AmountOpts
 >(EActions.SET_SPENT, spent => ({
   amount: spent
 }))
 
-export interface ISetSpentPayload {
+export interface SetSpentPayload {
   amount: AmountOpts
 }
