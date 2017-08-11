@@ -6,9 +6,12 @@ import {
 } from '@angular/core'
 import { NgRedux } from '@angular-redux/store'
 
+import { MonzoService } from './services/monzo.service'
+
 import { IState } from './store'
 
 import Amount from '../lib/monzo/Amount'
+import { accountsRequest } from '../lib/monzo/Account'
 
 import './style/index.css'
 
@@ -37,15 +40,23 @@ export class AppComponent implements OnInit, OnDestroy {
 
   accountName: string = 'Rob Ede'
 
-  constructor(private ngRedux: NgRedux<IState>) {}
+  constructor(
+    private ngRedux: NgRedux<IState>,
+    private monzoService: MonzoService
+  ) {}
 
   ngOnInit(): void {
     console.log('monux started')
 
-    console.log(this.ngRedux.getState())
+    getAccount()
   }
 
   ngOnDestroy(): void {
     console.log('monux stopped')
+  }
+
+  async getAccount() {
+    const data = await this.monzoService.request(accountsRequest)
+    console.log(data)
   }
 }

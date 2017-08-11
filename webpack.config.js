@@ -32,7 +32,12 @@ module.exports = {
   },
 
   resolve: {
-    extensions: ['.ts', '.js', '.json']
+    extensions: ['.ts', '.js', '.json'],
+    modules: ['./node_modules']
+  },
+
+  resolveLoader: {
+    modules: ['./node_modules']
   },
 
   devtool: 'inline-source-map',
@@ -137,5 +142,45 @@ module.exports = {
       hashDigest: 'base64',
       hashDigestLength: 5
     })
-  ]
+  ],
+
+  externals: {
+    child_process: 'require(\'child_process\')',
+    crypto: 'require(\'crypto\')',
+    events: 'require(\'events\')',
+    fs: 'require(\'fs\')',
+    http: 'require(\'http\')',
+    https: 'require(\'https\')',
+    assert: 'require(\'assert\')',
+    dns: 'require(\'dns\')',
+    net: 'require(\'net\')',
+    os: 'require(\'os\')',
+    path: 'require(\'path\')',
+    querystring: 'require(\'querystring\')',
+    readline: 'require(\'readline\')',
+    repl: 'require(\'repl\')',
+    stream: 'require(\'stream\')',
+    string_decoder: 'require(\'string_decoder\')',
+    url: 'require(\'url\')',
+    util: 'require(\'util\')',
+    zlib: 'require(\'zlib\')',
+
+    electron: 'require(\'electron\')',
+
+    keytar: 'require(\'keytar\')'
+  },
+
+  node: {
+    fs: 'empty',
+    global: true,
+    crypto: 'empty',
+    tls: 'empty',
+    net: 'empty',
+    process: true,
+    module: false,
+    clearImmediate: false,
+    setImmediate: false,
+    __dirname: false,
+    __filename: false
+  }
 }

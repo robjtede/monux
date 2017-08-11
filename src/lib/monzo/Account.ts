@@ -191,12 +191,10 @@ export default class Account {
   get stringify(): string {
     return JSON.stringify(this.json)
   }
+}
 
-  static accountsRequest(): MonzoRequest {
-    return {
-      path: '/accounts'
-    }
-  }
+export const accountsRequest = {
+  path: '/accounts'
 }
 
 export interface MonzoAccountResponse {
