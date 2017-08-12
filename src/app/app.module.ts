@@ -8,6 +8,9 @@ import middleware from './middleware'
 import { AppState } from './store'
 
 import { MonzoService } from './services/monzo.service'
+import { AccountActions } from './actions/account'
+import { BalanceActions } from './actions/balance'
+import { SpentActions } from './actions/spent'
 
 import { AppComponent } from './app.component'
 import { AmountComponent } from './components/amount.component'
@@ -16,7 +19,7 @@ import { AccountComponent } from './components/account.component'
 @NgModule({
   declarations: [AppComponent, AmountComponent, AccountComponent],
   imports: [BrowserModule, HttpClientModule, NgReduxModule],
-  providers: [MonzoService],
+  providers: [MonzoService, BalanceActions, SpentActions, AccountActions],
   bootstrap: [AppComponent]
 })
 export class AppModule {
@@ -24,7 +27,6 @@ export class AppModule {
     private readonly redux: NgRedux<AppState>,
     private readonly devTools: DevToolsExtension
   ) {
-    // You probably only want to expose this tool in devMode.
     const enhancers = this.devTools.isEnabled()
       ? [this.devTools.enhancer()]
       : []

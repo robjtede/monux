@@ -20,7 +20,6 @@ import './style/index.css'
   selector: 'monux-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css'],
-  providers: [BalanceActions],
   changeDetection: ChangeDetectionStrategy.Default
 })
 export class AppComponent implements OnInit, OnDestroy {
@@ -34,15 +33,14 @@ export class AppComponent implements OnInit, OnDestroy {
 
   constructor(
     private readonly redux: NgRedux<AppState>,
-    private readonly monzo: MonzoService,
     private readonly balanceActions: BalanceActions
   ) {}
 
   ngOnInit(): void {
     console.log('monux started')
 
-    // this.getAccount()
     this.redux.dispatch(this.balanceActions.getBalance())
+    // this.redux.dispatch(this.balanceActions.getBalance())
   }
 
   ngOnDestroy(): void {

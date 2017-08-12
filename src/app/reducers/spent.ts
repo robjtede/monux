@@ -1,6 +1,6 @@
 import { handleActions } from 'redux-actions'
 
-import { setSpent, SetSpentPayload } from '../actions/spent'
+import { SpentActions, SetSpentPayload } from '../actions/spent'
 import { SpentState } from '../store'
 
 const initialState: SpentState = {
@@ -12,7 +12,7 @@ const initialState: SpentState = {
 
 export const reducer = handleActions<SpentState, SetSpentPayload>(
   {
-    [setSpent.toString()]: (_, action) => {
+    [SpentActions.SET_SPENT]: (_, action) => {
       if (!action.payload) throw new TypeError('A payload is required')
 
       return action.payload.amount
