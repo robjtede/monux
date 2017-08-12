@@ -7,7 +7,7 @@ import windowState = require('electron-window-state')
 
 import { oneLineTrim } from 'common-tags'
 
-import { IAppInfo } from './app'
+import { AppInfo } from './app'
 import menuTemplate from './menu-template'
 
 const debug = Debug('app:window-manager')
@@ -79,7 +79,7 @@ export default class WindowManager {
     this.setDefaultMenu()
   }
 
-  goToAuthRequest(appInfo: IAppInfo): void {
+  goToAuthRequest(appInfo: AppInfo): void {
     debug('go to auth request')
     this.location = oneLineTrim`
       https://auth.getmondo.co.uk/

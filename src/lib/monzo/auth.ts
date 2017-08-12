@@ -2,7 +2,7 @@ import * as Debug from 'debug'
 
 import * as rp from 'request-promise-native'
 
-import { IAppInfo } from '../../app'
+import { AppInfo } from '../../app'
 import { getPassword, setPassword, deletePassword } from '../keychain'
 import MonzoApi from './api'
 
@@ -62,7 +62,7 @@ export const getSavedMonzo = (() => {
 })()
 
 export const getAccessToken = async (
-  appInfo: IAppInfo,
+  appInfo: AppInfo,
   authCode: string
 ): Promise<{ accessToken: string; refreshToken: string }> => {
   debug('getAccessToken')
@@ -94,10 +94,7 @@ export const getAccessToken = async (
   }
 }
 
-export const refreshAccess = async (
-  appInfo: IAppInfo,
-  refreshToken: string
-) => {
+export const refreshAccess = async (appInfo: AppInfo, refreshToken: string) => {
   debug('refreshAccess')
 
   const opts = {

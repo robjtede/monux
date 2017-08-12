@@ -20,9 +20,15 @@ import { TransactionActions } from './actions/transaction'
 import { AppComponent } from './app.component'
 import { AmountComponent } from './components/amount.component'
 import { AccountComponent } from './components/account.component'
+import { TransactionSummaryComponent } from './components/transaction-summary.component'
 
 @NgModule({
-  declarations: [AppComponent, AmountComponent, AccountComponent],
+  declarations: [
+    AppComponent,
+    AmountComponent,
+    AccountComponent,
+    TransactionSummaryComponent
+  ],
   imports: [BrowserModule, HttpClientModule, NgReduxModule],
   providers: [
     MonzoService,
