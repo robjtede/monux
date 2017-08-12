@@ -2,7 +2,7 @@ import { handleActions } from 'redux-actions'
 
 import { SelectedTransactionsState } from '../store'
 import {
-  selectTransaction,
+  TransactionActions,
   SelectTransactionPayload
 } from '../actions/transaction'
 
@@ -13,7 +13,7 @@ export const reducer = handleActions<
   SelectTransactionPayload
 >(
   {
-    [selectTransaction.toString()]: (_, { payload }) => {
+    [TransactionActions.SELECT_TRANSACTION]: (_, { payload }) => {
       if (!payload) throw new TypeError('A payload is required')
 
       return payload.txId

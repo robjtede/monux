@@ -12,7 +12,7 @@ import { MonzoService } from './services/monzo.service'
 import { AppState } from './store'
 import { BalanceActions } from './actions/balance'
 
-import Amount from '../lib/monzo/Amount'
+import Amount, { AmountOpts } from '../lib/monzo/Amount'
 
 import './style/index.css'
 
@@ -25,16 +25,21 @@ import './style/index.css'
 export class AppComponent implements OnInit, OnDestroy {
   readonly name = 'Monux'
 
-  @select(({ balance }: AppState) => new Amount(balance))
   private readonly balance$: Observable<Amount>
-
-  @select(({ spent }: AppState) => new Amount(spent))
   private readonly spent$: Observable<Amount>
 
   constructor(
     private readonly redux: NgRedux<AppState>,
     private readonly balanceActions: BalanceActions
-  ) {}
+  ) {
+    this.balance$ = this.redux
+      .select<AmountOpts>('balance')
+      .map(balance => new Amount(balance))
+
+    this.spent$ = this.redux
+      .select<AmountOpts>('spent')
+      .map(spent => new Amount(spent))
+  }
 
   ngOnInit(): void {
     console.log('monux started')

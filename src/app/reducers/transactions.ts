@@ -1,9 +1,7 @@
 import { handleActions, ReducerMap } from 'redux-actions'
 
 import {
-  setTransactions,
-  addTransactions,
-  updateTransactions,
+  TransactionActions,
   // hideTransaction,
   // unhideTransaction,
   SetTransactionsPayload,
@@ -33,19 +31,19 @@ const modifyReducer: ReducerMap<
   TransactionsState,
   ModifyTransactionsPayloads
 > = {
-  [setTransactions.toString()]: (_, { payload }) => {
+  [TransactionActions.SET_TRANSACTIONS]: (_, { payload }) => {
     if (!payload) throw new TypeError('A payload is required')
 
     return payload.txs
   },
 
-  [addTransactions.toString()]: (state, { payload }) => {
+  [TransactionActions.ADD_TRANSACTIONS]: (state, { payload }) => {
     if (!payload) throw new TypeError('A payload is required')
 
     return [...state, ...payload.txs]
   },
 
-  [updateTransactions.toString()]: (state, { payload }) => {
+  [TransactionActions.UPDATE_TRANSACTIONS]: (state, { payload }) => {
     if (!payload) throw new TypeError('A payload is required')
 
     const txIds = payload.txs.map(tx => tx.id)

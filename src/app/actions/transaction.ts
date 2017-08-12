@@ -1,105 +1,132 @@
+import { Injectable } from '@angular/core'
 import { createAction } from 'redux-actions'
 
-import { EActions } from './'
 // import { store } from '../store'
 
-import { MonzoTransactionResponse } from '../../lib/monzo/Transaction'
+import Account from '../../lib/monzo/Account'
+import Transaction, {
+  MonzoTransactionResponse
+} from '../../lib/monzo/Transaction'
 
 // import { updateTransactionCache } from '../scripts/cache'
 
-export const setTransactions = createAction<
-  SetTransactionsPayload,
-  MonzoTransactionResponse[]
->(EActions.SET_TRANSACTIONS, txs => ({
-  txs
-}))
+@Injectable()
+export class TransactionActions {
+  static readonly LOAD_TRANSACTIONS = 'LOAD_TRANSACTIONS'
+  static readonly SAVE_TRANSACTIONS = 'SAVE_TRANSACTIONS'
+  static readonly SET_TRANSACTIONS = 'SET_TRANSACTIONS'
+  static readonly ADD_TRANSACTIONS = 'ADD_TRANSACTIONS'
+  static readonly UPDATE_TRANSACTIONS = 'UPDATE_TRANSACTIONS'
+  static readonly POST_TRANSACTION = 'POST_TRANSACTION'
+  static readonly SELECT_TRANSACTION = 'SELECT_TRANSACTION'
+  static readonly HIDE_TRANSACTION = 'HIDE_TRANSACTION'
+  static readonly UNHIDE_TRANSACTION = 'UNHIDE_TRANSACTION'
+  static readonly UPDATE_TRANSACTION_NOTES = 'UPDATE_TRANSACTION_NOTES'
 
-export const addTransactions = createAction<
-  AddTransactionsPayload,
-  MonzoTransactionResponse[]
->(EActions.ADD_TRANSACTIONS, txs => ({
-  txs
-}))
+  setTransactions(txs: MonzoTransactionResponse[]) {
+    return createAction<
+      SetTransactionsPayload,
+      MonzoTransactionResponse[]
+    >(TransactionActions.SET_TRANSACTIONS, txs => ({
+      txs
+    }))(txs)
+  }
 
-export const updateTransactions = createAction<
-  IUpdateTransactionsPayload,
-  MonzoTransactionResponse[]
->(EActions.UPDATE_TRANSACTIONS, txs => ({
-  txs
-}))
+  addTransactions(txs: MonzoTransactionResponse[]) {
+    return createAction<
+      AddTransactionsPayload,
+      MonzoTransactionResponse[]
+    >(TransactionActions.ADD_TRANSACTIONS, txs => ({
+      txs
+    }))(txs)
+  }
 
-// export const saveTransactions = createAction<
-//   ISaveTransactionsPromise,
-//   Account,
-//   Transaction[]
-// >(EActions.SAVE_TRANSACTIONS, (acc, txs) => ({
-//   promise: updateTransactionCache(acc, txs)
-// }))
+  updateTransactions(txs: MonzoTransactionResponse[]) {
+    return createAction<
+      UpdateTransactionsPayload,
+      MonzoTransactionResponse[]
+    >(TransactionActions.UPDATE_TRANSACTIONS, txs => ({
+      txs
+    }))(txs)
+  }
 
-export const selectTransaction = createAction<
-  ISelectTransactionPayload,
-  string
->(EActions.SELECT_TRANSACTION, txId => ({
-  txId
-}))
+  selectTransaction(txId: string) {
+    return createAction<
+      SelectTransactionPayload,
+      string
+    >(TransactionActions.SELECT_TRANSACTION, txId => ({
+      txId
+    }))(txId)
+  }
 
-// export const hideTransaction = createAction<
-//   IHideTransactionPromise,
-//   Transaction,
-//   IMonzoApiAccount
-// >(EActions.HIDE_TRANSACTION, (tx, acc) => ({
-//   promise: (async () => {
-//     const monzo = await getMonzo()
-//     const account = new Account(monzo, acc)
-//     const ttx = new Transaction(monzo, account, tx.json)
-//
-//     const txHidden = await ttx.annotate('monux_hidden', 'true')
-//     store.dispatch(updateTransactions([txHidden.transaction]))
-//     store.dispatch(saveTransactions(account, [txHidden.transaction]))
-//
-//     return { tx: txHidden.transaction }
-//   })(),
-//   data: { txId: tx.id }
-// }))
+  // saveTransactions(account: Account, txs: Transaction[]) {
+  //   return createAction<
+  //     SaveTransactionsPromise,
+  //     Account,
+  //     Transaction[]
+  //   >(TransactionActions.SAVE_TRANSACTIONS, (acc, txs) => ({
+  //     promise: updateTransactionCache(acc, txs)
+  //   }))(account, txs)
+  // }
 
-// export const unhideTransaction = createAction<
-//   IHideTransactionPromise,
-//   Transaction,
-//   IMonzoApiAccount
-// >(EActions.UNHIDE_TRANSACTION, (tx, acc) => ({
-//   promise: (async () => {
-//     const monzo = await getMonzo()
-//     const account = new Account(monzo, acc)
-//     const ttx = new Transaction(monzo, account, tx.json)
-//
-//     const txHidden = await ttx.annotate('monux_hidden', '')
-//     store.dispatch(updateTransactions([txHidden.transaction]))
-//     store.dispatch(saveTransactions(account, [txHidden.transaction]))
-//
-//     return { tx: txHidden.transaction }
-//   })(),
-//   data: { txId: tx.id }
-// }))
+  // export const hideTransaction = createAction<
+  //   HideTransactionPromise,
+  //   Transaction,
+  //   MonzoApiAccount
+  // >(EActions.HIDE_TRANSACTION, (tx, acc) => ({
+  //   promise: (async () => {
+  //     const monzo = await getMonzo()
+  //     const account = new Account(monzo, acc)
+  //     const ttx = new Transaction(monzo, account, tx.json)
+  //
+  //     const txHidden = await ttx.annotate('monux_hidden', 'true')
+  //     store.dispatch(updateTransactions([txHidden.transaction]))
+  //     store.dispatch(saveTransactions(account, [txHidden.transaction]))
+  //
+  //     return { tx: txHidden.transaction }
+  //   })(),
+  //   data: { txId: tx.id }
+  // }))
 
-// export const updateTransactionNotes = createAction<
-//   IUpdateTransactionNotesPromise,
-//   Transaction,
-//   IMonzoApiAccount,
-//   string
-// >(EActions.UPDATE_TRANSACTION_NOTES, (tx, acc, notes) => ({
-//   promise: (async () => {
-//     const monzo = await getMonzo()
-//     const account = new Account(monzo, acc)
-//     const ttx = new Transaction(monzo, account, tx.json)
-//
-//     await ttx.setNotes(notes)
-//     store.dispatch(updateTransactions([ttx.json]))
-//     store.dispatch(saveTransactions(account, [ttx]))
-//
-//     return { tx: ttx.json }
-//   })(),
-//   data: { txId: tx.id }
-// }))
+  // export const unhideTransaction = createAction<
+  //   UnhideTransactionPromise,
+  //   Transaction,
+  //   MonzoApiAccount
+  // >(EActions.UNHIDE_TRANSACTION, (tx, acc) => ({
+  //   promise: (async () => {
+  //     const monzo = await getMonzo()
+  //     const account = new Account(monzo, acc)
+  //     const ttx = new Transaction(monzo, account, tx.json)
+  //
+  //     const txHidden = await ttx.annotate('monux_hidden', '')
+  //     store.dispatch(updateTransactions([txHidden.transaction]))
+  //     store.dispatch(saveTransactions(account, [txHidden.transaction]))
+  //
+  //     return { tx: txHidden.transaction }
+  //   })(),
+  //   data: { txId: tx.id }
+  // }))
+
+  // export const updateTransactionNotes = createAction<
+  //   IUpdateTransactionNotesPromise,
+  //   Transaction,
+  //   IMonzoApiAccount,
+  //   string
+  // >(EActions.UPDATE_TRANSACTION_NOTES, (tx, acc, notes) => ({
+  //   promise: (async () => {
+  //     const monzo = await getMonzo()
+  //     const account = new Account(monzo, acc)
+  //     const ttx = new Transaction(monzo, account, tx.json)
+  //
+  //     await ttx.setNotes(notes)
+  //     store.dispatch(updateTransactions([ttx.json]))
+  //     store.dispatch(saveTransactions(account, [ttx]))
+  //
+  //     return { tx: ttx.json }
+  //   })(),
+  //   data: { txId: tx.id }
+  // }))
+}
 
 export interface SetTransactionsPayload {
   txs: MonzoTransactionResponse[]
@@ -122,12 +149,17 @@ export interface HideTransactionPayload {
 }
 
 export interface HideTransactionPromise {
-  promise: Promise<any>
+  promise: Promise<{ tx: MonzoTransactionResponse }>
   data: HideTransactionPayload
 }
 
 export interface UnhideTransactionPayload {
   txId: string
+}
+
+export interface HideTransactionPromise {
+  promise: Promise<{ tx: MonzoTransactionResponse }>
+  data: UnhideTransactionPayload
 }
 
 export interface UpdateTransactionNotesPayload {
