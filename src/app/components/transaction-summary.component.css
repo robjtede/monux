@@ -1,0 +1,181 @@
+:host {
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: space-between;
+  align-items: stretch;
+
+  padding: 10px 15px;
+  width: 500px;
+  max-width: 100%;
+  max-height: 100px;
+
+  border-left: 20px solid;
+
+  &:hover {
+    cursor: pointer;
+  }
+
+  &.selected {
+    background: rgba(56, 78, 199, 1.0);
+    color: var(--off-white);
+  }
+}
+
+:host(:not(.selected):hover) {
+  background: #f0f0f0;
+}
+
+:host(:not(.selected).declined) {
+  background: #fff0f0;
+}
+
+:host(:not(.selected).declined:hover) {
+  background: #fee;
+}
+
+:host([data-category=groceries]) {
+  border-left-color: gold;
+}
+:host([data-category=transport]) {
+  border-left-color: teal;
+}
+:host([data-category=entertainment]) {
+  border-left-color: orangered;
+}
+:host([data-category=eating_out]) {
+  border-left-color: crimson;
+}
+:host([data-category=cash]) {
+  border-left-color: olivedrab;
+}
+:host([data-category=mondo]) {
+  border-left-color: olivedrab;
+}
+:host([data-category=monzo]) {
+  border-left-color: olivedrab;
+}
+:host([data-category=general]) {
+  border-left-color: slategrey;
+}
+:host([data-category=bills]) {
+  border-left-color: cornflowerblue;
+}
+:host([data-category=holidays]) {
+  border-left-color: orchid;
+}
+:host([data-category=shopping]) {
+  border-left-color: coral;
+}
+:host([data-category=expenses]) {
+  border-left-color: darkkhaki;
+}
+
+.icon-wrap {
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: center;
+  align-items: center;
+
+  flex: 2;
+  padding: 10px;
+  padding-left: 0;
+
+  & .icon {
+    width: 3.25em;
+    height: 3.25em;
+
+    background: var(--white);
+    border: var(--thin-border);
+    border-radius: 25%;
+  }
+}
+
+.info-wrap {
+  flex: 7 3;
+
+  display: flex;
+  flex-flow: column nowrap;
+  justify-content: center;
+  align-items: flex-start;
+
+  word-break: break-all;
+
+  & .info {
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: left;
+    align-items: flex-start;
+  }
+}
+
+.merchant {
+  margin: 0;
+
+  font-size: 1rem;
+}
+
+.meta {
+  margin-left: 1ch;
+
+  color: var(--label-grey);
+
+  & .meta-attachments::after {
+    content: attr(data-attachments);
+  }
+}
+
+.notes {
+  margin: 0;
+  margin-top: 0.2em;
+
+  font-size: 0.8rem;
+  color: var(--medium-grey);
+
+  @nest :host(.declined) & {
+    color: red;
+  }
+
+  &::before {
+    @nest :host(.declined) & {
+      content: 'Declined due to ';
+    }
+  }
+
+  @nest :host(.selected) & {
+    color: var(--light-grey);
+  }
+}
+
+.amount-wrap {
+  flex: 2 0;
+
+  display: flex;
+  flex-flow: column nowrap;
+  justify-content: center;
+  align-items: flex-end;
+
+  font-size: 1.2rem;
+  white-space: nowrap;
+
+  & .amount.positive {
+    color: green;
+  }
+
+  & .amount + .amount {
+    font-size: 0.8em;
+
+    &:not(.positive) {
+      color: var(--dark-grey);
+    }
+  }
+
+  @nest :host(.selected) & {
+    & .amount.positive {
+      color: var(--off-white);
+    }
+
+    & .amount + .amount {
+      color: var(--light-grey);
+    }
+  }
+}

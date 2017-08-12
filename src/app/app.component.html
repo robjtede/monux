@@ -21,12 +21,15 @@
 </nav>
 
 <main class="app">
-  <div class="pane transaction-pane">
+  <div class="pane transaction-pane active">
+    <div class="list" style="overflow-y: scroll;">
+      <m-transaction-summary *ngFor="let tx of txs$ | async" [tx]="tx"></m-transaction-summary>
+    </div>
     <!-- <m-transaction-list group-headings group-by="day" class="inactive"></m-transaction-list> -->
 
-    <div class="transaction-detail-pane inactive">
+    <!-- <div class="transaction-detail-pane"> -->
       <!-- <m-transaction-detail offline></m-transaction-detail> -->
-    </div>
+    <!-- </div> -->
   </div>
 
   <div class="pane spending-pane">
@@ -45,7 +48,7 @@
     <!-- <m-spending></m-spending> -->
   </div>
 
-  <div class="pane map-pane active">
+  <div class="pane map-pane">
     <div>
       <h1>🗺️ Map View</h1>
       <h2>View the location of all your transactions on one map.</h2>
