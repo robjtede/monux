@@ -5,7 +5,6 @@
   align-items: stretch;
 
   padding: 10px 15px;
-  width: 500px;
   max-width: 100%;
   max-height: 100px;
 
@@ -98,7 +97,7 @@
   justify-content: center;
   align-items: flex-start;
 
-  word-break: break-all;
+  overflow-wrap: break-word;
 
   & .info {
     display: flex;
@@ -112,6 +111,7 @@
   margin: 0;
 
   font-size: 1rem;
+  overflow-wrap: break-word;
 }
 
 .meta {

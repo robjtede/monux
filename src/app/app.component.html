@@ -22,14 +22,11 @@
 
 <main class="app">
   <div class="pane transaction-pane active">
-    <div class="list" style="overflow-y: scroll;">
-      <m-transaction-summary *ngFor="let tx of txs$ | async" [tx]="tx"></m-transaction-summary>
-    </div>
-    <!-- <m-transaction-list group-headings group-by="day" class="inactive"></m-transaction-list> -->
+    <m-transaction-list [txs]="txs$ | async"></m-transaction-list>
 
-    <!-- <div class="transaction-detail-pane"> -->
+    <div class="transaction-detail-pane">
       <!-- <m-transaction-detail offline></m-transaction-detail> -->
-    <!-- </div> -->
+    </div>
   </div>
 
   <div class="pane spending-pane">
