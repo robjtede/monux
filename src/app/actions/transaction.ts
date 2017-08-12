@@ -1,14 +1,25 @@
+import Debug = require('debug')
+
 import { Injectable } from '@angular/core'
+import { NgRedux } from '@angular-redux/store'
 import { createAction } from 'redux-actions'
 
-// import { store } from '../store'
+import { MonzoService } from '../services/monzo.service'
 
-import Account from '../../lib/monzo/Account'
+import { AppState } from '../store'
+
+import Account, {
+  accountsRequest,
+  MonzoAccountsResponse
+} from '../../lib/monzo/Account'
 import Transaction, {
+  MonzoTransactionsResponse,
   MonzoTransactionResponse
 } from '../../lib/monzo/Transaction'
 
 // import { updateTransactionCache } from '../scripts/cache'
+
+const debug = Debug('app:actions:transaction')
 
 @Injectable()
 export class TransactionActions {
@@ -16,12 +27,18 @@ export class TransactionActions {
   static readonly SAVE_TRANSACTIONS = 'SAVE_TRANSACTIONS'
   static readonly SET_TRANSACTIONS = 'SET_TRANSACTIONS'
   static readonly ADD_TRANSACTIONS = 'ADD_TRANSACTIONS'
+  static readonly GET_TRANSACTIONS = 'GET_TRANSACTIONS'
   static readonly UPDATE_TRANSACTIONS = 'UPDATE_TRANSACTIONS'
   static readonly POST_TRANSACTION = 'POST_TRANSACTION'
   static readonly SELECT_TRANSACTION = 'SELECT_TRANSACTION'
   static readonly HIDE_TRANSACTION = 'HIDE_TRANSACTION'
   static readonly UNHIDE_TRANSACTION = 'UNHIDE_TRANSACTION'
   static readonly UPDATE_TRANSACTION_NOTES = 'UPDATE_TRANSACTION_NOTES'
+
+  constructor(
+    private readonly redux: NgRedux<AppState>,
+    private readonly monzo: MonzoService
+  ) {}
 
   setTransactions(txs: MonzoTransactionResponse[]) {
     return createAction<
@@ -57,6 +74,41 @@ export class TransactionActions {
     >(TransactionActions.SELECT_TRANSACTION, txId => ({
       txId
     }))(txId)
+  }
+
+  getTransactions() {
+    return createAction<
+      GetTransactionsPromise
+    >(TransactionActions.GET_TRANSACTIONS, () => ({
+      promise: (async () => {
+        try {
+          const acc = new Account(
+            (await this.monzo.request<MonzoAccountsResponse>(accountsRequest()))
+              .accounts[0]
+          )
+
+          const txs = (await this.monzo.request<MonzoTransactionsResponse>(
+            acc.transactionsRequest()
+          )).transactions
+
+          debug('HTTP transactions =>', txs)
+
+          this.redux.dispatch(this.addTransactions(txs))
+          // store.dispatch({ type: 'SET_ONLINE' })
+          // store.dispatch({
+          //   type: 'SAVE_TRANSACTIONS',
+          //   payload: updateTransactionCache(account, txs)
+          // })
+          //
+          // store.dispatch({
+          //   type: 'GET_PENDING_TRANSACTIONS',
+          //   payload: updatePendingTransactions()
+          // })
+        } catch (err) {
+          console.error(err)
+        }
+      })()
+    }))()
   }
 
   // saveTransactions(account: Account, txs: Transaction[]) {
@@ -142,6 +194,10 @@ export interface UpdateTransactionsPayload {
 
 export interface SelectTransactionPayload {
   txId: string
+}
+
+export interface GetTransactionsPromise {
+  promise: Promise<any>
 }
 
 export interface HideTransactionPayload {

@@ -1,5 +1,6 @@
 import { format } from 'date-fns'
 
+import { JSONMap } from '../json-types'
 import { QueryString, MonzoRequest } from './api'
 
 export default class Account {
@@ -197,11 +198,11 @@ export const accountsRequest = () => {
   return { path: '/accounts' }
 }
 
-export interface MonzoAccountsResponse {
+export interface MonzoAccountsResponse extends JSONMap {
   accounts: MonzoAccountResponse[]
 }
 
-export interface MonzoAccountResponse {
+export interface MonzoAccountResponse extends JSONMap {
   id: string
   description: string
   created: string

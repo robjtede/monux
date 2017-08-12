@@ -26,7 +26,7 @@ import Amount, {
   MonzoBalanceResponse
 } from '../../lib/monzo/Amount'
 
-const debug = Debug('app:redux:actions:balance')
+const debug = Debug('app:actions:balance')
 
 @Injectable()
 export class BalanceActions {

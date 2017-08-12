@@ -9,6 +9,7 @@ import { Observable } from 'rxjs'
 
 import { AppState } from './store'
 import { BalanceActions } from './actions/balance'
+import { TransactionActions } from './actions/transaction'
 
 import Amount, { AmountOpts } from '../lib/monzo/Amount'
 
@@ -28,7 +29,8 @@ export class AppComponent implements OnInit, OnDestroy {
 
   constructor(
     private readonly redux: NgRedux<AppState>,
-    private readonly balanceActions: BalanceActions
+    private readonly balanceActions: BalanceActions,
+    private readonly transactionActions: TransactionActions
   ) {
     this.balance$ = this.redux
       .select<AmountOpts>('balance')
@@ -43,7 +45,7 @@ export class AppComponent implements OnInit, OnDestroy {
     console.log('monux started')
 
     this.redux.dispatch(this.balanceActions.getBalance())
-    // this.redux.dispatch(this.balanceActions.getBalance())
+    this.redux.dispatch(this.transactionActions.getTransactions())
   }
 
   ngOnDestroy(): void {
