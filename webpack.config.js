@@ -73,7 +73,7 @@ module.exports = {
         loader: [
           {
             loader: 'file-loader',
-            options: { name: 'assets/[name].[hash].[ext]' }
+            options: { name: 'assets/[name].[hash:8].[ext]' }
           }
         ]
       },
@@ -145,7 +145,7 @@ module.exports = {
     new HashedModuleIdsPlugin({
       hashFunction: 'sha256',
       hashDigest: 'base64',
-      hashDigestLength: 5
+      hashDigestLength: 8
     })
   ]
 }
