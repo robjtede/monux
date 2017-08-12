@@ -8,7 +8,7 @@ import Amount from '../../lib/monzo/Amount'
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AmountComponent {
-  @Input() private amount: Amount
+  @Input() private readonly amount: Amount
 
   getAmountHtml() {
     return !this.amount.foreign

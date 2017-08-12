@@ -77,7 +77,9 @@ export default class Transaction {
   }
 
   get displayName(): string {
-    return typeof this.merchant !== 'string' && this.merchant.name
+    return this.merchant &&
+    typeof this.merchant !== 'string' &&
+    this.merchant.name
       ? this.merchant.name
       : this.description
   }
@@ -152,7 +154,7 @@ export default class Transaction {
   }
 
   get merchant(): Merchant | string {
-    return typeof this.tx.merchant !== 'string'
+    return this.tx.merchant && typeof this.tx.merchant !== 'string'
       ? new Merchant(this.tx.merchant)
       : this.tx.merchant
   }

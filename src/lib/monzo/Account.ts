@@ -99,14 +99,14 @@ export default class Account {
 
     if (options.since) {
       if (options.since instanceof Date) {
-        opts.since = format(options.since, 'YYYY-MM-DDTHH:mm:ss.SSSZ')
+        opts.since = options.since.toISOString()
       } else {
         opts.since = options.since
       }
     }
 
     if (options.before) {
-      opts.before = format(options.before, 'YYYY-MM-DDTHH:mm:ss.SSSZ')
+      opts.before = options.before.toISOString()
     }
 
     if (options.limit) {
@@ -117,13 +117,6 @@ export default class Account {
       path: '/transactions',
       qs: opts
     }
-
-    // TODO: move to service
-    // const txs = await this.monzo.request('/transactions', opts)
-    //
-    // return txs.transactions.map((tx: IMonzoApiTransaction, index: number) => {
-    //   return new Transaction(this.monzo, this, tx, index)
-    // })
   }
 
   targetsRequest(): MonzoRequest {

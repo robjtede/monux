@@ -76,7 +76,9 @@ export class TransactionActions {
     }))(txId)
   }
 
-  getTransactions() {
+  getTransactions(
+    options: { since?: Date | string; before?: Date; limit?: number } = {}
+  ) {
     return createAction<
       GetTransactionsPromise
     >(TransactionActions.GET_TRANSACTIONS, () => ({
@@ -88,12 +90,20 @@ export class TransactionActions {
           )
 
           const txs = (await this.monzo.request<MonzoTransactionsResponse>(
-            acc.transactionsRequest()
+            acc.transactionsRequest(options)
           )).transactions
 
           debug('HTTP transactions =>', txs)
 
           this.redux.dispatch(this.addTransactions(txs))
+
+          // const cachedTxs = await getCachedTransactions()
+          //
+          // const txs =
+          //   cachedTxs.length > 0
+          //     ? await account.transactions({ since: cachedTxs[0].id })
+          //     : await account.transactions()
+
           // store.dispatch({ type: 'SET_ONLINE' })
           // store.dispatch({
           //   type: 'SAVE_TRANSACTIONS',
