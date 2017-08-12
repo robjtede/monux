@@ -9,65 +9,65 @@
   max-width: 100%;
   max-height: 100px;
 
-  border-left: 20px solid;
+  border-left: 20px solid transparent;
 
-  &:hover {
+  &(:hover) {
     cursor: pointer;
   }
 
-  &.selected {
+  &(.selected) {
     background: rgba(56, 78, 199, 1.0);
     color: var(--off-white);
   }
-}
 
-:host(:not(.selected):hover) {
-  background: #f0f0f0;
-}
+  &(:not(.selected):hover) {
+    background: #f0f0f0;
+  }
 
-:host(:not(.selected).declined) {
-  background: #fff0f0;
-}
+  &(:not(.selected).declined) {
+    background: #fff0f0;
+  }
 
-:host(:not(.selected).declined:hover) {
-  background: #fee;
-}
+  &(:not(.selected).declined:hover) {
+    background: #fee;
+  }
 
-:host([data-category=groceries]) {
-  border-left-color: gold;
-}
-:host([data-category=transport]) {
-  border-left-color: teal;
-}
-:host([data-category=entertainment]) {
-  border-left-color: orangered;
-}
-:host([data-category=eating_out]) {
-  border-left-color: crimson;
-}
-:host([data-category=cash]) {
-  border-left-color: olivedrab;
-}
-:host([data-category=mondo]) {
-  border-left-color: olivedrab;
-}
-:host([data-category=monzo]) {
-  border-left-color: olivedrab;
-}
-:host([data-category=general]) {
-  border-left-color: slategrey;
-}
-:host([data-category=bills]) {
-  border-left-color: cornflowerblue;
-}
-:host([data-category=holidays]) {
-  border-left-color: orchid;
-}
-:host([data-category=shopping]) {
-  border-left-color: coral;
-}
-:host([data-category=expenses]) {
-  border-left-color: darkkhaki;
+  &([data-category=groceries]) {
+    border-left-color: gold;
+  }
+  &([data-category=transport]) {
+    border-left-color: teal;
+  }
+  &([data-category=entertainment]) {
+    border-left-color: orangered;
+  }
+  &([data-category=eating_out]) {
+    border-left-color: crimson;
+  }
+  &([data-category=cash]) {
+    border-left-color: olivedrab;
+  }
+  &([data-category=mondo]) {
+    border-left-color: olivedrab;
+  }
+  &([data-category=monzo]) {
+    border-left-color: olivedrab;
+  }
+  &([data-category=general]) {
+    border-left-color: slategrey;
+  }
+  &([data-category=bills]) {
+    border-left-color: cornflowerblue;
+  }
+  &([data-category=holidays]) {
+    border-left-color: orchid;
+  }
+  &([data-category=shopping]) {
+    border-left-color: coral;
+  }
+  &([data-category=expenses]) {
+    border-left-color: darkkhaki;
+  }
 }
 
 .icon-wrap {

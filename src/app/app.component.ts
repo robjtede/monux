@@ -20,7 +20,7 @@ import './style/index.css'
   selector: 'monux-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.Default
 })
 export class AppComponent implements OnInit, OnDestroy {
   readonly name = 'Monux'
@@ -32,7 +32,7 @@ export class AppComponent implements OnInit, OnDestroy {
   constructor(
     private readonly redux: NgRedux<AppState>,
     private readonly balanceActions: BalanceActions,
-    private readonly transactionActions: TransactionActions
+    private readonly txActions: TransactionActions
   ) {
     this.balance$ = this.redux
       .select<AmountOpts>('balance')
@@ -52,7 +52,7 @@ export class AppComponent implements OnInit, OnDestroy {
 
     this.redux.dispatch(this.balanceActions.getBalance())
     this.redux.dispatch(
-      this.transactionActions.getTransactions({
+      this.txActions.getTransactions({
         since: new Date(Date.now() - 86400000 * 20).toISOString()
       })
     )
