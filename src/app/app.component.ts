@@ -4,10 +4,8 @@ import {
   OnDestroy,
   ChangeDetectionStrategy
 } from '@angular/core'
-import { NgRedux, select } from '@angular-redux/store'
+import { NgRedux } from '@angular-redux/store'
 import { Observable } from 'rxjs'
-
-import { MonzoService } from './services/monzo.service'
 
 import { AppState } from './store'
 import { BalanceActions } from './actions/balance'
@@ -20,7 +18,7 @@ import './style/index.css'
   selector: 'monux-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css'],
-  changeDetection: ChangeDetectionStrategy.Default
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AppComponent implements OnInit, OnDestroy {
   readonly name = 'Monux'

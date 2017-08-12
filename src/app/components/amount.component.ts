@@ -5,7 +5,7 @@ import Amount from '../../lib/monzo/Amount'
   selector: 'm-amount',
   templateUrl: './amount.component.html',
   styleUrls: ['./amount.component.css'],
-  changeDetection: ChangeDetectionStrategy.Default
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AmountComponent {
   @Input() private amount: Amount

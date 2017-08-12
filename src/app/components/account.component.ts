@@ -1,23 +1,25 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core'
-import { NgRedux, select } from '@angular-redux/store'
+import { NgRedux } from '@angular-redux/store'
 import { Observable } from 'rxjs'
 
 import { AppState } from '../store'
-import Account from '../../lib/monzo/Account'
+import Account, { MonzoAccountResponse } from '../../lib/monzo/Account'
 
 @Component({
   selector: 'm-account',
   templateUrl: './account.component.html',
   styleUrls: ['./account.component.css'],
-  changeDetection: ChangeDetectionStrategy.Default
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AccountComponent {
-  @select(({ account: { monzo } }: AppState) => {
-    return monzo ? new Account(monzo).name : 'Loading...'
-  })
   private readonly holder$: Observable<string>
+  private readonly bank$: Observable<string> = Observable.of('monux')
 
-  private readonly bank: string = 'monux'
-
-  constructor(private readonly redux: NgRedux) {}
+  constructor(private readonly redux: NgRedux<AppState>) {
+    this.holder$ = this.redux
+      .select<MonzoAccountResponse>(['account', 'monzo'])
+      .map(acc => {
+        return acc ? new Account(acc).name : 'Loading...'
+      })
+  }
 }
