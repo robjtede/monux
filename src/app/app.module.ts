@@ -21,6 +21,7 @@ import { AppComponent } from './app.component'
 import { AmountComponent } from './components/amount.component'
 import { AccountComponent } from './components/account.component'
 import { TransactionListComponent } from './components/transaction-list.component'
+import { TransactionGroupComponent } from './components/transaction-group.component'
 import { TransactionSummaryComponent } from './components/transaction-summary.component'
 
 @NgModule({
@@ -29,6 +30,7 @@ import { TransactionSummaryComponent } from './components/transaction-summary.co
     AmountComponent,
     AccountComponent,
     TransactionListComponent,
+    TransactionGroupComponent,
     TransactionSummaryComponent
   ],
   imports: [BrowserModule, HttpClientModule, NgReduxModule],

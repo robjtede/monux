@@ -273,7 +273,7 @@ export default class Transaction {
 export const groupTransactions = (
   txs: Transaction[],
   method = 'default'
-): GroupedTransactions => {
+): TransactionGroup[] => {
   const groupKey: GroupingMethods = {
     day: tx => {
       const created = new Date(tx.created)
@@ -295,7 +295,17 @@ export const groupTransactions = (
     }
   }
 
-  return map(groupBy(txs, groupKey[method]), (txs, id) => ({ id, txs }))
+  return map(groupBy(txs, groupKey[method]), (txs, id) => ({ id, method, txs }))
+}
+
+interface GroupingMethods {
+  [method: string]: (tx: Transaction) => string
+}
+
+export interface TransactionGroup {
+  id: string
+  method: string
+  txs: Transaction[]
 }
 
 export interface MonzoTransactionsResponse extends JSONMap {
@@ -350,12 +360,3 @@ export interface MonzoCounterpartyResponse extends JSONMap {
   prefered_name: string
   user_id: string
 }
-
-interface GroupingMethods {
-  [method: string]: (tx: Transaction) => string
-}
-
-export type GroupedTransactions = {
-  id: string
-  txs: Transaction[]
-}[]

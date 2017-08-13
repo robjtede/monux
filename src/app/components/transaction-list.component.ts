@@ -7,7 +7,7 @@ import {
 } from '@angular/core'
 
 import Transaction, {
-  GroupedTransactions,
+  TransactionGroup,
   groupTransactions
 } from '../../lib/monzo/Transaction'
 
@@ -20,7 +20,7 @@ import Transaction, {
 export class TransactionListComponent implements OnChanges {
   @Input() private readonly txs: Transaction[]
 
-  private txGroups: GroupedTransactions = []
+  private txGroups: TransactionGroup[] = []
 
   constructor() {}
 

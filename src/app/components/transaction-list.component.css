@@ -17,6 +17,6 @@
   }
 }
 
-m-transaction-summary:not(:last-of-type) {
+m-transaction-group:not(:last-of-type) {
   border-bottom: var(--thin-border);
 }

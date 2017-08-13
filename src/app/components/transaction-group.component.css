@@ -1,0 +1,3 @@
+m-transaction-summary:not(:last-of-type) {
+  border-bottom: var(--thin-border);
+}
