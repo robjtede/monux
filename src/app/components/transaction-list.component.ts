@@ -1,6 +1,9 @@
 import { Component, Input, ChangeDetectionStrategy } from '@angular/core'
 
-import Transaction from '../../lib/monzo/Transaction'
+import Transaction, {
+  GroupedTransactions,
+  groupTransactions
+} from '../../lib/monzo/Transaction'
 
 @Component({
   selector: 'm-transaction-list',
@@ -9,7 +12,13 @@ import Transaction from '../../lib/monzo/Transaction'
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TransactionListComponent {
-  @Input() private readonly txs: Transaction
+  @Input() private readonly txs: Transaction[]
 
   constructor() {}
+
+  get txGroups(): GroupedTransactions {
+    const groups = groupTransactions(this.txs, 'date')
+    console.log(groups)
+    return groups
+  }
 }

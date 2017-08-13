@@ -31,11 +31,11 @@ export class TransactionSummaryComponent {
     private readonly txActions: TransactionActions
   ) {}
 
-  get showAmount() {
+  get showAmount(): boolean {
     return !this.tx.is.metaAction && !this.tx.declined
   }
 
-  get selected() {
+  get selected(): boolean {
     return this.redux.getState().selectedTransaction === this.tx.id
   }
 

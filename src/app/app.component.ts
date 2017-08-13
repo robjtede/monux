@@ -12,7 +12,11 @@ import { BalanceActions } from './actions/balance'
 import { TransactionActions } from './actions/transaction'
 
 import Amount, { AmountOpts } from '../lib/monzo/Amount'
-import Transaction, { MonzoTransactionResponse } from '../lib/monzo/Transaction'
+import Transaction, {
+  MonzoTransactionResponse,
+  groupTransactions,
+  GroupedTransactions
+} from '../lib/monzo/Transaction'
 
 import './style/index.css'
 

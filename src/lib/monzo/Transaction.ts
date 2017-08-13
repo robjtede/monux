@@ -1,4 +1,5 @@
-import { format } from 'date-fns'
+import { format, startOfDay } from 'date-fns'
+import { groupBy, map } from 'lodash'
 
 import Amount, { SimpleAmount } from './Amount'
 import Merchant, { MonzoMerchantResponse } from './Merchant'
@@ -54,7 +55,7 @@ export default class Transaction {
     }
   }
 
-  get counterparty() {
+  get counterparty(): MonzoCounterpartyResponse {
     return this.tx.counterparty
   }
 
@@ -115,7 +116,7 @@ export default class Transaction {
   }
 
   get is() {
-    const cash = String(this.category) === 'cash'
+    const cash = this.category.toString() === 'cash'
     const zero = +this.tx.amount === 0
 
     const metaAction = zero && !this.inSpending
@@ -269,6 +270,34 @@ export default class Transaction {
   }
 }
 
+export const groupTransactions = (
+  txs: Transaction[],
+  method = 'default'
+): GroupedTransactions => {
+  const groupKey: GroupingMethods = {
+    date: tx => {
+      const created = new Date(tx.created)
+      return (+startOfDay(created)).toString()
+    },
+
+    merchant: tx => {
+      if (typeof tx.merchant === 'string') {
+        return tx.merchant
+      } else {
+        return tx.merchant
+          ? tx.merchant.groupId
+          : tx.counterparty.user_id ? 'monzo-contacts' : 'top-ups'
+      }
+    },
+
+    default: () => {
+      return 'unsorted'
+    }
+  }
+
+  return map(groupBy(txs, groupKey[method]), (txs, id) => ({ id, txs }))
+}
+
 export interface MonzoTransactionsResponse extends JSONMap {
   transactions: MonzoTransactionResponse[]
 }
@@ -321,3 +350,12 @@ export interface MonzoCounterpartyResponse extends JSONMap {
   prefered_name: string
   user_id: string
 }
+
+interface GroupingMethods {
+  [method: string]: (tx: Transaction) => string
+}
+
+export type GroupedTransactions = {
+  id: string
+  txs: Transaction[]
+}[]

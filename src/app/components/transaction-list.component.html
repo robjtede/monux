@@ -1,1 +1,1 @@
-<m-transaction-summary *ngFor="let tx of txs" [tx]="tx"></m-transaction-summary>
+<m-transaction-summary *ngFor="let group of txGroups" [tx]="group.txs[0]"></m-transaction-summary>

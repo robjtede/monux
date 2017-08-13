@@ -10,12 +10,14 @@
 
   border-left: 20px solid transparent;
 
+  transition: background-color 150ms ease, color 100ms ease;
+
   &(:hover) {
     cursor: pointer;
   }
 
   &(.selected) {
-    background: rgba(56, 78, 199, 1.0);
+    background-color: rgba(56, 78, 199, 1.0);
     color: var(--off-white);
   }
 
