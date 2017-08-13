@@ -1,5 +1,4 @@
-import { format, startOfDay } from 'date-fns'
-import { groupBy, map } from 'lodash'
+import { format } from 'date-fns'
 
 import Amount, { SimpleAmount } from './Amount'
 import Merchant, { MonzoMerchantResponse } from './Merchant'
@@ -268,44 +267,6 @@ export default class Transaction {
   get stringify(): string {
     return JSON.stringify(this.json)
   }
-}
-
-export const groupTransactions = (
-  txs: Transaction[],
-  method = 'default'
-): TransactionGroup[] => {
-  const groupKey: GroupingMethods = {
-    day: tx => {
-      const created = new Date(tx.created)
-      return (+startOfDay(created)).toString()
-    },
-
-    merchant: tx => {
-      if (typeof tx.merchant === 'string') {
-        return tx.merchant
-      } else {
-        return tx.merchant
-          ? tx.merchant.groupId
-          : tx.counterparty.user_id ? 'monzo-contacts' : 'top-ups'
-      }
-    },
-
-    default: () => {
-      return 'unsorted'
-    }
-  }
-
-  return map(groupBy(txs, groupKey[method]), (txs, id) => ({ id, method, txs }))
-}
-
-interface GroupingMethods {
-  [method: string]: (tx: Transaction) => string
-}
-
-export interface TransactionGroup {
-  id: string
-  method: string
-  txs: Transaction[]
 }
 
 export interface MonzoTransactionsResponse extends JSONMap {

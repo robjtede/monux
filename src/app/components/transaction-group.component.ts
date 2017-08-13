@@ -1,6 +1,6 @@
 import { Component, Input, ChangeDetectionStrategy } from '@angular/core'
 
-import Transaction, { TransactionGroup } from '../../lib/monzo/Transaction'
+import { TransactionGroup, getGroupTitle } from '../../lib/monzo/helpers'
 
 @Component({
   selector: 'm-transaction-group',
@@ -10,4 +10,8 @@ import Transaction, { TransactionGroup } from '../../lib/monzo/Transaction'
 })
 export class TransactionGroupComponent {
   @Input() private readonly group: TransactionGroup
+
+  get groupTitle(): string {
+    return getGroupTitle(this.group)
+  }
 }

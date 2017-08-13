@@ -2,8 +2,6 @@ import {
   Component,
   OnInit,
   OnDestroy,
-  OnChanges,
-  SimpleChanges,
   ChangeDetectionStrategy
 } from '@angular/core'
 import { NgRedux } from '@angular-redux/store'
@@ -24,7 +22,7 @@ import './style/index.css'
   styleUrls: ['./app.component.css'],
   changeDetection: ChangeDetectionStrategy.Default
 })
-export class AppComponent implements OnInit, OnDestroy, OnChanges {
+export class AppComponent implements OnInit, OnDestroy {
   readonly name = 'Monux'
 
   private readonly balance$: Observable<Amount>

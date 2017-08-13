@@ -1,5 +1,3 @@
-import { format } from 'date-fns'
-
 import { JSONMap } from '../json-types'
 import { QueryString, MonzoRequest } from './api'
 

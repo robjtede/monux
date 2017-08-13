@@ -6,10 +6,12 @@ import {
   SimpleChanges
 } from '@angular/core'
 
-import Transaction, {
+import Transaction from '../../lib/monzo/Transaction'
+import {
+  groupTransactions,
   TransactionGroup,
-  groupTransactions
-} from '../../lib/monzo/Transaction'
+  GroupingStrategy
+} from '../../lib/monzo/helpers'
 
 @Component({
   selector: 'm-transaction-list',
@@ -25,7 +27,7 @@ export class TransactionListComponent implements OnChanges {
   constructor() {}
 
   updateTxGroups(): void {
-    this.txGroups = groupTransactions(this.txs, 'day')
+    this.txGroups = groupTransactions(this.txs, GroupingStrategy.Day)
   }
 
   ngOnChanges(changes: SimpleChanges) {
