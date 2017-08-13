@@ -275,7 +275,7 @@ export const groupTransactions = (
   method = 'default'
 ): GroupedTransactions => {
   const groupKey: GroupingMethods = {
-    date: tx => {
+    day: tx => {
       const created = new Date(tx.created)
       return (+startOfDay(created)).toString()
     },

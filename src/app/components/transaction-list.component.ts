@@ -1,4 +1,10 @@
-import { Component, Input, ChangeDetectionStrategy } from '@angular/core'
+import {
+  Component,
+  OnChanges,
+  Input,
+  ChangeDetectionStrategy,
+  SimpleChanges
+} from '@angular/core'
 
 import Transaction, {
   GroupedTransactions,
@@ -11,14 +17,18 @@ import Transaction, {
   styleUrls: ['./transaction-list.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class TransactionListComponent {
+export class TransactionListComponent implements OnChanges {
   @Input() private readonly txs: Transaction[]
+
+  private txGroups: GroupedTransactions = []
 
   constructor() {}
 
-  get txGroups(): GroupedTransactions {
-    const groups = groupTransactions(this.txs, 'date')
-    console.log(groups)
-    return groups
+  updateTxGroups(): void {
+    this.txGroups = groupTransactions(this.txs, 'day')
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    if (Object.keys(changes).includes('txs')) this.updateTxGroups()
   }
 }

@@ -2,6 +2,8 @@ import {
   Component,
   OnInit,
   OnDestroy,
+  OnChanges,
+  SimpleChanges,
   ChangeDetectionStrategy
 } from '@angular/core'
 import { NgRedux } from '@angular-redux/store'
@@ -12,11 +14,7 @@ import { BalanceActions } from './actions/balance'
 import { TransactionActions } from './actions/transaction'
 
 import Amount, { AmountOpts } from '../lib/monzo/Amount'
-import Transaction, {
-  MonzoTransactionResponse,
-  groupTransactions,
-  GroupedTransactions
-} from '../lib/monzo/Transaction'
+import Transaction, { MonzoTransactionResponse } from '../lib/monzo/Transaction'
 
 import './style/index.css'
 
@@ -26,7 +24,7 @@ import './style/index.css'
   styleUrls: ['./app.component.css'],
   changeDetection: ChangeDetectionStrategy.Default
 })
-export class AppComponent implements OnInit, OnDestroy {
+export class AppComponent implements OnInit, OnDestroy, OnChanges {
   readonly name = 'Monux'
 
   private readonly balance$: Observable<Amount>
