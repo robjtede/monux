@@ -1,3 +1,28 @@
+:host {
+  display: block;
+}
+
+.group-heading {
+  padding: 10px 20px;
+  padding-left: 40px;
+
+  border-bottom: var(--thin-border);
+  background-color: var(--off-white);
+
+  & .group-title {
+    font-size: 1.2rem;
+  }
+
+  & .group-size {
+    font-size: 0.9rem;
+    color: var(--label-grey);
+  }
+
+  & .group-total {
+    font-size: 1rem;
+  }
+}
+
 m-transaction-summary:not(:last-of-type) {
   border-bottom: var(--thin-border);
 }
