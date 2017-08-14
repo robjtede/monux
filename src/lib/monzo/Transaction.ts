@@ -136,7 +136,8 @@ export default class Transaction {
       'merchant' in this.tx &&
       typeof this.tx.merchant !== 'string' &&
       this.tx.merchant &&
-      'online' in this.tx.merchant
+      'online' in this.tx.merchant &&
+      this.tx.merchant.online
     ) {
       return 'Online'
     } else if (
@@ -145,7 +146,8 @@ export default class Transaction {
       this.tx.merchant &&
       'address' in this.tx.merchant &&
       this.tx.merchant.address &&
-      'short_formatted' in this.tx.merchant
+      'short_formatted' in this.tx.merchant.address &&
+      this.tx.merchant.address.short_formatted
     ) {
       return this.tx.merchant.address.short_formatted
     } else {
@@ -161,9 +163,9 @@ export default class Transaction {
 
   get notes() {
     return {
-      toString: () => this.tx.notes,
       short: this.tx.notes.split('\n')[0],
-      full: this.tx.notes
+      full: this.tx.notes,
+      toString: () => this.tx.notes
     }
   }
 

@@ -27,9 +27,14 @@ import './style/index.css'
 export class AppComponent implements OnInit, OnDestroy {
   readonly name = 'Monux'
 
+  @select('selectedTransaction')
+  private readonly selectedTxId$: Observable<string>
+
+  private readonly accountHolder$: Observable<string>
   private readonly balance$: Observable<Amount>
   private readonly spent$: Observable<Amount>
   private readonly txs$: Observable<Transaction[]>
+  private readonly selectedTx$: Observable<Transaction | undefined>
 
   constructor(
     private readonly redux: NgRedux<AppState>,
@@ -52,6 +57,14 @@ export class AppComponent implements OnInit, OnDestroy {
     this.txs$ = this.redux
       .select<MonzoTransactionResponse[]>('transactions')
       .map(txs => txs.map(tx => new Transaction(tx)))
+
+    this.selectedTx$ = this.selectedTxId$
+      .combineLatest(this.txs$)
+      .filter(([txId, txs]) => !!txId && !!txs.length)
+      .map(([txId, txs]) => txs.find(tx => tx.id === txId))
+
+    // this.txs$.subscribe(x => console.log(x))
+    // this.selectedTx$.subscribe(x => console.log(x))
   }
 
   ngOnInit(): void {

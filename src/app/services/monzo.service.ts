@@ -20,12 +20,9 @@ export class MonzoService {
   constructor(private readonly http: HttpClient) {}
 
   async request<T>(
-    {
-      path = '/ping/whoami',
-      qs = {},
-      method = 'GET',
-      json = true
-    }: MonzoRequest = { path: '/ping/whoami' }
+    { path = '/ping/whoami', qs = {}, method = 'GET' }: MonzoRequest = {
+      path: '/ping/whoami'
+    }
   ): Promise<T> {
     const url = `${this.proto}${this.apiRoot}${path}`
 

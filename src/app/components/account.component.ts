@@ -1,7 +1,4 @@
 import { Component, Input, ChangeDetectionStrategy } from '@angular/core'
-import { Observable } from 'rxjs'
-
-import Account from '../../lib/monzo/Account'
 
 @Component({
   selector: 'm-account',
@@ -10,7 +7,7 @@ import Account from '../../lib/monzo/Account'
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AccountComponent {
-  @Input() readonly holder: Account
+  @Input() readonly holder: string = 'Loading...'
 
   readonly bank: string = 'monux'
 }
