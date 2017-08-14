@@ -58,13 +58,6 @@ module.exports = {
         test: /\.ts$/,
         loaders: [
           {
-            loader: '@angularclass/hmr-loader',
-            options: {
-              pretty: true,
-              prod: false
-            }
-          },
-          {
             loader: 'awesome-typescript-loader',
             options: { configFileName: './tsconfig.json' }
           },
@@ -144,7 +137,18 @@ module.exports = {
     new BaseHrefWebpackPlugin({}),
 
     new CommonsChunkPlugin({
-      name: ['app', 'polyfills']
+      name: 'polyfills',
+      chunks: ['polyfills']
+    }),
+
+    new CommonsChunkPlugin({
+      name: 'vendor',
+      chunks: ['app'],
+      minChunks: module => /node_modules/.test(module.resource)
+    }),
+
+    new CommonsChunkPlugin({
+      name: ['vendor', 'polyfills']
     }),
 
     new ExtractTextPlugin('[name].css'),
