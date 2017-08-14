@@ -4,7 +4,7 @@ import {
   OnDestroy,
   ChangeDetectionStrategy
 } from '@angular/core'
-import { NgRedux } from '@angular-redux/store'
+import { NgRedux, select } from '@angular-redux/store'
 import { Observable } from 'rxjs'
 
 import { AppState } from './store'
@@ -13,6 +13,8 @@ import { TransactionActions } from './actions/transaction'
 
 import Amount, { AmountOpts } from '../lib/monzo/Amount'
 import Transaction, { MonzoTransactionResponse } from '../lib/monzo/Transaction'
+import { MonzoAccountResponse } from '../lib/monzo/Account'
+import Account from '../lib/monzo/Account'
 
 import './style/index.css'
 
@@ -34,6 +36,11 @@ export class AppComponent implements OnInit, OnDestroy {
     private readonly balanceActions: BalanceActions,
     private readonly txActions: TransactionActions
   ) {
+    this.accountHolder$ = this.redux
+      .select<MonzoAccountResponse>(['account', 'monzo'])
+      .filter(acc => !!acc)
+      .map(acc => new Account(acc).name)
+
     this.balance$ = this.redux
       .select<AmountOpts>('balance')
       .map(balance => new Amount(balance))
@@ -43,7 +50,7 @@ export class AppComponent implements OnInit, OnDestroy {
       .map(spent => new Amount(spent))
 
     this.txs$ = this.redux
-      .select<MonzoTransactionResponse[]>(['transactions'])
+      .select<MonzoTransactionResponse[]>('transactions')
       .map(txs => txs.map(tx => new Transaction(tx)))
   }
 

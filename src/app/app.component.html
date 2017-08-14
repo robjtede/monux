@@ -9,7 +9,7 @@
 </header>
 
 <nav class="tabs">
-  <m-account></m-account>
+  <m-account [holder]="accountHolder$"></m-account>
   <div class="logout">Log Out</div>
 
   <div class="tabgroup">
@@ -25,7 +25,7 @@
     <m-transaction-list [txs]="txs$ | async"></m-transaction-list>
 
     <div class="transaction-detail-pane">
-      <!-- <m-transaction-detail offline></m-transaction-detail> -->
+      <m-transaction-detail [tx]="selectedTx$ | async"></m-transaction-detail>
     </div>
   </div>
 
