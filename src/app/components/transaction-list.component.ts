@@ -20,7 +20,7 @@ import {
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TransactionListComponent implements OnChanges {
-  @Input() private readonly txs: Transaction[]
+  @Input() readonly txs: Transaction[]
 
   private txGroups: TransactionGroup[] = []
 

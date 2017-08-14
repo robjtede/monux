@@ -24,7 +24,7 @@ import Transaction from '../../lib/monzo/Transaction'
   }
 })
 export class TransactionSummaryComponent {
-  @Input() private readonly tx: Transaction
+  @Input() readonly tx: Transaction
 
   constructor(
     private readonly redux: NgRedux<AppState>,

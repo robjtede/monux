@@ -58,6 +58,13 @@ module.exports = {
         test: /\.ts$/,
         loaders: [
           {
+            loader: '@angularclass/hmr-loader',
+            options: {
+              pretty: true,
+              prod: false
+            }
+          },
+          {
             loader: 'awesome-typescript-loader',
             options: { configFileName: './tsconfig.json' }
           },
@@ -116,7 +123,7 @@ module.exports = {
     new ProgressPlugin(),
 
     new GlobCopyWebpackPlugin({
-      patterns: ['assets', 'icons', 'monux.*'],
+      patterns: ['assets', 'monux.*'],
       globOptions: {
         cwd: root('./src'),
         dot: true,

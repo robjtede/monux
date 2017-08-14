@@ -37,7 +37,7 @@ export const groupTransactions = (
   return map(groupBy(txs, groupKey[method]), (txs, id) => ({ id, method, txs }))
 }
 
-// sortTransactions
+// TODO: sortTransactions
 
 export const getGroupTitle = (group: TransactionGroup): string => {
   const titleFns: GroupTitleFunctions = {

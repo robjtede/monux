@@ -2,7 +2,7 @@
   padding: 0.4em 0.8em;
 
   background: 5px center no-repeat;
-  background-image: url('../icons/monzo.png');
+  background-image: url('../assets/icons/monzo.png');
   background-size: contain;
   border: var(--thin-border);
   border-radius: 8px;

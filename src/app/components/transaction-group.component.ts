@@ -9,7 +9,7 @@ import { TransactionGroup, getGroupTitle } from '../../lib/monzo/helpers'
   changeDetection: ChangeDetectionStrategy.Default
 })
 export class TransactionGroupComponent {
-  @Input() private readonly group: TransactionGroup
+  @Input() readonly group: TransactionGroup
 
   get groupTitle(): string {
     return getGroupTitle(this.group)
