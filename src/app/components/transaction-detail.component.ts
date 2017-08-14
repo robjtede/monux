@@ -13,6 +13,7 @@ import Transaction from '../../lib/monzo/Transaction'
   styleUrls: ['./transaction-detail.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
+    '[class.declined]': 'tx.declined',
     '[attr.data-category]': 'tx.category'
   }
 })
@@ -22,10 +23,6 @@ export class TransactionDetailComponent {
   constructor() // private readonly redux: NgRedux<AppState>,
   // private readonly txActions: TransactionActions
   {
-  }
-
-  get showAmount(): boolean {
-    return !this.tx.is.metaAction && !this.tx.declined
   }
 
   get createdTime() {

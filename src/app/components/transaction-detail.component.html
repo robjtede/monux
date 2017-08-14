@@ -7,14 +7,16 @@
 
 <div class="location" *ngIf="!tx.online">{{ tx.location }}</div>
 <div class="category-wrap">
-  <div class="category">{{ tx.category.formatted }}</div>
+  <div class="category" [attr.emoji]="tx.emoji">{{ tx.category.formatted }}</div>
 </div>
-<div class="amount-wrap" [innerHTML]="tx.amount.html(true, 0)"></div>
+
+<div class="decline-reason" *ngIf="tx.declined">Declined due to {{ tx.declineReason }}.</div>
+<div class="amount-wrap" *ngIf="!this.tx.is.metaAction" [innerHTML]="tx.amount.html(true, 0)"></div>
 <div class="balance-wrap" [innerHTML]="tx.balance.html(true, 0)"></div>
 
 <div class="notes-wrap" [class.noted]="this.tx.notes">
   <a href="#">Add note</a>
-  <textarea class="notes">{{ tx.notes }}</textarea>
+  <textarea class="notes" [value]="tx.notes"></textarea>
 </div>
 
 <div class="attachments">
@@ -28,4 +30,3 @@
 <div class="id">{{ tx.id }}</div>
 <div class="description">{{ tx.description }}</div>
 <div class="settled" *ngIf="showAmount">{{ tx.settled }}</div>
-<div class="decline-reason" *ngIf="tx.declined">{{ tx.declineReason }}</div>

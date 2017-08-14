@@ -172,11 +172,18 @@
 }
 
 :host(.declined) .amount {
-  color: red;
+  color: color(red saturation(-20%));
 }
 
 .amount-wrap .amount .major {
   font-size: 2em;
+}
+
+.decline-reason {
+  padding: 1em 15px 0;
+
+  font-size: 1.2rem;
+  color: color(red saturation(-20%));
 }
 
 .balance-wrap {
@@ -290,8 +297,7 @@
 .date,
 .id,
 .description,
-.settled,
-.decline-reason {
+.settled {
   padding: 0.8em 15px;
 
   font-size: 0.8rem;
@@ -302,8 +308,7 @@
 .date::before,
 .id::before,
 .description::before,
-.settled::before,
-.decline-reason::before {
+.settled::before {
   content: var(--label-text);
   display: block;
 
@@ -323,19 +328,4 @@
 
 .settled {
   --label-text: 'Transaction Status:';
-}
-
-.settled.meta {
-  display: none;
-}
-
-.decline-reason {
-  --label-text: 'Decline Reason:';
-  display: none;
-
-  text-transform: capitalize;
-}
-
-:host(.declined) .decline-reason {
-  display: block;
 }
