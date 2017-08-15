@@ -1,4 +1,10 @@
-import { Component, Input, ChangeDetectionStrategy } from '@angular/core'
+import {
+  Component,
+  Input,
+  ChangeDetectionStrategy,
+  ElementRef,
+  ViewChild
+} from '@angular/core'
 // import { NgRedux, dispatch } from '@angular-redux/store'
 import { format } from 'date-fns'
 
@@ -20,6 +26,8 @@ import Transaction from '../../lib/monzo/Transaction'
 export class TransactionDetailComponent {
   @Input() readonly tx: Transaction
 
+  @ViewChild('icon') readonly $icon: ElementRef
+
   constructor() // private readonly redux: NgRedux<AppState>,
   // private readonly txActions: TransactionActions
   {
@@ -30,14 +38,19 @@ export class TransactionDetailComponent {
   }
 
   get emoji() {
-    if (typeof this.tx.merchant === 'string' || !this.tx.merchant.emoji) {
+    if (
+      typeof this.tx.merchant === 'string' ||
+      !this.tx.merchant ||
+      !this.tx.merchant.emoji
+    ) {
       return '💵️'
     } else {
       return this.tx.merchant.emoji
     }
   }
 
-  get noted() {
-    return !!this.tx.notes
+  iconFallback() {
+    console.log(this.$icon)
+    this.$icon.nativeElement.src = this.tx.iconFallback
   }
 }

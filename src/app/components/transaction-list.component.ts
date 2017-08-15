@@ -24,13 +24,11 @@ export class TransactionListComponent implements OnChanges {
 
   private txGroups: TransactionGroup[] = []
 
-  constructor() {}
+  ngOnChanges(changes: SimpleChanges) {
+    if (Object.keys(changes).includes('txs')) this.updateTxGroups()
+  }
 
   updateTxGroups(): void {
     this.txGroups = groupTransactions(this.txs, GroupingStrategy.Day)
-  }
-
-  ngOnChanges(changes: SimpleChanges) {
-    if (Object.keys(changes).includes('txs')) this.updateTxGroups()
   }
 }
