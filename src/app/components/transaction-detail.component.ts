@@ -28,4 +28,16 @@ export class TransactionDetailComponent {
   get createdTime() {
     return format(this.tx.created, 'h:mma - Do MMMM YYYY')
   }
+
+  get emoji() {
+    if (typeof this.tx.merchant === 'string' || !this.tx.merchant.emoji) {
+      return '💵️'
+    } else {
+      return this.tx.merchant.emoji
+    }
+  }
+
+  get noted() {
+    return !!this.tx.notes
+  }
 }

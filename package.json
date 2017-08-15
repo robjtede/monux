@@ -36,6 +36,7 @@
     "@angular/platform-browser": "^4.3.4",
     "@angular/platform-browser-dynamic": "^4.3.4",
     "@ngrx/store": "^4.0.2",
+    "angular2-autosize": "^1.0.1",
     "common-tags": "^1.4.0",
     "d3": "^4.10.0",
     "date-fns": "^2.0.0-alpha.1",

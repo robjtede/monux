@@ -1,43 +1,54 @@
 :host {
   display: block;
   padding-bottom: 15px;
-}
 
-:host([data-category=groceries]) {
-  --category-color: gold;
-}
-:host([data-category=transport]) {
-  --category-color: teal;
-}
-:host([data-category=entertainment]) {
-  --category-color: orangered;
-}
-:host([data-category=eating_out]) {
-  --category-color: crimson;
-}
-:host([data-category=cash]) {
-  --category-color: olivedrab;
-}
-:host([data-category=mondo]) {
-  --category-color: olivedrab;
-}
-:host([data-category=monzo]) {
-  --category-color: olivedrab;
-}
-:host([data-category=general]) {
-  --category-color: slategrey;
-}
-:host([data-category=bills]) {
-  --category-color: cornflowerblue;
-}
-:host([data-category=holidays]) {
-  --category-color: orchid;
-}
-:host([data-category=shopping]) {
-  --category-color: coral;
-}
-:host([data-category=expenses]) {
-  --category-color: darkkhaki;
+  &([data-category=groceries]) {
+    --category-color: gold;
+  }
+
+  &([data-category=transport]) {
+    --category-color: teal;
+  }
+
+  &([data-category=entertainment]) {
+    --category-color: orangered;
+  }
+
+  &([data-category=eating_out]) {
+    --category-color: crimson;
+  }
+
+  &([data-category=cash]) {
+    --category-color: olivedrab;
+  }
+
+  &([data-category=mondo]) {
+    --category-color: olivedrab;
+  }
+
+  &([data-category=monzo]) {
+    --category-color: olivedrab;
+  }
+
+  &([data-category=general]) {
+    --category-color: slategrey;
+  }
+
+  &([data-category=bills]) {
+    --category-color: cornflowerblue;
+  }
+
+  &([data-category=holidays]) {
+    --category-color: orchid;
+  }
+
+  &([data-category=shopping]) {
+    --category-color: coral;
+  }
+
+  &([data-category=expenses]) {
+    --category-color: darkkhaki;
+  }
 }
 
 .info {
@@ -68,32 +79,32 @@
 
 .icon-wrap {
   flex: 0 1 130px;
-}
 
-.icon {
-  width: 3em;
-  height: 3em;
+  & .icon {
+    width: 3em;
+    height: 3em;
 
-  border: var(--thin-border);
-  border-radius: 25%;
-  background: var(--white);
+    border: var(--thin-border);
+    border-radius: 25%;
+    background: var(--white);
 
-  transform: scale(1.8);
-  transform-origin: bottom left;
+    transform: scale(1.8);
+    transform-origin: bottom left;
+  }
 }
 
 .merchant {
   flex: 1;
 
   font-size: 2rem;
-}
 
-.merchant.online::after {
-  content: '\01F310';
-  font-size: 0.7em;
-  padding-left: 0.5em;
-  color: rgba(123, 198, 255, 1.0);
-  vertical-align: middle;
+  & .online::after {
+    content: '\01F310';
+    font-size: 0.7em;
+    padding-left: 0.5em;
+    color: rgba(123, 198, 255, 1.0);
+    vertical-align: middle;
+  }
 }
 
 .location {
@@ -116,33 +127,29 @@
   color: var(--category-color, black);
   font-size: 1.2rem;
   text-transform: capitalize;
-}
 
-.category:hover {
-  background-color: var(--category-color);
+  &:hover {
+    background-color: var(--category-color);
 
-  color: var(--white);
+    color: var(--white);
 
-  cursor: pointer;
-}
+    cursor: pointer;
+  }
 
-.category::before {
-  content: attr(emoji);
-  display: inline-block;
-  width: 1em;
-  height: 1em;
-  margin-right: 0.25em;
+  &::before {
+    content: attr(data-emoji);
+    display: inline-block;
+    width: 1em;
+    height: 1em;
+    margin-right: 0.25em;
 
-  font-size: 1.25em;
-  line-height: 1;
-  vertical-align: middle;
-  text-shadow: 1.5px 1.5px 0 white, -1.5px 1.5px 0 white, 1.5px -1.5px 0 white,
-    -1.5px -1.5px 0 white, 1.5px 0px 0 white, -1.5px 0px 0 white,
-    0px -1.5px 0 white, 0px 1.5px 0 white;
-}
-
-.category.noemoji::before {
-  content: '\1F4B5';
+    font-size: 1.25em;
+    line-height: 1;
+    vertical-align: middle;
+    text-shadow: 1.5px 1.5px 0 white, -1.5px 1.5px 0 white, 1.5px -1.5px 0 white,
+      -1.5px -1.5px 0 white, 1.5px 0px 0 white, -1.5px 0px 0 white,
+      0px -1.5px 0 white, 0px 1.5px 0 white;
+  }
 }
 
 .amount-wrap {
@@ -157,26 +164,26 @@
   font-size: 1.8rem;
   line-height: 1.2;
   white-space: nowrap;
-}
 
-.amount.positive {
-  color: green;
-}
+  &.positive {
+    color: green;
+  }
 
-.amount + .amount {
-  font-size: 1.5rem;
-}
+  & + .amount {
+    font-size: 1.5rem;
+  }
 
-.amount + .amount:not(.positive) {
-  color: var(--dark-grey);
-}
+  & + .amount:not(.positive) {
+    color: var(--dark-grey);
+  }
 
-:host(.declined) .amount {
-  color: color(red saturation(-20%));
-}
+  @nest :host(.declined) & {
+    color: color(red saturation(-20%));
+  }
 
-.amount-wrap .amount .major {
-  font-size: 2em;
+  /*.amount-wrap .amount .major {
+    font-size: 2em;
+  }*/
 }
 
 .decline-reason {
@@ -184,22 +191,6 @@
 
   font-size: 1.2rem;
   color: color(red saturation(-20%));
-}
-
-.balance-wrap {
-  --label-text: 'Balance (after transaction):';
-
-  padding: 0.8em 15px 0.5em;
-
-  border-bottom: var(--thin-border);
-}
-
-.balance-wrap .amount {
-  font-size: 1.6rem;
-}
-
-.balance-wrap .amount.positive {
-  color: inherit;
 }
 
 .balance-wrap::before,
@@ -211,44 +202,52 @@
   font-size: 1rem;
 }
 
+.balance-wrap {
+  --label-text: 'Balance (after transaction):';
+
+  padding: 0.8em 15px 0.5em;
+
+  border-bottom: var(--thin-border);
+
+  & .amount {
+    font-size: 1.6rem;
+  }
+
+  & .amount.positive {
+    color: inherit;
+  }
+}
+
 .notes-wrap {
   --label-text: 'Notes:';
 
   padding: 0.8em 15px 0.5em;
 
   border-bottom: var(--thin-border);
-}
 
-.notes-wrap textarea {
-  display: none;
-  width: 100%;
-  padding: 0.5em;
-  overflow-y: hidden;
+  & textarea {
+    width: calc(100% - 1em);
+    min-height: 3em;
+    padding: 0.5em;
+    overflow-y: hidden;
 
-  border-radius: 5px;
-  border: 1px solid;
-  border-color: transparent;
+    border-radius: 5px;
+    border: 1px solid;
+    border-color: transparent;
 
-  font-size: inherit;
-  line-height: inherit;
+    font-size: inherit;
+    line-height: inherit;
 
-  resize: none;
-}
+    resize: none;
+  }
 
-.notes-wrap.noted textarea {
-  display: block;
-}
+  & textarea:hover {
+    border-color: var(--light-grey);
+  }
 
-.notes-wrap textarea:hover {
-  border-color: var(--light-grey);
-}
-
-.notes-wrap a {
-  text-decoration: none;
-}
-
-.notes-wrap.noted a {
-  display: none;
+  & a {
+    text-decoration: none;
+  }
 }
 
 .attachments {

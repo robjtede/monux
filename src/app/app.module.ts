@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core'
 import { BrowserModule } from '@angular/platform-browser'
 import { HttpClientModule } from '@angular/common/http'
 import { NgReduxModule, NgRedux, DevToolsExtension } from '@angular-redux/store'
+import { Autosize } from 'angular2-autosize/src/autosize.directive'
 
 // redux
 import rootReducer from './reducers'
@@ -27,6 +28,7 @@ import { TransactionDetailComponent } from './components/transaction-detail.comp
 
 @NgModule({
   declarations: [
+    Autosize,
     AppComponent,
     AmountComponent,
     AccountComponent,

@@ -1,22 +1,30 @@
 <div class="map"></div>
 
 <div class="header">
-  <div class="icon-wrap"><img class="icon" [src]="tx.icon"></div>
-  <div class="merchant" [class.online]="tx.online">{{ tx.displayName }}</div>
+  <div class="icon-wrap">
+    <img class="icon" [src]="tx.icon">
+  </div>
+  <div class="merchant" [class.online]="tx.online">
+    {{ tx.displayName }}
+  </div>
 </div>
 
 <div class="location" *ngIf="!tx.online">{{ tx.location }}</div>
 <div class="category-wrap">
-  <div class="category" [attr.emoji]="tx.emoji">{{ tx.category.formatted }}</div>
+  <div class="category" [attr.data-emoji]="emoji">
+    {{ tx.category.formatted }}
+  </div>
 </div>
 
-<div class="decline-reason" *ngIf="tx.declined">Declined due to {{ tx.declineReason }}.</div>
+<div class="decline-reason" *ngIf="tx.declined">
+  Declined due to {{ tx.declineReason }}.
+</div>
 <div class="amount-wrap" *ngIf="!this.tx.is.metaAction" [innerHTML]="tx.amount.html(true, 0)"></div>
 <div class="balance-wrap" [innerHTML]="tx.balance.html(true, 0)"></div>
 
-<div class="notes-wrap" [class.noted]="this.tx.notes">
+<div class="notes-wrap" [class.noted]="notes">
   <a href="#">Add note</a>
-  <textarea class="notes" [value]="tx.notes"></textarea>
+  <textarea class="notes" autosize value="{{ tx.notes }}"></textarea>
 </div>
 
 <div class="attachments">
