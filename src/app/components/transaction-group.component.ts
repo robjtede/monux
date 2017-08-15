@@ -1,6 +1,10 @@
 import { Component, Input, ChangeDetectionStrategy } from '@angular/core'
 
-import { TransactionGroup, getGroupTitle } from '../../lib/monzo/helpers'
+import {
+  TransactionGroup,
+  getGroupTitle,
+  sumGroup
+} from '../../lib/monzo/helpers'
 import Amount, { SignModes } from '../../lib/monzo/Amount'
 
 @Component({
@@ -21,12 +25,7 @@ export class TransactionGroupComponent {
   }
 
   get groupTotal() {
-    return new Amount({
-      native: {
-        amount: 0,
-        currency: 'GBP'
-      }
-    }).html({
+    return sumGroup(this.group.txs).html({
       signMode: SignModes.Never
     })
   }

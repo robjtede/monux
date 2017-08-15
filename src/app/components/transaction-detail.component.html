@@ -19,8 +19,8 @@
 <div class="decline-reason" *ngIf="tx.declined">
   Declined due to {{ tx.declineReason }}.
 </div>
-<div class="amount-wrap" *ngIf="!this.tx.is.metaAction" [innerHTML]="tx.amount.html(true, 0)"></div>
-<div class="balance-wrap" [innerHTML]="tx.balance.html(true, 0)"></div>
+<div class="amount-wrap" *ngIf="!this.tx.is.metaAction" [innerHTML]="txAmount"></div>
+<div class="balance-wrap" [innerHTML]="txBalance"></div>
 
 <div class="notes-wrap">
   <textarea autosize value="{{ tx.notes }}" placeholder="Click here to add a note..."></textarea>

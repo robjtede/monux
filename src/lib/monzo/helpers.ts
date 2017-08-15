@@ -1,7 +1,8 @@
 import { format, startOfDay, isSameDay, isSameYear, subDays } from 'date-fns'
-import { groupBy, map } from 'lodash'
+import { groupBy, map, sumBy } from 'lodash'
 
 import Transaction from './Transaction'
+import Amount from './Amount'
 
 export const enum GroupingStrategy {
   Day = 'day',
@@ -73,6 +74,21 @@ export const getGroupTitle = (group: TransactionGroup): string => {
   }
 
   return titleFns[group.method](group)
+}
+
+export const sumGroup = (txs: Transaction[]): Amount => {
+  const filtered = txs
+    .filter(tx => !tx.is.metaAction || !tx.declined)
+    .filter(tx => tx.amount.negative)
+
+  const sum = sumBy(filtered, tx => tx.amount.raw)
+
+  return new Amount({
+    native: {
+      amount: sum,
+      currency: txs[0].amount.currency
+    }
+  })
 }
 
 interface GroupKeyFunctions {

@@ -12,6 +12,7 @@ import { format } from 'date-fns'
 // import { TransactionActions } from '../actions/transaction'
 
 import Transaction from '../../lib/monzo/Transaction'
+import { SignModes } from '../../lib/monzo/Amount'
 
 @Component({
   selector: 'm-transaction-detail',
@@ -35,6 +36,18 @@ export class TransactionDetailComponent {
 
   get createdTime() {
     return format(this.tx.created, 'h:mma - Do MMMM YYYY')
+  }
+
+  get txAmount(): string {
+    return this.tx.amount.html({
+      signMode: SignModes.Never
+    })
+  }
+
+  get txBalance(): string {
+    return this.tx.balance.html({
+      signMode: SignModes.Never
+    })
   }
 
   get emoji() {

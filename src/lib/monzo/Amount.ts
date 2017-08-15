@@ -63,6 +63,11 @@ export default class Amount {
   }
 
   // returns currency symbol
+  get currency(): string {
+    return this.native.currency
+  }
+
+  // returns currency symbol
   get symbol(): string {
     return this.native.currency in currencies
       ? currencies[this.native.currency].symbol
