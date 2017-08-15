@@ -1,3 +1,4 @@
+import { sortBy } from 'lodash'
 import { handleActions, ReducerMap } from 'redux-actions'
 
 import {
@@ -34,13 +35,16 @@ const modifyReducer: ReducerMap<
   [TransactionActions.SET_TRANSACTIONS]: (_, { payload }) => {
     if (!payload) throw new TypeError('A payload is required')
 
-    return payload.txs
+    return sortBy(payload.txs, tx => -new Date(tx.created).getTime())
   },
 
   [TransactionActions.ADD_TRANSACTIONS]: (state, { payload }) => {
     if (!payload) throw new TypeError('A payload is required')
 
-    return [...state, ...payload.txs]
+    return sortBy(
+      [...state, ...payload.txs],
+      tx => -new Date(tx.created).getTime()
+    )
   },
 
   [TransactionActions.UPDATE_TRANSACTIONS]: (state, { payload }) => {
@@ -52,7 +56,10 @@ const modifyReducer: ReducerMap<
       return !txIds.includes(tx.id)
     })
 
-    return [...txFilter, ...payload.txs]
+    return sortBy(
+      [...txFilter, ...payload.txs],
+      tx => -new Date(tx.created).getTime()
+    )
   }
 }
 
