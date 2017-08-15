@@ -2,7 +2,9 @@ import {
   Component,
   Input,
   ChangeDetectionStrategy,
-  HostListener
+  HostListener,
+  ViewChild,
+  ElementRef
 } from '@angular/core'
 import { NgRedux, dispatch } from '@angular-redux/store'
 
@@ -26,6 +28,8 @@ import Transaction from '../../lib/monzo/Transaction'
 export class TransactionSummaryComponent {
   @Input() readonly tx: Transaction
 
+  @ViewChild('icon') readonly $icon: ElementRef
+
   constructor(
     private readonly redux: NgRedux<AppState>,
     private readonly txActions: TransactionActions
@@ -43,5 +47,9 @@ export class TransactionSummaryComponent {
   @dispatch()
   selectTx() {
     return this.txActions.selectTransaction(this.tx.id)
+  }
+
+  iconFallback() {
+    this.$icon.nativeElement.src = this.tx.iconFallback
   }
 }

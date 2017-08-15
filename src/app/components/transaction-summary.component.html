@@ -1,4 +1,4 @@
-<div class="icon-wrap"><img class="icon" [src]="tx.icon"></div>
+<div class="icon-wrap"><img #icon class="icon" [src]="tx.icon" (error)="iconFallback()"></div>
 
 <div class="info-wrap">
   <div class="info">
