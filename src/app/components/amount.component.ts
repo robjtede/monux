@@ -1,5 +1,5 @@
 import { Component, Input, ChangeDetectionStrategy } from '@angular/core'
-import Amount from '../../lib/monzo/Amount'
+import Amount, { SignModes } from '../../lib/monzo/Amount'
 
 @Component({
   selector: 'm-amount',
@@ -12,8 +12,12 @@ export class AmountComponent {
 
   getAmountHtml() {
     return !this.amount.foreign
-      ? this.amount.html(true, 0)
-      : (this.amount.exchanged as Amount).html(true, 0) +
-        this.amount.html(true, 0)
+      ? this.amount.html({
+          signMode: SignModes.Never
+        })
+      : (this.amount.exchanged as Amount).html({ signMode: SignModes.Never }) +
+        this.amount.html({
+          signMode: SignModes.Never
+        })
   }
 }

@@ -4,6 +4,13 @@ export const enum Currencies {
   USD = 'USD'
 }
 
+export const enum SignModes {
+  Always,
+  OnlyPositive,
+  OnlyNegative,
+  Never
+}
+
 const currencies = {
   [Currencies.EUR]: { symbol: '€', separator: '.' },
   [Currencies.GBP]: { symbol: '£', separator: '.' },
@@ -105,20 +112,24 @@ export default class Amount {
   }
 
   // returns html formatted string
-  html(showCurrency = true, signMode = 1): string {
+  html(
+    {
+      showCurrency = true,
+      signMode = SignModes.Always
+    }: { showCurrency?: boolean; signMode?: SignModes } = {}
+  ): string {
     let str = '<span class="major">%j</span>'
     str += '<span class="separator">%p</span>'
     str += '<span class="minor">%n</span>'
 
     if (showCurrency) str = '<span class="currency">%y</span>' + str
 
-    // TODO: enum-ify
-    const signModes = [
-      '',
-      '<span class="sign">%s</span>',
-      '<span class="sign">%+</span>',
-      '<span class="sign">%-</span>'
-    ]
+    const signModes = {
+      [SignModes.Always]: '<span class="sign">%s</span>',
+      [SignModes.OnlyPositive]: '<span class="sign">%+</span>',
+      [SignModes.OnlyNegative]: '<span class="sign">%-</span>',
+      [SignModes.Never]: ''
+    }
 
     str = signModes[signMode] + str
     str = this.format(str)

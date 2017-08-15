@@ -292,10 +292,7 @@
   }
 }
 
-.date,
-.id,
-.description,
-.settled {
+.smallprint {
   padding: 0.8em 15px;
 
   font-size: 0.8rem;
@@ -303,10 +300,7 @@
   white-space: pre-wrap;
 }
 
-.date::before,
-.id::before,
-.description::before,
-.settled::before {
+.smallprint::before {
   content: var(--label-text);
   display: block;
 
