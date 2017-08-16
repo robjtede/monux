@@ -13,7 +13,7 @@ import Account, {
   accountsRequest,
   MonzoAccountsResponse
 } from '../../lib/monzo/Account'
-import {
+import Transaction, {
   MonzoTransactionsResponse,
   MonzoTransactionResponse,
   TransactionRequestOpts
@@ -96,7 +96,7 @@ export class TransactionActions {
 
           debug('HTTP transactions =>', txs)
 
-          this.redux.dispatch(this.addTransactions(txs))
+          this.redux.dispatch(this.setTransactions(txs))
 
           // const cachedTxs = await getCachedTransactions()
           //
@@ -105,12 +105,11 @@ export class TransactionActions {
           //     ? await account.transactions({ since: cachedTxs[0].id })
           //     : await account.transactions()
 
-          // store.dispatch({ type: 'SET_ONLINE' })
-          // store.dispatch({
-          //   type: 'SAVE_TRANSACTIONS',
-          //   payload: updateTransactionCache(account, txs)
-          // })
-          //
+          this.redux.dispatch(
+            // TODO: wasted class instantiation
+            this.saveTransactions(acc, txs.map(tx => new Transaction(tx)))
+          )
+
           // store.dispatch({
           //   type: 'GET_PENDING_TRANSACTIONS',
           //   payload: updatePendingTransactions()
@@ -140,15 +139,15 @@ export class TransactionActions {
     }))()
   }
 
-  // saveTransactions(account: Account, txs: Transaction[]) {
-  //   return createAction<
-  //     SaveTransactionsPromise,
-  //     Account,
-  //     Transaction[]
-  //   >(TransactionActions.SAVE_TRANSACTIONS, (acc, txs) => ({
-  //     promise: updateTransactionCache(acc, txs)
-  //   }))(account, txs)
-  // }
+  saveTransactions(account: Account, txs: Transaction[]) {
+    return createAction<
+      SaveTransactionsPromise,
+      Account,
+      Transaction[]
+    >(TransactionActions.SAVE_TRANSACTIONS, (acc, txs) => ({
+      promise: this.cache.saveTransactions(acc, txs)
+    }))(account, txs)
+  }
 
   // export const hideTransaction = createAction<
   //   HideTransactionPromise,

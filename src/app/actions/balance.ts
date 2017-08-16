@@ -20,6 +20,7 @@ import Amount, {
   SimpleAmount,
   MonzoBalanceResponse
 } from '../../lib/monzo/Amount'
+import { extractBalanceAndSpent } from '../../lib/monzo/helpers'
 
 const debug = Debug('app:actions:balance')
 
@@ -59,55 +60,14 @@ export class BalanceActions {
             acc.balanceRequest()
           )
 
-          const { balance, spent } = (() => {
-            const nativeBalance: SimpleAmount = {
-              amount: bal.balance,
-              currency: bal.currency
-            }
-
-            const nativeSpend: SimpleAmount = {
-              amount: bal.spend_today,
-              currency: bal.currency
-            }
-
-            if (bal.local_currency) {
-              const localBalance: SimpleAmount = {
-                amount: bal.balance * bal.local_exchange_rate,
-                currency: bal.local_currency
-              }
-
-              const localSpend: SimpleAmount = {
-                amount:
-                  bal.local_spend.length > 0
-                    ? bal.local_spend[0].spend_today * bal.local_exchange_rate
-                    : 0,
-                currency: bal.local_currency
-              }
-
-              return {
-                balance: new Amount({
-                  native: nativeBalance,
-                  local: localBalance
-                }),
-                spent: new Amount({ native: nativeSpend, local: localSpend })
-              }
-            } else {
-              return {
-                balance: new Amount({ native: nativeBalance }),
-                spent: new Amount({ native: nativeSpend })
-              }
-            }
-          })()
+          const { balance, spent } = extractBalanceAndSpent(bal)
 
           debug('HTTP balance =>', balance)
 
           this.redux.dispatch(this.accountActions.setAccount('monzo', acc.json))
           this.redux.dispatch(this.setBalance(balance.json))
           this.redux.dispatch(this.spentActions.setSpent(spent.json))
-          // this.redux.dispatch({
-          //   type: 'SAVE_ACCOUNT_BALANCE',
-          //   payload: updateAccountCache(acc, balance)
-          // })
+          this.redux.dispatch(this.saveBalance(acc, balance))
         } catch (err) {
           console.error(err)
         }
@@ -133,6 +93,22 @@ export class BalanceActions {
       })()
     }))()
   }
+
+  saveBalance(acc: Account, balance: Amount) {
+    return createAction<
+      SaveBalancePromise,
+      Account,
+      Amount
+    >(BalanceActions.SAVE_BALANCE, (acc, balance) => ({
+      promise: (async () => {
+        try {
+          this.cache.saveAccount(acc, balance)
+        } catch (err) {
+          console.error(err)
+        }
+      })()
+    }))(acc, balance)
+  }
 }
 
 export interface GetBalancePromise {
@@ -140,6 +116,10 @@ export interface GetBalancePromise {
 }
 
 export interface LoadBalancePromise {
+  promise: Promise<void>
+}
+
+export interface SaveBalancePromise {
   promise: Promise<void>
 }
 

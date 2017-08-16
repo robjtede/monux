@@ -17,7 +17,7 @@ import {
   selector: 'm-transaction-list',
   templateUrl: './transaction-list.component.html',
   styleUrls: ['./transaction-list.component.css'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.Default
 })
 export class TransactionListComponent implements OnChanges {
   @Input() readonly txs: Transaction[]

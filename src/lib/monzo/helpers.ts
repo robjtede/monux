@@ -2,7 +2,7 @@ import { format, startOfDay, isSameDay, isSameYear, subDays } from 'date-fns'
 import { groupBy, map, sumBy } from 'lodash'
 
 import Transaction from './Transaction'
-import Amount from './Amount'
+import Amount, { SimpleAmount, MonzoBalanceResponse } from './Amount'
 
 export const enum GroupingStrategy {
   Day = 'day',
@@ -89,6 +89,46 @@ export const sumGroup = (txs: Transaction[]): Amount => {
       currency: txs[0].amount.currency
     }
   })
+}
+
+export const extractBalanceAndSpent = (bal: MonzoBalanceResponse) => {
+  const nativeBalance: SimpleAmount = {
+    amount: bal.balance,
+    currency: bal.currency
+  }
+
+  const nativeSpend: SimpleAmount = {
+    amount: bal.spend_today,
+    currency: bal.currency
+  }
+
+  if (bal.local_currency) {
+    const localBalance: SimpleAmount = {
+      amount: bal.balance * bal.local_exchange_rate,
+      currency: bal.local_currency
+    }
+
+    const localSpend: SimpleAmount = {
+      amount:
+        bal.local_spend.length > 0
+          ? bal.local_spend[0].spend_today * bal.local_exchange_rate
+          : 0,
+      currency: bal.local_currency
+    }
+
+    return {
+      balance: new Amount({
+        native: nativeBalance,
+        local: localBalance
+      }),
+      spent: new Amount({ native: nativeSpend, local: localSpend })
+    }
+  } else {
+    return {
+      balance: new Amount({ native: nativeBalance }),
+      spent: new Amount({ native: nativeSpend })
+    }
+  }
 }
 
 interface GroupKeyFunctions {

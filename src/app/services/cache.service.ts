@@ -96,15 +96,13 @@ export class CacheService {
 
   saveTransactions = async (acc: Account, txs: Transaction[]) => {
     await this.db.transactions.bulkPut(
-      txs.map(tx => {
-        return {
-          id: tx.id,
-          accId: acc.id,
-          tx: tx.json,
-          created_at: tx.created,
-          updated_at: new Date()
-        }
-      })
+      txs.map(tx => ({
+        id: tx.id,
+        accId: acc.id,
+        tx: tx.json,
+        created_at: tx.created,
+        updated_at: new Date()
+      }))
     )
   }
 }
