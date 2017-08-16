@@ -11,6 +11,7 @@ import { AppState } from './store'
 
 // services
 import { MonzoService } from './services/monzo.service'
+import { CacheService } from './services/cache.service'
 import { AccountActions } from './actions/account'
 import { BalanceActions } from './actions/balance'
 import { SpentActions } from './actions/spent'
@@ -40,6 +41,7 @@ import { TransactionDetailComponent } from './components/transaction-detail.comp
   imports: [BrowserModule, HttpClientModule, NgReduxModule],
   providers: [
     MonzoService,
+    CacheService,
     AccountActions,
     BalanceActions,
     PaneActions,

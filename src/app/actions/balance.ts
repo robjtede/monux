@@ -5,6 +5,7 @@ import { NgRedux } from '@angular-redux/store'
 import { createAction } from 'redux-actions'
 
 import { MonzoService } from '../services/monzo.service'
+import { CacheService } from '../services/cache.service'
 import { SpentActions } from './spent'
 import { AccountActions } from './account'
 
@@ -38,6 +39,7 @@ export class BalanceActions {
   constructor(
     private readonly redux: NgRedux<AppState>,
     private readonly monzo: MonzoService,
+    private readonly cache: CacheService,
     private readonly spentActions: SpentActions,
     private readonly accountActions: AccountActions
   ) {}
@@ -119,24 +121,24 @@ export class BalanceActions {
     }))()
   }
 
-  // TODO: reimplement
-  // export const loadBalance = createAction<
-  //   LoadBalancePromise
-  // >(EActions.LOAD_BALANCE, () => ({
-  //   promise: (async () => {
-  //     try {
-  //       const cachedAccount = await getCachedAccount()
-  //       const cachedBalance = await getCachedBalance()
-  //
-  //       debug('cached balance =>', cachedBalance)
-  //
-  //       store.dispatch(setAccount('monzo', cachedAccount.acc))
-  //       store.dispatch(setBalance(cachedBalance.json))
-  //     } catch (err) {
-  //       console.error(err)
-  //     }
-  //   })()
-  // }))
+  loadBalance() {
+    return createAction<
+      LoadBalancePromise
+    >(BalanceActions.LOAD_BALANCE, () => ({
+      promise: (async () => {
+        try {
+          const { account, balance } = await this.cache.loadBalance()
+
+          debug('cached balance =>', balance)
+
+          this.redux.dispatch(this.accountActions.setAccount('monzo', account))
+          this.redux.dispatch(this.setBalance(balance))
+        } catch (err) {
+          console.error(err)
+        }
+      })()
+    }))()
+  }
 }
 
 export interface GetBalancePromise {

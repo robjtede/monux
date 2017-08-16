@@ -5,7 +5,7 @@ import {
   getGroupTitle,
   sumGroup
 } from '../../lib/monzo/helpers'
-import Amount, { SignModes } from '../../lib/monzo/Amount'
+import { SignModes } from '../../lib/monzo/Amount'
 
 @Component({
   selector: 'm-transaction-group',
