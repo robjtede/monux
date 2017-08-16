@@ -73,6 +73,7 @@ export class AppComponent implements OnInit, OnDestroy {
     this.redux.dispatch(this.balanceActions.loadBalance())
     this.redux.dispatch(this.balanceActions.getBalance())
 
+    this.redux.dispatch(this.txActions.loadTransactions())
     this.redux.dispatch(
       this.txActions.getTransactions({
         since: new Date(Date.now() - 86400000 * 20).toISOString()

@@ -99,7 +99,12 @@ export default class Transaction {
       return './icons/peer.png'
     }
 
-    if (typeof this.merchant !== 'string' && this.merchant.logo) {
+    if (
+      typeof this.merchant !== 'string' &&
+      this.merchant &&
+      'logo' in this.merchant &&
+      this.merchant.logo
+    ) {
       return this.merchant.logo
     }
 

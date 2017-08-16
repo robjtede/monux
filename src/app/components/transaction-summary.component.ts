@@ -50,6 +50,10 @@ export class TransactionSummaryComponent {
     return this.redux.getState().selectedTransaction === this.tx.id
   }
 
+  get hasAttachemnts() {
+    return this.tx.attachments && this.tx.attachments.length
+  }
+
   @HostListener('click')
   @dispatch()
   selectTx() {

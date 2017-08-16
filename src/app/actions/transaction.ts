@@ -5,6 +5,7 @@ import { NgRedux } from '@angular-redux/store'
 import { createAction } from 'redux-actions'
 
 import { MonzoService } from '../services/monzo.service'
+import { CacheService } from '../services/cache.service'
 
 import { AppState } from '../store'
 
@@ -16,8 +17,6 @@ import Transaction, {
   MonzoTransactionsResponse,
   MonzoTransactionResponse
 } from '../../lib/monzo/Transaction'
-
-// import { updateTransactionCache } from '../scripts/cache'
 
 const debug = Debug('app:actions:transaction')
 
@@ -37,7 +36,8 @@ export class TransactionActions {
 
   constructor(
     private readonly redux: NgRedux<AppState>,
-    private readonly monzo: MonzoService
+    private readonly monzo: MonzoService,
+    private readonly cache: CacheService
   ) {}
 
   setTransactions(txs: MonzoTransactionResponse[]) {
@@ -114,6 +114,24 @@ export class TransactionActions {
           //   type: 'GET_PENDING_TRANSACTIONS',
           //   payload: updatePendingTransactions()
           // })
+        } catch (err) {
+          console.error(err)
+        }
+      })()
+    }))()
+  }
+
+  loadTransactions() {
+    return createAction<
+      LoadTransactionsPromise
+    >(TransactionActions.LOAD_TRANSACTIONS, () => ({
+      promise: (async () => {
+        try {
+          const txs = await this.cache.loadTransactions()
+
+          debug('cached transactions =>', txs)
+
+          this.redux.dispatch(this.setTransactions(txs))
         } catch (err) {
           console.error(err)
         }
@@ -238,5 +256,9 @@ export interface UpdateTransactionNotesPromise {
 }
 
 export interface SaveTransactionsPromise {
+  promise: Promise<any>
+}
+
+export interface LoadTransactionsPromise {
   promise: Promise<any>
 }

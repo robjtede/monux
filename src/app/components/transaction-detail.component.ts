@@ -29,10 +29,9 @@ export class TransactionDetailComponent {
 
   @ViewChild('icon') readonly $icon: ElementRef
 
-  constructor() // private readonly redux: NgRedux<AppState>,
+  // private readonly redux: NgRedux<AppState>,
   // private readonly txActions: TransactionActions
-  {
-  }
+  constructor() {}
 
   get createdTime() {
     return format(this.tx.created, 'h:mma - Do MMMM YYYY')
@@ -63,7 +62,6 @@ export class TransactionDetailComponent {
   }
 
   iconFallback() {
-    console.log(this.$icon)
     this.$icon.nativeElement.src = this.tx.iconFallback
   }
 }

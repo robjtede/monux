@@ -31,6 +31,8 @@
     grid-area: total;
     align-self: center;
 
+    padding-left: 1em;
+
     color: var(--medium-grey);
     font-size: 1.1rem;
   }

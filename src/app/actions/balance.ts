@@ -9,12 +9,6 @@ import { CacheService } from '../services/cache.service'
 import { SpentActions } from './spent'
 import { AccountActions } from './account'
 
-// import {
-//   getCachedAccount,
-//   getCachedBalance,
-//   updateAccountCache
-// } from '../scripts/cache'
-
 import { AppState } from '../store'
 
 import Account, {

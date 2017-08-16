@@ -5,7 +5,7 @@
     <p class="merchant">{{ tx.displayName }}</p>
     <div class="meta">
       <span class="meta-pending" *ngIf="tx.pending">P</span>
-      <span class="meta-attachments" *ngIf="tx.attachments.length" [attr.data-attachments]="tx.attachments.length">A: </span>
+      <span class="meta-attachments" *ngIf="hasAttachments" [attr.data-attachments]="tx.attachments.length">A: </span>
     </div>
   </div>
   <p class="notes" *ngIf="tx.declined || tx.notes.short.trim()">

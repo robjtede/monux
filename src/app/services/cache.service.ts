@@ -8,8 +8,8 @@ import Transaction, {
 } from '../../lib/monzo/Transaction'
 
 class IDBCache extends Dexie {
-  transactions: Dexie.Table<ICacheTransaction, string>
-  accounts: Dexie.Table<ICacheAccount, string>
+  transactions: Dexie.Table<CachedTransaction, string>
+  accounts: Dexie.Table<CachedAccount, string>
 
   constructor() {
     super('IDBCache')
@@ -33,7 +33,7 @@ export class CacheService {
   loadAccount = (() => {
     const cachedAccount = this.db.accounts.limit(1).toArray()
 
-    return async (): Promise<ICacheAccount> => {
+    return async (): Promise<CachedAccount> => {
       return (await cachedAccount)[0]
     }
   })()
@@ -45,26 +45,21 @@ export class CacheService {
       account: MonzoAccountResponse
       balance: AmountOpts
     }> => {
-      const acc = await cachedAccount
-      const { native, local } = acc.balance
+      const account = await cachedAccount
+      const { native, local } = account.balance
 
       return {
-        account: acc.acc,
+        account: account.acc,
         balance: { native, local }
       }
     }
   })()
 
   loadTransactions = (() => {
-    const cachedTxs = this.db.transactions
-      .orderBy('created_at')
-      .reverse()
-      .toArray()
+    const txs = this.db.transactions.orderBy('created_at').reverse().toArray()
 
-    return async (): Promise<Transaction[]> => {
-      return (await cachedTxs).map(({ tx }) => {
-        return new Transaction(tx)
-      })
+    return async (): Promise<MonzoTransactionResponse[]> => {
+      return (await txs).map(tx => tx.tx)
     }
   })()
 
@@ -94,7 +89,7 @@ export class CacheService {
   }
 }
 
-export interface ICacheTransaction {
+export interface CachedTransaction {
   id: string
   accId: string
   tx: MonzoTransactionResponse
@@ -102,7 +97,7 @@ export interface ICacheTransaction {
   updated_at: Date
 }
 
-export interface ICacheAccount {
+export interface CachedAccount {
   id: string
   type: 'monzo'
   acc: MonzoAccountResponse
