@@ -13,9 +13,10 @@ import Account, {
   accountsRequest,
   MonzoAccountsResponse
 } from '../../lib/monzo/Account'
-import Transaction, {
+import {
   MonzoTransactionsResponse,
-  MonzoTransactionResponse
+  MonzoTransactionResponse,
+  TransactionRequestOpts
 } from '../../lib/monzo/Transaction'
 
 const debug = Debug('app:actions:transaction')
@@ -121,13 +122,13 @@ export class TransactionActions {
     }))()
   }
 
-  loadTransactions() {
+  loadTransactions(opts: TransactionRequestOpts = {}) {
     return createAction<
       LoadTransactionsPromise
     >(TransactionActions.LOAD_TRANSACTIONS, () => ({
       promise: (async () => {
         try {
-          const txs = await this.cache.loadTransactions()
+          const txs = await this.cache.loadTransactions(opts)
 
           debug('cached transactions =>', txs)
 

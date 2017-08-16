@@ -2,7 +2,6 @@ import { stringify } from 'querystring'
 
 import { Injectable } from '@angular/core'
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http'
-import 'rxjs/add/operator/toPromise'
 
 import { MonzoRequest } from '../../lib/monzo/api'
 import { getPassword } from '../../lib/keychain'

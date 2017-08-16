@@ -22,7 +22,7 @@
   }
 
   &(:not(.selected):hover) {
-    background: #f0f0f0;
+    background: #e0e0e0;
   }
 
   &(:not(.selected).declined) {

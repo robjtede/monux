@@ -4,7 +4,8 @@ import Dexie from 'dexie'
 import Amount, { AmountOpts } from '../../lib/monzo/Amount'
 import Account, { MonzoAccountResponse } from '../../lib/monzo/Account'
 import Transaction, {
-  MonzoTransactionResponse
+  MonzoTransactionResponse,
+  TransactionRequestOpts
 } from '../../lib/monzo/Transaction'
 
 class IDBCache extends Dexie {
@@ -55,13 +56,32 @@ export class CacheService {
     }
   })()
 
-  loadTransactions = (() => {
-    const txs = this.db.transactions.orderBy('created_at').reverse().toArray()
+  async loadTransactions(
+    { since, before, limit }: TransactionRequestOpts = {}
+  ): Promise<MonzoTransactionResponse[]> {
+    let txCol = this.db.transactions.orderBy('created_at').reverse()
 
-    return async (): Promise<MonzoTransactionResponse[]> => {
-      return (await txs).map(tx => tx.tx)
+    if (since) {
+      if (since && since instanceof Date) {
+        txCol = txCol.filter(tx => tx.created_at > since)
+      } else {
+        const sinceDate = new Date(since)
+        txCol = txCol.filter(tx => tx.created_at > sinceDate)
+      }
     }
-  })()
+
+    if (before) {
+      txCol = txCol.filter(tx => tx.created_at > before)
+    }
+
+    if (limit) {
+      txCol = txCol.limit(limit)
+    }
+
+    const txs = await txCol.toArray()
+
+    return txs.map(tx => tx.tx)
+  }
 
   saveAccount = async (acc: Account, balance: Amount) => {
     return this.db.accounts.put({

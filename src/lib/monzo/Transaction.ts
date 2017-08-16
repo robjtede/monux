@@ -328,3 +328,9 @@ export interface MonzoCounterpartyResponse extends JSONMap {
   prefered_name: string
   user_id: string
 }
+
+export interface TransactionRequestOpts {
+  since?: Date | string
+  before?: Date
+  limit?: number
+}

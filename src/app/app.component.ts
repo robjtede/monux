@@ -6,6 +6,7 @@ import {
 } from '@angular/core'
 import { NgRedux, select } from '@angular-redux/store'
 import { Observable } from 'rxjs'
+import { startOfMonth } from 'date-fns'
 
 import { AppState } from './store'
 import { BalanceActions } from './actions/balance'
@@ -73,12 +74,11 @@ export class AppComponent implements OnInit, OnDestroy {
     this.redux.dispatch(this.balanceActions.loadBalance())
     this.redux.dispatch(this.balanceActions.getBalance())
 
-    this.redux.dispatch(this.txActions.loadTransactions())
-    this.redux.dispatch(
-      this.txActions.getTransactions({
-        since: new Date(Date.now() - 86400000 * 20).toISOString()
-      })
-    )
+    // start of month
+    const som = startOfMonth(new Date())
+
+    this.redux.dispatch(this.txActions.loadTransactions({ since: som }))
+    this.redux.dispatch(this.txActions.getTransactions({ since: som }))
   }
 
   ngOnDestroy(): void {
