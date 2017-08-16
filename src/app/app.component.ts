@@ -8,14 +8,15 @@ import { NgRedux, select } from '@angular-redux/store'
 import { Observable } from 'rxjs'
 import { startOfMonth } from 'date-fns'
 
+import { CacheService } from './services/cache.service'
+
 import { AppState } from './store'
 import { BalanceActions } from './actions/balance'
 import { TransactionActions } from './actions/transaction'
 
+import Account, { MonzoAccountResponse } from '../lib/monzo/Account'
 import Amount, { AmountOpts } from '../lib/monzo/Amount'
 import Transaction, { MonzoTransactionResponse } from '../lib/monzo/Transaction'
-import { MonzoAccountResponse } from '../lib/monzo/Account'
-import Account from '../lib/monzo/Account'
 
 import './style/index.css'
 
@@ -39,6 +40,7 @@ export class AppComponent implements OnInit, OnDestroy {
 
   constructor(
     private readonly redux: NgRedux<AppState>,
+    private readonly cache: CacheService,
     private readonly balanceActions: BalanceActions,
     private readonly txActions: TransactionActions
   ) {
@@ -75,13 +77,24 @@ export class AppComponent implements OnInit, OnDestroy {
     this.redux.dispatch(this.balanceActions.getBalance())
 
     // start of month
-    const som = startOfMonth(new Date())
+    const som = startOfMonth(Date.now())
 
     this.redux.dispatch(this.txActions.loadTransactions({ since: som }))
-    this.redux.dispatch(this.txActions.getTransactions({ since: som }))
+
+    this.getNewTxs()
   }
 
   ngOnDestroy(): void {
     console.log('monux stopped')
+  }
+
+  async getNewTxs() {
+    const recentTx = (await this.cache.loadTransactions({ limit: 1 }))[0]
+
+    const action = recentTx
+      ? this.txActions.getTransactions({ since: recentTx.id })
+      : this.txActions.getTransactions()
+
+    this.redux.dispatch(action)
   }
 }

@@ -96,29 +96,23 @@ export class TransactionActions {
 
           debug('HTTP transactions =>', txs)
 
-          this.redux.dispatch(this.setTransactions(txs))
-
-          // const cachedTxs = await getCachedTransactions()
-          //
-          // const txs =
-          //   cachedTxs.length > 0
-          //     ? await account.transactions({ since: cachedTxs[0].id })
-          //     : await account.transactions()
-
+          this.redux.dispatch(this.updateTransactions(txs))
           this.redux.dispatch(
             // TODO: wasted class instantiation
             this.saveTransactions(acc, txs.map(tx => new Transaction(tx)))
           )
-
-          // store.dispatch({
-          //   type: 'GET_PENDING_TRANSACTIONS',
-          //   payload: updatePendingTransactions()
-          // })
         } catch (err) {
           console.error(err)
         }
       })()
     }))()
+  }
+
+  getPendingTransactions() {
+    // store.dispatch({
+    //   type: 'GET_PENDING_TRANSACTIONS',
+    //   payload: updatePendingTransactions()
+    // })
   }
 
   loadTransactions(opts: TransactionRequestOpts = {}) {
