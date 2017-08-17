@@ -17,7 +17,6 @@ import Account, {
 } from '../../lib/monzo/Account'
 import Amount, {
   AmountOpts,
-  SimpleAmount,
   MonzoBalanceResponse
 } from '../../lib/monzo/Amount'
 import { extractBalanceAndSpent } from '../../lib/monzo/helpers'
@@ -51,26 +50,22 @@ export class BalanceActions {
   getBalance() {
     return createAction<GetBalancePromise>(BalanceActions.GET_BALANCE, () => ({
       promise: (async () => {
-        try {
-          const acc = new Account(
-            (await this.monzo.request<MonzoAccountsResponse>(accountsRequest()))
-              .accounts[0]
-          )
-          const bal = await this.monzo.request<MonzoBalanceResponse>(
-            acc.balanceRequest()
-          )
+        const acc = new Account(
+          (await this.monzo.request<MonzoAccountsResponse>(accountsRequest()))
+            .accounts[0]
+        )
+        const bal = await this.monzo.request<MonzoBalanceResponse>(
+          acc.balanceRequest()
+        )
 
-          const { balance, spent } = extractBalanceAndSpent(bal)
+        const { balance, spent } = extractBalanceAndSpent(bal)
 
-          debug('HTTP balance =>', balance)
+        debug('HTTP balance =>', balance)
 
-          this.redux.dispatch(this.accountActions.setAccount('monzo', acc.json))
-          this.redux.dispatch(this.setBalance(balance.json))
-          this.redux.dispatch(this.spentActions.setSpent(spent.json))
-          this.redux.dispatch(this.saveBalance(acc, balance))
-        } catch (err) {
-          console.error(err)
-        }
+        this.redux.dispatch(this.accountActions.setAccount('monzo', acc.json))
+        this.redux.dispatch(this.setBalance(balance.json))
+        this.redux.dispatch(this.spentActions.setSpent(spent.json))
+        this.redux.dispatch(this.saveBalance(acc, balance))
       })()
     }))()
   }
@@ -80,16 +75,12 @@ export class BalanceActions {
       LoadBalancePromise
     >(BalanceActions.LOAD_BALANCE, () => ({
       promise: (async () => {
-        try {
-          const { account, balance } = await this.cache.loadBalance()
+        const { account, balance } = await this.cache.loadBalance()
 
-          debug('cached balance =>', balance)
+        debug('cached balance =>', balance)
 
-          this.redux.dispatch(this.accountActions.setAccount('monzo', account))
-          this.redux.dispatch(this.setBalance(balance))
-        } catch (err) {
-          console.error(err)
-        }
+        this.redux.dispatch(this.accountActions.setAccount('monzo', account))
+        this.redux.dispatch(this.setBalance(balance))
       })()
     }))()
   }
@@ -101,11 +92,7 @@ export class BalanceActions {
       Amount
     >(BalanceActions.SAVE_BALANCE, (acc, balance) => ({
       promise: (async () => {
-        try {
-          this.cache.saveAccount(acc, balance)
-        } catch (err) {
-          console.error(err)
-        }
+        this.cache.saveAccount(acc, balance)
       })()
     }))(acc, balance)
   }

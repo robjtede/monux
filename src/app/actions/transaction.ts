@@ -77,33 +77,27 @@ export class TransactionActions {
     }))(txId)
   }
 
-  getTransactions(
-    options: { since?: Date | string; before?: Date; limit?: number } = {}
-  ) {
+  getTransactions(options: TransactionRequestOpts = {}) {
     return createAction<
       GetTransactionsPromise
     >(TransactionActions.GET_TRANSACTIONS, () => ({
       promise: (async () => {
-        try {
-          const acc = new Account(
-            (await this.monzo.request<MonzoAccountsResponse>(accountsRequest()))
-              .accounts[0]
-          )
+        const acc = new Account(
+          (await this.monzo.request<MonzoAccountsResponse>(accountsRequest()))
+            .accounts[0]
+        )
 
-          const txs = (await this.monzo.request<MonzoTransactionsResponse>(
-            acc.transactionsRequest(options)
-          )).transactions
+        const txs = (await this.monzo.request<MonzoTransactionsResponse>(
+          acc.transactionsRequest(options)
+        )).transactions
 
-          debug('HTTP transactions =>', txs)
+        debug('HTTP transactions =>', txs)
 
-          this.redux.dispatch(this.updateTransactions(txs))
-          this.redux.dispatch(
-            // TODO: wasted class instantiation
-            this.saveTransactions(acc, txs.map(tx => new Transaction(tx)))
-          )
-        } catch (err) {
-          console.error(err)
-        }
+        this.redux.dispatch(this.updateTransactions(txs))
+        this.redux.dispatch(
+          // TODO: wasted class instantiation
+          this.saveTransactions(acc, txs.map(tx => new Transaction(tx)))
+        )
       })()
     }))()
   }
@@ -120,15 +114,11 @@ export class TransactionActions {
       LoadTransactionsPromise
     >(TransactionActions.LOAD_TRANSACTIONS, () => ({
       promise: (async () => {
-        try {
-          const txs = await this.cache.loadTransactions(opts)
+        const txs = await this.cache.loadTransactions(opts)
 
-          debug('cached transactions =>', txs)
+        debug('cached transactions =>', txs)
 
-          this.redux.dispatch(this.setTransactions(txs))
-        } catch (err) {
-          console.error(err)
-        }
+        this.redux.dispatch(this.setTransactions(txs))
       })()
     }))()
   }
