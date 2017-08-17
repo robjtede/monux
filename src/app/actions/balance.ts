@@ -50,22 +50,26 @@ export class BalanceActions {
   getBalance() {
     return createAction<GetBalancePromise>(BalanceActions.GET_BALANCE, () => ({
       promise: (async () => {
-        const acc = new Account(
-          (await this.monzo.request<MonzoAccountsResponse>(accountsRequest()))
-            .accounts[0]
-        )
-        const bal = await this.monzo.request<MonzoBalanceResponse>(
-          acc.balanceRequest()
-        )
+        try {
+          const acc = new Account(
+            (await this.monzo.request<MonzoAccountsResponse>(accountsRequest()))
+              .accounts[0]
+          )
+          const bal = await this.monzo.request<MonzoBalanceResponse>(
+            acc.balanceRequest()
+          )
 
-        const { balance, spent } = extractBalanceAndSpent(bal)
+          const { balance, spent } = extractBalanceAndSpent(bal)
 
-        debug('HTTP balance =>', balance)
+          debug('HTTP balance =>', balance)
 
-        this.redux.dispatch(this.accountActions.setAccount('monzo', acc.json))
-        this.redux.dispatch(this.setBalance(balance.json))
-        this.redux.dispatch(this.spentActions.setSpent(spent.json))
-        this.redux.dispatch(this.saveBalance(acc, balance))
+          this.redux.dispatch(this.accountActions.setAccount('monzo', acc.json))
+          this.redux.dispatch(this.setBalance(balance.json))
+          this.redux.dispatch(this.spentActions.setSpent(spent.json))
+          this.redux.dispatch(this.saveBalance(acc, balance))
+        } catch (err) {
+          console.error(err)
+        }
       })()
     }))()
   }
