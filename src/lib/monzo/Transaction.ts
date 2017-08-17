@@ -2,7 +2,7 @@ import { format } from 'date-fns'
 
 import Amount, { SimpleAmount } from './Amount'
 import Merchant, { MonzoMerchantResponse } from './Merchant'
-import { JSONMap } from '../json-types'
+import { JSONMap, Primitive } from '../json-types'
 import { MonzoRequest } from './api'
 
 export default class Transaction {
@@ -215,7 +215,7 @@ export default class Transaction {
     }
   }
 
-  annotateRequest(key: string, val: string | number): MonzoRequest {
+  annotateRequest(key: string, val: string | number | null): MonzoRequest {
     const metaKey = `metadata[${key}]`
 
     return {
@@ -229,6 +229,14 @@ export default class Transaction {
 
   setNotesRequest(val: string): MonzoRequest {
     return this.annotateRequest('notes', val)
+  }
+
+  hideRequest(): MonzoRequest {
+    return this.annotateRequest('monux_hidden', 'true')
+  }
+
+  unhideRequest(): MonzoRequest {
+    return this.annotateRequest('notes', '')
   }
 
   attachmentUploadRequest(contentType = 'image/jpeg'): MonzoRequest {

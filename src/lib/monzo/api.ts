@@ -1,9 +1,11 @@
 import * as rp from 'request-promise-native'
 
+import { Primitive } from '../json-types'
+
 type HttpMethods = 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE' | 'OPTIONS'
 
 export interface QueryString {
-  [key: string]: string | number | boolean | undefined
+  [key: string]: Primitive
 }
 
 export interface MonzoRequest {

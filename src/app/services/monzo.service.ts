@@ -47,8 +47,11 @@ export class MonzoService {
       console.error(`Unhandled HTTP call with ${method} method.`)
       throw new Error(`Unhandled HTTP call with ${method} method.`)
     } else if (method === 'PATCH') {
-      console.error(`Unhandled HTTP call with ${method} method.`)
-      throw new Error(`Unhandled HTTP call with ${method} method.`)
+      return this.http
+        .patch<T>(url, params, {
+          headers
+        })
+        .toPromise()
     } else {
       console.error(`Unhandled HTTP call with ${method} method.`)
       throw new Error(`Unhandled HTTP call with ${method} method.`)

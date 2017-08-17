@@ -86,5 +86,10 @@ export class TransactionSummaryComponent implements OnInit {
     }
   }
 
-  loadIcon() {}
+  @dispatch()
+  hideTx(ev: MouseEvent) {
+    ev.stopPropagation()
+
+    return this.txActions.hideTransaction(this.tx)
+  }
 }
