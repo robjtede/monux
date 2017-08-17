@@ -276,10 +276,6 @@ export default class Transaction {
   }
 }
 
-export interface MonzoTransactionsResponse extends JSONMap {
-  transactions: MonzoTransactionResponse[]
-}
-
 export interface MonzoTransactionResponse extends JSONMap {
   account_balance: number
   account_id: string

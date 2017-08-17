@@ -8,8 +8,6 @@ import { NgRedux, select } from '@angular-redux/store'
 import { Observable } from 'rxjs'
 import { startOfMonth } from 'date-fns'
 
-import { CacheService } from './services/cache.service'
-
 import { AppState } from './store'
 import { BalanceActions } from './actions/balance'
 import { TransactionActions } from './actions/transaction'
@@ -40,7 +38,6 @@ export class AppComponent implements OnInit, OnDestroy {
 
   constructor(
     private readonly redux: NgRedux<AppState>,
-    private readonly cache: CacheService,
     private readonly balanceActions: BalanceActions,
     private readonly txActions: TransactionActions
   ) {
@@ -80,21 +77,11 @@ export class AppComponent implements OnInit, OnDestroy {
     const som = startOfMonth(Date.now())
 
     this.redux.dispatch(this.txActions.loadTransactions({ since: som }))
-
-    this.getNewTxs()
+    this.redux.dispatch(this.txActions.getNewTransactions())
+    this.redux.dispatch(this.txActions.getPendingTransactions())
   }
 
   ngOnDestroy(): void {
     console.log('monux stopped')
-  }
-
-  async getNewTxs() {
-    const recentTx = (await this.cache.loadTransactions({ limit: 1 }))[0]
-
-    const action = recentTx
-      ? this.txActions.getTransactions({ since: recentTx.id })
-      : this.txActions.getTransactions()
-
-    this.redux.dispatch(action)
   }
 }

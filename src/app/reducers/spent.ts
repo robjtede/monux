@@ -12,10 +12,10 @@ const initialState: SpentState = {
 
 export const reducer = handleActions<SpentState, SetSpentPayload>(
   {
-    [SpentActions.SET_SPENT]: (_, action) => {
-      if (!action.payload) throw new TypeError('A payload is required')
+    [SpentActions.SET_SPENT]: (_, { payload }) => {
+      if (!payload) throw new TypeError('A payload is required')
 
-      return action.payload.amount
+      return payload.amount
     }
   },
   initialState

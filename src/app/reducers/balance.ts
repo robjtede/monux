@@ -12,10 +12,10 @@ const initialState: BalanceState = {
 
 export const reducer = handleActions<BalanceState, SetBalancePayload>(
   {
-    [BalanceActions.SET_BALANCE]: (_, action) => {
-      if (!action.payload) throw new TypeError('A payload is required')
+    [BalanceActions.SET_BALANCE]: (_, { payload }) => {
+      if (!payload) throw new TypeError('A payload is required')
 
-      return action.payload.amount
+      return payload.amount
     }
   },
   initialState

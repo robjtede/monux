@@ -7,11 +7,11 @@ const initialState: AccountState = {}
 
 const reducer = handleActions<AccountState, SetAccountPayload>(
   {
-    [AccountActions.SET_ACCOUNT]: (_, action) => {
-      if (!action.payload) throw new TypeError('A payload is required')
+    [AccountActions.SET_ACCOUNT]: (_, { payload }) => {
+      if (!payload) throw new TypeError('A payload is required')
 
       return {
-        [action.payload.bank]: action.payload.acc
+        [payload.bank]: payload.acc
       }
     }
   },

@@ -14,7 +14,6 @@ import Account, {
   MonzoAccountsResponse
 } from '../../lib/monzo/Account'
 import Transaction, {
-  MonzoTransactionsResponse,
   MonzoTransactionResponse,
   TransactionRequestOpts
 } from '../../lib/monzo/Transaction'
@@ -28,6 +27,8 @@ export class TransactionActions {
   static readonly SET_TRANSACTIONS = 'SET_TRANSACTIONS'
   static readonly ADD_TRANSACTIONS = 'ADD_TRANSACTIONS'
   static readonly GET_TRANSACTIONS = 'GET_TRANSACTIONS'
+  static readonly GET_PENDING_TRANSACTIONS = 'GET_PENDING_TRANSACTIONS'
+  static readonly GET_NEW_TRANSACTIONS = 'GET_NEW_TRANSACTIONS'
   static readonly UPDATE_TRANSACTIONS = 'UPDATE_TRANSACTIONS'
   static readonly POST_TRANSACTION = 'POST_TRANSACTION'
   static readonly SELECT_TRANSACTION = 'SELECT_TRANSACTION'
@@ -82,14 +83,15 @@ export class TransactionActions {
       GetTransactionsPromise
     >(TransactionActions.GET_TRANSACTIONS, () => ({
       promise: (async () => {
+        // TODO: duplicate request
         const acc = new Account(
           (await this.monzo.request<MonzoAccountsResponse>(accountsRequest()))
             .accounts[0]
         )
 
-        const txs = (await this.monzo.request<MonzoTransactionsResponse>(
-          acc.transactionsRequest(options)
-        )).transactions
+        const { transactions: txs } = await this.monzo.request<{
+          transactions: MonzoTransactionResponse[]
+        }>(acc.transactionsRequest(options))
 
         debug('HTTP transactions =>', txs)
 
@@ -102,11 +104,62 @@ export class TransactionActions {
     }))()
   }
 
+  getTransaction(txId: string) {
+    return createAction<
+      GetTransactionsPromise
+    >(TransactionActions.GET_TRANSACTIONS, () => ({
+      promise: (async () => {
+        // TODO: duplicate request
+        const acc = new Account(
+          (await this.monzo.request<MonzoAccountsResponse>(accountsRequest()))
+            .accounts[0]
+        )
+
+        const { transaction: tx } = await this.monzo.request<{
+          transaction: MonzoTransactionResponse
+        }>(acc.transactionRequest(txId))
+
+        debug('HTTP pending transaction =>', tx)
+
+        // BUG: adds pending txs to tx list
+        // this.redux.dispatch(this.updateTransactions([tx]))
+        this.redux.dispatch(
+          // TODO: wasted class instantiation
+          this.saveTransactions(acc, [new Transaction(tx)])
+        )
+      })()
+    }))()
+  }
+
+  getNewTransactions() {
+    return createAction<
+      GetTransactionsPromise
+    >(TransactionActions.GET_NEW_TRANSACTIONS, () => ({
+      promise: (async () => {
+        const recentTx = (await this.cache.loadTransactions({ limit: 1 }))[0]
+
+        const action = recentTx
+          ? this.getTransactions({ since: recentTx.id })
+          : this.getTransactions()
+
+        this.redux.dispatch(action)
+      })()
+    }))()
+  }
+
   getPendingTransactions() {
-    // store.dispatch({
-    //   type: 'GET_PENDING_TRANSACTIONS',
-    //   payload: updatePendingTransactions()
-    // })
+    return createAction<
+      GetTransactionsPromise
+    >(TransactionActions.GET_PENDING_TRANSACTIONS, () => ({
+      promise: (async () => {
+        const txs = (await this.cache.loadTransactions()).filter(tx => {
+          // TODO: wasted class instantiation
+          return new Transaction(tx).pending
+        })
+
+        txs.forEach(tx => this.redux.dispatch(this.getTransaction(tx.id)))
+      })()
+    }))()
   }
 
   loadTransactions(opts: TransactionRequestOpts = {}) {
