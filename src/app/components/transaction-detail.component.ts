@@ -5,11 +5,11 @@ import {
   ElementRef,
   ViewChild
 } from '@angular/core'
-// import { NgRedux, dispatch } from '@angular-redux/store'
+import { NgRedux, dispatch } from '@angular-redux/store'
 import { format } from 'date-fns'
 
-// import { AppState } from '../store'
-// import { TransactionActions } from '../actions/transaction'
+import { AppState } from '../store'
+import { TransactionActions } from '../actions/transaction'
 
 import Transaction from '../../lib/monzo/Transaction'
 import { SignModes } from '../../lib/monzo/Amount'
@@ -28,10 +28,12 @@ export class TransactionDetailComponent {
   @Input() readonly tx: Transaction
 
   @ViewChild('icon') readonly $icon: ElementRef
+  @ViewChild('notes') readonly $notes: ElementRef
 
-  // private readonly redux: NgRedux<AppState>,
-  // private readonly txActions: TransactionActions
-  constructor() {}
+  constructor(
+    private readonly redux: NgRedux<AppState>,
+    private readonly txActions: TransactionActions
+  ) {}
 
   get createdTime() {
     return format(this.tx.created, 'h:mma - Do MMMM YYYY')
@@ -63,5 +65,13 @@ export class TransactionDetailComponent {
 
   iconFallback() {
     this.$icon.nativeElement.src = this.tx.iconFallback
+  }
+
+  @dispatch()
+  updateNotes() {
+    return this.txActions.updateTransactionNotes(
+      this.tx,
+      this.$notes.nativeElement.value
+    )
   }
 }

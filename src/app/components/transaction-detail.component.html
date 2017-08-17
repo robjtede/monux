@@ -23,7 +23,13 @@
 <div class="balance-wrap" [innerHTML]="txBalance"></div>
 
 <div class="notes-wrap">
-  <textarea autosize value="{{ tx.notes }}" placeholder="Click here to add a note..."></textarea>
+  <textarea
+    #notes
+    autosize
+    (blur)="updateNotes()"
+    value='{{ tx.notes }}'
+    placeholder="Click here to add a note..."
+  ></textarea>
 </div>
 
 <div class="attachments">

@@ -243,25 +243,36 @@ export class TransactionActions {
     }))(tx)
   }
 
-  // export const updateTransactionNotes = createAction<
-  //   IUpdateTransactionNotesPromise,
-  //   Transaction,
-  //   IMonzoApiAccount,
-  //   string
-  // >(EActions.UPDATE_TRANSACTION_NOTES, (tx, acc, notes) => ({
-  //   promise: (async () => {
-  //     const monzo = await getMonzo()
-  //     const account = new Account(monzo, acc)
-  //     const ttx = new Transaction(monzo, account, tx.json)
-  //
-  //     await ttx.setNotes(notes)
-  //     store.dispatch(updateTransactions([ttx.json]))
-  //     store.dispatch(saveTransactions(account, [ttx]))
-  //
-  //     return { tx: ttx.json }
-  //   })(),
-  //   data: { txId: tx.id }
-  // }))
+  updateTransactionNotes(tx: Transaction, notes: string) {
+    return createAction<
+      UpdateTransactionNotesPromise,
+      Transaction,
+      string
+    >(TransactionActions.UPDATE_TRANSACTION_NOTES, (tx, notes) => ({
+      promise: (async () => {
+        // TODO: duplicate request
+        const acc = new Account(
+          (await this.monzo.request<MonzoAccountsResponse>(accountsRequest()))
+            .accounts[0]
+        )
+
+        await this.monzo.request<{
+          transaction: MonzoTransactionResponse
+        }>(await tx.setNotesRequest(notes))
+
+        const { transaction: newTx } = await this.monzo.request<{
+          transaction: MonzoTransactionResponse
+        }>(await acc.transactionRequest(tx.id))
+
+        this.redux.dispatch(this.updateTransactions([newTx]))
+        this.redux.dispatch(
+          this.saveTransactions(acc, [new Transaction(newTx)])
+        )
+
+        return { tx: newTx }
+      })()
+    }))(tx, notes)
+  }
 }
 
 export interface SetTransactionsPayload {
@@ -298,7 +309,6 @@ export interface UpdateTransactionNotesPayload {
 
 export interface UpdateTransactionNotesPromise {
   promise: Promise<{ tx: MonzoTransactionResponse }>
-  data: UpdateTransactionNotesPayload
 }
 
 export interface SaveTransactionsPromise {

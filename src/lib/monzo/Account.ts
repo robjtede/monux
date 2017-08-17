@@ -27,48 +27,6 @@ export default class Account {
         account_id: this.id
       }
     }
-
-    // TODO: move to service
-    // return this.monzo
-    //   .request('/balance', {
-    //     account_id: this.id
-    //   })
-    //   .then(bal => {
-    //     const nativeBalance: IAmount = {
-    //       amount: bal.balance,
-    //       currency: bal.currency
-    //     }
-    //
-    //     const nativeSpend: IAmount = {
-    //       amount: bal.spend_today,
-    //       currency: bal.currency
-    //     }
-    //
-    //     if (bal.local_currency) {
-    //       const localBalance: IAmount = {
-    //         amount: bal.balance * bal.local_exchange_rate,
-    //         currency: bal.local_currency
-    //       }
-    //
-    //       const localSpend: IAmount = {
-    //         amount:
-    //           bal.local_spend.length > 0
-    //             ? bal.local_spend[0].spend_today * bal.local_exchange_rate
-    //             : 0,
-    //         currency: bal.local_currency
-    //       }
-    //
-    //       return {
-    //         balance: new Amount(nativeBalance, localBalance),
-    //         spentToday: new Amount(nativeSpend, localSpend)
-    //       }
-    //     } else {
-    //       return {
-    //         balance: new Amount(nativeBalance),
-    //         spentToday: new Amount(nativeSpend)
-    //       }
-    //     }
-    //   })
   }
 
   transactionRequest(txId: string): MonzoRequest {
@@ -78,13 +36,6 @@ export default class Account {
         'expand[]': 'merchant'
       }
     }
-
-    // TODO: move to service
-    // const res = await this.monzo.request(`/transactions/${txId}`, {
-    //   'expand[]': 'merchant'
-    // })
-    //
-    // return new Transaction(this.monzo, this, res.transaction, undefined)
   }
 
   transactionsRequest(
