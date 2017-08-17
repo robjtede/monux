@@ -1,6 +1,7 @@
 import {
   Component,
   Input,
+  OnInit,
   ChangeDetectionStrategy,
   HostListener,
   ViewChild,
@@ -26,15 +27,28 @@ import { SignModes } from '../../lib/monzo/Amount'
     '[attr.data-category]': 'tx.category.raw'
   }
 })
-export class TransactionSummaryComponent {
+export class TransactionSummaryComponent implements OnInit {
   @Input() readonly tx: Transaction
 
   @ViewChild('icon') readonly $icon: ElementRef
+
+  private iconObserver = new IntersectionObserver(
+    this.onIconIntersection.bind(this),
+    {
+      rootMargin: '50px 0px',
+      threshold: 0.01,
+      root: document.documentElement
+    }
+  )
 
   constructor(
     private readonly redux: NgRedux<AppState>,
     private readonly txActions: TransactionActions
   ) {}
+
+  ngOnInit() {
+    this.iconObserver.observe(this.$icon.nativeElement)
+  }
 
   get showAmount(): boolean {
     return !this.tx.is.metaAction && !this.tx.declined
@@ -63,4 +77,14 @@ export class TransactionSummaryComponent {
   iconFallback() {
     this.$icon.nativeElement.src = this.tx.iconFallback
   }
+
+  onIconIntersection(entries: IntersectionObserverEntry[]) {
+    if (entries.length && entries[0].intersectionRatio > 0) {
+      this.$icon.nativeElement.src = this.$icon.nativeElement.dataset.src
+
+      this.iconObserver.unobserve(this.$icon.nativeElement)
+    }
+  }
+
+  loadIcon() {}
 }

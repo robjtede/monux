@@ -1,4 +1,6 @@
-<div class="icon-wrap"><img #icon class="icon" [src]="tx.icon" (error)="iconFallback()"></div>
+<div class="icon-wrap">
+  <img #icon class="icon" [attr.data-src]="tx.icon" (error)="iconFallback()">
+</div>
 
 <div class="info-wrap">
   <div class="info">
