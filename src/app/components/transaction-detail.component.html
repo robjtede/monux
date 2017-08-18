@@ -34,7 +34,14 @@
 
 <div class="attachments">
   <div class="scroll-wrap">
-    <div class="scroll-inner"></div>
+    <div class="scroll-inner" *ngIf="hasAttachments">
+      <div *ngFor="let att of tx.attachments" class="attachment">
+        <div class="delete">
+          X
+        </div>
+        <img [src]="att.url">
+      </div>
+    </div>
   </div>
   <input type="file" class="new-attachment" disabled>
 </div>

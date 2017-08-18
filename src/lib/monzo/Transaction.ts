@@ -304,7 +304,7 @@ export interface MonzoTransactionResponse extends JSONMap {
   local_amount: number
   // TODO: full currency code list
   local_currency: string
-  merchant: string | MonzoMerchantResponse
+  merchant: MonzoMerchantResponse | string | null
   metadata: JSONMap
   notes: string
   originator: false

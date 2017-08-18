@@ -6,7 +6,7 @@ import {
   SelectTransactionPayload
 } from '../actions/transaction'
 
-const initialState: SelectedTransactionsState = ''
+const initialState: SelectedTransactionsState = 'tx_00009Mvi2QlTlkoT92HCnx'
 
 export const reducer = handleActions<
   SelectedTransactionsState,

@@ -64,14 +64,8 @@ export class TransactionSummaryComponent implements OnInit {
     return this.redux.getState().selectedTransaction === this.tx.id
   }
 
-  get hasAttachemnts() {
+  get hasAttachments() {
     return this.tx.attachments && this.tx.attachments.length
-  }
-
-  @HostListener('click')
-  @dispatch()
-  selectTx() {
-    return this.txActions.selectTransaction(this.tx.id)
   }
 
   iconFallback() {
@@ -84,6 +78,12 @@ export class TransactionSummaryComponent implements OnInit {
 
       this.iconObserver.unobserve(this.$icon.nativeElement)
     }
+  }
+
+  @HostListener('click')
+  @dispatch()
+  selectTx() {
+    return this.txActions.selectTransaction(this.tx.id)
   }
 
   @dispatch()

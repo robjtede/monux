@@ -63,6 +63,10 @@ export class TransactionDetailComponent {
     }
   }
 
+  get hasAttachments() {
+    return this.tx.attachments && this.tx.attachments.length
+  }
+
   iconFallback() {
     this.$icon.nativeElement.src = this.tx.iconFallback
   }
