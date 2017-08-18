@@ -77,8 +77,8 @@ export class AppComponent implements OnInit, OnDestroy {
     const som = subMonths(startOfMonth(Date.now()), 1)
 
     this.redux.dispatch(this.txActions.loadTransactions({ since: som }))
-    // this.redux.dispatch(this.txActions.getNewTransactions())
-    // this.redux.dispatch(this.txActions.getPendingTransactions())
+    this.redux.dispatch(this.txActions.getNewTransactions())
+    this.redux.dispatch(this.txActions.getPendingTransactions())
   }
 
   ngOnDestroy(): void {

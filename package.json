@@ -50,6 +50,7 @@
     "img-exif": "^0.2.0",
     "keytar": "^4.0.4",
     "lodash": "^4.17.4",
+    "ng2-img-tools": "^1.0.5",
     "p-iteration": "^1.1.5",
     "redux": "^3.7.2",
     "redux-actions": "^2.2.1",
