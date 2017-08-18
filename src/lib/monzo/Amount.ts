@@ -93,7 +93,7 @@ export default class Amount {
 
   // returns amount split into major and minor units
   get split(): string[] {
-    return this.normalize.toString().split('.')
+    return String(this.normalize).split('.')
   }
 
   // returns major unit
@@ -172,9 +172,9 @@ export default class Amount {
     str = str.replace(/%\+/g, this.signIfPositive)
     str = str.replace(/%-/g, this.signIfNegative)
 
-    str = str.replace(/%r/g, this.raw.toString())
-    str = str.replace(/%a/g, this.amount.toString())
-    str = str.replace(/%m/g, this.normalize.toString())
+    str = str.replace(/%r/g, String(this.raw))
+    str = str.replace(/%a/g, String(this.amount))
+    str = str.replace(/%m/g, String(this.normalize))
 
     str = str.replace(/%j/g, this.major)
     str = str.replace(/%n/g, this.minor)

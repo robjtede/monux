@@ -120,8 +120,8 @@ export default class Transaction {
   }
 
   get is() {
-    const cash = this.category.toString() === 'cash'
-    const zero = +this.tx.amount === 0
+    const cash = String(this.category) === 'cash'
+    const zero = this.tx.amount === 0
 
     const metaAction = zero && !this.inSpending
 
@@ -160,10 +160,10 @@ export default class Transaction {
     }
   }
 
-  get merchant(): Merchant | string {
-    return this.tx.merchant && typeof this.tx.merchant !== 'string'
-      ? new Merchant(this.tx.merchant)
-      : this.tx.merchant
+  get merchant(): Merchant | string | undefined {
+    if (!this.tx.merchant) return undefined
+    if (typeof this.tx.merchant === 'string') return this.tx.merchant
+    return new Merchant(this.tx.merchant)
   }
 
   get notes() {
@@ -176,9 +176,8 @@ export default class Transaction {
 
   get online(): boolean {
     return (
-      'merchant' in this.tx &&
+      !!this.tx.merchant &&
       typeof this.tx.merchant !== 'string' &&
-      this.tx.merchant &&
       'online' in this.tx.merchant &&
       this.tx.merchant.online
     )
