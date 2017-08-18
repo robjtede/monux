@@ -41,10 +41,8 @@ export class MonzoService {
         })
         .toPromise()
     } else if (method === 'POST') {
-      console.error(`Unhandled HTTP call with ${method} method.`)
       throw new Error(`Unhandled HTTP call with ${method} method.`)
     } else if (method === 'PUT') {
-      console.error(`Unhandled HTTP call with ${method} method.`)
       throw new Error(`Unhandled HTTP call with ${method} method.`)
     } else if (method === 'PATCH') {
       return this.http
@@ -53,7 +51,6 @@ export class MonzoService {
         })
         .toPromise()
     } else {
-      console.error(`Unhandled HTTP call with ${method} method.`)
       throw new Error(`Unhandled HTTP call with ${method} method.`)
     }
   }

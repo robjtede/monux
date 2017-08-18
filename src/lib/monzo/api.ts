@@ -5,7 +5,7 @@ import { Primitive } from '../json-types'
 type HttpMethods = 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE' | 'OPTIONS'
 
 export interface QueryString {
-  [key: string]: Primitive
+  [key: string]: Primitive | undefined
 }
 
 export interface MonzoRequest {

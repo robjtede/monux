@@ -8,7 +8,6 @@ import {
   SetTransactionsPayload,
   AddTransactionsPayload,
   UpdateTransactionsPayload,
-  HideTransactionPayload,
   UnhideTransactionPayload
 } from '../actions/transaction'
 import { TransactionsState } from '../store'
@@ -18,9 +17,7 @@ export type ModifyTransactionsPayloads =
   | AddTransactionsPayload
   | UpdateTransactionsPayload
 
-export type VisibilityTransactionsPayloads =
-  | HideTransactionPayload
-  | UnhideTransactionPayload
+export type VisibilityTransactionsPayloads = UnhideTransactionPayload
 
 export type TransactionsPayloads =
   | ModifyTransactionsPayloads

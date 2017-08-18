@@ -2,7 +2,7 @@ import { format } from 'date-fns'
 
 import Amount, { SimpleAmount } from './Amount'
 import Merchant, { MonzoMerchantResponse } from './Merchant'
-import { JSONMap, Primitive } from '../json-types'
+import { JSONMap } from '../json-types'
 import { MonzoRequest } from './api'
 
 export default class Transaction {
