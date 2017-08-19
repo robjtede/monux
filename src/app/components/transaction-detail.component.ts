@@ -18,7 +18,7 @@ import {
   MonzoAttachmentUploadResponse,
   MonzoAttachmentResponse
 } from '../../lib/monzo/Attachment'
-import { SignModes } from '../../lib/monzo/Amount'
+import Amount, { SignModes } from '../../lib/monzo/Amount'
 import Transaction from '../../lib/monzo/Transaction'
 
 @Component({
@@ -50,9 +50,17 @@ export class TransactionDetailComponent {
   }
 
   get txAmount(): string {
-    return this.tx.amount.html({
+    let amount = this.tx.amount.html({
       signMode: SignModes.Never
     })
+
+    if (this.tx.amount.foreign) {
+      amount += (this.tx.amount.exchanged as Amount).html({
+        signMode: SignModes.Never
+      })
+    }
+
+    return amount
   }
 
   get txBalance(): string {
