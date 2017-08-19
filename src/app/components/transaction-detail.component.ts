@@ -14,11 +14,12 @@ import { MonzoService } from '../services/monzo.service'
 import { AppState } from '../store'
 import { TransactionActions } from '../actions/transaction'
 
-import Transaction, {
-  MonzoAttachmentResponse,
-  MonzoAttachmentUploadResponse
-} from '../../lib/monzo/Transaction'
+import {
+  MonzoAttachmentUploadResponse,
+  MonzoAttachmentResponse
+} from '../../lib/monzo/Attachment'
 import { SignModes } from '../../lib/monzo/Amount'
+import Transaction from '../../lib/monzo/Transaction'
 
 @Component({
   selector: 'm-transaction-detail',

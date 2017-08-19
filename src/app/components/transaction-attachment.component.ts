@@ -10,9 +10,7 @@ import { Ng2ImgToolsService } from 'ng2-img-tools'
 
 import { MonzoService } from '../services/monzo.service'
 
-import Transaction, {
-  MonzoAttachmentResponse
-} from '../../lib/monzo/Transaction'
+import Attachment from '../../lib/monzo/Attachment'
 
 @Component({
   selector: 'm-transaction-attachment',
@@ -22,8 +20,7 @@ import Transaction, {
   host: {}
 })
 export class TransactionAttachmentComponent implements OnInit {
-  @Input() readonly attachment: MonzoAttachmentResponse
-  @Input() readonly tx: Transaction
+  @Input() readonly attachment: Attachment
 
   @ViewChild('attachment') $attachment: ElementRef
 
@@ -51,7 +48,7 @@ export class TransactionAttachmentComponent implements OnInit {
 
   async delete() {
     try {
-      const req = this.tx.attachmentDeregisterRequest(this.attachment.id)
+      const req = this.attachment.attachmentDeregisterRequest()
       const res = await this.monzo.request(req)
 
       console.log(res)
