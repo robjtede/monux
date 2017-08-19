@@ -22,7 +22,6 @@ import { SignModes } from '../../lib/monzo/Amount'
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
     '[class.selected]': 'selected',
-    '[class.pending]': 'tx.pending',
     '[class.declined]': 'tx.declined',
     '[attr.data-category]': 'tx.category.raw'
   }

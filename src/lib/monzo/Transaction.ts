@@ -92,11 +92,11 @@ export default class Transaction {
 
   get icon(): string {
     if ('is_topup' in this.tx.metadata && this.tx.metadata.is_topup) {
-      return './icons/topup.png'
+      return './assets/icons/topup.png'
     }
 
     if (this.tx.counterparty && 'user_id' in this.tx.counterparty) {
-      return './icons/peer.png'
+      return './assets/icons/peer.png'
     }
 
     if (
@@ -112,7 +112,7 @@ export default class Transaction {
   }
 
   get iconFallback(): string {
-    return `./icons/${this.category}.png`
+    return `./assets/icons/${this.category}.png`
   }
 
   get id(): string {

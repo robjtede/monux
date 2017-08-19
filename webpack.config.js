@@ -116,7 +116,16 @@ module.exports = {
     new ProgressPlugin(),
 
     new GlobCopyWebpackPlugin({
-      patterns: ['assets', 'monux.*'],
+      patterns: ['./assets'],
+      globOptions: {
+        cwd: root('./src/app'),
+        dot: true,
+        ignore: '**/.gitkeep'
+      }
+    }),
+
+    new GlobCopyWebpackPlugin({
+      patterns: ['./monux.*'],
       globOptions: {
         cwd: root('./src'),
         dot: true,
