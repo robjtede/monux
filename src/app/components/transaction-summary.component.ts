@@ -13,7 +13,7 @@ import { AppState } from '../store'
 import { TransactionActions } from '../actions/transaction'
 
 import Transaction from '../../lib/monzo/Transaction'
-import { SignModes } from '../../lib/monzo/Amount'
+import Amount, { SignModes } from '../../lib/monzo/Amount'
 
 @Component({
   selector: 'm-transaction-summary',
@@ -54,9 +54,17 @@ export class TransactionSummaryComponent implements OnInit {
   }
 
   get txAmount(): string {
-    return this.tx.amount.html({
+    let amount = this.tx.amount.html({
       signMode: SignModes.Never
     })
+
+    if (this.tx.amount.foreign) {
+      amount += (this.tx.amount.exchanged as Amount).html({
+        signMode: SignModes.Never
+      })
+    }
+
+    return amount
   }
 
   get selected(): boolean {
