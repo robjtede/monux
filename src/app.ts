@@ -1,11 +1,14 @@
 import { randomBytes } from 'crypto'
 import { parse as parseQueryString } from 'querystring'
 import { parse as parseUrl } from 'url'
-import * as Debug from 'debug'
+import Debug = require('debug')
 
 import { app } from 'electron'
-import { enableLiveReload } from 'electron-compile'
 import installExtension, { REDUX_DEVTOOLS } from 'electron-devtools-installer'
+
+import reloader = require('electron-reload')
+
+reloader(__dirname)
 
 import {
   getAccessToken,
@@ -13,13 +16,11 @@ import {
   verifyAccess,
   getSavedCode,
   saveCode
-} from '../lib/monzo/auth'
+} from './lib/monzo/auth'
 import WindowManager from './window-manager'
 
 const debug = Debug('app:app')
 const mainWindow = new WindowManager()
-
-enableLiveReload()
 
 if (!app.isDefaultProtocolClient(app.getName().toLowerCase())) {
   app.setAsDefaultProtocolClient(app.getName().toLowerCase())
@@ -27,7 +28,7 @@ if (!app.isDefaultProtocolClient(app.getName().toLowerCase())) {
 
 debug(`starting`, app.getName(), 'version', app.getVersion())
 
-export interface IAppInfo {
+export interface AppInfo {
   client_id: string
   client_secret: string
   redirect_uri: string
@@ -43,7 +44,7 @@ const getAppInfo = (() => {
     })
   })
 
-  return async (): Promise<IAppInfo> => {
+  return async (): Promise<AppInfo> => {
     return {
       client_id: await getSavedCode('client_id'),
       client_secret: await getSavedCode('client_secret'),

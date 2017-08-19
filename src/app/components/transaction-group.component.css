@@ -1,0 +1,43 @@
+:host {
+  display: block;
+}
+
+.group-heading {
+  display: grid;
+  grid-template-areas: "title total" "size total";
+  justify-content: space-between;
+
+  position: sticky;
+  top: 0;
+  padding: 0.5em 20px;
+
+  border-bottom: var(--thin-border);
+  background-color: var(--off-white);
+
+  & .group-title {
+    grid-area: title;
+
+    font-size: 1.2rem;
+  }
+
+  & .group-size {
+    grid-area: size;
+
+    font-size: 0.9rem;
+    color: var(--label-grey);
+  }
+
+  & .group-total {
+    grid-area: total;
+    align-self: center;
+
+    padding-left: 1em;
+
+    color: var(--medium-grey);
+    font-size: 1.1rem;
+  }
+}
+
+m-transaction-summary:not(:last-of-type) {
+  border-bottom: var(--thin-border);
+}

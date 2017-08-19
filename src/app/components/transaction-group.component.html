@@ -1,0 +1,12 @@
+<div class="group-heading">
+  <div class="group-title">{{ groupTitle }}</div>
+
+  <div class="group-size" *ngIf="groupSize" [ngPlural]="groupSize">
+    <ng-template ngPluralCase="=1">{{ groupSize }} transaction</ng-template>
+    <ng-template ngPluralCase="other">{{ groupSize }} transactions</ng-template>
+  </div>
+
+  <div class="group-total" [innerHTML]="groupTotal"></div>
+</div>
+
+<m-transaction-summary *ngFor="let tx of group.txs" [tx]="tx"></m-transaction-summary>

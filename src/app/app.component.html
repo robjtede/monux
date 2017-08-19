@@ -1,0 +1,71 @@
+<header class="balances">
+  <div class="card-balance">
+    <m-amount [amount]="balance$ | async"></m-amount>
+  </div>
+
+  <div class="spent-today">
+    <m-amount [amount]="spent$ | async"></m-amount>
+  </div>
+</header>
+
+<nav class="tabs">
+  <m-account [holder]="accountHolder$ | async"></m-account>
+  <div class="logout">Log Out</div>
+
+  <div class="tabgroup">
+    <div data-pane="transaction" class="tab">Transactions</div>
+    <div data-pane="spending" class="tab">Spending</div>
+    <div data-pane="map" class="tab">Map</div>
+    <div data-pane="export" class="tab">Export</div>
+  </div>
+</nav>
+
+<main class="app">
+  <div class="pane transaction-pane active">
+    <m-transaction-list [txs]="txs$ | async"></m-transaction-list>
+
+    <div class="transaction-detail-pane">
+      <m-transaction-detail *ngIf="selectedTx$ | async" [tx]="selectedTx$ | async"></m-transaction-detail>
+    </div>
+  </div>
+
+  <div class="pane spending-pane">
+    <div class="spending-list">
+      <h1>Months</h1>
+    </div>
+    <div class="spending-vis">
+      <h1>This Month</h1>
+      <svg>
+        <g>
+          <text class="label"></text>
+          <text class="amount"></text>
+        </g>
+      </svg>
+    </div>
+    <!-- <m-spending></m-spending> -->
+  </div>
+
+  <div class="pane map-pane">
+    <div>
+      <h1>🗺️ Map View</h1>
+      <h2>View the location of all your transactions on one map.</h2>
+      <h3>🚀️ Coming soon...</h3>
+    </div>
+
+    <!-- <m-map></m-map> -->
+  </div>
+
+  <div class="pane export-pane">
+    <div>
+      <h1>📒️ Export</h1>
+      <h2>Generate reports and export to CSV or Excel.</h2>
+      <h3>🚀️ Coming soon...</h3>
+    </div>
+
+    <!-- <m-export></m-export> -->
+  </div>
+</main>
+
+<div class="lightbox">
+  <img>
+</div>

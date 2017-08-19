@@ -1,0 +1,28 @@
+:host {
+  margin: 0;
+
+  font-weight: 300;
+  font-size: 1.5rem;
+}
+
+.amount {
+  line-height: 1;
+
+  -webkit-app-region: no-drag;
+  -webkit-user-select: initial;
+
+  & .major {
+    font-size: 2em;
+  }
+}
+
+.amount + .amount {
+  display: block;
+
+  color: var(--light-grey);
+  font-size: 0.8em;
+
+  & .major {
+    font-size: 1em;
+  }
+}

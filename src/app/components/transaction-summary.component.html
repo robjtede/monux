@@ -1,0 +1,29 @@
+<div class="icon-wrap">
+  <img #icon class="icon" [attr.data-src]="tx.icon" (error)="iconFallback()">
+</div>
+
+<div class="info-wrap">
+  <div class="info">
+    <p class="merchant">{{ tx.displayName }}</p>
+    <div class="meta">
+      <span class="meta-pending" *ngIf="tx.pending">P</span>
+      <span class="meta-attachments" *ngIf="hasAttachments" [attr.data-attachments]="tx.attachments.length">A: </span>
+    </div>
+  </div>
+  <p class="notes" *ngIf="tx.declined || tx.notes.short.trim()">
+    {{ tx.declineReason || tx.notes.short }}
+  </p>
+</div>
+
+<ng-container *ngIf="showAmount; then amount else hider"></ng-container>
+
+
+<ng-template #amount>
+  <div class="amount-wrap" [innerHTML]="txAmount"></div>
+</ng-template>
+
+<ng-template #hider>
+  <div class="amount-wrap">
+    <div class="hider" (click)="hideTx($event)">X</div>
+  </div>
+</ng-template>

@@ -1,0 +1,22 @@
+:host {
+  display: block;
+  overflow-x: hidden;
+  overflow-y: scroll;
+
+  border-right: var(--thin-border);
+
+  &(.inactive)::after {
+    content: 'Loading...';
+    width: 100%;
+    padding-top: 150px;
+
+    color: var(--medium-grey);
+    text-align: center;
+
+    -webkit-user-select: none;
+  }
+}
+
+m-transaction-group:not(:last-of-type) {
+  border-bottom: var(--thin-border);
+}
