@@ -264,7 +264,7 @@ export default class Transaction {
     }
   }
 
-  deregisterAttachmentRequest(attachmentId: string): MonzoRequest {
+  attachmentDeregisterRequest(attachmentId: string): MonzoRequest {
     return {
       path: '/attachment/deregister',
       qs: {
@@ -323,6 +323,11 @@ export interface MonzoAttachmentResponse extends JSONMap {
   type: string
   url: string
   user_id: string
+}
+
+export interface MonzoAttachmentUploadResponse extends JSONMap {
+  file_url: string
+  upload_url: string
 }
 
 export interface MonzoCounterpartyResponse extends JSONMap {

@@ -8,7 +8,11 @@ import {
 } from '@angular/core'
 import { Ng2ImgToolsService } from 'ng2-img-tools'
 
-import { MonzoAttachmentResponse } from '../../lib/monzo/Transaction'
+import { MonzoService } from '../services/monzo.service'
+
+import Transaction, {
+  MonzoAttachmentResponse
+} from '../../lib/monzo/Transaction'
 
 @Component({
   selector: 'm-transaction-attachment',
@@ -19,12 +23,16 @@ import { MonzoAttachmentResponse } from '../../lib/monzo/Transaction'
 })
 export class TransactionAttachmentComponent implements OnInit {
   @Input() readonly attachment: MonzoAttachmentResponse
+  @Input() readonly tx: Transaction
 
   @ViewChild('attachment') $attachment: ElementRef
 
   // private readonly redux: NgRedux<AppState>,
   // private readonly txActions: TransactionActions
-  constructor(private imgTools: Ng2ImgToolsService) {}
+  constructor(
+    private monzo: MonzoService,
+    private imgTools: Ng2ImgToolsService
+  ) {}
 
   ngOnInit() {
     this.orientImage()
@@ -39,5 +47,16 @@ export class TransactionAttachmentComponent implements OnInit {
 
       this.$attachment.nativeElement.src = rotatedImg.src
     })
+  }
+
+  async delete() {
+    try {
+      const req = this.tx.attachmentDeregisterRequest(this.attachment.id)
+      const res = await this.monzo.request(req)
+
+      console.log(res)
+    } catch (err) {
+      console.error(err)
+    }
   }
 }

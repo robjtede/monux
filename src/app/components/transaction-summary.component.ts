@@ -81,9 +81,9 @@ export class TransactionSummaryComponent implements OnInit {
   }
 
   @HostListener('click')
-  @dispatch()
   selectTx() {
-    return this.txActions.selectTransaction(this.tx.id)
+    this.redux.dispatch(this.txActions.selectTransaction(this.tx.id))
+    this.redux.dispatch(this.txActions.getTransaction(this.tx.id))
   }
 
   @dispatch()
