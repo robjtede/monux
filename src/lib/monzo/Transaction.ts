@@ -1,6 +1,7 @@
 import { format } from 'date-fns'
 
 import Amount, { SimpleAmount } from './Amount'
+import Attachment, { MonzoAttachmentResponse } from './Attachment'
 import Merchant, { MonzoMerchantResponse } from './Merchant'
 import { JSONMap } from '../json-types'
 import { MonzoRequest } from './api'
@@ -27,8 +28,8 @@ export default class Transaction {
     }
   }
 
-  get attachments(): MonzoAttachmentResponse[] {
-    return this.tx.attachments
+  get attachments(): Attachment[] {
+    return this.tx.attachments.map(att => new Attachment(att))
   }
 
   get balance(): Amount {
@@ -264,16 +265,6 @@ export default class Transaction {
     }
   }
 
-  attachmentDeregisterRequest(attachmentId: string): MonzoRequest {
-    return {
-      path: '/attachment/deregister',
-      qs: {
-        id: attachmentId
-      },
-      method: 'POST'
-    }
-  }
-
   get json(): MonzoTransactionResponse {
     return this.tx
   }
@@ -310,24 +301,6 @@ export interface MonzoTransactionResponse extends JSONMap {
   scheme: string
   settled: string
   updated: string
-}
-
-export interface MonzoAttachmentResponse extends JSONMap {
-  created: string
-  external_id: string
-  // TODO: full mime-type list
-  file_type: string
-  file_url: string
-  id: string
-  // TODO: full mime-type list
-  type: string
-  url: string
-  user_id: string
-}
-
-export interface MonzoAttachmentUploadResponse extends JSONMap {
-  file_url: string
-  upload_url: string
 }
 
 export interface MonzoCounterpartyResponse extends JSONMap {
