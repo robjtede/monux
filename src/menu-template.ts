@@ -1,6 +1,6 @@
 import { shell } from 'electron'
 
-export default [
+export const macOSMenu = [
   {
     label: 'Application',
     submenu: [

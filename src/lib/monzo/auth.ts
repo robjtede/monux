@@ -4,7 +4,7 @@ import * as rp from 'request-promise-native'
 
 import { AppInfo } from '../../app'
 import { getPassword, setPassword, deletePassword } from '../keychain'
-import MonzoApi from './api'
+import { MonzoApi } from './api'
 
 const debug = Debug('app:monzo:auth')
 

@@ -8,11 +8,11 @@ import windowState = require('electron-window-state')
 import { oneLineTrim } from 'common-tags'
 
 import { AppInfo } from './app'
-import menuTemplate from './menu-template'
+import { macOSMenu } from './menu-template'
 
 const debug = Debug('app:window-manager')
 
-export default class WindowManager {
+export class WindowManager {
   private _window: Electron.BrowserWindow | undefined
 
   focus() {
@@ -66,7 +66,7 @@ export default class WindowManager {
 
   setDefaultMenu(): void {
     debug('set default menu')
-    this.menu = menuTemplate
+    this.menu = macOSMenu
   }
 
   goToMonux(): void {
