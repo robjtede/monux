@@ -17,7 +17,7 @@ const currencies = {
   [Currencies.USD]: { symbol: '$', separator: '.' }
 }
 
-export default class Amount {
+export class Amount {
   private readonly native: SimpleAmount
   private readonly local?: SimpleAmount
 
