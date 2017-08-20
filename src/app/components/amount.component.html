@@ -1,1 +1,27 @@
-<div [innerHTML]="getAmountHtml()"></div>
+<span class="amount native" *ngIf="showNative">
+  <ng-container *ngIf="signMode !== 'never'" [ngSwitch]="signMode">
+    <span class="sign" *ngSwitchCase="'always'">{{ amount.sign }}</span>
+    <span class="sign" *ngSwitchCase="'onlyPositive'">{{ amount.signIfPositive }}</span>
+    <span class="sign" *ngSwitchCase="'onlyNegative'">{{ amount.signIfNegative }}</span>
+    <span class="sign" *ngSwitchDefault>{{ amount.sign }}</span>
+  </ng-container>
+
+  <span class="currency" *ngIf="showCurrency">{{ amount.symbol }}</span>
+  <span class="major">{{ amount.major }}</span>
+  <span class="separator">{{ amount.separator }}</span>
+  <span class="minor">{{ amount.minor }}</span>
+</span>
+
+<span class="amount local" *ngIf="showLocal">
+  <ng-container *ngIf="signMode !== 'never'" [ngSwitch]="signMode">
+    <span class="sign" *ngSwitchCase="'always'">{{ amount.exchanged.sign }}</span>
+    <span class="sign" *ngSwitchCase="'onlyPositive'">{{ amount.exchanged.signIfPositive }}</span>
+    <span class="sign" *ngSwitchCase="'onlyNegative'">{{ amount.exchanged.signIfNegative }}</span>
+    <span class="sign" *ngSwitchDefault>{{ amount.exchanged.sign }}</span>
+  </ng-container>
+
+  <span class="currency" *ngIf="showCurrency">{{ amount.exchanged.symbol }}</span>
+  <span class="major">{{ amount.exchanged.major }}</span>
+  <span class="separator">{{ amount.exchanged.separator }}</span>
+  <span class="minor">{{ amount.exchanged.minor }}</span>
+</span>

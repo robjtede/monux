@@ -1,28 +1,26 @@
 :host {
   margin: 0;
+}
 
-  font-weight: 300;
-  font-size: 1.5rem;
+:host(.positive) {
+  color: var(--positive-color, inherit);
+}
+
+:host(.negative) {
+  color: var(--negative-color, inherit);
 }
 
 .amount {
-  line-height: 1;
+  display: flex;
 
-  -webkit-app-region: no-drag;
-  -webkit-user-select: initial;
-
-  & .major {
-    font-size: 2em;
-  }
+  white-space: nowrap;
 }
 
-.amount + .amount {
-  display: block;
+:host([large-major="true"]) .native .major {
+  font-size: var(--large-major-size, 1.5em);
+}
 
-  color: var(--light-grey);
-  font-size: 0.8em;
-
-  & .major {
-    font-size: 1em;
-  }
+.local {
+  color: var(--local-color, var(--light-grey));
+  font-size: var(--local-size, 0.8em);
 }
