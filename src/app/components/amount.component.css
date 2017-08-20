@@ -12,15 +12,16 @@
 
 .amount {
   display: flex;
+  align-items: baseline;
 
   white-space: nowrap;
 }
 
-:host([large-major="true"]) .native .major {
+:host([large-major]) .native .major {
   font-size: var(--large-major-size, 1.5em);
 }
 
 .local {
-  color: var(--local-color, var(--light-grey));
+  color: var(--local-color, var(--dark-grey, gray(128)));
   font-size: var(--local-size, 0.8em);
 }

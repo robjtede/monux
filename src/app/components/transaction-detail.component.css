@@ -165,32 +165,17 @@
   border-bottom: var(--thin-border);
 }
 
-.amount {
+m-amount {
   display: block;
 
-  font-size: 2.2rem;
-  line-height: 1.2;
-  white-space: nowrap;
+  font-size: 2rem;
+  line-height: 1.4;
 
-  &.positive {
-    color: green;
-  }
-
-  & + .amount {
-    font-size: 1.5rem;
-  }
-
-  & + .amount:not(.positive) {
-    color: var(--dark-grey);
-  }
+  --positive-color: green;
 
   @nest :host(.declined) & {
-    color: color(red saturation(-20%));
+    --negative-color: color(red saturation(-20%));
   }
-
-  /*.amount-wrap .amount .major {
-    font-size: 2em;
-  }*/
 }
 
 .balance-wrap::before,
@@ -205,16 +190,14 @@
 .balance-wrap {
   --label-text: 'Balance (after transaction):';
 
-  padding: 0.8em 15px 0.5em;
+  padding: 0.5em 15px;
 
   border-bottom: var(--thin-border);
 
-  & .amount {
-    font-size: 1.6rem;
-  }
+  & m-amount {
+    font-size: 1.8rem;
 
-  & .amount.positive {
-    color: inherit;
+    --positive-color: inherit;
   }
 }
 

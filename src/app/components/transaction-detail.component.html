@@ -19,8 +19,20 @@
 <div class="decline-reason" *ngIf="tx.declined">
   Declined due to {{ tx.declineReason }}.
 </div>
-<div class="amount-wrap" *ngIf="!this.tx.is.metaAction" [innerHTML]="txAmount"></div>
-<div class="balance-wrap" [innerHTML]="txBalance"></div>
+<div class="amount-wrap">
+  <m-amount
+    *ngIf="!tx.is.metaAction"
+    [amount]="tx.amount"
+    sign-mode="never"
+    large-major
+  ></m-amount>
+</div>
+<div class="balance-wrap">
+  <m-amount
+    [amount]="tx.balance"
+    sign-mode="never"
+  ></m-amount>
+</div>
 
 <div class="notes-wrap">
   <textarea
