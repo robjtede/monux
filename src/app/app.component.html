@@ -1,10 +1,18 @@
 <header class="balances">
   <div class="card-balance">
-    <m-amount [amount]="balance$ | async"></m-amount>
+    <m-amount
+      [amount]="balance$ | async"
+      sign-mode="never"
+      large-major
+    ></m-amount>
   </div>
 
   <div class="spent-today">
-    <m-amount [amount]="spent$ | async"></m-amount>
+    <m-amount
+      [amount]="spent$ | async"
+      sign-mode="never"
+      large-major
+    ></m-amount>
   </div>
 </header>
 
