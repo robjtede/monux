@@ -163,6 +163,7 @@ m-amount {
   --local-color: var(--dark-grey);
 
   @nest :host(.selected) & {
+    --positive-color: var(--off-white);
     --local-color: var(--light-grey);
   }
 }
