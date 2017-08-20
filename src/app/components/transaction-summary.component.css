@@ -157,7 +157,7 @@ m-amount {
   align-items: flex-end;
 
   font-size: 1.2rem;
-  line-height: 1.2;
+  line-height: 1.4;
 
   --positive-color: green;
   --local-color: var(--dark-grey);

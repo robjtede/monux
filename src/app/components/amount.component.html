@@ -6,7 +6,7 @@
     <span class="sign" *ngSwitchDefault>{{ amount.sign }}</span>
   </ng-container>
 
-  <span class="currency" *ngIf="showCurrency">{{ amount.symbol }}</span>
+  <span class="currency" *ngIf="currencyMode === 'both' || currencyMode === 'native'">{{ amount.symbol }}</span>
   <span class="major">{{ amount.major }}</span>
   <span class="separator">{{ amount.separator }}</span>
   <span class="minor">{{ amount.minor }}</span>
@@ -20,7 +20,7 @@
     <span class="sign" *ngSwitchDefault>{{ amount.exchanged.sign }}</span>
   </ng-container>
 
-  <span class="currency" *ngIf="showCurrency">{{ amount.exchanged.symbol }}</span>
+  <span class="currency" *ngIf="currencyMode === 'both' || currencyMode === 'local'">{{ amount.exchanged.symbol }}</span>
   <span class="major">{{ amount.exchanged.major }}</span>
   <span class="separator">{{ amount.exchanged.separator }}</span>
   <span class="minor">{{ amount.exchanged.minor }}</span>
