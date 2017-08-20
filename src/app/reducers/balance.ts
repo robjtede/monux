@@ -20,5 +20,3 @@ export const reducer = handleActions<BalanceState, SetBalancePayload>(
   },
   initialState
 )
-
-export default reducer

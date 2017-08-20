@@ -20,5 +20,3 @@ export const reducer = handleActions<SpentState, SetSpentPayload>(
   },
   initialState
 )
-
-export default reducer
