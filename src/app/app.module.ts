@@ -2,22 +2,26 @@ import { NgModule } from '@angular/core'
 import { BrowserModule } from '@angular/platform-browser'
 import { HttpClientModule } from '@angular/common/http'
 import { NgReduxModule, NgRedux, DevToolsExtension } from '@angular-redux/store'
-import { Autosize } from 'angular2-autosize/src/autosize.directive'
 import { Ng2ImgToolsModule } from 'ng2-img-tools'
 
 // redux
 import { rootReducer } from './reducers'
 import { middleware } from './middleware'
 import { AppState } from './store'
-
-// services
-import { MonzoService } from './services/monzo.service'
-import { CacheService } from './services/cache.service'
 import { AccountActions } from './actions/account'
 import { BalanceActions } from './actions/balance'
 import { SpentActions } from './actions/spent'
 import { PaneActions } from './actions/pane'
 import { TransactionActions } from './actions/transaction'
+
+// directives
+import { Autosize } from 'angular2-autosize/src/autosize.directive'
+
+// pipes
+
+// services
+import { MonzoService } from './services/monzo.service'
+import { CacheService } from './services/cache.service'
 
 // components
 import { AppComponent } from './app.component'
