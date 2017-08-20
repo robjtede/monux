@@ -19,7 +19,11 @@
 
 
 <ng-template #amount>
-  <div class="amount-wrap" [innerHTML]="txAmount"></div>
+  <m-amount
+    [amount]="tx.amount"
+    sign-mode="onlyPositive"
+    currency-mode="local"
+  ></m-amount>
 </ng-template>
 
 <ng-template #hider>

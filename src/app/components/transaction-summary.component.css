@@ -148,7 +148,7 @@
   }
 }
 
-.amount-wrap {
+m-amount {
   flex: 2 0;
 
   display: flex;
@@ -157,27 +157,13 @@
   align-items: flex-end;
 
   font-size: 1.2rem;
-  white-space: nowrap;
+  line-height: 1.4;
 
-  & .amount.positive {
-    color: green;
-  }
-
-  & .amount + .amount {
-    font-size: 0.8em;
-
-    &:not(.positive) {
-      color: var(--dark-grey);
-    }
-  }
+  --positive-color: green;
+  --local-color: var(--dark-grey);
 
   @nest :host(.selected) & {
-    & .amount.positive {
-      color: var(--off-white);
-    }
-
-    & .amount + .amount {
-      color: var(--light-grey);
-    }
+    --positive-color: var(--off-white);
+    --local-color: var(--light-grey);
   }
 }

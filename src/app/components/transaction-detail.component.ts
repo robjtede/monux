@@ -49,26 +49,6 @@ export class TransactionDetailComponent {
     return format(this.tx.created, 'h:mma - Do MMMM YYYY')
   }
 
-  get txAmount(): string {
-    let amount = this.tx.amount.html({
-      signMode: SignModes.Never
-    })
-
-    if (this.tx.amount.foreign) {
-      amount += (this.tx.amount.exchanged as Amount).html({
-        signMode: SignModes.Never
-      })
-    }
-
-    return amount
-  }
-
-  get txBalance(): string {
-    return this.tx.balance.html({
-      signMode: SignModes.Never
-    })
-  }
-
   get emoji() {
     if (
       typeof this.tx.merchant === 'string' ||
