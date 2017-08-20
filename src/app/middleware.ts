@@ -11,4 +11,3 @@ export const logger: Middleware = <S>(store: MiddlewareAPI<S>) => (
 }
 
 export const middleware: Middleware[] = [promiseMiddleware()]
-export default middleware

@@ -15,7 +15,7 @@ export interface MonzoRequest {
   json?: boolean
 }
 
-export default class MonzoApi {
+export class MonzoApi {
   private proto: string = 'https://'
   private apiRoot: string = 'api.monzo.com'
 

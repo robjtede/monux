@@ -6,8 +6,8 @@ import { Autosize } from 'angular2-autosize/src/autosize.directive'
 import { Ng2ImgToolsModule } from 'ng2-img-tools'
 
 // redux
-import rootReducer from './reducers'
-import middleware from './middleware'
+import { rootReducer } from './reducers'
+import { middleware } from './middleware'
 import { AppState } from './store'
 
 // services

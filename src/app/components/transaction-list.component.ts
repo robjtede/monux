@@ -6,7 +6,7 @@ import {
   SimpleChanges
 } from '@angular/core'
 
-import Transaction from '../../lib/monzo/Transaction'
+import { Transaction } from '../../lib/monzo/Transaction'
 import {
   groupTransactions,
   TransactionGroup,

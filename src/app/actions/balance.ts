@@ -11,11 +11,13 @@ import { AccountActions } from './account'
 
 import { AppState } from '../store'
 
-import Account, {
+import {
+  Account,
   accountsRequest,
   MonzoAccountsResponse
 } from '../../lib/monzo/Account'
-import Amount, {
+import {
+  Amount,
   AmountOpts,
   MonzoBalanceResponse
 } from '../../lib/monzo/Amount'

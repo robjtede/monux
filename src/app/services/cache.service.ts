@@ -1,9 +1,10 @@
 import { Injectable } from '@angular/core'
 import Dexie from 'dexie'
 
-import Amount, { AmountOpts } from '../../lib/monzo/Amount'
-import Account, { MonzoAccountResponse } from '../../lib/monzo/Account'
-import Transaction, {
+import { Amount, AmountOpts } from '../../lib/monzo/Amount'
+import { Account, MonzoAccountResponse } from '../../lib/monzo/Account'
+import {
+  Transaction,
   MonzoTransactionResponse,
   TransactionRequestOpts
 } from '../../lib/monzo/Transaction'

@@ -9,11 +9,13 @@ import { CacheService } from '../services/cache.service'
 
 import { AppState } from '../store'
 
-import Account, {
+import {
+  Account,
   accountsRequest,
   MonzoAccountsResponse
 } from '../../lib/monzo/Account'
-import Transaction, {
+import {
+  Transaction,
   MonzoTransactionResponse,
   TransactionRequestOpts
 } from '../../lib/monzo/Transaction'

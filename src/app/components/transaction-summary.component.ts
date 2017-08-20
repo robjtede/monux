@@ -12,8 +12,8 @@ import { NgRedux, dispatch } from '@angular-redux/store'
 import { AppState } from '../store'
 import { TransactionActions } from '../actions/transaction'
 
-import Transaction from '../../lib/monzo/Transaction'
-import Amount, { SignModes } from '../../lib/monzo/Amount'
+import { Transaction } from '../../lib/monzo/Transaction'
+import { Amount, SignModes } from '../../lib/monzo/Amount'
 
 @Component({
   selector: 'm-transaction-summary',

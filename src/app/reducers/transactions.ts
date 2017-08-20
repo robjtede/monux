@@ -107,7 +107,7 @@ const modifyReducer: ReducerMap<
 //   }
 // }
 
-export default handleActions<TransactionsState, TransactionsPayloads>(
+export const reducer = handleActions<TransactionsState, TransactionsPayloads>(
   {
     ...modifyReducer
     // ...hideReducer

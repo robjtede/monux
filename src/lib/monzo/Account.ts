@@ -1,8 +1,16 @@
 import { JSONMap } from '../json-types'
 import { QueryString, MonzoRequest } from './api'
 
-export default class Account {
+export class Account {
   constructor(private readonly acc: MonzoAccountResponse) {}
+
+  get created(): Date {
+    return new Date(this.acc.created)
+  }
+
+  get description(): string {
+    return this.acc.description
+  }
 
   get id(): string {
     return this.acc.id
@@ -10,14 +18,6 @@ export default class Account {
 
   get name(): string {
     return this.description
-  }
-
-  get description(): string {
-    return this.acc.description
-  }
-
-  get created(): Date {
-    return new Date(this.acc.created)
   }
 
   balanceRequest(): MonzoRequest {

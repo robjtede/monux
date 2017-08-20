@@ -12,9 +12,9 @@ import { AppState } from './store'
 import { BalanceActions } from './actions/balance'
 import { TransactionActions } from './actions/transaction'
 
-import Account, { MonzoAccountResponse } from '../lib/monzo/Account'
-import Amount, { AmountOpts } from '../lib/monzo/Amount'
-import Transaction, { MonzoTransactionResponse } from '../lib/monzo/Transaction'
+import { Account, MonzoAccountResponse } from '../lib/monzo/Account'
+import { Amount, AmountOpts } from '../lib/monzo/Amount'
+import { Transaction, MonzoTransactionResponse } from '../lib/monzo/Transaction'
 
 import './style/index.css'
 

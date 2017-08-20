@@ -1,7 +1,7 @@
 import { JSONMap } from '../json-types'
 import { MonzoRequest } from './api'
 
-export default class Attachment {
+export class Attachment {
   constructor(private readonly att: MonzoAttachmentResponse) {}
 
   get created() {

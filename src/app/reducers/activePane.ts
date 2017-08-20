@@ -15,5 +15,3 @@ export const reducer = handleActions<ActivePaneState, SetPanePayload>(
   },
   initialState
 )
-
-export default reducer

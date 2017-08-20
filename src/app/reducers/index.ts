@@ -2,14 +2,14 @@ import { combineReducers } from 'redux'
 
 import { AppState } from '../store'
 
-import account from './account'
-import balance from './balance'
-import spent from './spent'
-import activePane from './activePane'
-import transactions from './transactions'
-import selectedTransaction from './selectedTransaction'
+import { reducer as account } from './account'
+import { reducer as balance } from './balance'
+import { reducer as spent } from './spent'
+import { reducer as activePane } from './activePane'
+import { reducer as transactions } from './transactions'
+import { reducer as selectedTransaction } from './selectedTransaction'
 
-export default combineReducers<AppState>({
+export const rootReducer = combineReducers<AppState>({
   balance,
   spent,
   account,

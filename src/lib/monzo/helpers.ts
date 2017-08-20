@@ -1,8 +1,8 @@
 import { format, startOfDay, isSameDay, isSameYear, subDays } from 'date-fns'
 import { groupBy, map, sumBy } from 'lodash'
 
-import Transaction from './Transaction'
-import Amount, { SimpleAmount, MonzoBalanceResponse } from './Amount'
+import { Transaction } from './Transaction'
+import { Amount, SimpleAmount, MonzoBalanceResponse } from './Amount'
 
 export const enum GroupingStrategy {
   Day = 'day',

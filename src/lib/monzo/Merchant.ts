@@ -1,31 +1,7 @@
 import { JSONMap } from '../json-types'
 
-export default class Merchant {
+export class Merchant {
   constructor(private readonly merchant: MonzoMerchantResponse) {}
-
-  get id(): string {
-    return this.merchant.id
-  }
-
-  get groupId(): string {
-    return this.merchant.group_id
-  }
-
-  get emoji(): string {
-    return this.merchant.emoji
-  }
-
-  get name(): string {
-    return this.merchant.name
-  }
-
-  get logo(): string {
-    return this.merchant.logo
-  }
-
-  get created(): string {
-    return this.merchant.created
-  }
 
   get address(): MonzoAddressResponse {
     return this.merchant.address
@@ -35,8 +11,32 @@ export default class Merchant {
     return this.merchant.category
   }
 
+  get created(): string {
+    return this.merchant.created
+  }
+
+  get emoji(): string {
+    return this.merchant.emoji
+  }
+
+  get groupId(): string {
+    return this.merchant.group_id
+  }
+
+  get id(): string {
+    return this.merchant.id
+  }
+
+  get logo(): string {
+    return this.merchant.logo
+  }
+
   get metadata(): MonzoMerchantMetadataResponse {
     return this.merchant.metadata
+  }
+
+  get name(): string {
+    return this.merchant.name
   }
 
   equals(merchant: Merchant) {

@@ -1,12 +1,12 @@
 import { format } from 'date-fns'
 
-import Amount, { SimpleAmount } from './Amount'
-import Attachment, { MonzoAttachmentResponse } from './Attachment'
-import Merchant, { MonzoMerchantResponse } from './Merchant'
+import { Amount, SimpleAmount } from './Amount'
+import { Attachment, MonzoAttachmentResponse } from './Attachment'
+import { Merchant, MonzoMerchantResponse } from './Merchant'
 import { JSONMap } from '../json-types'
 import { MonzoRequest } from './api'
 
-export default class Transaction {
+export class Transaction {
   constructor(private readonly tx: MonzoTransactionResponse) {}
 
   get amount(): Amount {

@@ -3,9 +3,9 @@ import { handleActions } from 'redux-actions'
 import { AccountActions, SetAccountPayload } from '../actions/account'
 import { AccountState } from '../store'
 
-const initialState: AccountState = {}
+export const initialState: AccountState = {}
 
-const reducer = handleActions<AccountState, SetAccountPayload>(
+export const reducer = handleActions<AccountState, SetAccountPayload>(
   {
     [AccountActions.SET_ACCOUNT]: (_, { payload }) => {
       if (!payload) throw new TypeError('A payload is required')
@@ -17,5 +17,3 @@ const reducer = handleActions<AccountState, SetAccountPayload>(
   },
   initialState
 )
-
-export default reducer

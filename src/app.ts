@@ -17,7 +17,7 @@ import {
   getSavedCode,
   saveCode
 } from './lib/monzo/auth'
-import WindowManager from './window-manager'
+import { WindowManager } from './window-manager'
 
 const debug = Debug('app:app')
 const mainWindow = new WindowManager()

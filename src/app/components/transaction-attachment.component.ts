@@ -10,7 +10,7 @@ import { Ng2ImgToolsService } from 'ng2-img-tools'
 
 import { MonzoService } from '../services/monzo.service'
 
-import Attachment from '../../lib/monzo/Attachment'
+import { Attachment } from '../../lib/monzo/Attachment'
 
 @Component({
   selector: 'm-transaction-attachment',

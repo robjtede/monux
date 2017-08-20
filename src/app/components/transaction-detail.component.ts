@@ -18,8 +18,8 @@ import {
   MonzoAttachmentUploadResponse,
   MonzoAttachmentResponse
 } from '../../lib/monzo/Attachment'
-import Amount, { SignModes } from '../../lib/monzo/Amount'
-import Transaction from '../../lib/monzo/Transaction'
+import { Amount, SignModes } from '../../lib/monzo/Amount'
+import { Transaction } from '../../lib/monzo/Transaction'
 
 @Component({
   selector: 'm-transaction-detail',
