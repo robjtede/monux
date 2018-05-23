@@ -1,11 +1,10 @@
 import { resolve } from 'path'
 import { format } from 'url'
+import { URL } from 'url'
 import * as Debug from 'debug'
 
 import { BrowserWindow, Menu } from 'electron'
 import windowState = require('electron-window-state')
-
-import { oneLineTrim } from 'common-tags'
 
 import { AppInfo } from './app'
 import { macOSMenu } from './menu-template'
@@ -13,7 +12,7 @@ import { macOSMenu } from './menu-template'
 const debug = Debug('app:window-manager')
 
 export class WindowManager {
-  private _window: Electron.BrowserWindow | undefined
+  private _window: BrowserWindow | undefined
 
   focus() {
     if (this._window) this._window.focus()
@@ -23,7 +22,7 @@ export class WindowManager {
     return !!this._window
   }
 
-  get window(): Electron.BrowserWindow {
+  get window(): BrowserWindow {
     debug('get window')
     if (this._window) return this._window
 
@@ -39,7 +38,7 @@ export class WindowManager {
       height: mainWindowState.height,
       minWidth: 600,
       minHeight: 600,
-      titleBarStyle: 'hidden-inset',
+      titleBarStyle: 'hiddenInset',
       webPreferences: {
         experimentalFeatures: true
       }
@@ -81,13 +80,14 @@ export class WindowManager {
 
   goToAuthRequest(appInfo: AppInfo): void {
     debug('go to auth request')
-    this.location = oneLineTrim`
-      https://auth.getmondo.co.uk/
-      ?client_id=${appInfo.client_id}
-      &redirect_uri=${appInfo.redirect_uri}
-      &response_type=${appInfo.response_type}
-      &state=${appInfo.state}
-    `
+    const url = new URL('https://auth.monzo.com/')
+    url.searchParams.set('client_id', appInfo.client_id)
+    url.searchParams.set('redirect_uri', appInfo.redirect_uri)
+    url.searchParams.set('response_type', appInfo.response_type)
+    url.searchParams.set('state', appInfo.state)
+
+    this.location = url.toString()
+
     this.setDefaultMenu()
   }
 

@@ -137,7 +137,12 @@ export class Account {
 }
 
 export const accountsRequest = () => {
-  return { path: '/accounts' }
+  return {
+    path: '/accounts',
+    qs: {
+      account_type: 'uk_retail'
+    }
+  }
 }
 
 export interface MonzoAccountsResponse extends JSONMap {

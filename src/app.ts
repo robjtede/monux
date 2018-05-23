@@ -57,7 +57,7 @@ const getAppInfo = (() => {
 
 const parseAuthUrl = async (forwardedUrl: string) => {
   const appInfo = await getAppInfo()
-  const query = parseUrl(forwardedUrl).query
+  const query = parseUrl(forwardedUrl).query as string
   const authResponse = parseQueryString(query)
 
   if (authResponse.state !== appInfo.state) {
@@ -73,7 +73,7 @@ const parseAuthUrl = async (forwardedUrl: string) => {
   try {
     const { accessToken, refreshToken } = await getAccessToken(
       appInfo,
-      authCode
+      authCode as string
     )
 
     debug('token =>', accessToken)

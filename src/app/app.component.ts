@@ -6,6 +6,7 @@ import {
 } from '@angular/core'
 import { NgRedux, select } from '@angular-redux/store'
 import { Observable } from 'rxjs'
+import { combineLatest, filter, map } from 'rxjs/operators'
 import { startOfMonth, subMonths } from 'date-fns'
 
 import { AppState } from './store'
@@ -43,28 +44,28 @@ export class AppComponent implements OnInit, OnDestroy {
   ) {
     this.accountHolder$ = this.redux
       .select<MonzoAccountResponse>(['account', 'monzo'])
-      .filter(acc => !!acc)
-      .map(acc => new Account(acc).name)
+      .pipe(filter(acc => !!acc), map(acc => new Account(acc).name))
 
     this.balance$ = this.redux
       .select<AmountOpts>('balance')
-      .map(balance => new Amount(balance))
+      .pipe(map(balance => new Amount(balance)))
 
     this.spent$ = this.redux
       .select<AmountOpts>('spent')
-      .map(spent => new Amount(spent))
+      .pipe(map(spent => new Amount(spent)))
 
     this.txs$ = this.redux
       .select<MonzoTransactionResponse[]>('transactions')
-      .map(txs => txs.map(tx => new Transaction(tx)))
+      .pipe(map(txs => txs.map(tx => new Transaction(tx))))
 
-    this.selectedTx$ = this.selectedTxId$
-      .combineLatest(this.txs$)
-      .filter(([txId, txs]) => !!txId && !!txs.length)
-      .map(([txId, txs]) => txs.find(tx => tx.id === txId))
+    this.selectedTx$ = this.selectedTxId$.pipe(
+      combineLatest(this.txs$),
+      filter(([txId, txs]) => !!txId && !!txs.length),
+      map(([txId, txs]) => txs.find(tx => tx.id === txId))
+    )
 
-    // this.txs$.subscribe(x => console.log(x))
-    // this.selectedTx$.subscribe(x => console.log(x))
+    this.txs$.subscribe(x => console.log(x))
+    this.selectedTx$.subscribe(x => console.log(x))
   }
 
   ngOnInit(): void {

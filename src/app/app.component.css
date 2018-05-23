@@ -1,4 +1,5 @@
 :host {
+  height: 100vh;
   display: grid;
   grid-template-rows: var(--header-height) var(--nav-height) auto;
   grid-template-columns: auto;
@@ -39,14 +40,14 @@ header {
 }
 
 .card-balance {
-  --label-text: 'Account Balance';
+  --label-text: "Account Balance";
   flex: 1;
 
   text-align: left;
 }
 
 .spent-today {
-  --label-text: 'Spent Today';
+  --label-text: "Spent Today";
   --align: flex-end;
   flex: 1;
 
@@ -211,7 +212,7 @@ m-transaction-list {
 }
 
 .transaction-detail-pane.inactive::after {
-  content: 'Select transaction from the list to the left.';
+  content: "Select transaction from the list to the left.";
   display: block;
   width: 100%;
   padding-top: 150px;
