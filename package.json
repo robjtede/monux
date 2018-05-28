@@ -72,7 +72,6 @@
     "@types/electron-config": "^0.2.1",
     "@types/electron-devtools-installer": "^2.0.3",
     "@types/electron-window-state": "^2.0.31",
-    "@types/keytar": "^4.0.1",
     "@types/lodash": "^4.14.109",
     "@types/node": "^10.1.2",
     "@types/redux-actions": "^2.3.0",
@@ -98,6 +97,7 @@
     "html-loader": "^0.5.5",
     "html-webpack-plugin": "^3.2.0",
     "husky": "^0.14.3",
+    "json-types": "^1.0.0",
     "lint-staged": "^7.1.2",
     "postcss": "^6.0.22",
     "postcss-cssnext": "^3.1.0",
@@ -108,7 +108,7 @@
     "to-string-loader": "^1.1.5",
     "tslib": "^1.9.1",
     "tslint": "^5.10.0",
-    "typescript": "^2.8.3",
+    "typescript": "^2.7.2",
     "webpack": "^3.5.5"
   },
   "lint-staged": {

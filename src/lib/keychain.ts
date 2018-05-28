@@ -1,5 +1,5 @@
-import * as keychain from 'keytar'
-import * as Debug from 'debug'
+import keychain = require('keytar')
+import Debug = require('debug')
 
 const debug = Debug('app:keychain')
 

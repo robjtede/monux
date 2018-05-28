@@ -1,4 +1,4 @@
-import { JSONMap } from '../json-types'
+import { JSONMap } from 'json-types'
 import { MonzoRequest } from './api'
 
 export class Attachment {

@@ -1,4 +1,4 @@
-import { JSONMap } from '../json-types'
+import { JSONMap } from 'json-types'
 
 export class Merchant {
   constructor(private readonly merchant: MonzoMerchantResponse) {}

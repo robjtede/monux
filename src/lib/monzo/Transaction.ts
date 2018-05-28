@@ -1,9 +1,9 @@
 import { format } from 'date-fns'
+import { JSONMap } from 'json-types'
 
 import { Amount, SimpleAmount } from './Amount'
 import { Attachment, MonzoAttachmentResponse } from './Attachment'
 import { Merchant, MonzoMerchantResponse } from './Merchant'
-import { JSONMap } from '../json-types'
 import { MonzoRequest } from './api'
 
 export class Transaction {
@@ -79,8 +79,8 @@ export class Transaction {
 
   get displayName(): string {
     return this.merchant &&
-    typeof this.merchant !== 'string' &&
-    this.merchant.name
+      typeof this.merchant !== 'string' &&
+      this.merchant.name
       ? this.merchant.name
       : this.description
   }

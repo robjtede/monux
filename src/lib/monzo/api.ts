@@ -1,6 +1,6 @@
 import * as rp from 'request-promise-native'
 
-import { Primitive } from '../json-types'
+import { Primitive } from 'json-types'
 
 type HttpMethods = 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE' | 'OPTIONS'
 

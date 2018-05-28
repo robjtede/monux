@@ -1,4 +1,4 @@
-import { JSONMap } from '../json-types'
+import { JSONMap } from 'json-types'
 import { QueryString, MonzoRequest } from './api'
 
 export class Account {
