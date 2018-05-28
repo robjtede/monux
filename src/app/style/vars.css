@@ -7,11 +7,11 @@
   --dark-grey: gray(30%);
   --black: gray(0%);
 
-  --monzo-blue: rgba(21, 35, 60, 1.0);
+  --monzo-blue: rgba(21, 35, 60, 1);
 
   --thin-border: 1px solid var(--light-grey);
 
-  --header-height: 150px;
-  --nav-height: 80px;
+  --header-height: 7.5em;
+  --nav-height: 4em;
   --main-height: calc(100vh - var(--header-height) - var(--nav-height));
 }

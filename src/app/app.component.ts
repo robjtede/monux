@@ -28,9 +28,7 @@ import './style/index.css'
 export class AppComponent implements OnInit, OnDestroy {
   readonly name = 'Monux'
 
-  @select('selectedTransaction')
   private readonly selectedTxId$: Observable<string>
-
   private readonly accountHolder$: Observable<string>
   private readonly balance$: Observable<Amount>
   private readonly spent$: Observable<Amount>
@@ -42,6 +40,8 @@ export class AppComponent implements OnInit, OnDestroy {
     private readonly balanceActions: BalanceActions,
     private readonly txActions: TransactionActions
   ) {
+    this.selectedTxId$ = this.redux.select<string>('selectedTransaction')
+
     this.accountHolder$ = this.redux
       .select<MonzoAccountResponse>(['account', 'monzo'])
       .pipe(filter(acc => !!acc), map(acc => new Account(acc).name))

@@ -17,7 +17,7 @@
   }
 
   &(.selected) {
-    background-color: rgba(56, 78, 199, 1.0);
+    background-color: rgba(56, 78, 199, 1);
     color: var(--off-white);
   }
 
@@ -114,6 +114,7 @@
 
   font-size: 1rem;
   overflow-wrap: break-word;
+  word-break: break-word;
 }
 
 .meta {
@@ -139,7 +140,7 @@
 
   &::before {
     @nest :host(.declined) & {
-      content: 'Declined due to ';
+      content: "Declined due to ";
     }
   }
 

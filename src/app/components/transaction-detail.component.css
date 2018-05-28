@@ -97,12 +97,13 @@
   flex: 1;
 
   font-size: 2rem;
+  word-break: break-word;
 
   & .online::after {
-    content: '\01F310';
+    content: "\01F310";
     font-size: 0.7em;
     padding-left: 0.5em;
-    color: rgba(123, 198, 255, 1.0);
+    color: rgba(123, 198, 255, 1);
     vertical-align: middle;
   }
 }
@@ -188,7 +189,7 @@ m-amount {
 }
 
 .balance-wrap {
-  --label-text: 'Balance (after transaction):';
+  --label-text: "Balance (after transaction):";
 
   padding: 0.5em 15px;
 
@@ -202,7 +203,7 @@ m-amount {
 }
 
 .notes-wrap {
-  --label-text: 'Notes:';
+  --label-text: "Notes:";
 
   padding: 0.8em 15px 0.5em;
 
@@ -238,7 +239,7 @@ m-amount {
   border-bottom: var(--thin-border);
 
   &::before {
-    content: 'Attachments:';
+    content: "Attachments:";
     display: block;
     padding-left: 15px;
     padding-right: 15px;
@@ -273,16 +274,16 @@ m-amount {
 }
 
 .date {
-  --label-text: 'Transaction Date and Time:';
+  --label-text: "Transaction Date and Time:";
 }
 .description {
-  --label-text: 'Transaction Description:';
+  --label-text: "Transaction Description:";
 }
 
 .id {
-  --label-text: 'Transaction ID:';
+  --label-text: "Transaction ID:";
 }
 
 .settled {
-  --label-text: 'Transaction Status:';
+  --label-text: "Transaction Status:";
 }
