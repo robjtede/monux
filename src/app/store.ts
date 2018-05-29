@@ -11,11 +11,13 @@ export type AccountState = {
   monzo?: MonzoAccountResponse
 }
 
-export interface AppState {
-  account: AccountState
-  activePane: ActivePaneState
-  balance: BalanceState
-  spent: SpentState
-  transactions: TransactionsState
-  selectedTransaction: SelectedTransactionsState
-}
+// export interface AppState {
+//   account: AccountState
+//   activePane: ActivePaneState
+//   balance: BalanceState
+//   spent: SpentState
+//   transactions: TransactionsState
+//   selectedTransaction: SelectedTransactionsState
+// }
+
+export type AppState = any

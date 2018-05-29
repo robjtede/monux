@@ -14,14 +14,17 @@
     "noImplicitAny": true,
     "noImplicitReturns": true,
     "noImplicitThis": true,
-    "noUnusedLocals": true,
-    "noUnusedParameters": true,
+    "noUnusedLocals": false,
+    "noUnusedParameters": false,
     "preserveConstEnums": true,
     "removeComments": false,
     "strict": true,
-    "target": "es2015",
+    "target": "es2016",
     "skipLibCheck": true,
     "outDir": "./dist"
   },
-  "exclude": ["node_modules"]
+  "angularCompilerOptions": {
+    "fullTemplateTypeCheck": true,
+    "preserveWhitespaces": true,
+  }
 }

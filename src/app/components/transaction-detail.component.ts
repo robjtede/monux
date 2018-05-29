@@ -6,19 +6,18 @@ import {
   ViewChild
 } from '@angular/core'
 import { HttpClient, HttpHeaders } from '@angular/common/http'
-import { NgRedux, dispatch } from '@angular-redux/store'
+import { dispatch } from '@angular-redux/store'
 import { format } from 'date-fns'
 
 import { MonzoService } from '../services/monzo.service'
 
-import { AppState } from '../store'
 import { TransactionActions } from '../actions/transaction'
 
 import {
   MonzoAttachmentUploadResponse,
   MonzoAttachmentResponse
 } from '../../lib/monzo/Attachment'
-import { Amount, SignModes } from '../../lib/monzo/Amount'
+import { SignModes } from '../../lib/monzo/Amount'
 import { Transaction } from '../../lib/monzo/Transaction'
 
 @Component({
@@ -32,14 +31,13 @@ import { Transaction } from '../../lib/monzo/Transaction'
   }
 })
 export class TransactionDetailComponent {
-  @Input() readonly tx: Transaction
+  @Input() readonly tx!: Transaction
 
-  @ViewChild('icon') readonly $icon: ElementRef
-  @ViewChild('notes') readonly $notes: ElementRef
-  @ViewChild('uploader') readonly $uploader: ElementRef
+  @ViewChild('icon') readonly $icon!: ElementRef
+  @ViewChild('notes') readonly $notes!: ElementRef
+  @ViewChild('uploader') readonly $uploader!: ElementRef
 
   constructor(
-    private readonly redux: NgRedux<AppState>,
     private readonly txActions: TransactionActions,
     private readonly monzo: MonzoService,
     private readonly http: HttpClient
@@ -63,6 +61,10 @@ export class TransactionDetailComponent {
 
   get hasAttachments() {
     return this.tx.attachments && this.tx.attachments.length
+  }
+
+  get showAmount(): boolean {
+    return !this.tx.is.metaAction && !this.tx.declined
   }
 
   iconFallback() {

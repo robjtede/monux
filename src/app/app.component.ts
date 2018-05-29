@@ -4,7 +4,7 @@ import {
   OnDestroy,
   ChangeDetectionStrategy
 } from '@angular/core'
-import { NgRedux, select } from '@angular-redux/store'
+import { NgRedux } from '@angular-redux/store'
 import { Observable } from 'rxjs'
 import { combineLatest, filter, map } from 'rxjs/operators'
 import { startOfMonth, subMonths } from 'date-fns'
@@ -28,12 +28,12 @@ import './style/index.css'
 export class AppComponent implements OnInit, OnDestroy {
   readonly name = 'Monux'
 
-  private readonly selectedTxId$: Observable<string>
-  private readonly accountHolder$: Observable<string>
-  private readonly balance$: Observable<Amount>
-  private readonly spent$: Observable<Amount>
-  private readonly txs$: Observable<Transaction[]>
-  private readonly selectedTx$: Observable<Transaction | undefined>
+  readonly selectedTxId$: Observable<string>
+  readonly accountHolder$: Observable<string>
+  readonly balance$: Observable<Amount>
+  readonly spent$: Observable<Amount>
+  readonly txs$: Observable<Transaction[]>
+  readonly selectedTx$: Observable<Transaction | undefined>
 
   constructor(
     private readonly redux: NgRedux<AppState>,
@@ -44,7 +44,10 @@ export class AppComponent implements OnInit, OnDestroy {
 
     this.accountHolder$ = this.redux
       .select<MonzoAccountResponse>(['account', 'monzo'])
-      .pipe(filter(acc => !!acc), map(acc => new Account(acc).name))
+      .pipe(
+        filter(acc => !!acc),
+        map(acc => new Account(acc).name)
+      )
 
     this.balance$ = this.redux
       .select<AmountOpts>('balance')

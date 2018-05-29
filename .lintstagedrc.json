@@ -1,0 +1,22 @@
+{
+  "!*.{js,ts,css}": [
+    "eclint fix",
+    "git add"
+  ],
+  "*.js": [
+    "eclint fix",
+    "prettier --write --no-semi --single-quote",
+    "eslint --fix",
+    "git add"
+  ],
+  "*.ts": [
+    "eclint fix",
+    "prettier --write --no-semi --single-quote",
+    "git add"
+  ],
+  "*.css": [
+    "eclint fix",
+    "prettier --write",
+    "git add"
+  ]
+}

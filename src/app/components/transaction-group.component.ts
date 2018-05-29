@@ -14,7 +14,7 @@ import { SignModes } from '../../lib/monzo/Amount'
   changeDetection: ChangeDetectionStrategy.Default
 })
 export class TransactionGroupComponent {
-  @Input() readonly group: TransactionGroup
+  @Input() readonly group!: TransactionGroup
 
   get groupTitle(): string {
     return getGroupTitle(this.group)

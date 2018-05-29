@@ -20,9 +20,9 @@ import {
   changeDetection: ChangeDetectionStrategy.Default
 })
 export class TransactionListComponent implements OnChanges {
-  @Input() readonly txs: Transaction[]
+  @Input() readonly txs!: Transaction[]
 
-  private txGroups: TransactionGroup[] = []
+  txGroups: TransactionGroup[] = []
 
   ngOnChanges(changes: SimpleChanges) {
     if (Object.keys(changes).includes('txs')) this.updateTxGroups()

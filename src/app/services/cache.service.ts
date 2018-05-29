@@ -10,8 +10,8 @@ import {
 } from '../../lib/monzo/Transaction'
 
 class IDBCache extends Dexie {
-  transactions: Dexie.Table<CachedTransaction, string>
-  accounts: Dexie.Table<CachedAccount, string>
+  transactions!: Dexie.Table<CachedTransaction, string>
+  accounts!: Dexie.Table<CachedAccount, string>
 
   constructor() {
     super('IDBCache')
@@ -57,9 +57,11 @@ export class CacheService {
     }
   })()
 
-  async loadTransactions(
-    { since, before, limit }: TransactionRequestOpts = {}
-  ): Promise<MonzoTransactionResponse[]> {
+  async loadTransactions({
+    since,
+    before,
+    limit
+  }: TransactionRequestOpts = {}): Promise<MonzoTransactionResponse[]> {
     let txCol = this.db.transactions.orderBy('created_at').reverse()
 
     if (since) {

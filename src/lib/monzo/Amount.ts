@@ -11,7 +11,7 @@ export const enum SignModes {
   Never
 }
 
-const currencies = {
+const currencies: CurrencyLibrary = {
   [Currencies.EUR]: { symbol: '€', separator: '.' },
   [Currencies.GBP]: { symbol: '£', separator: '.' },
   [Currencies.USD]: { symbol: '$', separator: '.' }
@@ -117,12 +117,10 @@ export class Amount {
   }
 
   // returns html formatted string
-  html(
-    {
-      showCurrency = true,
-      signMode = SignModes.Always
-    }: { showCurrency?: boolean; signMode?: SignModes } = {}
-  ): string {
+  html({
+    showCurrency = true,
+    signMode = SignModes.Always
+  }: { showCurrency?: boolean; signMode?: SignModes } = {}): string {
     let str = '<span class="major">%j</span>'
     str += '<span class="separator">%p</span>'
     str += '<span class="minor">%n</span>'
@@ -203,9 +201,13 @@ export class Amount {
   }
 }
 
-export interface CurrencyMetadata {
+export interface CurrencyDefinition {
   symbol: string
   separator: string
+}
+
+export interface CurrencyLibrary {
+  [currency: string]: CurrencyDefinition
 }
 
 export interface SimpleAmount {

@@ -27,18 +27,15 @@ import { SignModes } from '../../lib/monzo/Amount'
   }
 })
 export class TransactionSummaryComponent implements OnInit {
-  @Input() readonly tx: Transaction
+  @Input() readonly tx!: Transaction
 
-  @ViewChild('icon') readonly $icon: ElementRef
+  @ViewChild('icon') readonly $icon!: ElementRef
 
-  private iconObserver = new IntersectionObserver(
-    this.onIconIntersection.bind(this),
-    {
-      rootMargin: '50px 0px',
-      threshold: 0.01,
-      root: document.documentElement
-    }
-  )
+  iconObserver = new IntersectionObserver(this.onIconIntersection.bind(this), {
+    rootMargin: '50px 0px',
+    threshold: 0.01,
+    root: document.documentElement
+  })
 
   constructor(
     private readonly redux: NgRedux<AppState>,

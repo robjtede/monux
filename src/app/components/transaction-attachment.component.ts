@@ -20,12 +20,10 @@ import { Attachment } from '../../lib/monzo/Attachment'
   host: {}
 })
 export class TransactionAttachmentComponent implements OnInit {
-  @Input() readonly attachment: Attachment
+  @Input() readonly attachment!: Attachment
 
-  @ViewChild('attachment') $attachment: ElementRef
+  @ViewChild('attachment') $attachment!: ElementRef
 
-  // private readonly redux: NgRedux<AppState>,
-  // private readonly txActions: TransactionActions
   constructor(
     private monzo: MonzoService,
     private imgTools: Ng2ImgToolsService

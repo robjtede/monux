@@ -2,7 +2,7 @@
 
 <div class="header">
   <div class="icon-wrap">
-    <img #icon class="icon" [src]="tx.icon" (error)="iconFallback($event)">
+    <img #icon class="icon" [src]="tx.icon" (error)="iconFallback()">
   </div>
   <div class="merchant" [class.online]="tx.online">
     {{ tx.displayName }}
@@ -35,9 +35,9 @@
 </div>
 
 <div class="notes-wrap">
+  <!-- autosize -->
   <textarea
     #notes
-    autosize
     (blur)="updateNotes()"
     value='{{ tx.notes }}'
     placeholder="Click here to add a note..."

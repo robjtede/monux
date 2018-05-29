@@ -1,21 +1,18 @@
 const webpack = require('webpack')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
-const ExtractTextPlugin = require('extract-text-webpack-plugin')
-
-const {
-  BaseHrefWebpackPlugin,
-  GlobCopyWebpackPlugin
-} = require('@angular/cli/plugins/webpack')
+const CopyWebpackPlugin = require('copy-webpack-plugin')
+const MiniCssExtractPlugin = require('mini-css-extract-plugin')
+const { AngularCompilerPlugin } = require('@ngtools/webpack')
 
 const { root } = require('./tools/webpack-helpers')
 
 const {
   HashedModuleIdsPlugin,
   ContextReplacementPlugin,
-  ProgressPlugin,
-  optimize
+  ProgressPlugin
 } = webpack
-const { CommonsChunkPlugin } = optimize
+
+const dev = process.env.NODE_ENV === 'dev'
 
 module.exports = {
   entry: {
@@ -24,11 +21,10 @@ module.exports = {
   },
 
   output: {
-    path: root('dist', 'app'),
-    // publicPath: '/',
-    filename: '[name].js',
-    chunkFilename: '[id].chunk.js'
+    path: root('dist', 'app')
   },
+
+  mode: 'development',
 
   target: 'electron-renderer',
 
@@ -54,46 +50,46 @@ module.exports = {
 
   module: {
     rules: [
-      {
-        test: /\.ts$/,
-        loaders: [
-          {
-            loader: 'awesome-typescript-loader',
-            options: { configFileName: './tsconfig.json' }
-          },
-          'angular2-template-loader'
-        ]
-      },
+      // html files
       {
         test: /\.html$/,
         loader: 'html-loader'
       },
+
+      // asset files
       {
         test: /\.(png|jpe?g|gif|svg|woff2?|(t|o)tf|eot|ico)$/,
-        loader: [
+        loaders: [
           {
             loader: 'file-loader',
             options: { name: 'assets/[name].[hash:8].[ext]' }
           }
         ]
       },
+
+      // page css
       {
         test: /\.css$/,
         include: root('src', 'app', 'style'),
-        loader: ExtractTextPlugin.extract({
-          use: [
-            {
-              loader: 'css-loader',
-              options: { sourceMap: true, importLoaders: 1 }
-            },
-            {
-              loader: 'postcss-loader',
-              options: { sourceMap: 'inline' }
+        loaders: [
+          {
+            loader: 'style-loader',
+            options: {
+              sourceMap: true
             }
-          ],
-          fallback: 'style-loader'
-        })
+          },
+          {
+            loader: 'css-loader',
+            options: { sourceMap: true, importLoaders: 1 }
+          },
+          {
+            loader: 'postcss-loader',
+            options: { sourceMap: 'inline' }
+          }
+        ]
       },
+
+      // angular component css
       {
         test: /\.css$/,
         exclude: root('src', 'app', 'style'),
@@ -108,59 +104,48 @@ module.exports = {
             options: { sourceMap: 'inline' }
           }
         ]
+      },
+
+      // angular files
+      {
+        test: /(?:\.ngfactory\.js|\.ngstyle\.js|\.ts)$/,
+        loader: '@ngtools/webpack'
       }
     ]
   },
 
   plugins: [
-    new ProgressPlugin(),
+    new CopyWebpackPlugin([
+      { from: './monux.*', context: './src' },
+      { from: './assets/', context: './src/app', to: './assets' }
+    ]),
 
-    new GlobCopyWebpackPlugin({
-      patterns: ['./assets'],
-      globOptions: {
-        cwd: root('./src/app'),
-        dot: true,
-        ignore: '**/.gitkeep'
-      }
-    }),
-
-    new GlobCopyWebpackPlugin({
-      patterns: ['./monux.*'],
-      globOptions: {
-        cwd: root('./src'),
-        dot: true,
-        ignore: '**/.gitkeep'
-      }
+    new AngularCompilerPlugin({
+      tsConfigPath: './tsconfig.json',
+      mainPath: './src/app/main.ts',
+      sourceMap: true
     }),
 
     new ContextReplacementPlugin(
       /angular(\\|\/)core(\\|\/)@angular/,
-      './src/app',
-      {}
+      './src/app'
     ),
 
+    new MiniCssExtractPlugin({
+      // Options similar to the same options in webpackOptions.output
+      // both options are optional
+      filename: '[name].css',
+      chunkFilename: '[id].css'
+    }),
+
     new HtmlWebpackPlugin({
-      template: './src/app/index.html'
+      template: './src/app/index.html',
+      baseHref: dev ? '/' : './',
+      chunksSortMode: (chunk1, chunk2) => {
+        const orders = ['polyfills', 'app']
+        return orders.indexOf(chunk1.names[0]) - orders.indexOf(chunk2.names[0])
+      }
     }),
-
-    new BaseHrefWebpackPlugin({}),
-
-    new CommonsChunkPlugin({
-      name: 'polyfills',
-      chunks: ['polyfills']
-    }),
-
-    new CommonsChunkPlugin({
-      name: 'vendor',
-      chunks: ['app'],
-      minChunks: module => /node_modules/.test(module.resource)
-    }),
-
-    new CommonsChunkPlugin({
-      name: ['vendor', 'polyfills']
-    }),
-
-    new ExtractTextPlugin('[name].css'),
 
     new HashedModuleIdsPlugin({
       hashFunction: 'sha256',
