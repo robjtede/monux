@@ -15,7 +15,7 @@ import { PaneActions } from './actions/pane'
 import { TransactionActions } from './actions/transaction'
 
 // directives
-// import { Autosize } from 'angular2-autosize/src/autosize.directive'
+import { Autosize } from 'angular2-autosize/src/autosize.directive'
 
 // pipes
 
@@ -35,7 +35,7 @@ import { TransactionDetailComponent } from './components/transaction-detail.comp
 
 @NgModule({
   declarations: [
-    // Autosize,
+    Autosize,
     AppComponent,
     AmountComponent,
     AccountComponent,
