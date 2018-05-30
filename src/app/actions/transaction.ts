@@ -31,6 +31,7 @@ export class TransactionActions {
   static readonly GET_TRANSACTIONS = 'GET_TRANSACTIONS'
   static readonly GET_PENDING_TRANSACTIONS = 'GET_PENDING_TRANSACTIONS'
   static readonly GET_NEW_TRANSACTIONS = 'GET_NEW_TRANSACTIONS'
+  static readonly GET_SPECFIC_TRANSACTIONS = 'GET_SPECFIC_TRANSACTIONS'
   static readonly UPDATE_TRANSACTIONS = 'UPDATE_TRANSACTIONS'
   static readonly POST_TRANSACTION = 'POST_TRANSACTION'
   static readonly SELECT_TRANSACTION = 'SELECT_TRANSACTION'
@@ -45,235 +46,276 @@ export class TransactionActions {
   ) {}
 
   setTransactions(txs: MonzoTransactionResponse[]) {
-    return createAction<
-      SetTransactionsPayload,
-      MonzoTransactionResponse[]
-    >(TransactionActions.SET_TRANSACTIONS, txs => ({
-      txs
-    }))(txs)
+    return createAction<SetTransactionsPayload, MonzoTransactionResponse[]>(
+      TransactionActions.SET_TRANSACTIONS,
+      txs => ({
+        txs
+      })
+    )(txs)
   }
 
   addTransactions(txs: MonzoTransactionResponse[]) {
-    return createAction<
-      AddTransactionsPayload,
-      MonzoTransactionResponse[]
-    >(TransactionActions.ADD_TRANSACTIONS, txs => ({
-      txs
-    }))(txs)
+    return createAction<AddTransactionsPayload, MonzoTransactionResponse[]>(
+      TransactionActions.ADD_TRANSACTIONS,
+      txs => ({
+        txs
+      })
+    )(txs)
   }
 
   updateTransactions(txs: MonzoTransactionResponse[]) {
-    return createAction<
-      UpdateTransactionsPayload,
-      MonzoTransactionResponse[]
-    >(TransactionActions.UPDATE_TRANSACTIONS, txs => ({
-      txs
-    }))(txs)
+    return createAction<UpdateTransactionsPayload, MonzoTransactionResponse[]>(
+      TransactionActions.UPDATE_TRANSACTIONS,
+      txs => ({
+        txs
+      })
+    )(txs)
   }
 
   selectTransaction(txId: string) {
-    return createAction<
-      SelectTransactionPayload,
-      string
-    >(TransactionActions.SELECT_TRANSACTION, txId => ({
-      txId
-    }))(txId)
+    return createAction<SelectTransactionPayload, string>(
+      TransactionActions.SELECT_TRANSACTION,
+      txId => ({
+        txId
+      })
+    )(txId)
   }
 
   getTransactions(options: TransactionRequestOpts = {}) {
-    return createAction<
-      GetTransactionsPromise,
-      TransactionRequestOpts
-    >(TransactionActions.GET_TRANSACTIONS, options => ({
-      promise: (async () => {
-        try {
-          // TODO: duplicate request
-          const acc = new Account(
-            (await this.monzo.request<MonzoAccountsResponse>(accountsRequest()))
-              .accounts[0]
-          )
+    return createAction<GetTransactionsPromise, TransactionRequestOpts>(
+      TransactionActions.GET_TRANSACTIONS,
+      options => ({
+        promise: (async () => {
+          try {
+            // TODO: duplicate request
+            const acc = new Account(
+              (await this.monzo.request<MonzoAccountsResponse>(
+                accountsRequest()
+              )).accounts[0]
+            )
 
-          const { transactions: txs } = await this.monzo.request<{
-            transactions: MonzoTransactionResponse[]
-          }>(acc.transactionsRequest(options))
+            const { transactions: txs } = await this.monzo.request<{
+              transactions: MonzoTransactionResponse[]
+            }>(acc.transactionsRequest(options))
 
-          debug('HTTP transactions =>', txs)
+            debug('HTTP transactions =>', txs)
 
-          this.redux.dispatch(this.updateTransactions(txs))
-          this.redux.dispatch(
-            // TODO: wasted class instantiation
-            this.saveTransactions(acc, txs.map(tx => new Transaction(tx)))
-          )
-        } catch (err) {
-          throw new Error(err)
-        }
-      })()
-    }))(options)
+            this.redux.dispatch(this.updateTransactions(txs))
+            this.redux.dispatch(
+              // TODO: wasted class instantiation
+              this.saveTransactions(acc, txs.map(tx => new Transaction(tx)))
+            )
+          } catch (err) {
+            throw new Error(err)
+          }
+        })()
+      })
+    )(options)
+  }
+
+  getSpecificTransactions(txIds: string[]) {
+    return createAction<GetTransactionsPromise, string[]>(
+      TransactionActions.GET_SPECFIC_TRANSACTIONS,
+      txIds => ({
+        promise: (async () => {
+          try {
+            // TODO: duplicate request
+            const acc = new Account(
+              (await this.monzo.request<MonzoAccountsResponse>(
+                accountsRequest()
+              )).accounts[0]
+            )
+
+            const txs = (await Promise.all(
+              txIds.map(async id => {
+                return this.monzo.request<{
+                  transaction: MonzoTransactionResponse
+                }>(acc.transactionRequest(id))
+              })
+            )).map(tx => tx.transaction)
+
+            this.redux.dispatch(this.updateTransactions(txs))
+            this.redux.dispatch(
+              // TODO: wasted class instantiation
+              this.saveTransactions(acc, txs.map(tx => new Transaction(tx)))
+            )
+          } catch (err) {
+            throw new Error(err)
+          }
+        })()
+      })
+    )(txIds)
   }
 
   getTransaction(txId: string) {
-    return createAction<
-      GetTransactionsPromise,
-      string
-    >(TransactionActions.GET_TRANSACTIONS, txId => ({
-      promise: (async () => {
-        try {
-          // TODO: duplicate request
-          const acc = new Account(
-            (await this.monzo.request<MonzoAccountsResponse>(accountsRequest()))
-              .accounts[0]
-          )
+    return createAction<GetTransactionsPromise, string>(
+      TransactionActions.GET_TRANSACTIONS,
+      txId => ({
+        promise: (async () => {
+          try {
+            // TODO: duplicate request
+            const acc = new Account(
+              (await this.monzo.request<MonzoAccountsResponse>(
+                accountsRequest()
+              )).accounts[0]
+            )
 
-          const { transaction: tx } = await this.monzo.request<{
-            transaction: MonzoTransactionResponse
-          }>(acc.transactionRequest(txId))
+            const { transaction: tx } = await this.monzo.request<{
+              transaction: MonzoTransactionResponse
+            }>(acc.transactionRequest(txId))
 
-          debug('HTTP pending transaction =>', tx)
+            debug('HTTP pending transaction =>', tx)
 
-          // BUG: adds pending txs to tx list
-          // this.redux.dispatch(this.updateTransactions([tx]))
-          this.redux.dispatch(
-            // TODO: wasted class instantiation
-            this.saveTransactions(acc, [new Transaction(tx)])
-          )
-        } catch (err) {
-          throw new Error(err)
-        }
-      })()
-    }))(txId)
+            // BUG: adds pending txs to tx list
+            // this.redux.dispatch(this.updateTransactions([tx]))
+            this.redux.dispatch(
+              // TODO: wasted class instantiation
+              this.saveTransactions(acc, [new Transaction(tx)])
+            )
+          } catch (err) {
+            throw new Error(err)
+          }
+        })()
+      })
+    )(txId)
   }
 
   getNewTransactions() {
-    return createAction<
-      GetTransactionsPromise
-    >(TransactionActions.GET_NEW_TRANSACTIONS, () => ({
-      promise: (async () => {
-        try {
-          const recentTx = (await this.cache.loadTransactions({ limit: 1 }))[0]
+    return createAction<GetTransactionsPromise>(
+      TransactionActions.GET_NEW_TRANSACTIONS,
+      () => ({
+        promise: (async () => {
+          try {
+            const recentTx = (await this.cache.loadTransactions({
+              limit: 1
+            }))[0]
 
-          const action = recentTx
-            ? this.getTransactions({ since: recentTx.id })
-            : this.getTransactions()
+            const action = recentTx
+              ? this.getTransactions({ since: recentTx.id })
+              : this.getTransactions()
 
-          this.redux.dispatch(action)
-        } catch (err) {
-          throw new Error(err)
-        }
-      })()
-    }))()
+            this.redux.dispatch(action)
+          } catch (err) {
+            throw new Error(err)
+          }
+        })()
+      })
+    )()
   }
 
   getPendingTransactions() {
-    return createAction<
-      GetTransactionsPromise
-    >(TransactionActions.GET_PENDING_TRANSACTIONS, () => ({
-      promise: (async () => {
-        try {
-          const txs = (await this.cache.loadTransactions()).filter(tx => {
-            // TODO: wasted class instantiation
-            return new Transaction(tx).pending
-          })
+    return createAction<GetTransactionsPromise>(
+      TransactionActions.GET_PENDING_TRANSACTIONS,
+      () => ({
+        promise: (async () => {
+          try {
+            const txs = (await this.cache.loadTransactions()).filter(tx => {
+              // TODO: wasted class instantiation
+              return new Transaction(tx).pending
+            })
 
-          txs.forEach(tx => this.redux.dispatch(this.getTransaction(tx.id)))
-        } catch (err) {
-          throw new Error(err)
-        }
-      })()
-    }))()
+            this.redux.dispatch(
+              this.getSpecificTransactions(txs.map(tx => tx.id))
+            )
+          } catch (err) {
+            throw new Error(err)
+          }
+        })()
+      })
+    )()
   }
 
   loadTransactions(opts: TransactionRequestOpts = {}) {
-    return createAction<
-      LoadTransactionsPromise,
-      TransactionRequestOpts
-    >(TransactionActions.LOAD_TRANSACTIONS, opts => ({
-      promise: (async () => {
-        const txs = await this.cache.loadTransactions(opts)
+    return createAction<LoadTransactionsPromise, TransactionRequestOpts>(
+      TransactionActions.LOAD_TRANSACTIONS,
+      opts => ({
+        promise: (async () => {
+          const txs = await this.cache.loadTransactions(opts)
 
-        debug('cached transactions =>', txs)
+          debug('cached transactions =>', txs)
 
-        this.redux.dispatch(this.setTransactions(txs))
-      })()
-    }))(opts)
+          this.redux.dispatch(this.setTransactions(txs))
+        })()
+      })
+    )(opts)
   }
 
   saveTransactions(account: Account, txs: Transaction[]) {
-    return createAction<
-      SaveTransactionsPromise,
-      Account,
-      Transaction[]
-    >(TransactionActions.SAVE_TRANSACTIONS, (acc, txs) => ({
-      promise: this.cache.saveTransactions(acc, txs)
-    }))(account, txs)
+    return createAction<SaveTransactionsPromise, Account, Transaction[]>(
+      TransactionActions.SAVE_TRANSACTIONS,
+      (acc, txs) => ({
+        promise: this.cache.saveTransactions(acc, txs)
+      })
+    )(account, txs)
   }
 
   hideTransaction(tx: Transaction) {
-    return createAction<
-      HideTransactionPromise,
-      Transaction
-    >(TransactionActions.HIDE_TRANSACTION, tx => ({
-      promise: (async () => {
-        try {
-          const { transaction: newTx } = await this.monzo.request<{
-            transaction: MonzoTransactionResponse
-          }>(tx.annotateRequest('monux_hidden', 'true'))
+    return createAction<HideTransactionPromise, Transaction>(
+      TransactionActions.HIDE_TRANSACTION,
+      tx => ({
+        promise: (async () => {
+          try {
+            const { transaction: newTx } = await this.monzo.request<{
+              transaction: MonzoTransactionResponse
+            }>(tx.annotateRequest('monux_hidden', 'true'))
 
-          return { tx: newTx }
-        } catch (err) {
-          throw new Error(err)
-        }
-      })()
-    }))(tx)
+            return { tx: newTx }
+          } catch (err) {
+            throw new Error(err)
+          }
+        })()
+      })
+    )(tx)
   }
 
   unhideTransaction(tx: Transaction) {
-    return createAction<
-      HideTransactionPromise,
-      Transaction
-    >(TransactionActions.HIDE_TRANSACTION, tx => ({
-      promise: (async () => {
-        try {
-          const { transaction: newTx } = await this.monzo.request<{
-            transaction: MonzoTransactionResponse
-          }>(tx.annotateRequest('monux_hidden', ''))
+    return createAction<HideTransactionPromise, Transaction>(
+      TransactionActions.HIDE_TRANSACTION,
+      tx => ({
+        promise: (async () => {
+          try {
+            const { transaction: newTx } = await this.monzo.request<{
+              transaction: MonzoTransactionResponse
+            }>(tx.annotateRequest('monux_hidden', ''))
 
-          return { tx: newTx }
-        } catch (err) {
-          throw new Error(err)
-        }
-      })()
-    }))(tx)
+            return { tx: newTx }
+          } catch (err) {
+            throw new Error(err)
+          }
+        })()
+      })
+    )(tx)
   }
 
   updateTransactionNotes(tx: Transaction, notes: string) {
-    return createAction<
-      UpdateTransactionNotesPromise,
-      Transaction,
-      string
-    >(TransactionActions.UPDATE_TRANSACTION_NOTES, (tx, notes) => ({
-      promise: (async () => {
-        // TODO: duplicate request
-        const acc = new Account(
-          (await this.monzo.request<MonzoAccountsResponse>(accountsRequest()))
-            .accounts[0]
-        )
+    return createAction<UpdateTransactionNotesPromise, Transaction, string>(
+      TransactionActions.UPDATE_TRANSACTION_NOTES,
+      (tx, notes) => ({
+        promise: (async () => {
+          // TODO: duplicate request
+          const acc = new Account(
+            (await this.monzo.request<MonzoAccountsResponse>(
+              accountsRequest()
+            )).accounts[0]
+          )
 
-        await this.monzo.request<{
-          transaction: MonzoTransactionResponse
-        }>(await tx.setNotesRequest(notes))
+          await this.monzo.request<{
+            transaction: MonzoTransactionResponse
+          }>(await tx.setNotesRequest(notes))
 
-        const { transaction: newTx } = await this.monzo.request<{
-          transaction: MonzoTransactionResponse
-        }>(await acc.transactionRequest(tx.id))
+          const { transaction: newTx } = await this.monzo.request<{
+            transaction: MonzoTransactionResponse
+          }>(await acc.transactionRequest(tx.id))
 
-        this.redux.dispatch(this.updateTransactions([newTx]))
-        this.redux.dispatch(
-          this.saveTransactions(acc, [new Transaction(newTx)])
-        )
+          this.redux.dispatch(this.updateTransactions([newTx]))
+          this.redux.dispatch(
+            this.saveTransactions(acc, [new Transaction(newTx)])
+          )
 
-        return { tx: newTx }
-      })()
-    }))(tx, notes)
+          return { tx: newTx }
+        })()
+      })
+    )(tx, notes)
   }
 }
 

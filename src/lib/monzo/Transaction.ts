@@ -294,6 +294,7 @@ export interface MonzoTransactionResponse extends JSONMap {
   created: string
   // TODO: full currency code list
   currency: string
+  // TODO: this could be undefined
   decline_reason: string
   dedupe_id: string
   description: string
