@@ -133,7 +133,8 @@ module.exports = {
     new AngularCompilerPlugin({
       tsConfigPath: './tsconfig.webpack.json',
       mainPath: './src/app/main.ts',
-      sourceMap: true
+      sourceMap: true,
+      skipCodeGeneration: true
     }),
 
     new MiniCssExtractPlugin(),

@@ -41,25 +41,31 @@ export class BalanceActions {
   ) {}
 
   setBalance(balance: AmountOpts) {
-    return createAction<
-      SetBalancePayload,
-      AmountOpts
-    >(BalanceActions.SET_BALANCE, balance => ({
-      amount: balance
-    }))(balance)
+    return createAction<SetBalancePayload, AmountOpts>(
+      BalanceActions.SET_BALANCE,
+      balance => ({
+        amount: balance
+      })
+    )(balance)
   }
 
   getBalance() {
     return createAction<GetBalancePromise>(BalanceActions.GET_BALANCE, () => ({
       promise: (async () => {
         try {
-          const acc = new Account(
-            (await this.monzo.request<MonzoAccountsResponse>(accountsRequest()))
-              .accounts[0]
+          const profile = await this.monzo.request<MonzoAccountsResponse>(
+            accountsRequest()
           )
+          const acc = new Account(profile.accounts[0])
+
+          debug('profile =>', profile)
+          debug('acc =>', acc)
+
           const bal = await this.monzo.request<MonzoBalanceResponse>(
             acc.balanceRequest()
           )
+
+          debug('HTTP response =>', bal)
 
           const { balance, spent } = extractBalanceAndSpent(bal)
 
@@ -77,30 +83,30 @@ export class BalanceActions {
   }
 
   loadBalance() {
-    return createAction<
-      LoadBalancePromise
-    >(BalanceActions.LOAD_BALANCE, () => ({
-      promise: (async () => {
-        const { account, balance } = await this.cache.loadBalance()
+    return createAction<LoadBalancePromise>(
+      BalanceActions.LOAD_BALANCE,
+      () => ({
+        promise: (async () => {
+          const { account, balance } = await this.cache.loadBalance()
 
-        debug('cached balance =>', balance)
+          debug('cached balance =>', balance)
 
-        this.redux.dispatch(this.accountActions.setAccount('monzo', account))
-        this.redux.dispatch(this.setBalance(balance))
-      })()
-    }))()
+          this.redux.dispatch(this.accountActions.setAccount('monzo', account))
+          this.redux.dispatch(this.setBalance(balance))
+        })()
+      })
+    )()
   }
 
   saveBalance(acc: Account, balance: Amount) {
-    return createAction<
-      SaveBalancePromise,
-      Account,
-      Amount
-    >(BalanceActions.SAVE_BALANCE, (acc, balance) => ({
-      promise: (async () => {
-        this.cache.saveAccount(acc, balance)
-      })()
-    }))(acc, balance)
+    return createAction<SaveBalancePromise, Account, Amount>(
+      BalanceActions.SAVE_BALANCE,
+      (acc, balance) => ({
+        promise: (async () => {
+          this.cache.saveAccount(acc, balance)
+        })()
+      })
+    )(acc, balance)
   }
 }
 

@@ -163,13 +163,14 @@ export interface AccountOwner extends JSONMap {
 }
 
 export interface MonzoAccountResponse extends JSONMap {
-  id: string
-  description: string
-  created: string
-  type: string
   account_number: string
-  sort_code: string
+  closed: boolean
+  created: string
+  description: string
+  id: string
   owners: AccountOwner[]
+  sort_code: string
+  type: string
 }
 
 export interface MonzoTransactionQuery extends QueryString {

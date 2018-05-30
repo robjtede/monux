@@ -78,11 +78,18 @@ export class Transaction {
   }
 
   get displayName(): string {
-    return this.merchant &&
+    if (
+      this.merchant &&
       typeof this.merchant !== 'string' &&
       this.merchant.name
-      ? this.merchant.name
-      : this.description
+    ) {
+      return this.merchant.name
+    } else if (this.is.pot) {
+      // TODO: get proper description for pot
+      return 'Added to Pot'
+    } else {
+      return this.description
+    }
   }
 
   get hidden(): boolean {
@@ -125,11 +132,13 @@ export class Transaction {
     const zero = this.tx.amount === 0
 
     const metaAction = zero && !this.inSpending
+    const pot = this.tx.scheme === 'uk_retail_pot'
 
     return {
       metaAction,
       cash,
-      zero
+      zero,
+      pot
     }
   }
 
