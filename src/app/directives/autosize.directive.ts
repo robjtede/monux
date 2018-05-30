@@ -1,3 +1,10 @@
+// Original code from https://github.com/stevepapa/ng-autosize
+// by Steve Papa
+//
+// Removed from package due to build errors caused by incorrect packaging.
+// Updated to use modifications from stevepapa/ng-autosize#17. Also added
+// definite assignment operators.
+
 import {
   Input,
   AfterViewInit,
@@ -13,7 +20,6 @@ export class Autosize implements AfterViewInit {
   private el: HTMLElement
   private _minHeight!: string
   private _maxHeight!: string
-  // private _lastHeight!: number
   private _clientWidth: number
 
   @Input('minHeight')

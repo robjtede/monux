@@ -4,13 +4,9 @@ const CopyWebpackPlugin = require('copy-webpack-plugin')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const { AngularCompilerPlugin } = require('@ngtools/webpack')
 
-const { root } = require('./tools/webpack-helpers')
+const { ProgressPlugin } = webpack
 
-const {
-  HashedModuleIdsPlugin,
-  ContextReplacementPlugin,
-  ProgressPlugin
-} = webpack
+const { root } = require('./tools/webpack-helpers')
 
 const dev = process.env.NODE_ENV === 'dev'
 
@@ -42,7 +38,19 @@ module.exports = {
 
   watchOptions: {
     aggregateTimeout: 1000,
-    ignored: ['node_modules', 'dist']
+    ignored: ['node_modules', 'dist', '.git']
+  },
+
+  optimization: {
+    splitChunks: {
+      cacheGroups: {
+        commons: {
+          test: /[\\/]node_modules[\\/]/,
+          name: 'vendor',
+          chunks: 'all'
+        }
+      }
+    }
   },
 
   module: {
@@ -134,7 +142,7 @@ module.exports = {
       template: './src/app/index.html',
       baseHref: dev ? '/' : './',
       chunksSortMode: (chunk1, chunk2) => {
-        const orders = ['polyfills', 'app']
+        const orders = ['polyfills', 'vendor', 'app']
         return orders.indexOf(chunk1.names[0]) - orders.indexOf(chunk2.names[0])
       }
     })

@@ -24,6 +24,10 @@ export class Account {
     return this.acc.owners
   }
 
+  get ownerNames(): string[] {
+    return this.owners.map(x => x.preferred_name)
+  }
+
   balanceRequest(): MonzoRequest {
     return {
       path: '/balance',
