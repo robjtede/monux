@@ -21,7 +21,9 @@ module.exports = {
   },
 
   output: {
-    path: root('dist', 'app')
+    path: root('dist', 'app'),
+    filename: '[name].js',
+    chunkFilename: '[id].chunk.js'
   },
 
   mode: 'development',
@@ -29,16 +31,11 @@ module.exports = {
   target: 'electron-renderer',
 
   resolve: {
-    extensions: ['.ts', '.js', '.json'],
-    modules: ['./node_modules']
-  },
-
-  resolveLoader: {
-    modules: ['./node_modules']
+    extensions: ['.ts', '.js', '.json']
   },
 
   externals: {
-    keytar: 'require(\'keytar\')'
+    keytar: "require('keytar')"
   },
 
   devtool: 'inline-source-map',
@@ -58,7 +55,7 @@ module.exports = {
 
       // asset files
       {
-        test: /\.(png|jpe?g|gif|svg|woff2?|(t|o)tf|eot|ico)$/,
+        test: /\.(png|jpe?g|gif|svg|woff2?|[to]tf|eot|ico)$/,
         loaders: [
           {
             loader: 'file-loader',
@@ -108,35 +105,30 @@ module.exports = {
 
       // angular files
       {
-        test: /(?:\.ngfactory\.js|\.ngstyle\.js|\.ts)$/,
+        test: /\.ngfactory\.js|\.ngstyle\.js|\.ts$/,
         loader: '@ngtools/webpack'
       }
     ]
   },
 
   plugins: [
+    new ProgressPlugin(),
+
     new CopyWebpackPlugin([
-      { from: './monux.*', context: './src' },
+      // electron-level icons
+      { from: './monux.*', context: './src', to: '../' },
+
+      // app icons
       { from: './assets/', context: './src/app', to: './assets' }
     ]),
 
     new AngularCompilerPlugin({
-      tsConfigPath: './tsconfig.json',
+      tsConfigPath: './tsconfig.webpack.json',
       mainPath: './src/app/main.ts',
       sourceMap: true
     }),
 
-    new ContextReplacementPlugin(
-      /angular(\\|\/)core(\\|\/)@angular/,
-      './src/app'
-    ),
-
-    new MiniCssExtractPlugin({
-      // Options similar to the same options in webpackOptions.output
-      // both options are optional
-      filename: '[name].css',
-      chunkFilename: '[id].css'
-    }),
+    new MiniCssExtractPlugin(),
 
     new HtmlWebpackPlugin({
       template: './src/app/index.html',
@@ -145,12 +137,6 @@ module.exports = {
         const orders = ['polyfills', 'app']
         return orders.indexOf(chunk1.names[0]) - orders.indexOf(chunk2.names[0])
       }
-    }),
-
-    new HashedModuleIdsPlugin({
-      hashFunction: 'sha256',
-      hashDigest: 'base64',
-      hashDigestLength: 8
     })
   ]
 }

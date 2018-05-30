@@ -17,7 +17,11 @@ export class Account {
   }
 
   get name(): string {
-    return this.description
+    return this.owners[0].preferred_name
+  }
+
+  get owners(): AccountOwner[] {
+    return this.acc.owners
   }
 
   balanceRequest(): MonzoRequest {
@@ -149,14 +153,22 @@ export interface MonzoAccountsResponse extends JSONMap {
   accounts: MonzoAccountResponse[]
 }
 
+export interface AccountOwner extends JSONMap {
+  user_id: string
+  preferred_name: string
+}
+
 export interface MonzoAccountResponse extends JSONMap {
   id: string
   description: string
   created: string
   type: string
+  account_number: string
+  sort_code: string
+  owners: AccountOwner[]
 }
 
-interface MonzoTransactionQuery extends QueryString {
+export interface MonzoTransactionQuery extends QueryString {
   account_id: string
   'expand[]'?: string
   since?: string

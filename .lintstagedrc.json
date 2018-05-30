@@ -5,13 +5,12 @@
   ],
   "*.js": [
     "eclint fix",
-    "prettier --write --no-semi --single-quote",
-    "eslint --fix",
+    "prettier --write",
     "git add"
   ],
   "*.ts": [
     "eclint fix",
-    "prettier --write --no-semi --single-quote",
+    "prettier --write",
     "git add"
   ],
   "*.css": [

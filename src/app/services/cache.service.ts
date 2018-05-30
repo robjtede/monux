@@ -65,7 +65,7 @@ export class CacheService {
     let txCol = this.db.transactions.orderBy('created_at').reverse()
 
     if (since) {
-      if (since && since instanceof Date) {
+      if (since instanceof Date) {
         txCol = txCol.filter(tx => tx.created_at > since)
       } else {
         const sinceDate = new Date(since)
