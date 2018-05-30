@@ -1,7 +1,7 @@
 'use strict'
 
-var packager = require('electron-packager')
-const pkg = require('./package.json')
+const packager = require('electron-packager')
+const pkg = require('../package.json')
 const argv = require('minimist')(process.argv.slice(1))
 
 const shouldBuildAll = argv.all || false
@@ -15,16 +15,16 @@ const DEFAULT_OPTS = {
   buildVersion: pkg.version
 }
 
-const pack = (plat, arch, cb) => {
+const pack = (platform, arch, cb) => {
   // there is no darwin ia32 electron
-  if (plat === 'darwin' && arch === 'ia32') return
+  if (platform === 'darwin' && arch === 'ia32') return
 
   const iconExt =
-    plat === 'darwin' ? '.icns' : plat === 'win32' ? 'ico' : '.png'
+    platform === 'darwin' ? '.icns' : platform === 'win32' ? 'ico' : '.png'
 
   const opts = Object.assign({}, DEFAULT_OPTS, {
-    platform: plat,
-    icon: `src/favicon${iconExt}`,
+    platform,
+    icon: `./src/monux${iconExt}`,
     arch,
     prune: true,
     overwrite: true,
@@ -38,11 +38,14 @@ const pack = (plat, arch, cb) => {
     ]
   })
 
-  console.log(opts)
-  packager(opts, cb)
+  console.log('packager options:', opts)
+  return packager(opts)
 }
 
-pack(platform, arch, (err, appPath) => {
-  if (err) console.log(err)
-  else console.log('Application packaged successfuly!', appPath)
-})
+pack(platform, arch)
+  .then(appPath => {
+    console.log('Application packaged successfuly!', appPath)
+  })
+  .catch(err => {
+    console.log(err)
+  })

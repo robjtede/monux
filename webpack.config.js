@@ -4,13 +4,13 @@ const CopyWebpackPlugin = require('copy-webpack-plugin')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const { AngularCompilerPlugin } = require('@ngtools/webpack')
 
-const { ProgressPlugin } = webpack
+const { ProgressPlugin, NormalModuleReplacementPlugin } = webpack
 
 const { root } = require('./tools/webpack-helpers')
 
 const dev = process.env.NODE_ENV === 'dev'
 
-module.exports = {
+module.exports = (env, options) => ({
   entry: {
     app: './src/app/main.ts',
     polyfills: './src/app/polyfills.ts'
@@ -122,6 +122,12 @@ module.exports = {
   plugins: [
     new ProgressPlugin(),
 
+    new NormalModuleReplacementPlugin(/environments\/environment$/, function(
+      resource
+    ) {
+      if (options.mode === 'production') resource.request += '.prod'
+    }),
+
     new CopyWebpackPlugin([
       // electron-level icons
       { from: './monux.*', context: './src', to: '../' },
@@ -141,11 +147,11 @@ module.exports = {
 
     new HtmlWebpackPlugin({
       template: './src/app/index.html',
-      baseHref: dev ? '/' : './',
+      // baseHref: dev ? '/' : './',
       chunksSortMode: (chunk1, chunk2) => {
         const orders = ['polyfills', 'vendor', 'app']
         return orders.indexOf(chunk1.names[0]) - orders.indexOf(chunk2.names[0])
       }
     })
   ]
-}
+})

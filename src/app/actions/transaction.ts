@@ -87,7 +87,7 @@ export class TransactionActions {
       options => ({
         promise: (async () => {
           try {
-            // TODO: duplicate request
+            // TODO: remove duplicate request
             const acc = new Account(
               (await this.monzo.request<MonzoAccountsResponse>(
                 accountsRequest()
@@ -119,7 +119,7 @@ export class TransactionActions {
       txIds => ({
         promise: (async () => {
           try {
-            // TODO: duplicate request
+            // TODO: remove duplicate request
             const acc = new Account(
               (await this.monzo.request<MonzoAccountsResponse>(
                 accountsRequest()
@@ -153,7 +153,7 @@ export class TransactionActions {
       txId => ({
         promise: (async () => {
           try {
-            // TODO: duplicate request
+            // TODO: remove duplicate request
             const acc = new Account(
               (await this.monzo.request<MonzoAccountsResponse>(
                 accountsRequest()
@@ -292,7 +292,7 @@ export class TransactionActions {
       TransactionActions.UPDATE_TRANSACTION_NOTES,
       (tx, notes) => ({
         promise: (async () => {
-          // TODO: duplicate request
+          // TODO: remove duplicate request
           const acc = new Account(
             (await this.monzo.request<MonzoAccountsResponse>(
               accountsRequest()

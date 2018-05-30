@@ -1,6 +1,8 @@
 import { NgModule } from '@angular/core'
 import { BrowserModule } from '@angular/platform-browser'
 import { HttpClientModule } from '@angular/common/http'
+
+// third party modules
 import { NgReduxModule, NgRedux, DevToolsExtension } from '@angular-redux/store'
 import { Ng2ImgToolsModule } from 'ng2-img-tools'
 
