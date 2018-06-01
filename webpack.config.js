@@ -8,8 +8,6 @@ const { AngularCompilerPlugin } = require('@ngtools/webpack')
 
 const { ProgressPlugin, NormalModuleReplacementPlugin } = webpack
 
-const { root } = require('./tools/webpack-helpers')
-
 const dev = process.env.NODE_ENV === 'dev'
 
 module.exports = (env, options) => ({
@@ -19,7 +17,7 @@ module.exports = (env, options) => ({
   },
 
   output: {
-    path: root('dist', 'app'),
+    path: path.resolve('dist', 'app'),
     filename: '[name].js',
     chunkFilename: '[id].chunk.js'
   },
@@ -77,7 +75,7 @@ module.exports = (env, options) => ({
       // page css
       {
         test: /\.css$/,
-        include: root('src', 'app', 'style'),
+        include: path.resolve('src', 'app', 'style'),
         loaders: [
           {
             loader: 'style-loader',
@@ -99,7 +97,7 @@ module.exports = (env, options) => ({
       // angular component css
       {
         test: /\.css$/,
-        exclude: root('src', 'app', 'style'),
+        exclude: path.resolve('src', 'app', 'style'),
         loaders: [
           'to-string-loader',
           {
@@ -124,11 +122,12 @@ module.exports = (env, options) => ({
   plugins: [
     new ProgressPlugin(),
 
-    new NormalModuleReplacementPlugin(/environments\/environment$/, function(
-      resource
-    ) {
-      if (options.mode === 'production') resource.request += '.prod'
-    }),
+    new NormalModuleReplacementPlugin(
+      /environments\/environment$/,
+      resource => {
+        if (options.mode === 'production') resource.request += '.prod'
+      }
+    ),
 
     new CopyWebpackPlugin([
       // electron-level icons

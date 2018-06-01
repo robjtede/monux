@@ -1,16 +1,23 @@
 {
   "appId": "uk.robjtede.monux",
   "publish": null,
-  "asar": false,
   "directories": {
     "output": "./out"
   },
   "files": [
     "./dist/**",
     "./node_modules/**",
+    "./build/**",
     "./package.json"
   ],
   "mac": {
     "target": ["dir"]
-  }
+  },
+  "win": {
+    "target": ["portable"]
+  },
+  "protocols": [{
+    "name": "Monux",
+    "schemes": ["monux"]
+  }]
 }

@@ -10,16 +10,22 @@
   "license": "MIT",
   "scripts": {
     "start": "npm run build:dev:webpack -- --watch",
+
     "electron:dev": "electron ./dist/app.js",
     "electron:serve": "npm run build:electron && npm run electron:dev",
+
     "build:dev": "npm run build:dev:webpack && npm run build:electron",
     "build:dev:webpack": "webpack --mode development",
-    "build": "cross-env NODE_ENV=production npm run build:webpack",
-    "build:electron": "tsc ./src/app.ts --outDir ./dist --target es2015 --module commonjs --skipLibCheck",
+
+    "build": "cross-env NODE_ENV=production npm run build:webpack && npm run build:electron",
     "build:webpack": "webpack --mode production",
-    "build:linux": "npm run build && node tools/package.js --platform=linux --arch=x64",
-    "build:windows": "npm run build && node tools/package.js --platform=win32 --arch=ia32",
-    "build:mac": "npm run build && node tools/package.js --platform=darwin --arch=x64",
+    "build:electron": "tsc ./src/app.ts --outDir ./dist --target es2015 --module commonjs --skipLibCheck",
+
+    "build:mac": "npm run build && electron-builder --mac",
+    "build:windows": "npm run build && electron-builder --win",
+    "build:linux": "npm run build && electron-builder --linux",
+    "build:all": "npm run build && electron-builder -mw",
+
     "precommit": "lint-staged",
     "postinstall": "electron-builder install-app-deps"
   },
