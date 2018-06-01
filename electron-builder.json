@@ -1,0 +1,16 @@
+{
+  "appId": "uk.robjtede.monux",
+  "publish": null,
+  "asar": false,
+  "directories": {
+    "output": "./out"
+  },
+  "files": [
+    "./dist/**",
+    "./node_modules/**",
+    "./package.json"
+  ],
+  "mac": {
+    "target": ["dir"]
+  }
+}

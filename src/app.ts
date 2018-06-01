@@ -5,7 +5,6 @@ import Debug = require('debug')
 
 import { app } from 'electron'
 import installExtension, { REDUX_DEVTOOLS } from 'electron-devtools-installer'
-import reloader = require('electron-reload')
 
 import {
   getAccessToken,
@@ -25,7 +24,9 @@ if (!app.isDefaultProtocolClient(app.getName().toLowerCase())) {
 
 debug(`starting`, app.getName(), 'version', app.getVersion())
 
-reloader(__dirname)
+import('electron-reload')
+  .then(({ default: reloader }) => reloader(__dirname))
+  .catch(err => console.log)
 
 export interface AppInfo {
   client_id: string
