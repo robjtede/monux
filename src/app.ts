@@ -25,7 +25,7 @@ if (!app.isDefaultProtocolClient(app.getName().toLowerCase())) {
 debug(`starting`, app.getName(), 'version', app.getVersion())
 
 import('electron-reload')
-  .then(({ default: reloader }) => reloader(__dirname))
+  .then(reloader => reloader(__dirname))
   .catch(console.error)
 
 export interface AppInfo {
