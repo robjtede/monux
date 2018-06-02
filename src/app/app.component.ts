@@ -17,8 +17,6 @@ import { Account, MonzoAccountResponse } from '../lib/monzo/Account'
 import { Amount, AmountOpts } from '../lib/monzo/Amount'
 import { Transaction, MonzoTransactionResponse } from '../lib/monzo/Transaction'
 
-import './style/index.css'
-
 @Component({
   selector: 'monux-root',
   templateUrl: './app.component.html',

@@ -26,7 +26,7 @@ debug(`starting`, app.getName(), 'version', app.getVersion())
 
 import('electron-reload')
   .then(({ default: reloader }) => reloader(__dirname))
-  .catch(err => console.log)
+  .catch(console.error)
 
 export interface AppInfo {
   client_id: string
