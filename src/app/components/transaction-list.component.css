@@ -17,6 +17,20 @@
   }
 }
 
+.search {
+  display: flex;
+  align-items: center;
+  padding: 0.4em 20px;
+
+  & input {
+    flex-grow: 1;
+    margin-left: 0.4em;
+    padding: 0.4em;
+
+    font-size: inherit;
+  }
+}
+
 m-transaction-group:not(:last-of-type) {
   border-bottom: var(--thin-border);
 }

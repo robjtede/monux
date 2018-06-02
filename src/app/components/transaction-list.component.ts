@@ -12,6 +12,7 @@ import {
   TransactionGroup,
   GroupingStrategy
 } from '../../lib/monzo/helpers'
+import { Merchant } from '../../lib/monzo/Merchant'
 
 @Component({
   selector: 'm-transaction-list',
@@ -22,6 +23,7 @@ import {
 export class TransactionListComponent implements OnChanges {
   @Input() readonly txs!: Transaction[]
 
+  search?: string
   txGroups: TransactionGroup[] = []
 
   ngOnChanges(changes: SimpleChanges) {
@@ -29,6 +31,32 @@ export class TransactionListComponent implements OnChanges {
   }
 
   updateTxGroups(): void {
-    this.txGroups = groupTransactions(this.txs, GroupingStrategy.Day)
+    if (this.search) {
+      this.txGroups = groupTransactions(
+        this.txs.filter(tx => {
+          const re = new RegExp(`.*${this.search}.*`, 'i')
+
+          return (
+            re.test(tx.displayName) ||
+            re.test(tx.category.raw) ||
+            re.test(tx.notes.full) ||
+            (tx.merchant && typeof tx.merchant === 'string'
+              ? re.test(tx.merchant)
+              : false) ||
+            (tx.merchant && tx.merchant instanceof Merchant
+              ? re.test(tx.merchant.name)
+              : false)
+          )
+        }),
+        GroupingStrategy.Day
+      )
+    } else {
+      this.txGroups = groupTransactions(this.txs, GroupingStrategy.Day)
+    }
+  }
+
+  updateSearch(search: string): void {
+    this.search = search.trim() ? search : undefined
+    this.updateTxGroups()
   }
 }

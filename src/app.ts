@@ -16,13 +16,14 @@ import {
 import { WindowManager } from './window-manager'
 
 const debug = Debug('app:app')
+
+debug(`starting`, app.getName(), 'version', app.getVersion())
+
 const mainWindow = new WindowManager()
 
 if (!app.isDefaultProtocolClient(app.getName().toLowerCase())) {
   app.setAsDefaultProtocolClient(app.getName().toLowerCase())
 }
-
-debug(`starting`, app.getName(), 'version', app.getVersion())
 
 import('electron-reload')
   .then(reloader => reloader(__dirname))

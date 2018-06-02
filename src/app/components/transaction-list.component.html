@@ -1,1 +1,7 @@
+<div class="search">
+  <label for="l-search">
+    Search
+  </label>
+  <input id="l-search" name="l-search" type="text" #search (input)="updateSearch(search.value)" placeholder="Tesco / Shopping / Big Mac">
+</div>
 <m-transaction-group *ngFor="let group of txGroups" [group]="group"></m-transaction-group>
