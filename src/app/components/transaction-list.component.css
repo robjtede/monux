@@ -20,7 +20,7 @@
 .search {
   display: flex;
   align-items: center;
-  padding: 0.4em 20px;
+  padding: 0.4em 0.75em;
 
   & input {
     flex-grow: 1;
@@ -33,4 +33,8 @@
 
 m-transaction-group:not(:last-of-type) {
   border-bottom: var(--thin-border);
+}
+
+m-transaction-group:first-of-type {
+  border-top: var(--thin-border);
 }

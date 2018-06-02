@@ -4,12 +4,13 @@
 
 .group-heading {
   display: grid;
-  grid-template-areas: "title total" "size total";
+  grid-template-areas: 'title total' 'title total';
   justify-content: space-between;
 
   position: sticky;
-  top: 0;
-  padding: 0.4em 20px;
+  top: -1px;
+  padding: 0.4em 0.75em;
+  padding-left: 20px;
 
   border-bottom: var(--thin-border);
   background-color: var(--off-white);
@@ -21,6 +22,7 @@
   }
 
   & .group-size {
+    display: none;
     grid-area: size;
 
     font-size: 0.9rem;
