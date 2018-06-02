@@ -10,22 +10,17 @@
   "license": "MIT",
   "scripts": {
     "start": "npm run build:dev:webpack -- --watch",
-
     "electron:dev": "electron ./dist/app.js",
     "electron:serve": "npm run build:electron && npm run electron:dev",
-
     "build:dev": "npm run build:dev:webpack && npm run build:electron",
     "build:dev:webpack": "webpack --mode development",
-
     "build": "cross-env NODE_ENV=production npm run build:webpack && npm run build:electron",
     "build:webpack": "webpack --mode production",
     "build:electron": "tsc ./src/app.ts --outDir ./dist --target es2015 --module commonjs --skipLibCheck",
-
     "build:mac": "npm run build && electron-builder --mac",
     "build:windows": "npm run build && electron-builder --win",
     "build:linux": "npm run build && electron-builder --linux",
     "build:all": "npm run build && electron-builder -mw",
-
     "precommit": "lint-staged",
     "postinstall": "electron-builder install-app-deps"
   },
@@ -61,7 +56,6 @@
     "zone.js": "^0.8.26"
   },
   "devDependencies": {
-    "@angular/cli": "^6.0.7",
     "@angular/compiler-cli": "^6.0.3",
     "@ngtools/webpack": "^6.0.7",
     "@types/common-tags": "^1.4.0",
