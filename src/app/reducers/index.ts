@@ -1,6 +1,6 @@
 import { combineReducers } from 'redux'
 
-import { AppState } from '../store'
+import { AppState } from '../state'
 
 import { reducer as account } from './account'
 import { reducer as balance } from './balance'

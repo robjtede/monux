@@ -1,6 +1,6 @@
 import { handleActions } from 'redux-actions'
 
-import { SelectedTransactionsState } from '../store'
+import { SelectedTransactionsState } from '../state'
 import {
   TransactionActions,
   SelectTransactionPayload

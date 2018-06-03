@@ -3,13 +3,19 @@ import { BrowserModule } from '@angular/platform-browser'
 import { HttpClientModule } from '@angular/common/http'
 
 // third party modules
-import { NgReduxModule, NgRedux, DevToolsExtension } from '@angular-redux/store'
+import { StoreModule, ActionReducerMap } from '@ngrx/store'
+import { StoreDevtoolsModule } from '@ngrx/store-devtools'
+import { NgReduxModule, NgRedux } from '@angular-redux/store'
 import { Ng2ImgToolsModule } from 'ng2-img-tools'
 
+import { environment } from '../environments/environment'
+
 // redux
-import { rootReducer } from './reducers'
+import { AppState, reducers } from './store'
+
+import { rootReducer as reducer } from './reducers'
 import { middleware } from './middleware'
-import { AppState } from './store'
+import { AppState as OldAppState } from './state'
 import { AccountActions } from './actions/account'
 import { BalanceActions } from './actions/balance'
 import { SpentActions } from './actions/spent'
@@ -47,7 +53,19 @@ import { TransactionDetailComponent } from './components/transaction-detail.comp
     TransactionAttachmentComponent,
     TransactionDetailComponent
   ],
-  imports: [BrowserModule, HttpClientModule, NgReduxModule, Ng2ImgToolsModule],
+  imports: [
+    BrowserModule,
+    HttpClientModule,
+    NgReduxModule,
+    Ng2ImgToolsModule,
+    StoreModule.forRoot({
+      selectedTransaction: reducers.selectedTransactionReducer
+    } as ActionReducerMap<AppState>),
+    StoreDevtoolsModule.instrument({
+      logOnly: environment.production,
+      maxAge: environment.production ? false : 50
+    })
+  ],
   providers: [
     MonzoService,
     CacheService,
@@ -60,19 +78,7 @@ import { TransactionDetailComponent } from './components/transaction-detail.comp
   bootstrap: [AppComponent]
 })
 export class AppModule {
-  constructor(
-    private readonly redux: NgRedux<AppState>,
-    private readonly devTools: DevToolsExtension
-  ) {
-    const enhancers = this.devTools.isEnabled()
-      ? [this.devTools.enhancer()]
-      : []
-
-    this.redux.configureStore(
-      rootReducer,
-      {} as AppState,
-      middleware,
-      enhancers
-    )
+  constructor(private readonly redux: NgRedux<OldAppState>) {
+    this.redux.configureStore(reducer, {}, middleware)
   }
 }

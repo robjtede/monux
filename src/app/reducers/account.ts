@@ -1,7 +1,7 @@
 import { handleActions } from 'redux-actions'
 
 import { AccountActions, SetAccountPayload } from '../actions/account'
-import { AccountState } from '../store'
+import { AccountState } from '../state'
 
 export const initialState: AccountState = {}
 

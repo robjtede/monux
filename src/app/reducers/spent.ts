@@ -1,7 +1,7 @@
 import { handleActions } from 'redux-actions'
 
 import { SpentActions, SetSpentPayload } from '../actions/spent'
-import { SpentState } from '../store'
+import { SpentState } from '../state'
 
 const initialState: SpentState = {
   native: {

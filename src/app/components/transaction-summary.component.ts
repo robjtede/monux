@@ -9,7 +9,7 @@ import {
 } from '@angular/core'
 import { NgRedux, dispatch } from '@angular-redux/store'
 
-import { AppState } from '../store'
+import { AppState } from '../state'
 import { TransactionActions } from '../actions/transaction'
 
 import { Transaction } from '../../lib/monzo/Transaction'

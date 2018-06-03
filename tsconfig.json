@@ -25,7 +25,9 @@
   },
   "angularCompilerOptions": {
     "fullTemplateTypeCheck": true,
-    "preserveWhitespaces": true
+    "preserveWhitespaces": true,
+    "strictInjectionParameters": true,
+    "enableIvy": true
   },
   "exclude": [
     "./node_modules/"

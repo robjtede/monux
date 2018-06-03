@@ -20,5 +20,4 @@ export type AccountState = {
 //   selectedTransaction: SelectedTransactionsState
 // }
 
-// TODO: strongly typed state
 export type AppState = any

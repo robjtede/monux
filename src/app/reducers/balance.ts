@@ -1,7 +1,7 @@
 import { handleActions } from 'redux-actions'
 
 import { BalanceActions, SetBalancePayload } from '../actions/balance'
-import { BalanceState } from '../store'
+import { BalanceState } from '../state'
 
 const initialState: BalanceState = {
   native: {

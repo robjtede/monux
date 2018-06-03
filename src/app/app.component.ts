@@ -9,7 +9,7 @@ import { Observable } from 'rxjs'
 import { combineLatest, filter, map } from 'rxjs/operators'
 import { startOfMonth, subMonths } from 'date-fns'
 
-import { AppState } from './store'
+import { AppState } from './state'
 import { BalanceActions } from './actions/balance'
 import { TransactionActions } from './actions/transaction'
 

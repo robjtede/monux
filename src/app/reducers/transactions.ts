@@ -10,7 +10,7 @@ import {
   UpdateTransactionsPayload,
   UnhideTransactionPayload
 } from '../actions/transaction'
-import { TransactionsState } from '../store'
+import { TransactionsState } from '../state'
 
 export type ModifyTransactionsPayloads =
   | SetTransactionsPayload

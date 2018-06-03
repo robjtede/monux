@@ -9,7 +9,7 @@ import { CacheService } from '../services/cache.service'
 import { SpentActions } from './spent'
 import { AccountActions } from './account'
 
-import { AppState } from '../store'
+import { AppState } from '../state'
 
 import {
   Account,

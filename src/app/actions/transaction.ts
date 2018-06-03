@@ -7,7 +7,7 @@ import { createAction } from 'redux-actions'
 import { MonzoService } from '../services/monzo.service'
 import { CacheService } from '../services/cache.service'
 
-import { AppState } from '../store'
+import { AppState } from '../state'
 
 import {
   Account,

@@ -1,7 +1,7 @@
 import { handleActions } from 'redux-actions'
 
 import { PaneActions, SetPanePayload } from '../actions/pane'
-import { ActivePaneState } from '../store'
+import { ActivePaneState } from '../state'
 
 const initialState: ActivePaneState = 'transaction'
 
