@@ -4,12 +4,14 @@ import {
   OnDestroy,
   ChangeDetectionStrategy
 } from '@angular/core'
+import { Store, select } from '@ngrx/store'
 import { NgRedux } from '@angular-redux/store'
 import { Observable } from 'rxjs'
 import { combineLatest, filter, map } from 'rxjs/operators'
 import { startOfMonth, subMonths } from 'date-fns'
 
-import { AppState } from './state'
+import { AppState } from './store'
+import { AppState as OldAppState } from './state'
 import { BalanceActions } from './actions/balance'
 import { TransactionActions } from './actions/transaction'
 
@@ -26,7 +28,7 @@ import { Transaction, MonzoTransactionResponse } from '../lib/monzo/Transaction'
 export class AppComponent implements OnInit, OnDestroy {
   readonly name = 'Monux'
 
-  readonly selectedTxId$: Observable<string>
+  readonly selectedTxId$: Observable<string | undefined>
   readonly accountHolder$: Observable<string>
   readonly balance$: Observable<Amount>
   readonly spent$: Observable<Amount>
@@ -34,11 +36,12 @@ export class AppComponent implements OnInit, OnDestroy {
   readonly selectedTx$: Observable<Transaction | undefined>
 
   constructor(
-    private readonly redux: NgRedux<AppState>,
+    private readonly redux: NgRedux<OldAppState>,
+    private readonly store: Store<AppState>,
     private readonly balanceActions: BalanceActions,
     private readonly txActions: TransactionActions
   ) {
-    this.selectedTxId$ = this.redux.select<string>('selectedTransaction')
+    this.selectedTxId$ = this.store.pipe(select('selectedTransaction'))
 
     this.accountHolder$ = this.redux
       .select<MonzoAccountResponse>(['account', 'monzo'])

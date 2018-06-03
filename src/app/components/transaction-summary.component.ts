@@ -7,13 +7,18 @@ import {
   ViewChild,
   ElementRef
 } from '@angular/core'
+import { map, tap } from 'rxjs/operators'
+import { Store, select } from '@ngrx/store'
 import { NgRedux, dispatch } from '@angular-redux/store'
 
-import { AppState } from '../state'
+import { AppState } from '../store'
+import { SelectTransactionAction } from '../store/actions/selectedTransaction.actions'
+import { AppState as OldAppState } from '../state'
 import { TransactionActions } from '../actions/transaction'
 
 import { Transaction } from '../../lib/monzo/Transaction'
 import { SignModes } from '../../lib/monzo/Amount'
+import { Observable } from 'rxjs'
 
 @Component({
   selector: 'm-transaction-summary',
@@ -31,6 +36,8 @@ export class TransactionSummaryComponent implements OnInit {
 
   @ViewChild('icon') readonly $icon!: ElementRef
 
+  selected = false
+
   iconObserver = new IntersectionObserver(this.onIconIntersection.bind(this), {
     rootMargin: '50px 0px',
     threshold: 0.01,
@@ -38,20 +45,24 @@ export class TransactionSummaryComponent implements OnInit {
   })
 
   constructor(
-    private readonly redux: NgRedux<AppState>,
+    private readonly redux: NgRedux<OldAppState>,
+    private readonly store: Store<AppState>,
     private readonly txActions: TransactionActions
   ) {}
 
   ngOnInit() {
     this.iconObserver.observe(this.$icon.nativeElement)
+
+    this.store
+      .pipe(
+        select('selectedTransaction'),
+        map(x => x === this.tx.id)
+      )
+      .subscribe(x => (this.selected = x))
   }
 
   get showAmount(): boolean {
     return !this.tx.is.metaAction && !this.tx.declined
-  }
-
-  get selected(): boolean {
-    return this.redux.getState().selectedTransaction === this.tx.id
   }
 
   get hasAttachments() {
@@ -72,7 +83,7 @@ export class TransactionSummaryComponent implements OnInit {
 
   @HostListener('click')
   selectTx() {
-    this.redux.dispatch(this.txActions.selectTransaction(this.tx.id))
+    this.store.dispatch(new SelectTransactionAction(this.tx.id))
     this.redux.dispatch(this.txActions.getTransaction(this.tx.id))
   }
 
