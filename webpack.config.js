@@ -138,7 +138,10 @@ module.exports = (env, options) => {
         tsConfigPath: './tsconfig.webpack.json',
         mainPath: './src/app/main.ts',
         sourceMap: true,
-        skipCodeGeneration: devMode ? true : false
+        skipCodeGeneration: devMode,
+        compilerOptions: {
+          debug: devMode
+        }
       }),
 
       new MiniCssExtractPlugin({

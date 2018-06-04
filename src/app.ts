@@ -128,9 +128,14 @@ if (isSecondInstance) {
 app.on('ready', async () => {
   debug('ready event')
 
-  installExtension(REDUX_DEVTOOLS)
-    .then((name: string) => console.log('Added Extension:', name))
-    .catch((err: Error) => console.log('An error occurred:', err))
+  const extensions = [
+    installExtension(REDUX_DEVTOOLS),
+    installExtension('elgalmkoelokbchhkhacckoklkejnhcd')
+  ]
+
+  Promise.all(extensions)
+    .then(names => console.log('Added Extensions:', names.join(', ')))
+    .catch(err => console.log('An error occurred adding extension:', err))
 
   try {
     const appInfo = await getAppInfo()

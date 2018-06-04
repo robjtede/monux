@@ -41,7 +41,7 @@ export class AppComponent implements OnInit, OnDestroy {
     private readonly balanceActions: BalanceActions,
     private readonly txActions: TransactionActions
   ) {
-    this.selectedTxId$ = this.store.pipe(select('selectedTransaction'))
+    this.selectedTxId$ = this.store.select('selectedTransaction')
 
     this.accountHolder$ = this.redux
       .select<MonzoAccountResponse>(['account', 'monzo'])
@@ -67,9 +67,6 @@ export class AppComponent implements OnInit, OnDestroy {
       filter(([txId, txs]) => !!txId && !!txs.length),
       map(([txId, txs]) => txs.find(tx => tx.id === txId))
     )
-
-    this.txs$.subscribe(x => console.log(x))
-    this.selectedTx$.subscribe(x => console.log(x))
   }
 
   ngOnInit(): void {

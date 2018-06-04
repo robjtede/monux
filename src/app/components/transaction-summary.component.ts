@@ -7,8 +7,8 @@ import {
   ViewChild,
   ElementRef
 } from '@angular/core'
-import { map, tap } from 'rxjs/operators'
-import { Store, select } from '@ngrx/store'
+import { filter, map } from 'rxjs/operators'
+import { Store } from '@ngrx/store'
 import { NgRedux, dispatch } from '@angular-redux/store'
 
 import { AppState } from '../store'
@@ -17,8 +17,6 @@ import { AppState as OldAppState } from '../state'
 import { TransactionActions } from '../actions/transaction'
 
 import { Transaction } from '../../lib/monzo/Transaction'
-import { SignModes } from '../../lib/monzo/Amount'
-import { Observable } from 'rxjs'
 
 @Component({
   selector: 'm-transaction-summary',
@@ -54,8 +52,9 @@ export class TransactionSummaryComponent implements OnInit {
     this.iconObserver.observe(this.$icon.nativeElement)
 
     this.store
+      .select('selectedTransaction')
       .pipe(
-        select('selectedTransaction'),
+        filter(x => !!x),
         map(x => x === this.tx.id)
       )
       .subscribe(x => (this.selected = x))
