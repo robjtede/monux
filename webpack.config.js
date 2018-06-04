@@ -35,7 +35,7 @@ module.exports = (env, options) => {
       keytar: "require('keytar')"
     },
 
-    devtool: 'inline-source-map',
+    devtool: devMode ? 'inline-source-map' : 'source-map',
 
     watchOptions: {
       aggregateTimeout: 1000,
@@ -45,13 +45,6 @@ module.exports = (env, options) => {
     optimization: {
       splitChunks: {
         chunks: 'all'
-        // cacheGroups: {
-        //   commons: {
-        //     test: /[\\/]node_modules[\\/]/,
-        //     name: 'vendor',
-        //     chunks: 'all'
-        //   }
-        // }
       }
     },
 

@@ -4,7 +4,6 @@ import { parse as parseUrl } from 'url'
 import Debug = require('debug')
 
 import { app } from 'electron'
-import installExtension, { REDUX_DEVTOOLS } from 'electron-devtools-installer'
 
 import {
   getAccessToken,
@@ -128,14 +127,20 @@ if (isSecondInstance) {
 app.on('ready', async () => {
   debug('ready event')
 
-  const extensions = [
-    installExtension(REDUX_DEVTOOLS),
-    installExtension('elgalmkoelokbchhkhacckoklkejnhcd')
-  ]
+  import('electron-devtools-installer').then(
+    ({ default: installExtension, REDUX_DEVTOOLS }) => {
+      const extensions = [
+        installExtension(REDUX_DEVTOOLS),
+        installExtension('elgalmkoelokbchhkhacckoklkejnhcd')
+      ]
 
-  Promise.all(extensions)
-    .then(names => console.log('Added Extensions:', names.join(', ')))
-    .catch(err => console.log('An error occurred adding extension:', err))
+      return Promise.all(extensions)
+        .then(names => console.log('Added Extensions:', names.join(', ')))
+        .catch(err => console.log('An error occurred adding extension:', err))
+    }
+  )
+
+  import('devtron').then(({ install }) => install())
 
   try {
     const appInfo = await getAppInfo()
