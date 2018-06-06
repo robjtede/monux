@@ -4,7 +4,7 @@ import { Injectable } from '@angular/core'
 import { NgRedux } from '@angular-redux/store'
 import { createAction } from 'redux-actions'
 
-import { MonzoService } from '../services/monzo.service'
+import { MonzoOldService } from '../services/monzo.old.service'
 import { CacheService } from '../services/cache.service'
 import { SpentActions } from './spent'
 import { AccountActions } from './account'
@@ -34,7 +34,7 @@ export class BalanceActions {
 
   constructor(
     private readonly redux: NgRedux<AppState>,
-    private readonly monzo: MonzoService,
+    private readonly monzo: MonzoOldService,
     private readonly cache: CacheService,
     private readonly spentActions: SpentActions,
     private readonly accountActions: AccountActions

@@ -8,7 +8,7 @@ import {
 } from '@angular/core'
 import { Ng2ImgToolsService } from 'ng2-img-tools'
 
-import { MonzoService } from '../services/monzo.service'
+import { MonzoOldService } from '../services/monzo.old.service'
 
 import { Attachment } from '../../lib/monzo/Attachment'
 
@@ -25,7 +25,7 @@ export class TransactionAttachmentComponent implements OnInit {
   @ViewChild('attachment') $attachment!: ElementRef
 
   constructor(
-    private monzo: MonzoService,
+    private monzo: MonzoOldService,
     private imgTools: Ng2ImgToolsService
   ) {}
 

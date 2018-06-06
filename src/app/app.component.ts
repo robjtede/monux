@@ -4,7 +4,7 @@ import {
   OnDestroy,
   ChangeDetectionStrategy
 } from '@angular/core'
-import { Store, select } from '@ngrx/store'
+import { Store } from '@ngrx/store'
 import { NgRedux } from '@angular-redux/store'
 import { Observable } from 'rxjs'
 import { combineLatest, filter, map } from 'rxjs/operators'
@@ -15,6 +15,7 @@ import { AppState as OldAppState } from './state'
 import { BalanceActions } from './actions/balance'
 import { TransactionActions } from './actions/transaction'
 
+import { MonzoService } from './services/monzo.service'
 import { Account, MonzoAccountResponse } from '../lib/monzo/Account'
 import { Amount, AmountOpts } from '../lib/monzo/Amount'
 import { Transaction, MonzoTransactionResponse } from '../lib/monzo/Transaction'
@@ -39,7 +40,8 @@ export class AppComponent implements OnInit, OnDestroy {
     private readonly redux: NgRedux<OldAppState>,
     private readonly store: Store<AppState>,
     private readonly balanceActions: BalanceActions,
-    private readonly txActions: TransactionActions
+    private readonly txActions: TransactionActions,
+    private readonly monzoService: MonzoService
   ) {
     this.selectedTxId$ = this.store.select('selectedTransaction')
 

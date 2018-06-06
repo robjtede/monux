@@ -29,6 +29,7 @@ import { Autosize } from './directives/autosize.directive'
 
 // services
 import { MonzoService } from './services/monzo.service'
+import { MonzoOldService } from './services/monzo.old.service'
 import { CacheService } from './services/cache.service'
 
 // components
@@ -68,6 +69,7 @@ import { TransactionDetailComponent } from './components/transaction-detail.comp
   ],
   providers: [
     MonzoService,
+    MonzoOldService,
     CacheService,
     AccountActions,
     BalanceActions,

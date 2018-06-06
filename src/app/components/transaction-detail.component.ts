@@ -9,7 +9,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http'
 import { dispatch } from '@angular-redux/store'
 import { format } from 'date-fns'
 
-import { MonzoService } from '../services/monzo.service'
+import { MonzoOldService } from '../services/monzo.old.service'
 
 import { TransactionActions } from '../actions/transaction'
 
@@ -39,7 +39,7 @@ export class TransactionDetailComponent {
 
   constructor(
     private readonly txActions: TransactionActions,
-    private readonly monzo: MonzoService,
+    private readonly monzo: MonzoOldService,
     private readonly http: HttpClient
   ) {}
 
