@@ -14,6 +14,8 @@ import { AppState } from './store'
 import { AppState as OldAppState } from './state'
 import { BalanceActions } from './actions/balance'
 import { TransactionActions } from './actions/transaction'
+import { GetBalanceAction } from './store/actions/balance.actions'
+import { BalanceEffects } from './store/effects/balance.effects'
 
 import { MonzoService } from './services/monzo.service'
 import { Account, MonzoAccountResponse } from '../lib/monzo/Account'
@@ -38,12 +40,25 @@ export class AppComponent implements OnInit, OnDestroy {
 
   constructor(
     private readonly redux: NgRedux<OldAppState>,
-    private readonly store: Store<AppState>,
+    private readonly store$: Store<AppState>,
     private readonly balanceActions: BalanceActions,
     private readonly txActions: TransactionActions,
     private readonly monzoService: MonzoService
   ) {
-    this.selectedTxId$ = this.store.select('selectedTransaction')
+    this.selectedTxId$ = this.store$.select('selectedTransaction')
+
+    this.balance$ = this.store$.select('balance').pipe(
+      filter(balance => !!balance),
+      map(
+        ({ balance, currency }) =>
+          new Amount({
+            native: {
+              amount: balance,
+              currency: currency
+            }
+          })
+      )
+    )
 
     this.accountHolder$ = this.redux
       .select<MonzoAccountResponse>(['account', 'monzo'])
@@ -51,10 +66,6 @@ export class AppComponent implements OnInit, OnDestroy {
         filter(acc => !!acc),
         map(acc => new Account(acc).name)
       )
-
-    this.balance$ = this.redux
-      .select<AmountOpts>('balance')
-      .pipe(map(balance => new Amount(balance)))
 
     this.spent$ = this.redux
       .select<AmountOpts>('spent')
@@ -74,8 +85,8 @@ export class AppComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     console.log('monux started')
 
-    this.redux.dispatch(this.balanceActions.loadBalance())
-    this.redux.dispatch(this.balanceActions.getBalance())
+    // this.redux.dispatch(this.balanceActions.loadBalance())
+    // this.redux.dispatch(this.balanceActions.getBalance())
 
     // start of month
     const som = subMonths(startOfMonth(Date.now()), 1)

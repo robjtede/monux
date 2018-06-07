@@ -1,17 +1,21 @@
+// primary modules
 import { NgModule } from '@angular/core'
 import { BrowserModule } from '@angular/platform-browser'
 import { HttpClientModule } from '@angular/common/http'
-
-// third party modules
 import { StoreModule, ActionReducerMap } from '@ngrx/store'
+import { EffectsModule } from '@ngrx/effects'
 import { StoreDevtoolsModule } from '@ngrx/store-devtools'
+
+// secondary modules
 import { NgReduxModule, NgRedux } from '@angular-redux/store'
 import { Ng2ImgToolsModule } from 'ng2-img-tools'
 
+// environment
 import { environment } from '../environments/environment'
 
-// redux
+// store
 import { AppState, reducers } from './store'
+import { effects } from './store/effects'
 
 import { rootReducer as reducer } from './reducers'
 import { middleware } from './middleware'
@@ -60,8 +64,10 @@ import { TransactionDetailComponent } from './components/transaction-detail.comp
     NgReduxModule,
     Ng2ImgToolsModule,
     StoreModule.forRoot({
-      selectedTransaction: reducers.selectedTransactionReducer
+      selectedTransaction: reducers.selectedTransactionReducer,
+      balance: reducers.balanceReducer
     } as ActionReducerMap<AppState>),
+    EffectsModule.forRoot(effects),
     StoreDevtoolsModule.instrument({
       logOnly: environment.production,
       maxAge: environment.production ? false : 50

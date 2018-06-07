@@ -1,7 +1,7 @@
 import {
+  Actions,
   SELECT_TRANSACTION,
-  DESELECT_TRANSACTION,
-  Actions
+  DESELECT_TRANSACTION
 } from '../actions/selectedTransaction.actions'
 import { SelectedTransactionState } from '../states'
 

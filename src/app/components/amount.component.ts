@@ -13,7 +13,7 @@ import { Amount } from '../../lib/monzo/Amount'
 })
 export class AmountComponent {
   @Input() readonly amount!: Amount
-  @Input() readonly show?: ShowModes = 'both'
+  @Input() readonly show: ShowModes = 'both'
   @Input('sign-mode') readonly signMode?: SignModes = 'always'
   @Input('currency-mode') readonly currencyMode?: CurrencyModes = 'both'
   @Input('large-major') readonly largeMajor?: boolean = false

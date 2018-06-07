@@ -222,6 +222,7 @@ export interface AmountOpts {
 
 export interface MonzoBalanceResponse {
   balance: number
+  total_balance: number
   // TODO: currency enum-ify
   currency: string
   // TODO: currency enum-ify

@@ -1,7 +1,7 @@
 import { Action } from '@ngrx/store'
 
-export const SELECT_TRANSACTION = '[TRANSACTION] Select'
-export const DESELECT_TRANSACTION = '[TRANSACTION] Deselect'
+export const SELECT_TRANSACTION = '[Transaction] Select'
+export const DESELECT_TRANSACTION = '[Transaction] Deselect'
 
 export class SelectTransactionAction implements Action {
   readonly type = SELECT_TRANSACTION
