@@ -1,7 +1,4 @@
 import { Injectable } from '@angular/core'
-import { from, Observable, ObservableInput } from 'rxjs'
-import { pluck, switchMap, map } from 'rxjs/operators'
-
 import Dexie from 'dexie'
 
 import { Amount, AmountOpts } from '../../lib/monzo/Amount'
@@ -32,41 +29,39 @@ class IDBCache extends Dexie {
 }
 
 @Injectable()
-export class CacheService {
+export class CacheOldService {
   private db = new IDBCache()
 
   loadAccount = (() => {
     const cachedAccount = this.db.accounts.limit(1).toArray()
 
-    return (): Observable<CachedAccount> => {
-      return from(cachedAccount).pipe(pluck('0'))
+    return async (): Promise<CachedAccount> => {
+      return (await cachedAccount)[0]
     }
   })()
 
   loadBalance = (() => {
     const cachedAccount = this.loadAccount()
 
-    return (): Observable<{
+    return async (): Promise<{
       account: MonzoAccountResponse
       balance: AmountOpts
-    }> =>
-      cachedAccount.pipe(
-        switchMap(acc => {
-          const { native, local } = acc.balance
+    }> => {
+      const account = await cachedAccount
+      const { native, local } = account.balance
 
-          return {
-            account: acc.acc,
-            balance: { native, local }
-          } as any
-        })
-      )
+      return {
+        account: account.acc,
+        balance: { native, local }
+      }
+    }
   })()
 
-  loadTransactions({
+  async loadTransactions({
     since,
     before,
     limit
-  }: TransactionRequestOpts = {}): Observable<MonzoTransactionResponse[]> {
+  }: TransactionRequestOpts = {}): Promise<MonzoTransactionResponse[]> {
     let txCol = this.db.transactions.orderBy('created_at').reverse()
 
     if (since) {
@@ -86,7 +81,9 @@ export class CacheService {
       txCol = txCol.limit(limit)
     }
 
-    return from(txCol.toArray()).pipe(map(txs => txs.map(tx => tx.tx)))
+    const txs = await txCol.toArray()
+
+    return txs.map(tx => tx.tx)
   }
 
   saveAccount = async (acc: Account, balance: Amount) => {

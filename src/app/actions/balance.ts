@@ -5,7 +5,7 @@ import { NgRedux } from '@angular-redux/store'
 import { createAction } from 'redux-actions'
 
 import { MonzoOldService } from '../services/monzo.old.service'
-import { CacheService } from '../services/cache.service'
+import { CacheOldService } from '../services/cache.old.service'
 import { SpentActions } from './spent'
 import { AccountActions } from './account'
 
@@ -35,7 +35,7 @@ export class BalanceActions {
   constructor(
     private readonly redux: NgRedux<AppState>,
     private readonly monzo: MonzoOldService,
-    private readonly cache: CacheService,
+    private readonly cache: CacheOldService,
     private readonly spentActions: SpentActions,
     private readonly accountActions: AccountActions
   ) {}
