@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core'
 import { Store, Action } from '@ngrx/store'
 import { Actions, Effect, ofType, ROOT_EFFECTS_INIT } from '@ngrx/effects'
 import { defer, Observable, of } from 'rxjs'
-import { catchError, map, switchMap, switchMapTo } from 'rxjs/operators'
+import { catchError, map, switchMapTo } from 'rxjs/operators'
 
 import { MonzoService } from '../../services/monzo.service'
 import {
@@ -10,18 +10,17 @@ import {
   Account,
   MonzoAccountsResponse
 } from '../../../lib/monzo/Account'
-import { MonzoBalanceResponse } from '../../../lib/monzo/Amount'
 
 import { AppState } from '../'
 import {
-  GET_BALANCE,
-  SetBalanceAction,
-  GetBalanceAction,
-  GetBalanceFailedAction
-} from '../actions/balance.actions'
+  GET_ACCOUNT,
+  SetAccountAction,
+  GetAccountAction,
+  GetAccountFailedAction
+} from '../actions/account.actions'
 
 @Injectable()
-export class BalanceEffects {
+export class AccountEffects {
   constructor(
     private readonly store$: Store<AppState>,
     private readonly actions$: Actions,
@@ -30,22 +29,17 @@ export class BalanceEffects {
 
   @Effect()
   get$: Observable<Action> = this.actions$.pipe(
-    ofType(GET_BALANCE),
+    ofType(GET_ACCOUNT),
     switchMapTo(
       this.monzoService.request<MonzoAccountsResponse>(accountsRequest())
     ),
-    switchMap(accounts => {
-      const account = new Account(accounts.accounts[0])
+    map(accounts => {
+      const acc = accounts.accounts[0]
 
-      console.log(account.json)
-
-      return this.monzoService.request<MonzoBalanceResponse>(
-        account.balanceRequest()
-      )
+      return new SetAccountAction(acc)
     }),
-    map(data => new SetBalanceAction(data)),
-    catchError(err => of(new GetBalanceFailedAction()))
+    catchError(err => of(new GetAccountFailedAction()))
   )
 
-  @Effect() init$: Observable<Action> = defer(() => of(new GetBalanceAction()))
+  @Effect() init$: Observable<Action> = defer(() => of(new GetAccountAction()))
 }

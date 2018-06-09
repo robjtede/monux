@@ -4,16 +4,12 @@ import {
   OnDestroy,
   ChangeDetectionStrategy
 } from '@angular/core'
-import { Store } from '@ngrx/store'
-import { NgRedux } from '@angular-redux/store'
+import { select, Store } from '@ngrx/store'
 import { Observable } from 'rxjs'
 import { combineLatest, filter, map } from 'rxjs/operators'
 import { startOfMonth, subMonths } from 'date-fns'
 
 import { AppState } from './store'
-import { AppState as OldAppState } from './state'
-import { BalanceActions } from './actions/balance'
-import { TransactionActions } from './actions/transaction'
 import { GetBalanceAction } from './store/actions/balance.actions'
 import { BalanceEffects } from './store/effects/balance.effects'
 
@@ -35,19 +31,14 @@ export class AppComponent implements OnInit, OnDestroy {
   readonly accountHolder$: Observable<string>
   readonly balance$: Observable<Amount>
   readonly spent$: Observable<Amount>
-  readonly txs$: Observable<Transaction[]>
-  readonly selectedTx$: Observable<Transaction | undefined>
+  // readonly txs$: Observable<Transaction[]>
+  // readonly selectedTx$: Observable<Transaction | undefined>
 
-  constructor(
-    private readonly redux: NgRedux<OldAppState>,
-    private readonly store$: Store<AppState>,
-    private readonly balanceActions: BalanceActions,
-    private readonly txActions: TransactionActions,
-    private readonly monzoService: MonzoService
-  ) {
+  constructor(private readonly store$: Store<AppState>) {
     this.selectedTxId$ = this.store$.select('selectedTransaction')
 
-    this.balance$ = this.store$.select('balance').pipe(
+    this.balance$ = this.store$.pipe(
+      select('balance'),
       filter(balance => !!balance),
       map(
         ({ balance, currency }) =>
@@ -60,40 +51,48 @@ export class AppComponent implements OnInit, OnDestroy {
       )
     )
 
-    this.accountHolder$ = this.redux
-      .select<MonzoAccountResponse>(['account', 'monzo'])
+    this.accountHolder$ = this.store$
+      .select<MonzoAccountResponse>('account')
       .pipe(
         filter(acc => !!acc),
         map(acc => new Account(acc).name)
       )
 
-    this.spent$ = this.redux
-      .select<AmountOpts>('spent')
-      .pipe(map(spent => new Amount(spent)))
-
-    this.txs$ = this.redux
-      .select<MonzoTransactionResponse[]>('transactions')
-      .pipe(map(txs => txs.map(tx => new Transaction(tx))))
-
-    this.selectedTx$ = this.selectedTxId$.pipe(
-      combineLatest(this.txs$),
-      filter(([txId, txs]) => !!txId && !!txs.length),
-      map(([txId, txs]) => txs.find(tx => tx.id === txId))
+    this.spent$ = this.store$.pipe(
+      select('balance'),
+      filter(balance => !!balance),
+      map(
+        ({ spend_today, currency }) =>
+          new Amount({
+            native: {
+              amount: spend_today,
+              currency: currency
+            }
+          })
+      )
     )
+
+    // this.txs$ = this.store$.pipe(
+    //   select<MonzoTransactionResponse[]>('transactions'),
+    //   map(txs => txs.map(tx => new Transaction(tx)))
+    // )
+
+    // this.selectedTx$ = this.selectedTxId$.pipe(
+    //   combineLatest(this.txs$),
+    //   filter(([txId, txs]) => !!txId && !!txs.length),
+    //   map(([txId, txs]) => txs.find(tx => tx.id === txId))
+    // )
   }
 
   ngOnInit(): void {
     console.log('monux started')
 
-    // this.redux.dispatch(this.balanceActions.loadBalance())
-    // this.redux.dispatch(this.balanceActions.getBalance())
-
     // start of month
-    const som = subMonths(startOfMonth(Date.now()), 1)
+    // const som = subMonths(startOfMonth(Date.now()), 1)
 
-    this.redux.dispatch(this.txActions.loadTransactions({ since: som }))
-    this.redux.dispatch(this.txActions.getNewTransactions())
-    this.redux.dispatch(this.txActions.getPendingTransactions())
+    // this.redux.dispatch(this.txActions.loadTransactions({ since: som }))
+    // this.redux.dispatch(this.txActions.getNewTransactions())
+    // this.redux.dispatch(this.txActions.getPendingTransactions())
   }
 
   ngOnDestroy(): void {

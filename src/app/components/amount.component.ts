@@ -5,7 +5,7 @@ import { Amount } from '../../lib/monzo/Amount'
   selector: 'm-amount',
   templateUrl: './amount.component.html',
   styleUrls: ['./amount.component.css'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  changeDetection: ChangeDetectionStrategy.Default,
   host: {
     '[class.positive]': 'amount.positive',
     '[class.negative]': 'amount.negative'
