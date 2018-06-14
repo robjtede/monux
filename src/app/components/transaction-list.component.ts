@@ -18,7 +18,7 @@ import { Merchant } from '../../lib/monzo/Merchant'
   selector: 'm-transaction-list',
   templateUrl: './transaction-list.component.html',
   styleUrls: ['./transaction-list.component.css'],
-  changeDetection: ChangeDetectionStrategy.Default
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TransactionListComponent implements OnChanges {
   @Input() readonly txs!: Transaction[]

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core'
-import { from, Observable, ObservableInput } from 'rxjs'
+import { from, Observable } from 'rxjs'
 import { pluck, switchMap, map } from 'rxjs/operators'
 
 import Dexie from 'dexie'

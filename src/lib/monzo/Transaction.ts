@@ -313,6 +313,10 @@ export interface MonzoTransactionResponse extends JSONMap {
   updated: string
 }
 
+export interface MonzoTransactionsResponse extends JSONMap {
+  transactions: MonzoTransactionResponse[]
+}
+
 export interface MonzoCounterpartyResponse extends JSONMap {
   name: string
   number: string

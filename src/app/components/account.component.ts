@@ -4,7 +4,7 @@ import { Component, Input, ChangeDetectionStrategy } from '@angular/core'
   selector: 'm-account',
   templateUrl: './account.component.html',
   styleUrls: ['./account.component.css'],
-  changeDetection: ChangeDetectionStrategy.Default
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AccountComponent {
   @Input() readonly holder: string = 'Loading...'

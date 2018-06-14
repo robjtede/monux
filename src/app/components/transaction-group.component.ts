@@ -11,7 +11,7 @@ import { SignModes } from '../../lib/monzo/Amount'
   selector: 'm-transaction-group',
   templateUrl: './transaction-group.component.html',
   styleUrls: ['./transaction-group.component.css'],
-  changeDetection: ChangeDetectionStrategy.Default
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TransactionGroupComponent {
   @Input() readonly group!: TransactionGroup

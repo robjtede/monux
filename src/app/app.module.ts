@@ -13,7 +13,7 @@ import { Ng2ImgToolsModule } from 'ng2-img-tools'
 import { environment } from '../environments/environment'
 
 // store
-import { AppState, reducers } from './store'
+import { AppState, reducers, initialState } from './store'
 import { effects } from './store/effects'
 
 // directives
@@ -31,9 +31,9 @@ import { CacheOldService } from './services/cache.old.service'
 import { AppComponent } from './app.component'
 import { AmountComponent } from './components/amount.component'
 import { AccountComponent } from './components/account.component'
-// import { TransactionListComponent } from './components/transaction-list.component'
-// import { TransactionGroupComponent } from './components/transaction-group.component'
-// import { TransactionSummaryComponent } from './components/transaction-summary.component'
+import { TransactionListComponent } from './components/transaction-list.component'
+import { TransactionGroupComponent } from './components/transaction-group.component'
+import { TransactionSummaryComponent } from './components/transaction-summary.component'
 // import { TransactionAttachmentComponent } from './components/transaction-attachment.component'
 // import { TransactionDetailComponent } from './components/transaction-detail.component'
 
@@ -42,21 +42,19 @@ import { AccountComponent } from './components/account.component'
     Autosize,
     AppComponent,
     AmountComponent,
-    AccountComponent
-    // TransactionListComponent,
-    // TransactionGroupComponent,
-    // TransactionSummaryComponent,
+    AccountComponent,
+    TransactionListComponent,
+    TransactionGroupComponent,
+    TransactionSummaryComponent
     // TransactionAttachmentComponent,
     // TransactionDetailComponent
   ],
   imports: [
     BrowserModule,
     HttpClientModule,
-    StoreModule.forRoot({
-      account: reducers.accountReducer,
-      balance: reducers.balanceReducer,
-      selectedTransaction: reducers.selectedTransactionReducer
-    } as any),
+    StoreModule.forRoot(reducers as any, {
+      initialState
+    }),
     EffectsModule.forRoot(effects),
     StoreDevtoolsModule.instrument({
       logOnly: environment.production

@@ -10,18 +10,18 @@ import {
   Account,
   MonzoAccountsResponse
 } from '../../../lib/monzo/Account'
-import { MonzoBalanceResponse } from '../../../lib/monzo/Amount'
+import { MonzoTransactionsResponse } from '../../../lib/monzo/Transaction'
 
 import { AppState } from '../'
 import {
-  GET_BALANCE,
-  SetBalanceAction,
-  GetBalanceAction,
-  GetBalanceFailedAction
-} from '../actions/balance.actions'
+  GET_TRANSACTIONS,
+  SetTransactionsAction,
+  GetTransactionsAction,
+  GetTransactionsFailedAction
+} from '../actions/transactions.actions'
 
 @Injectable()
-export class BalanceEffects {
+export class TransactionsEffects {
   constructor(
     private readonly store$: Store<AppState>,
     private readonly actions$: Actions,
@@ -30,20 +30,21 @@ export class BalanceEffects {
 
   @Effect()
   get$: Observable<Action> = this.actions$.pipe(
-    ofType(GET_BALANCE),
+    ofType(GET_TRANSACTIONS),
     switchMapTo(
       this.monzoService.request<MonzoAccountsResponse>(accountsRequest())
     ),
     switchMap(accounts => {
       const account = new Account(accounts.accounts[0])
 
-      return this.monzoService.request<MonzoBalanceResponse>(
-        account.balanceRequest()
+      return this.monzoService.request<MonzoTransactionsResponse>(
+        account.transactionsRequest()
       )
     }),
-    map(data => new SetBalanceAction(data)),
-    catchError(err => of(new GetBalanceFailedAction()))
+    map(txs => new SetTransactionsAction(txs.transactions)),
+    catchError(err => of(new GetTransactionsFailedAction()))
   )
 
-  @Effect() init$: Observable<Action> = defer(() => of(new GetBalanceAction()))
+  @Effect()
+  init$: Observable<Action> = defer(() => of(new GetTransactionsAction()))
 }

@@ -6,7 +6,7 @@ import {
 } from '@angular/core'
 import { select, Store } from '@ngrx/store'
 import { Observable } from 'rxjs'
-import { combineLatest, filter, map } from 'rxjs/operators'
+import { combineLatest, filter, map, tap } from 'rxjs/operators'
 import { startOfMonth, subMonths } from 'date-fns'
 
 import { AppState } from './store'
@@ -17,12 +17,13 @@ import { MonzoService } from './services/monzo.service'
 import { Account, MonzoAccountResponse } from '../lib/monzo/Account'
 import { Amount, AmountOpts } from '../lib/monzo/Amount'
 import { Transaction, MonzoTransactionResponse } from '../lib/monzo/Transaction'
+import { LOCATION_INITIALIZED } from '@angular/common'
 
 @Component({
   selector: 'monux-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css'],
-  changeDetection: ChangeDetectionStrategy.Default
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AppComponent implements OnInit, OnDestroy {
   readonly name = 'Monux'
@@ -31,14 +32,13 @@ export class AppComponent implements OnInit, OnDestroy {
   readonly accountHolder$: Observable<string>
   readonly balance$: Observable<Amount>
   readonly spent$: Observable<Amount>
-  // readonly txs$: Observable<Transaction[]>
+  readonly txs$: Observable<Transaction[]>
   // readonly selectedTx$: Observable<Transaction | undefined>
 
   constructor(private readonly store$: Store<AppState>) {
     this.selectedTxId$ = this.store$.select('selectedTransaction')
 
-    this.balance$ = this.store$.pipe(
-      select('balance'),
+    this.balance$ = this.store$.select('balance').pipe(
       filter(balance => !!balance),
       map(
         ({ balance, currency }) =>
@@ -51,15 +51,12 @@ export class AppComponent implements OnInit, OnDestroy {
       )
     )
 
-    this.accountHolder$ = this.store$
-      .select<MonzoAccountResponse>('account')
-      .pipe(
-        filter(acc => !!acc),
-        map(acc => new Account(acc).name)
-      )
+    this.accountHolder$ = this.store$.select('account').pipe(
+      filter(acc => !!acc),
+      map(acc => new Account(acc).name)
+    )
 
-    this.spent$ = this.store$.pipe(
-      select('balance'),
+    this.spent$ = this.store$.select('balance').pipe(
       filter(balance => !!balance),
       map(
         ({ spend_today, currency }) =>
@@ -72,10 +69,9 @@ export class AppComponent implements OnInit, OnDestroy {
       )
     )
 
-    // this.txs$ = this.store$.pipe(
-    //   select<MonzoTransactionResponse[]>('transactions'),
-    //   map(txs => txs.map(tx => new Transaction(tx)))
-    // )
+    this.txs$ = this.store$
+      .select('transactions')
+      .pipe(map(txs => txs.map(tx => new Transaction(tx))))
 
     // this.selectedTx$ = this.selectedTxId$.pipe(
     //   combineLatest(this.txs$),

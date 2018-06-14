@@ -9,12 +9,9 @@ import {
 } from '@angular/core'
 import { filter, map } from 'rxjs/operators'
 import { Store } from '@ngrx/store'
-import { NgRedux, dispatch } from '@angular-redux/store'
 
 import { AppState } from '../store'
 import { SelectTransactionAction } from '../store/actions/selectedTransaction.actions'
-import { AppState as OldAppState } from '../state'
-import { TransactionActions } from '../actions/transaction'
 
 import { Transaction } from '../../lib/monzo/Transaction'
 
@@ -42,11 +39,7 @@ export class TransactionSummaryComponent implements OnInit {
     root: document.documentElement
   })
 
-  constructor(
-    private readonly redux: NgRedux<OldAppState>,
-    private readonly store: Store<AppState>,
-    private readonly txActions: TransactionActions
-  ) {}
+  constructor(private readonly store: Store<AppState>) {}
 
   ngOnInit() {
     this.iconObserver.observe(this.$icon.nativeElement)
@@ -83,13 +76,12 @@ export class TransactionSummaryComponent implements OnInit {
   @HostListener('click')
   selectTx() {
     this.store.dispatch(new SelectTransactionAction(this.tx.id))
-    this.redux.dispatch(this.txActions.getTransaction(this.tx.id))
   }
 
-  @dispatch()
-  hideTx(ev: MouseEvent) {
-    ev.stopPropagation()
+  // @dispatch()
+  // hideTx(ev: MouseEvent) {
+  //   ev.stopPropagation()
 
-    return this.txActions.hideTransaction(this.tx)
-  }
+  //   return this.txActions.hideTransaction(this.tx)
+  // }
 }
