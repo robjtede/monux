@@ -6,12 +6,9 @@ import {
   ViewChild
 } from '@angular/core'
 import { HttpClient, HttpHeaders } from '@angular/common/http'
-import { dispatch } from '@angular-redux/store'
 import { format } from 'date-fns'
 
 import { MonzoOldService } from '../services/monzo.old.service'
-
-import { TransactionActions } from '../actions/transaction'
 
 import {
   MonzoAttachmentUploadResponse,
@@ -38,7 +35,6 @@ export class TransactionDetailComponent {
   @ViewChild('uploader') readonly $uploader!: ElementRef
 
   constructor(
-    private readonly txActions: TransactionActions,
     private readonly monzo: MonzoOldService,
     private readonly http: HttpClient
   ) {}
@@ -105,11 +101,11 @@ export class TransactionDetailComponent {
     console.log('registered attachment', fileUrl, registerRes)
   }
 
-  @dispatch()
-  updateNotes() {
-    return this.txActions.updateTransactionNotes(
-      this.tx,
-      this.$notes.nativeElement.value
-    )
-  }
+  // @dispatch()
+  // updateNotes() {
+  //   return this.txActions.updateTransactionNotes(
+  //     this.tx,
+  //     this.$notes.nativeElement.value
+  //   )
+  // }
 }

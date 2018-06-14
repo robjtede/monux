@@ -35,10 +35,7 @@
     <m-transaction-list [txs]="txs$ | async"></m-transaction-list>
 
     <div class="transaction-detail-pane">
-      <div>
-        {{ selectedTxId$ | async }}
-      </div>
-      <!-- <m-transaction-detail *ngIf="selectedTx$ | async" [tx]="selectedTx$ | async"></m-transaction-detail> -->
+      <m-transaction-detail *ngIf="selectedTx$ | async" [tx]="selectedTx$ | async"></m-transaction-detail>
     </div>
   </div>
 

@@ -34,8 +34,8 @@ import { AccountComponent } from './components/account.component'
 import { TransactionListComponent } from './components/transaction-list.component'
 import { TransactionGroupComponent } from './components/transaction-group.component'
 import { TransactionSummaryComponent } from './components/transaction-summary.component'
-// import { TransactionAttachmentComponent } from './components/transaction-attachment.component'
-// import { TransactionDetailComponent } from './components/transaction-detail.component'
+import { TransactionAttachmentComponent } from './components/transaction-attachment.component'
+import { TransactionDetailComponent } from './components/transaction-detail.component'
 
 @NgModule({
   declarations: [
@@ -45,9 +45,9 @@ import { TransactionSummaryComponent } from './components/transaction-summary.co
     AccountComponent,
     TransactionListComponent,
     TransactionGroupComponent,
-    TransactionSummaryComponent
-    // TransactionAttachmentComponent,
-    // TransactionDetailComponent
+    TransactionSummaryComponent,
+    TransactionAttachmentComponent,
+    TransactionDetailComponent
   ],
   imports: [
     BrowserModule,

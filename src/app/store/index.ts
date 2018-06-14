@@ -3,6 +3,8 @@ import { reducer as balance } from './reducers/balance.reducer'
 import { reducer as selectedTransaction } from './reducers/selectedTransaction.reducer'
 import { reducer as transactions } from './reducers/transactions.reducer'
 
+import { AppState, TransactionsState } from './states'
+
 export const reducers = {
   account,
   balance,
@@ -10,8 +12,8 @@ export const reducers = {
   transactions
 }
 
-export const initialState = {
-  transactions: []
+export const initialState: AppState = {
+  transactions: [] as TransactionsState
 }
 
 // TODO: solve import loop

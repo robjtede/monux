@@ -33,7 +33,7 @@ export class AppComponent implements OnInit, OnDestroy {
   readonly balance$: Observable<Amount>
   readonly spent$: Observable<Amount>
   readonly txs$: Observable<Transaction[]>
-  // readonly selectedTx$: Observable<Transaction | undefined>
+  readonly selectedTx$: Observable<Transaction | undefined>
 
   constructor(private readonly store$: Store<AppState>) {
     this.selectedTxId$ = this.store$.select('selectedTransaction')
@@ -73,11 +73,11 @@ export class AppComponent implements OnInit, OnDestroy {
       .select('transactions')
       .pipe(map(txs => txs.map(tx => new Transaction(tx))))
 
-    // this.selectedTx$ = this.selectedTxId$.pipe(
-    //   combineLatest(this.txs$),
-    //   filter(([txId, txs]) => !!txId && !!txs.length),
-    //   map(([txId, txs]) => txs.find(tx => tx.id === txId))
-    // )
+    this.selectedTx$ = this.selectedTxId$.pipe(
+      combineLatest(this.txs$),
+      filter(([txId, txs]) => !!txId && !!txs.length),
+      map(([txId, txs]) => txs.find(tx => tx.id === txId))
+    )
   }
 
   ngOnInit(): void {

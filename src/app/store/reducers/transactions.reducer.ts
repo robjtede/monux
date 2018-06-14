@@ -1,3 +1,6 @@
+import { sortBy } from 'lodash'
+import { getTime } from 'date-fns'
+
 import {
   Actions,
   SET_TRANSACTIONS,
@@ -11,7 +14,9 @@ export const reducer = (
 ): TransactionsState => {
   switch (action.type) {
     case SET_TRANSACTIONS:
-      return (action as SetTransactionsAction).payload
+      const txs = (action as SetTransactionsAction).payload
+
+      return sortBy(txs, tx => -getTime(tx.created))
   }
 
   return state
