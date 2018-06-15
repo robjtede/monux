@@ -2,8 +2,10 @@ import { Action } from '@ngrx/store'
 
 import { suffixes } from './'
 
-export const SELECT_TRANSACTION = '[Transaction] Select'
-export const DESELECT_TRANSACTION = '[Transaction] Deselect'
+const actionPrefix = '[Transaction]'
+
+export const SELECT_TRANSACTION = `${actionPrefix} Select`
+export const DESELECT_TRANSACTION = `${actionPrefix} Deselect`
 
 export class SelectTransactionAction implements Action {
   readonly type = SELECT_TRANSACTION

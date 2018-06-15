@@ -4,10 +4,12 @@ import { suffixes } from './'
 
 import { MonzoBalanceResponse } from '../../../lib/monzo/Amount'
 
-export const GET_BALANCE = '[Balance] HTTP/Get'
+const actionPrefix = '[Balance]'
+
+export const GET_BALANCE = `${actionPrefix} HTTP/Get`
 export const GET_BALANCE_SUCCESS = `${GET_BALANCE} ${suffixes.success}`
 export const GET_BALANCE_FAILED = `${GET_BALANCE} ${suffixes.failed}`
-export const SET_BALANCE = '[Balance] Set'
+export const SET_BALANCE = `${actionPrefix} Set`
 
 export class GetBalanceAction implements Action {
   readonly type = GET_BALANCE

@@ -4,10 +4,12 @@ import { suffixes } from './'
 
 import { MonzoAccountResponse } from '../../../lib/monzo/Account'
 
-export const GET_ACCOUNT = '[Account] HTTP/Get'
+const actionPrefix = '[Account]'
+
+export const GET_ACCOUNT = `${actionPrefix} HTTP/Get`
 export const GET_ACCOUNT_SUCCESS = `${GET_ACCOUNT} ${suffixes.success}`
 export const GET_ACCOUNT_FAILED = `${GET_ACCOUNT} ${suffixes.failed}`
-export const SET_ACCOUNT = '[Account] Set'
+export const SET_ACCOUNT = `${actionPrefix} Set`
 
 export class GetAccountAction implements Action {
   readonly type = GET_ACCOUNT

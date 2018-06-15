@@ -7,12 +7,14 @@ import {
   TransactionRequestOpts
 } from '../../../lib/monzo/Transaction'
 
-export const GET_TRANSACTIONS = '[Transactions] HTTP/Get'
+const actionPrefix = '[Transactions]'
+
+export const GET_TRANSACTIONS = `${actionPrefix} HTTP/Get`
 export const GET_TRANSACTIONS_SUCCESS = `${GET_TRANSACTIONS} ${
   suffixes.success
 }`
 export const GET_TRANSACTIONS_FAILED = `${GET_TRANSACTIONS} ${suffixes.failed}`
-export const SET_TRANSACTIONS = '[Transactions] Set'
+export const SET_TRANSACTIONS = `${actionPrefix} Set`
 
 export class GetTransactionsAction implements Action {
   readonly type = GET_TRANSACTIONS
