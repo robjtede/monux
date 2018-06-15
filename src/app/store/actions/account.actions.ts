@@ -1,10 +1,12 @@
 import { Action } from '@ngrx/store'
 
+import { suffixes } from './'
+
 import { MonzoAccountResponse } from '../../../lib/monzo/Account'
 
 export const GET_ACCOUNT = '[Account] HTTP/Get'
-export const GET_ACCOUNT_SUCCESS = `${GET_ACCOUNT} (Success)`
-export const GET_ACCOUNT_FAILED = `${GET_ACCOUNT} (Failed)`
+export const GET_ACCOUNT_SUCCESS = `${GET_ACCOUNT} ${suffixes.success}`
+export const GET_ACCOUNT_FAILED = `${GET_ACCOUNT} ${suffixes.failed}`
 export const SET_ACCOUNT = '[Account] Set'
 
 export class GetAccountAction implements Action {

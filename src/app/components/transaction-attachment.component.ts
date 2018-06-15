@@ -8,8 +8,6 @@ import {
 } from '@angular/core'
 import { Ng2ImgToolsService } from 'ng2-img-tools'
 
-import { MonzoOldService } from '../services/monzo.old.service'
-
 import { Attachment } from '../../lib/monzo/Attachment'
 
 @Component({
@@ -24,10 +22,7 @@ export class TransactionAttachmentComponent implements OnInit {
 
   @ViewChild('attachment') $attachment!: ElementRef
 
-  constructor(
-    private monzo: MonzoOldService,
-    private imgTools: Ng2ImgToolsService
-  ) {}
+  constructor(private imgTools: Ng2ImgToolsService) {}
 
   ngOnInit() {
     this.orientImage()
@@ -47,9 +42,9 @@ export class TransactionAttachmentComponent implements OnInit {
   async delete() {
     try {
       const req = this.attachment.attachmentDeregisterRequest()
-      const res = await this.monzo.request(req)
+      // const res = await this.monzo.request(req)
 
-      console.log(res)
+      // console.log(res)
     } catch (err) {
       console.error(err)
     }

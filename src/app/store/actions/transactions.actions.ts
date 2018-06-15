@@ -1,13 +1,17 @@
 import { Action } from '@ngrx/store'
 
+import { suffixes } from './'
+
 import {
   MonzoTransactionResponse,
   TransactionRequestOpts
 } from '../../../lib/monzo/Transaction'
 
 export const GET_TRANSACTIONS = '[Transactions] HTTP/Get'
-export const GET_TRANSACTIONS_SUCCESS = `${GET_TRANSACTIONS} (Success)`
-export const GET_TRANSACTIONS_FAILED = `${GET_TRANSACTIONS} (Failed)`
+export const GET_TRANSACTIONS_SUCCESS = `${GET_TRANSACTIONS} ${
+  suffixes.success
+}`
+export const GET_TRANSACTIONS_FAILED = `${GET_TRANSACTIONS} ${suffixes.failed}`
 export const SET_TRANSACTIONS = '[Transactions] Set'
 
 export class GetTransactionsAction implements Action {

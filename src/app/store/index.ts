@@ -12,14 +12,9 @@ export const reducers = {
   transactions
 }
 
-export const initialState: AppState = {
+// TODO: should be AppState compatible
+export const initialState = {
   transactions: [] as TransactionsState
 }
-
-// TODO: solve import loop
-// export const suffixes = {
-//   success: ' (Success)',
-//   failed: ' (Failed)'
-// }
 
 export * from './states'

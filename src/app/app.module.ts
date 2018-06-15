@@ -2,7 +2,7 @@
 import { NgModule } from '@angular/core'
 import { BrowserModule } from '@angular/platform-browser'
 import { HttpClientModule } from '@angular/common/http'
-import { StoreModule, ActionReducerMap } from '@ngrx/store'
+import { StoreModule } from '@ngrx/store'
 import { EffectsModule } from '@ngrx/effects'
 import { StoreDevtoolsModule } from '@ngrx/store-devtools'
 
@@ -23,9 +23,7 @@ import { Autosize } from './directives/autosize.directive'
 
 // services
 import { MonzoService } from './services/monzo.service'
-import { MonzoOldService } from './services/monzo.old.service'
 import { CacheService } from './services/cache.service'
-import { CacheOldService } from './services/cache.old.service'
 
 // components
 import { AppComponent } from './app.component'
@@ -61,7 +59,7 @@ import { TransactionDetailComponent } from './components/transaction-detail.comp
     }),
     Ng2ImgToolsModule
   ],
-  providers: [MonzoService, MonzoOldService, CacheOldService, CacheService],
+  providers: [MonzoService, CacheService],
   bootstrap: [AppComponent]
 })
 export class AppModule {}

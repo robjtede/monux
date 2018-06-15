@@ -1,5 +1,7 @@
 import { Action } from '@ngrx/store'
 
+import { suffixes } from './'
+
 export const SELECT_TRANSACTION = '[Transaction] Select'
 export const DESELECT_TRANSACTION = '[Transaction] Deselect'
 

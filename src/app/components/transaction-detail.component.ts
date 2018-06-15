@@ -8,8 +8,6 @@ import {
 import { HttpClient, HttpHeaders } from '@angular/common/http'
 import { format } from 'date-fns'
 
-import { MonzoOldService } from '../services/monzo.old.service'
-
 import {
   MonzoAttachmentUploadResponse,
   MonzoAttachmentResponse
@@ -34,10 +32,7 @@ export class TransactionDetailComponent {
   @ViewChild('notes') readonly $notes!: ElementRef
   @ViewChild('uploader') readonly $uploader!: ElementRef
 
-  constructor(
-    private readonly monzo: MonzoOldService,
-    private readonly http: HttpClient
-  ) {}
+  constructor(private readonly http: HttpClient) {}
 
   get createdTime() {
     return format(this.tx.created, 'h:mma - Do MMMM YYYY')
@@ -73,32 +68,32 @@ export class TransactionDetailComponent {
     const file: File = this.$uploader.nativeElement.files[0]
     console.log(file)
 
-    const contentType = 'image/jpeg'
+    // const contentType = 'image/jpeg'
 
-    const {
-      upload_url: uploadUrl,
-      file_url: fileUrl
-    } = await this.monzo.request<MonzoAttachmentUploadResponse>(
-      this.tx.attachmentUploadRequest(contentType)
-    )
-    console.log('got attachment upload url', uploadUrl)
+    // const {
+    //   upload_url: uploadUrl,
+    //   file_url: fileUrl
+    // } = await this.monzo.request<MonzoAttachmentUploadResponse>(
+    //   this.tx.attachmentUploadRequest(contentType)
+    // )
+    // console.log('got attachment upload url', uploadUrl)
 
-    const headers = new HttpHeaders()
-    headers.set('Content-Type', contentType)
+    // const headers = new HttpHeaders()
+    // headers.set('Content-Type', contentType)
 
-    await this.http
-      .put(uploadUrl, file, {
-        headers
-      })
-      .toPromise()
+    // await this.http
+    //   .put(uploadUrl, file, {
+    //     headers
+    //   })
+    //   .toPromise()
 
-    console.log('done uploading')
+    // console.log('done uploading')
 
-    const registerRes = await this.monzo.request<{
-      attachment: MonzoAttachmentResponse
-    }>(this.tx.attachmentRegisterRequest(fileUrl, contentType))
+    // const registerRes = await this.monzo.request<{
+    //   attachment: MonzoAttachmentResponse
+    // }>(this.tx.attachmentRegisterRequest(fileUrl, contentType))
 
-    console.log('registered attachment', fileUrl, registerRes)
+    // console.log('registered attachment', fileUrl, registerRes)
   }
 
   // @dispatch()
