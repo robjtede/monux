@@ -2,14 +2,14 @@ import { MonzoAccountResponse } from '../../lib/monzo/Account'
 import { MonzoBalanceResponse } from '../../lib/monzo/Amount'
 import { MonzoTransactionResponse } from '../../lib/monzo/Transaction'
 
-export type AccountState = MonzoAccountResponse
-export type BalanceState = MonzoBalanceResponse
-export type SelectedTransactionState = string
+export type AccountState = MonzoAccountResponse | undefined
+export type BalanceState = MonzoBalanceResponse | undefined
+export type SelectedTransactionState = string | undefined
 export type TransactionsState = MonzoTransactionResponse[]
 
 export interface AppState {
-  account?: AccountState
-  balance?: BalanceState
-  selectedTransaction?: SelectedTransactionState
+  account: AccountState
+  balance: BalanceState
+  selectedTransaction: SelectedTransactionState
   transactions: TransactionsState
 }

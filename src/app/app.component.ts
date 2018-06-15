@@ -15,7 +15,7 @@ import { BalanceEffects } from './store/effects/balance.effects'
 
 import { MonzoService } from './services/monzo.service'
 import { Account, MonzoAccountResponse } from '../lib/monzo/Account'
-import { Amount, AmountOpts } from '../lib/monzo/Amount'
+import { Amount, AmountOpts, MonzoBalanceResponse } from '../lib/monzo/Amount'
 import { Transaction, MonzoTransactionResponse } from '../lib/monzo/Transaction'
 import { LOCATION_INITIALIZED } from '@angular/common'
 
@@ -41,7 +41,7 @@ export class AppComponent implements OnInit, OnDestroy {
     this.balance$ = this.store$.select('balance').pipe(
       filter(balance => !!balance),
       map(
-        ({ balance, currency }) =>
+        ({ balance, currency }: MonzoBalanceResponse) =>
           new Amount({
             native: {
               amount: balance,
@@ -53,13 +53,13 @@ export class AppComponent implements OnInit, OnDestroy {
 
     this.accountHolder$ = this.store$.select('account').pipe(
       filter(acc => !!acc),
-      map(acc => new Account(acc).name)
+      map((acc: MonzoAccountResponse) => new Account(acc).name)
     )
 
     this.spent$ = this.store$.select('balance').pipe(
       filter(balance => !!balance),
       map(
-        ({ spend_today, currency }) =>
+        ({ spend_today, currency }: MonzoBalanceResponse) =>
           new Amount({
             native: {
               amount: spend_today,
@@ -83,10 +83,6 @@ export class AppComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     console.log('monux started')
 
-    // start of month
-    // const som = subMonths(startOfMonth(Date.now()), 1)
-
-    // this.redux.dispatch(this.txActions.loadTransactions({ since: som }))
     // this.redux.dispatch(this.txActions.getNewTransactions())
     // this.redux.dispatch(this.txActions.getPendingTransactions())
   }

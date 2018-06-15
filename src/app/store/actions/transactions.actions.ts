@@ -1,6 +1,9 @@
 import { Action } from '@ngrx/store'
 
-import { MonzoTransactionResponse } from '../../../lib/monzo/Transaction'
+import {
+  MonzoTransactionResponse,
+  TransactionRequestOpts
+} from '../../../lib/monzo/Transaction'
 
 export const GET_TRANSACTIONS = '[Transactions] HTTP/Get'
 export const GET_TRANSACTIONS_SUCCESS = `${GET_TRANSACTIONS} (Success)`
@@ -9,6 +12,8 @@ export const SET_TRANSACTIONS = '[Transactions] Set'
 
 export class GetTransactionsAction implements Action {
   readonly type = GET_TRANSACTIONS
+
+  constructor(public payload: TransactionRequestOpts) {}
 }
 
 export class SetTransactionsAction implements Action {

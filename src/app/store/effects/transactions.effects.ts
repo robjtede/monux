@@ -1,8 +1,10 @@
 import { Injectable } from '@angular/core'
 import { Store, Action } from '@ngrx/store'
-import { Actions, Effect, ofType, ROOT_EFFECTS_INIT } from '@ngrx/effects'
+import { Actions, Effect, ofType } from '@ngrx/effects'
 import { defer, Observable, of } from 'rxjs'
-import { catchError, map, switchMap, switchMapTo } from 'rxjs/operators'
+import { catchError, map, switchMap, zip } from 'rxjs/operators'
+
+import { startOfMonth, subMonths } from 'date-fns'
 
 import { MonzoService } from '../../services/monzo.service'
 import {
@@ -31,20 +33,28 @@ export class TransactionsEffects {
   @Effect()
   get$: Observable<Action> = this.actions$.pipe(
     ofType(GET_TRANSACTIONS),
-    switchMapTo(
-      this.monzoService.request<MonzoAccountsResponse>(accountsRequest())
-    ),
-    switchMap(accounts => {
-      const account = new Account(accounts.accounts[0])
+    zip(this.monzoService.request<MonzoAccountsResponse>(accountsRequest())),
+    switchMap(
+      ([action, accounts]: [GetTransactionsAction, MonzoAccountsResponse]) => {
+        const account = new Account(accounts.accounts[0])
 
-      return this.monzoService.request<MonzoTransactionsResponse>(
-        account.transactionsRequest()
-      )
-    }),
+        return this.monzoService.request<MonzoTransactionsResponse>(
+          account.transactionsRequest(action.payload)
+        )
+      }
+    ),
     map(txs => new SetTransactionsAction(txs.transactions)),
     catchError(err => of(new GetTransactionsFailedAction()))
   )
 
   @Effect()
-  init$: Observable<Action> = defer(() => of(new GetTransactionsAction()))
+  init$: Observable<Action> = defer(() => {
+    const startDate = subMonths(startOfMonth(Date.now()), 1)
+
+    return of(
+      new GetTransactionsAction({
+        since: startDate
+      })
+    )
+  })
 }
