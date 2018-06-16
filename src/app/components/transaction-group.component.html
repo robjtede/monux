@@ -9,4 +9,9 @@
   <div class="group-total" [innerHTML]="groupTotal"></div>
 </div>
 
-<m-transaction-summary *ngFor="let tx of group.txs" [tx]="tx"></m-transaction-summary>
+<m-transaction-summary
+  *ngFor="let tx of group.txs"
+  [tx]="tx"
+  [selected]="selectedTx?.id === tx.id"
+  (select)="selectTx($event)"
+></m-transaction-summary>

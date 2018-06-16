@@ -8,10 +8,10 @@ import {
 } from '../actions/transactions.actions'
 import { TransactionsState } from '../states'
 
-export const reducer = (
+export function reducer(
   state: TransactionsState,
   action: Actions
-): TransactionsState => {
+): TransactionsState {
   switch (action.type) {
     case SET_TRANSACTIONS:
       const txs = (action as SetTransactionsAction).payload

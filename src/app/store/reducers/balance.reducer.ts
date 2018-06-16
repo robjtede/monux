@@ -5,7 +5,7 @@ import {
 } from '../actions/balance.actions'
 import { BalanceState } from '../states'
 
-export const reducer = (state: BalanceState, action: Actions): BalanceState => {
+export function reducer(state: BalanceState, action: Actions): BalanceState {
   switch (action.type) {
     case SET_BALANCE:
       return (action as SetBalanceAction).payload

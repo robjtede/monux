@@ -4,20 +4,16 @@ import {
   OnDestroy,
   ChangeDetectionStrategy
 } from '@angular/core'
-import { select, Store } from '@ngrx/store'
+import { Store } from '@ngrx/store'
 import { Observable } from 'rxjs'
-import { combineLatest, filter, map, tap } from 'rxjs/operators'
-import { startOfMonth, subMonths } from 'date-fns'
+import { combineLatest, filter, map } from 'rxjs/operators'
 
 import { AppState } from './store'
-import { GetBalanceAction } from './store/actions/balance.actions'
-import { BalanceEffects } from './store/effects/balance.effects'
+import { SelectTransactionAction } from './store/actions/selectedTransaction.actions'
 
-import { MonzoService } from './services/monzo.service'
 import { Account, MonzoAccountResponse } from '../lib/monzo/Account'
-import { Amount, AmountOpts, MonzoBalanceResponse } from '../lib/monzo/Amount'
-import { Transaction, MonzoTransactionResponse } from '../lib/monzo/Transaction'
-import { LOCATION_INITIALIZED } from '@angular/common'
+import { Amount, MonzoBalanceResponse } from '../lib/monzo/Amount'
+import { Transaction } from '../lib/monzo/Transaction'
 
 @Component({
   selector: 'monux-root',
@@ -89,5 +85,9 @@ export class AppComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     console.log('monux stopped')
+  }
+
+  selectTx(txId: string): void {
+    this.store$.dispatch(new SelectTransactionAction(txId))
   }
 }

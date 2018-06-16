@@ -1,4 +1,10 @@
-import { Component, Input, ChangeDetectionStrategy } from '@angular/core'
+import {
+  Component,
+  Input,
+  ChangeDetectionStrategy,
+  Output,
+  EventEmitter
+} from '@angular/core'
 
 import {
   TransactionGroup,
@@ -6,6 +12,7 @@ import {
   sumGroup
 } from '../../lib/monzo/helpers'
 import { SignModes } from '../../lib/monzo/Amount'
+import { Transaction } from '../../lib/monzo/Transaction'
 
 @Component({
   selector: 'm-transaction-group',
@@ -15,6 +22,9 @@ import { SignModes } from '../../lib/monzo/Amount'
 })
 export class TransactionGroupComponent {
   @Input() readonly group!: TransactionGroup
+  @Input() readonly selectedTx?: Transaction
+
+  @Output() select = new EventEmitter<string>()
 
   get groupTitle(): string {
     return getGroupTitle(this.group)
@@ -28,5 +38,9 @@ export class TransactionGroupComponent {
     return sumGroup(this.group.txs).html({
       signMode: SignModes.Never
     })
+  }
+
+  selectTx(txId: string): void {
+    this.select.emit(txId)
   }
 }

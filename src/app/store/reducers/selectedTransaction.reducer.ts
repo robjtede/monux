@@ -6,10 +6,10 @@ import {
 } from '../actions/selectedTransaction.actions'
 import { SelectedTransactionState } from '../states'
 
-export const reducer = (
+export function reducer(
   state: SelectedTransactionState,
   action: Actions
-): SelectedTransactionState => {
+): SelectedTransactionState {
   switch (action.type) {
     case SELECT_TRANSACTION:
       return (action as SelectTransactionAction).payload

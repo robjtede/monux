@@ -1,8 +1,10 @@
 import {
-  Component,
-  OnChanges,
-  Input,
   ChangeDetectionStrategy,
+  Component,
+  EventEmitter,
+  Input,
+  OnChanges,
+  Output,
   SimpleChanges
 } from '@angular/core'
 
@@ -22,6 +24,9 @@ import { Merchant } from '../../lib/monzo/Merchant'
 })
 export class TransactionListComponent implements OnChanges {
   @Input() readonly txs!: Transaction[]
+  @Input() readonly selectedTx?: Transaction
+
+  @Output() select = new EventEmitter<string>()
 
   search?: string
   txGroups: TransactionGroup[] = []
@@ -58,5 +63,9 @@ export class TransactionListComponent implements OnChanges {
   updateSearch(search: string): void {
     this.search = search.trim() ? search : undefined
     this.updateTxGroups()
+  }
+
+  selectTx(txId: string): void {
+    this.select.emit(txId)
   }
 }
