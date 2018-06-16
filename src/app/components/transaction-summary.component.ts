@@ -7,7 +7,8 @@ import {
   Input,
   OnInit,
   Output,
-  ViewChild
+  ViewChild,
+  HostBinding
 } from '@angular/core'
 
 import { Transaction } from '../../lib/monzo/Transaction'
@@ -18,25 +19,30 @@ import { Transaction } from '../../lib/monzo/Transaction'
   styleUrls: ['./transaction-summary.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
-    '[class.selected]': 'selected',
     '[class.declined]': 'tx.declined',
     '[attr.data-category]': 'tx.category.raw'
   }
 })
 export class TransactionSummaryComponent implements OnInit {
   @Input() readonly tx!: Transaction
-  @Input() readonly selected!: boolean
+
+  @Input()
+  @HostBinding('class.selected')
+  readonly selected!: boolean
 
   @Output() select = new EventEmitter<string>()
   @Output() hide = new EventEmitter<Transaction>()
 
   @ViewChild('icon') readonly $icon!: ElementRef
 
-  iconObserver = new IntersectionObserver(this.onIconIntersection.bind(this), {
-    rootMargin: '50px 0px',
-    threshold: 0.01,
-    root: document.documentElement
-  })
+  private iconObserver = new IntersectionObserver(
+    this.onIconIntersection.bind(this),
+    {
+      rootMargin: '50px 0px',
+      threshold: 0.01,
+      root: document.documentElement
+    }
+  )
 
   ngOnInit() {
     this.iconObserver.observe(this.$icon.nativeElement)

@@ -27,18 +27,18 @@
     large-major
   ></m-amount>
 </div>
-<div class="balance-wrap">
+<!-- <div class="balance-wrap">
   <m-amount
     [amount]="tx.balance"
     sign-mode="never"
   ></m-amount>
-</div>
+</div> -->
 
 <div class="notes-wrap">
   <textarea
     #notes
     autosize
-    (blur)="true //updateNotes()"
+    (blur)="updateNotes(notes.value)"
     value='{{ tx.notes }}'
     placeholder="Click here to add a note..."
   ></textarea>

@@ -6,6 +6,8 @@ import {
   ViewChild
 } from '@angular/core'
 import { HttpClient, HttpHeaders } from '@angular/common/http'
+import { Store } from '@ngrx/store'
+
 import { format } from 'date-fns'
 
 import {
@@ -14,6 +16,9 @@ import {
 } from '../../lib/monzo/Attachment'
 import { SignModes } from '../../lib/monzo/Amount'
 import { Transaction } from '../../lib/monzo/Transaction'
+
+import { AppState } from '../store'
+import { PatchTransactionNotesAction } from '../store/actions/transactions.actions'
 
 @Component({
   selector: 'm-transaction-detail',
@@ -29,10 +34,12 @@ export class TransactionDetailComponent {
   @Input() readonly tx!: Transaction
 
   @ViewChild('icon') readonly $icon!: ElementRef
-  @ViewChild('notes') readonly $notes!: ElementRef
   @ViewChild('uploader') readonly $uploader!: ElementRef
 
-  constructor(private readonly http: HttpClient) {}
+  constructor(
+    private readonly http: HttpClient,
+    private readonly store$: Store<AppState>
+  ) {}
 
   get createdTime() {
     return format(this.tx.created, 'h:mma - Do MMMM YYYY')
@@ -96,11 +103,9 @@ export class TransactionDetailComponent {
     // console.log('registered attachment', fileUrl, registerRes)
   }
 
-  // @dispatch()
-  // updateNotes() {
-  //   return this.txActions.updateTransactionNotes(
-  //     this.tx,
-  //     this.$notes.nativeElement.value
-  //   )
-  // }
+  updateNotes(notes: string) {
+    return this.store$.dispatch(
+      new PatchTransactionNotesAction(this.tx.json, notes)
+    )
+  }
 }

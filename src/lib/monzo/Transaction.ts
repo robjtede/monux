@@ -29,7 +29,11 @@ export class Transaction {
   }
 
   get attachments(): Attachment[] {
-    return this.tx.attachments.map(att => new Attachment(att))
+    if (this.tx.attachments) {
+      return this.tx.attachments.map(att => new Attachment(att))
+    } else {
+      return []
+    }
   }
 
   get balance(): Amount {
@@ -224,6 +228,15 @@ export class Transaction {
     }
   }
 
+  selfRequest(): MonzoRequest {
+    return {
+      path: `/transactions/${this.id}`,
+      qs: {
+        'expand[]': 'merchant'
+      }
+    }
+  }
+
   annotateRequest(key: string, val: string | number | null): MonzoRequest {
     const metaKey = `metadata[${key}]`
 
@@ -311,6 +324,10 @@ export interface MonzoTransactionResponse extends JSONMap {
   scheme: string
   settled: string
   updated: string
+}
+
+export interface MonzoOuterTransactionResponse extends JSONMap {
+  transaction: MonzoTransactionResponse
 }
 
 export interface MonzoTransactionsResponse extends JSONMap {
