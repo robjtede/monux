@@ -38,10 +38,7 @@ export class WindowManager {
       height: mainWindowState.height,
       minWidth: 600,
       minHeight: 600,
-      titleBarStyle: 'hiddenInset',
-      webPreferences: {
-        experimentalFeatures: true
-      }
+      titleBarStyle: 'hiddenInset'
     })
 
     mainWindowState.manage(this._window)
