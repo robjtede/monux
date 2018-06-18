@@ -124,6 +124,10 @@ nav {
   font-size: 0.9rem;
 
   cursor: default;
+
+  &:focus {
+    outline: none;
+  }
 }
 
 .tab:not(:last-child) {
@@ -160,38 +164,6 @@ main {
   justify-content: space-between;
   align-items: stretch;
   max-width: 100%;
-}
-
-.map-pane,
-.export-pane {
-  padding-top: calc(var(--main-height) * 0.2);
-  justify-content: center;
-
-  text-align: center;
-}
-
-.map-pane h1,
-.export-pane h1 {
-  margin-bottom: 0;
-
-  color: var(--dark-grey);
-  font-weight: normal;
-}
-
-.map-pane h2,
-.export-pane h2 {
-  margin-top: 0;
-
-  color: var(--medium-grey);
-  font-weight: normal;
-}
-
-.map-pane h3,
-.export-pane h3 {
-  margin-top: 0;
-
-  color: var(--label-grey);
-  font-weight: normal;
 }
 
 .lightboxable {

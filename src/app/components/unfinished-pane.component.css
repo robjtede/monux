@@ -1,0 +1,32 @@
+:host {
+  padding-top: calc(var(--main-height) * 0.2);
+  justify-content: center;
+
+  text-align: center;
+}
+
+div {
+  width: 100%;
+}
+
+h1 {
+  margin-bottom: 0;
+
+  color: var(--dark-grey);
+  font-weight: normal;
+}
+
+h2 {
+  margin-top: 0;
+
+  color: var(--medium-grey);
+  font-weight: normal;
+}
+
+h3 {
+  margin-top: 0;
+
+  color: var(--label-grey);
+  font-weight: normal;
+  font-size: 1.4rem;
+}
