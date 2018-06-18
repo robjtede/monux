@@ -1,8 +1,16 @@
 import { Injectable } from '@angular/core'
+import { Router } from '@angular/router'
 import { Store, Action } from '@ngrx/store'
 import { Actions, Effect, ofType, ROOT_EFFECTS_INIT } from '@ngrx/effects'
-import { defer, Observable, of } from 'rxjs'
-import { catchError, map, switchMapTo } from 'rxjs/operators'
+import { defer, from, Observable, of } from 'rxjs'
+import {
+  catchError,
+  map,
+  switchMap,
+  switchMapTo,
+  mapTo,
+  tap
+} from 'rxjs/operators'
 
 import { MonzoService } from '../../services/monzo.service'
 import {
@@ -19,12 +27,17 @@ import {
   GetAccountFailedAction
 } from '../actions/account.actions'
 
+import { CacheService } from '../../services/cache.service'
+import { deletePassword } from '../../../lib/keychain'
+
 @Injectable()
 export class AccountEffects {
   constructor(
     private readonly store$: Store<AppState>,
     private readonly actions$: Actions,
-    private readonly monzoService: MonzoService
+    private readonly monzoService: MonzoService,
+    private readonly cacheService: CacheService,
+    private readonly router: Router
   ) {}
 
   @Effect()
@@ -39,6 +52,30 @@ export class AccountEffects {
       return new SetAccountAction(acc)
     }),
     catchError(err => of(new GetAccountFailedAction()))
+  )
+
+  @Effect({ dispatch: false })
+  logout$: Observable<any> = this.actions$.pipe(
+    ofType('LOGOUT'),
+    switchMapTo(this.cacheService.deleteAllAccounts()),
+    switchMap(x => {
+      const deletions = Promise.all([
+        deletePassword({
+          account: 'Monux',
+          service: 'monux.monzo.access_token'
+        }),
+        deletePassword({
+          account: 'Monux',
+          service: 'monux.monzo.refresh_token'
+        })
+      ])
+
+      return from(deletions).pipe(mapTo({ type: 'LOGOUT_SUCCESS' }))
+    }),
+    catchError(err => of({ type: 'LOGOUT_FAILED' })),
+    tap(_ => {
+      this.router.navigate(['/client-info'])
+    })
   )
 
   @Effect() init$: Observable<Action> = defer(() => of(new GetAccountAction()))

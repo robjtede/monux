@@ -82,7 +82,7 @@ export class TransactionsEffects {
   )
 
   @Effect({ dispatch: false })
-  selectTx$ = this.actions$.pipe(
+  logSelectTx$: Observable<any> = this.actions$.pipe(
     ofType(SELECT_TRANSACTION),
     withLatestFrom(this.store$),
     tap(([action, store]: [SelectTransactionAction, AppState]) => {

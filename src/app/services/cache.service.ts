@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core'
-import { from, Observable } from 'rxjs'
-import { pluck, switchMap, map } from 'rxjs/operators'
+import { from, Observable, of } from 'rxjs'
+import { map, pluck, switchMap, switchMapTo } from 'rxjs/operators'
 
 import Dexie from 'dexie'
 
@@ -42,6 +42,15 @@ export class CacheService {
       return from(cachedAccount).pipe(pluck('0'))
     }
   })()
+
+  deleteAllAccounts(): Observable<boolean> {
+    const deletions = Promise.all([
+      this.db.accounts.clear(),
+      this.db.transactions.clear()
+    ])
+
+    return from(deletions).pipe(switchMapTo(of(true)))
+  }
 
   loadBalance = (() => {
     const cachedAccount = this.loadAccount()
