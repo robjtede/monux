@@ -3,7 +3,7 @@
   display: grid;
   grid-template-rows: var(--header-height) var(--nav-height) auto;
   grid-template-columns: auto;
-  grid-template-areas: "header" "nav" "main";
+  grid-template-areas: 'header' 'nav' 'main';
 }
 
 header {
@@ -40,14 +40,14 @@ header {
 }
 
 .card-balance {
-  --label-text: "Account Balance";
+  --label-text: 'Account Balance';
   flex: 1;
 
   text-align: left;
 }
 
 .spent-today {
-  --label-text: "Spent Today";
+  --label-text: 'Spent Today';
   --align: flex-end;
   flex: 1;
 
@@ -154,16 +154,12 @@ main {
 }
 
 .pane {
-  display: none;
+  display: flex;
   flex: 1 0 auto;
   flex-flow: row nowrap;
   justify-content: space-between;
   align-items: stretch;
   max-width: 100%;
-}
-
-.pane.active {
-  display: flex;
 }
 
 .map-pane,
@@ -196,35 +192,6 @@ main {
 
   color: var(--label-grey);
   font-weight: normal;
-}
-
-m-transaction-list {
-  flex: 4;
-}
-
-.transaction-detail-pane {
-  flex: 5;
-  overflow-y: scroll;
-}
-
-.transaction-detail-pane.inactive {
-  background: var(--off-white);
-}
-
-.transaction-detail-pane.inactive::after {
-  content: "Select transaction from the list to the left.";
-  display: block;
-  width: 100%;
-  padding-top: 150px;
-
-  color: var(--medium-grey);
-  text-align: center;
-
-  -webkit-user-select: none;
-}
-
-.transaction-detail-pane.inactive m-transaction-detail {
-  display: none;
 }
 
 .lightboxable {

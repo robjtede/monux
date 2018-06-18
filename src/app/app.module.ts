@@ -1,5 +1,6 @@
 // primary modules
 import { NgModule } from '@angular/core'
+import { AppRoutingModule, routingComponents } from './app-routing.module'
 import { BrowserModule } from '@angular/platform-browser'
 import { HttpClientModule } from '@angular/common/http'
 import { StoreModule } from '@ngrx/store'
@@ -26,7 +27,7 @@ import { MonzoService } from './services/monzo.service'
 import { CacheService } from './services/cache.service'
 
 // components
-import { AppComponent } from './app.component'
+import { AppComponent } from './components/app.component'
 import { AmountComponent } from './components/amount.component'
 import { AccountComponent } from './components/account.component'
 import { TransactionListComponent } from './components/transaction-list.component'
@@ -45,10 +46,12 @@ import { TransactionDetailComponent } from './components/transaction-detail.comp
     TransactionGroupComponent,
     TransactionSummaryComponent,
     TransactionAttachmentComponent,
-    TransactionDetailComponent
+    TransactionDetailComponent,
+    routingComponents
   ],
   imports: [
     BrowserModule,
+    AppRoutingModule,
     HttpClientModule,
     StoreModule.forRoot(reducers as any, {
       initialState

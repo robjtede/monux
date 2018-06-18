@@ -23,7 +23,7 @@
 
 ## Vision
 
-Monux is being designed to support all OSes and any bank with a public API. For now, Monux supports [Monzo](https://monzo.com) on MacOS, only.
+Monux is being designed to support all OSes and any bank with a public API. At the moment, Monux only supports [Monzo](https://monzo.com) on macOS.
 
 
 ## Download

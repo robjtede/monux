@@ -1,33 +1,33 @@
 import { Injectable } from '@angular/core'
-import { Store, Action } from '@ngrx/store'
 import { Actions, Effect, ofType } from '@ngrx/effects'
+import { Action, Store } from '@ngrx/store'
+import { startOfMonth, subMonths } from 'date-fns'
 import { defer, Observable, of } from 'rxjs'
 import {
   catchError,
   map,
   switchMap,
   tap,
-  zip,
   withLatestFrom,
-  pluck
+  zip
 } from 'rxjs/operators'
 
-import { startOfMonth, subMonths } from 'date-fns'
-
-import { MonzoService } from '../../services/monzo.service'
+import { AppState } from '../'
 import {
-  accountsRequest,
   Account,
+  accountsRequest,
   MonzoAccountsResponse
 } from '../../../lib/monzo/Account'
 import {
+  MonzoOuterTransactionResponse,
   MonzoTransactionsResponse,
-  Transaction,
-  MonzoTransactionResponse,
-  MonzoOuterTransactionResponse
+  Transaction
 } from '../../../lib/monzo/Transaction'
-
-import { AppState } from '../'
+import { MonzoService } from '../../services/monzo.service'
+import {
+  SELECT_TRANSACTION,
+  SelectTransactionAction
+} from '../actions/selectedTransaction.actions'
 import {
   GET_TRANSACTIONS,
   GetTransactionsAction,
@@ -38,10 +38,6 @@ import {
   SetTransactionAction,
   SetTransactionsAction
 } from '../actions/transactions.actions'
-import {
-  SELECT_TRANSACTION,
-  SelectTransactionAction
-} from '../actions/selectedTransaction.actions'
 
 @Injectable()
 export class TransactionsEffects {
@@ -69,7 +65,7 @@ export class TransactionsEffects {
   )
 
   @Effect()
-  updateNote$: Observable<Action> = this.actions$.pipe(
+  patchNote$: Observable<Action> = this.actions$.pipe(
     ofType(PATCH_TRANSACTION_NOTES),
     switchMap(({ tx, notes }: PatchTransactionNotesAction) =>
       this.monzo.request<MonzoOuterTransactionResponse>(

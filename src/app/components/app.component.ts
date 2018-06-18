@@ -6,14 +6,12 @@ import {
 } from '@angular/core'
 import { Store } from '@ngrx/store'
 import { Observable } from 'rxjs'
-import { combineLatest, filter, map } from 'rxjs/operators'
+import { filter, map } from 'rxjs/operators'
 
-import { AppState } from './store'
-import { SelectTransactionAction } from './store/actions/selectedTransaction.actions'
+import { AppState } from '../store'
 
-import { Account, MonzoAccountResponse } from '../lib/monzo/Account'
-import { Amount, MonzoBalanceResponse } from '../lib/monzo/Amount'
-import { Transaction } from '../lib/monzo/Transaction'
+import { Account, MonzoAccountResponse } from '../../lib/monzo/Account'
+import { Amount, MonzoBalanceResponse } from '../../lib/monzo/Amount'
 
 @Component({
   selector: 'monux-root',
@@ -24,16 +22,11 @@ import { Transaction } from '../lib/monzo/Transaction'
 export class AppComponent implements OnInit, OnDestroy {
   readonly name = 'Monux'
 
-  readonly selectedTxId$: Observable<string | undefined>
   readonly accountHolder$: Observable<string>
   readonly balance$: Observable<Amount>
   readonly spent$: Observable<Amount>
-  readonly txs$: Observable<Transaction[]>
-  readonly selectedTx$: Observable<Transaction | undefined>
 
   constructor(private readonly store$: Store<AppState>) {
-    this.selectedTxId$ = this.store$.select('selectedTransaction')
-
     this.balance$ = this.store$.select('balance').pipe(
       filter(balance => !!balance),
       map(
@@ -64,16 +57,6 @@ export class AppComponent implements OnInit, OnDestroy {
           })
       )
     )
-
-    this.txs$ = this.store$
-      .select('transactions')
-      .pipe(map(txs => txs.map(tx => new Transaction(tx))))
-
-    this.selectedTx$ = this.selectedTxId$.pipe(
-      combineLatest(this.txs$),
-      filter(([txId, txs]) => !!txId && !!txs.length),
-      map(([txId, txs]) => txs.find(tx => tx.id === txId))
-    )
   }
 
   ngOnInit(): void {
@@ -85,9 +68,5 @@ export class AppComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     console.log('monux stopped')
-  }
-
-  selectTx(txId: string): void {
-    this.store$.dispatch(new SelectTransactionAction(txId))
   }
 }

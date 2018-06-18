@@ -1,0 +1,12 @@
+<m-transaction-list
+  [txs]="txs$ | async"
+  [selectedTx]="selectedTx$ | async"
+  (select)="selectTx($event)"
+></m-transaction-list>
+
+<div class="transaction-detail-pane">
+  <m-transaction-detail
+    *ngIf="selectedTx$ | async"
+    [tx]="selectedTx$ | async"
+  ></m-transaction-detail>
+</div>

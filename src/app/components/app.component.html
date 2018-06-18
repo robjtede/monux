@@ -1,0 +1,59 @@
+<header class="balances">
+  <div class="card-balance">
+    <m-amount
+      *ngIf="balance$ | async"
+      [amount]="balance$ | async"
+      sign-mode="never"
+      large-major
+    ></m-amount>
+  </div>
+
+  <div class="spent-today">
+    <m-amount
+      *ngIf="spent$ | async"
+      [amount]="spent$ | async"
+      sign-mode="never"
+      large-major
+    ></m-amount>
+  </div>
+</header>
+
+<nav class="tabs">
+  <m-account [holder]="accountHolder$ | async"></m-account>
+  <div class="logout">Log Out</div>
+
+  <div class="tabgroup">
+    <div class="tab" [routerLink]="['/transactions']" routerLinkActive="active">Transactions</div>
+    <div class="tab" [routerLink]="['/spending']" routerLinkActive="active">Spending</div>
+    <div class="tab" [routerLink]="['/map']" routerLinkActive="active">Map</div>
+    <div class="tab" [routerLink]="['/export']" routerLinkActive="active">Export</div>
+  </div>
+</nav>
+
+<main>
+  <router-outlet></router-outlet>
+
+  <!-- <div class="pane map-pane">
+    <div>
+      <h1>🗺️ Map View</h1>
+      <h2>View the location of all your transactions on one map.</h2>
+      <h3>🚀️ Coming soon...</h3>
+    </div>
+
+    <m-map></m-map>
+  </div>
+
+  <div class="pane export-pane">
+    <div>
+      <h1>📒️ Export</h1>
+      <h2>Generate reports and export to CSV or Excel.</h2>
+      <h3>🚀️ Coming soon...</h3>
+    </div>
+
+    <m-export></m-export>
+  </div> -->
+</main>
+
+<div class="lightbox">
+  <img>
+</div>

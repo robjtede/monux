@@ -1,7 +1,7 @@
 import { format } from 'date-fns'
 import { JSONMap } from 'json-types'
 
-import { Amount, SimpleAmount } from './Amount'
+import { Amount } from './Amount'
 import { Attachment, MonzoAttachmentResponse } from './Attachment'
 import { Merchant, MonzoMerchantResponse } from './Merchant'
 import { MonzoRequest } from './api'
@@ -10,14 +10,14 @@ export class Transaction {
   constructor(private readonly tx: MonzoTransactionResponse) {}
 
   get amount(): Amount {
-    const native: SimpleAmount = {
+    const native = {
       amount: this.tx.amount,
       currency: this.tx.currency
     }
 
     // if foreign currency
     if (this.tx.currency !== this.tx.local_currency) {
-      const local: SimpleAmount = {
+      const local = {
         amount: this.tx.local_amount,
         currency: this.tx.local_currency
       }
@@ -37,7 +37,7 @@ export class Transaction {
   }
 
   get balance(): Amount {
-    const native: SimpleAmount = {
+    const native = {
       amount: this.tx.account_balance,
       currency: this.tx.currency
     }
