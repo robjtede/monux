@@ -1,7 +1,7 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core'
 import { Store } from '@ngrx/store'
-import { Observable } from 'rxjs'
-import { combineLatest, filter, map } from 'rxjs/operators'
+import { iif, Observable, combineLatest } from 'rxjs'
+import { filter, map, tap } from 'rxjs/operators'
 
 import { AppState } from '../store'
 import { SelectTransactionAction } from '../store/actions/selectedTransaction.actions'
@@ -29,12 +29,12 @@ export class TransactionPaneComponent {
       .select('transactions')
       .pipe(map(txs => txs.map(tx => new Transaction(tx))))
 
-    this.selectedTx$ = this.selectedTxId$.pipe(
-      combineLatest(this.txs$),
+    this.selectedTx$ = combineLatest(this.selectedTxId$, this.txs$).pipe(
       filter(([txId, txs]) => !!txId && !!txs.length),
       map(([txId, txs]) => txs.find(tx => tx.id === txId))
     )
   }
+
   selectTx(txId: string): void {
     this.store$.dispatch(new SelectTransactionAction(txId))
   }

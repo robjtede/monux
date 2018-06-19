@@ -12,28 +12,23 @@ import {
   TransactionRequestOpts
 } from '../../lib/monzo/Transaction'
 
-class IDBCache extends Dexie {
+export class MonuxCache extends Dexie {
   transactions!: Dexie.Table<CachedTransaction, string>
   accounts!: Dexie.Table<CachedAccount, string>
 
   constructor() {
-    super('IDBCache')
+    super('MonuxCache')
 
     this.version(1).stores({
-      transactions: 'id, created_at, accId',
-      accounts: 'id, name, type'
-    })
-
-    this.version(2).stores({
-      transactions: 'id, accId, created_at, updated_at',
-      accounts: 'id, created_at, updated_at'
+      transactions: 'id, accId, createdAt, updatedAt',
+      accounts: 'id, createdAt, updatedAt'
     })
   }
 }
 
 @Injectable()
 export class CacheService {
-  private db = new IDBCache()
+  private readonly db = new MonuxCache()
 
   loadAccount = (() => {
     const cachedAccount = this.db.accounts.limit(1).toArray()
@@ -77,19 +72,19 @@ export class CacheService {
     before,
     limit
   }: TransactionRequestOpts = {}): Observable<MonzoTransactionResponse[]> {
-    let txCol = this.db.transactions.orderBy('created_at').reverse()
+    let txCol = this.db.transactions.orderBy('createdAt').reverse()
 
     if (since) {
       if (since instanceof Date) {
-        txCol = txCol.filter(tx => tx.created_at > since)
+        txCol = txCol.filter(tx => tx.createdAt > since)
       } else {
         const sinceDate = new Date(since)
-        txCol = txCol.filter(tx => tx.created_at > sinceDate)
+        txCol = txCol.filter(tx => tx.createdAt > sinceDate)
       }
     }
 
     if (before) {
-      txCol = txCol.filter(tx => tx.created_at > before)
+      txCol = txCol.filter(tx => tx.createdAt > before)
     }
 
     if (limit) {
@@ -105,8 +100,8 @@ export class CacheService {
       balance: balance.json,
       type: 'monzo',
       acc: acc.json,
-      created_at: acc.created,
-      updated_at: new Date()
+      createdAt: acc.created,
+      updatedAt: new Date()
     })
   }
 
@@ -116,8 +111,8 @@ export class CacheService {
         id: tx.id,
         accId: acc.id,
         tx: tx.json,
-        created_at: tx.created,
-        updated_at: new Date()
+        createdAt: tx.created,
+        updatedAt: new Date()
       }))
     )
   }
@@ -127,8 +122,8 @@ export interface CachedTransaction {
   id: string
   accId: string
   tx: MonzoTransactionResponse
-  created_at: Date
-  updated_at: Date
+  createdAt: Date
+  updatedAt: Date
 }
 
 export interface CachedAccount {
@@ -136,6 +131,6 @@ export interface CachedAccount {
   type: 'monzo'
   acc: MonzoAccountResponse
   balance: AmountOpts
-  created_at: Date
-  updated_at: Date
+  createdAt: Date
+  updatedAt: Date
 }

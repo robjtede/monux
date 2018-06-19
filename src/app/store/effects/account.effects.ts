@@ -58,7 +58,7 @@ export class AccountEffects {
   logout$: Observable<any> = this.actions$.pipe(
     ofType('LOGOUT'),
     switchMapTo(this.cacheService.deleteAll()),
-    switchMap(x => {
+    switchMap(() => {
       const tokenDeletions = Promise.all([
         deletePassword({
           account: 'Monux',
@@ -74,7 +74,7 @@ export class AccountEffects {
     }),
     catchError(err => of({ type: 'LOGOUT_FAILED' })),
     tap(_ => {
-      this.router.navigate(['/client-info'])
+      this.router.navigate(['login'])
     })
   )
 

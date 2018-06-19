@@ -26,6 +26,8 @@ const routes: Routes = [
   {
     path: 'app',
     component: AppComponent,
+    canActivate: [ApiAccessGuard],
+    canActivateChild: [ApiAccessGuard],
     children: [
       {
         path: '',
