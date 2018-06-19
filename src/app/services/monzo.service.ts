@@ -122,7 +122,7 @@ export class MonzoService {
   }
 
   verifyAccess(accessToken: string): Observable<boolean> {
-    debug('verifying access with =>', accessToken)
+    debug('verifying access token (whoami)')
 
     const path = `${this.proto}${this.apiRoot}/ping/whoami`
     const headers = new HttpHeaders({

@@ -92,6 +92,8 @@ export class WindowManager {
   }
 
   openAuthRequest(url: string): void {
+    this.closeAuthRequest()
+
     debug('open auth request', url)
 
     this._authWindow = new BrowserWindow({
