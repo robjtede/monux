@@ -8,6 +8,7 @@ import { TransactionPaneComponent } from './components/transaction-pane.componen
 import { SpendingPaneComponent } from './components/spending-pane.component'
 import { MapPaneComponent } from './components/map-pane.component'
 import { ExportPaneComponent } from './components/export-pane.component'
+import { PathNotFoundComponent } from './components/path-not-found.component'
 
 // guards
 import { ApiAccessGuard } from './guards/api-access.guard'
@@ -27,6 +28,11 @@ const routes: Routes = [
     component: AppComponent,
     children: [
       {
+        path: '',
+        redirectTo: '/app/(pane:transactions)',
+        pathMatch: 'full'
+      },
+      {
         outlet: 'pane',
         path: 'transactions',
         component: TransactionPaneComponent
@@ -45,13 +51,18 @@ const routes: Routes = [
         outlet: 'pane',
         path: 'export',
         component: ExportPaneComponent
+      },
+      {
+        path: '**',
+        redirectTo: '/app/(pane:transactions)',
+        pathMatch: 'full'
       }
     ]
+  },
+  {
+    path: '**',
+    component: PathNotFoundComponent
   }
-  // {
-  //   path: '**',
-  //   redirectTo: 'app'
-  // }
 ]
 
 @NgModule({
@@ -65,5 +76,6 @@ export const routingComponents = [
   TransactionPaneComponent,
   SpendingPaneComponent,
   MapPaneComponent,
-  ExportPaneComponent
+  ExportPaneComponent,
+  PathNotFoundComponent
 ]
