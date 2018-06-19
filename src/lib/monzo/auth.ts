@@ -1,6 +1,6 @@
-import * as Debug from 'debug'
-
-import * as rp from 'request-promise-native'
+import { URL } from 'url'
+import rp = require('request-promise-native')
+import Debug = require('debug')
 
 import { AppInfo } from '../../app'
 import { getPassword, setPassword, deletePassword } from '../keychain'
@@ -92,6 +92,17 @@ export const getAccessToken = async (
     console.error('getAccessToken failed =>', err.error)
     throw new Error(err)
   }
+}
+
+export const getAuthRequestUrl = (appInfo: AppInfo): string => {
+  const url = new URL('https://auth.monzo.com')
+
+  url.searchParams.set('client_id', appInfo.client_id)
+  url.searchParams.set('redirect_uri', appInfo.redirect_uri)
+  url.searchParams.set('response_type', appInfo.response_type)
+  url.searchParams.set('state', appInfo.state)
+
+  return url.toString()
 }
 
 export const refreshAccess = async (appInfo: AppInfo, refreshToken: string) => {

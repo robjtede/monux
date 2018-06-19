@@ -3,13 +3,14 @@ import { parse as parseQueryString } from 'querystring'
 import { parse as parseUrl } from 'url'
 import Debug = require('debug')
 
-import { app } from 'electron'
+import { app, ipcMain, EventEmitter } from 'electron'
 
 import {
   getAccessToken,
   verifyAccess,
   getSavedCode,
-  saveCode
+  saveCode,
+  getAuthRequestUrl
 } from './lib/monzo/auth'
 import { WindowManager } from './window-manager'
 
@@ -17,7 +18,7 @@ const debug = Debug('app:app')
 
 debug(`starting`, app.getName(), 'version', app.getVersion())
 
-export const mainWindow = new WindowManager()
+export const wm = new WindowManager()
 
 if (!app.isDefaultProtocolClient(app.getName().toLowerCase())) {
   app.setAsDefaultProtocolClient(app.getName().toLowerCase())
@@ -82,7 +83,8 @@ const parseAuthUrl = async (forwardedUrl: string) => {
       if (refreshToken) await saveCode('refresh_token', refreshToken)
       else debug('no refresh token sent')
 
-      mainWindow.window.webContents.send('auth-verify:monzo', accessToken)
+      wm.mainWindow.webContents.send('auth-verify:monzo', accessToken)
+      wm.closeAuthRequest()
     } else {
       console.error('Invalid access token')
       throw new Error('Invalid access token')
@@ -95,10 +97,10 @@ const parseAuthUrl = async (forwardedUrl: string) => {
 
 const isSecondInstance = app.makeSingleInstance(async (argv, _) => {
   // Someone tried to run a second instance, we should focus our window.
-  if (mainWindow.hasWindow && mainWindow.window.isMinimized()) {
-    mainWindow.window.restore()
+  if (wm.hasMainWindow() && wm.mainWindow.isMinimized()) {
+    wm.mainWindow.restore()
   }
-  mainWindow.focus()
+  wm.focus()
 
   if (process.platform === 'win32' && argv.length > 1) {
     const authUrl = argv.find(param => {
@@ -126,6 +128,7 @@ if (isSecondInstance) {
 app.on('ready', async () => {
   debug('ready event')
 
+  import('devtron').then(({ install }) => install())
   import('electron-devtools-installer').then(
     ({ default: installExtension, REDUX_DEVTOOLS }) => {
       const extensions = [
@@ -139,57 +142,20 @@ app.on('ready', async () => {
     }
   )
 
-  import('devtron').then(({ install }) => install())
+  wm.goToMonux()
 
-  mainWindow.goToMonux()
+  ipcMain.on('open-auth-window', async (_ev: EventEmitter, bank: string) => {
+    debug('opening auth request window for', bank)
 
-  // try {
-  //   const appInfo = await getAppInfo()
+    const appInfo = await getAppInfo()
+    const url = getAuthRequestUrl(appInfo)
+    wm.openAuthRequest(url)
+  })
 
-  //   try {
-  //     const accessToken = await getSavedCode('access_token')
-
-  //     try {
-  //       const access = await verifyAccess(accessToken)
-
-  //       if (access) {
-  //         mainWindow.goToMonux()
-  //       } else {
-  //         try {
-  //           const refreshToken = await getSavedCode('refresh_token')
-
-  //           const {
-  //             accessToken: newAccessToken,
-  //             refreshToken: newRefreshToken
-  //           } = await refreshAccess(appInfo, refreshToken)
-
-  //           if (await verifyAccess(newAccessToken)) {
-  //             await saveCode('access_token', newAccessToken)
-  //             await saveCode('refresh_token', newRefreshToken)
-
-  //             mainWindow.goToMonux()
-  //           } else {
-  //             console.error('Invalid refresh token')
-  //             throw new Error('Invalid refresh token')
-  //           }
-  //         } catch (err) {
-  //           debug('no refresh token found')
-  //           mainWindow.goToAuthRequest(appInfo)
-  //         }
-  //       }
-  //     } catch (err) {
-  //       console.warn(err.name)
-  //       if (err.name === 'RequestError') mainWindow.goToMonux()
-  //       else throw new Error(err)
-  //     }
-  //   } catch (err) {
-  //     debug('no access token found')
-  //     mainWindow.goToAuthRequest(appInfo)
-  //   }
-  // } catch (err) {
-  //   debug('no client info found')
-  //   mainWindow.goToClientInfo()
-  // }
+  ipcMain.on('auth-verify:monzo', async (_ev: EventEmitter, url: string) => {
+    debug('getting acceess token from manually entered code')
+    await parseAuthUrl(url)
+  })
 })
 
 app.on('open-url', async (_, forwardedUrl) => {
@@ -207,6 +173,6 @@ app.on('window-all-closed', () => {
 
 app.on('activate', () => {
   debug('activate event')
-  if (mainWindow.hasWindow) mainWindow.focus()
-  else mainWindow.goToMonux()
+  if (wm.hasMainWindow()) wm.focus()
+  else wm.goToMonux()
 })

@@ -13,26 +13,38 @@ import { makeMacOSMenu } from './menu-template'
 const debug = Debug('app:window-manager')
 
 export class WindowManager {
-  private _window: BrowserWindow | undefined
+  private _mainWindow: BrowserWindow | undefined
+  private _authWindow: BrowserWindow | undefined
 
   focus() {
-    if (this._window) this._window.focus()
+    if (this._mainWindow) {
+      debug('focus main window')
+      this._mainWindow.focus()
+    }
   }
 
-  get hasWindow(): boolean {
-    return !!this._window
+  hasMainWindow(): boolean {
+    return !!this._mainWindow
   }
 
-  get window(): BrowserWindow {
-    debug('get window')
-    if (this._window) return this._window
+  hasAuthWindow(): boolean {
+    return !!this._authWindow
+  }
+
+  get mainWindow(): BrowserWindow {
+    if (this._mainWindow) {
+      debug('get main window')
+      return this._mainWindow
+    }
+
+    debug('creating main window')
 
     const mainWindowState = windowState({
       defaultHeight: 800,
       defaultWidth: 1000
     })
 
-    this._window = new BrowserWindow({
+    this._mainWindow = new BrowserWindow({
       x: mainWindowState.x,
       y: mainWindowState.y,
       width: mainWindowState.width,
@@ -42,18 +54,22 @@ export class WindowManager {
       titleBarStyle: 'hiddenInset'
     })
 
-    mainWindowState.manage(this._window)
+    mainWindowState.manage(this._mainWindow)
 
-    this._window.on('closed', () => {
-      this._window = undefined
+    this._mainWindow.on('closed', () => {
+      this._mainWindow = undefined
     })
 
-    return this._window
+    return this._mainWindow
   }
 
-  set location(path: string) {
-    debug('set window location =>', path)
-    this.window.loadURL(path)
+  // get authWindow (): BrowserWindow | undefined {
+  //   return this.authWindow
+  // }
+
+  set mainLocation(url: string) {
+    debug('set window location =>', url)
+    this.mainWindow.loadURL(url)
   }
 
   set menu(menu: Electron.MenuItemConstructorOptions[]) {
@@ -63,37 +79,36 @@ export class WindowManager {
 
   setDefaultMenu(): void {
     debug('set default menu')
-    this.menu = makeMacOSMenu(this.window)
+    this.menu = makeMacOSMenu(this)
   }
 
   goToMonux(): void {
     debug('go to monux')
-    this.location = format({
+    this.mainLocation = format({
       pathname: resolve(__dirname, 'app', 'index.html'),
       protocol: 'file:'
     })
     this.setDefaultMenu()
   }
 
-  // goToAuthRequest(appInfo: AppInfo): void {
-  //   debug('go to auth request')
-  //   const url = new URL('https://auth.monzo.com/')
-  //   url.searchParams.set('client_id', appInfo.client_id)
-  //   url.searchParams.set('redirect_uri', appInfo.redirect_uri)
-  //   url.searchParams.set('response_type', appInfo.response_type)
-  //   url.searchParams.set('state', appInfo.state)
+  openAuthRequest(url: string): void {
+    debug('open auth request', url)
 
-  //   this.location = url.toString()
+    this._authWindow = new BrowserWindow({
+      width: 600,
+      height: 800
+    })
 
-  //   this.setDefaultMenu()
-  // }
+    this._authWindow.loadURL(url)
+    this._authWindow.focus()
 
-  // goToClientInfo(): void {
-  //   debug('go to client info')
-  //   this.location = format({
-  //     pathname: resolve(__dirname, 'app', 'get-client-info.html'),
-  //     protocol: 'file:',
-  //   })
-  //   this.setDefaultMenu()
-  // }
+    this._authWindow.on('closed', () => {
+      this._authWindow = undefined
+    })
+  }
+
+  closeAuthRequest(): void {
+    debug('close auth window')
+    if (this.hasAuthWindow()) (this._authWindow as BrowserWindow).close()
+  }
 }

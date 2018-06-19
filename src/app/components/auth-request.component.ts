@@ -9,9 +9,7 @@ const debug = Debug('app:component:auth-request')
 
 @Component({
   selector: 'monux-login',
-  template: `
-    <h1>Auth Verify</h1>
-  `,
+  templateUrl: './auth-request.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AuthRequestComponent implements OnInit {
@@ -32,5 +30,24 @@ export class AuthRequestComponent implements OnInit {
         })
       }
     )
+  }
+
+  openAuthRequest(ev: MouseEvent) {
+    ev.preventDefault()
+    ev.stopPropagation()
+
+    if (ev.target) {
+      debug('opening auth request window')
+
+      ipcRenderer.send('open-auth-window', 'monzo')
+    }
+  }
+
+  manualCode(ev: Event, token: string) {
+    ev.preventDefault()
+    ev.stopPropagation()
+
+    debug('sending manually entered code')
+    ipcRenderer.send('auth-verify:monzo', token)
   }
 }

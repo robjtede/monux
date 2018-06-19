@@ -19,9 +19,8 @@ const debug = Debug('app:guard:api-access')
 export class ApiAccessGuard implements CanActivate, CanActivateChild {
   constructor(
     private monzo: MonzoService,
-    private router: Router
-  ) // private route: ActivatedRoute
-  {}
+    private router: Router // private route: ActivatedRoute
+  ) {}
 
   canActivate(_route: ActivatedRouteSnapshot, _state: RouterStateSnapshot) {
     debug('checking acitvation')
@@ -30,7 +29,7 @@ export class ApiAccessGuard implements CanActivate, CanActivateChild {
       tap(console.log),
       map(code => !!code),
       catchError((err: Error) => {
-        debug(err.name, err.message)
+        debug(err.message)
         this.router.navigate(['auth-request'])
         return of(false)
       })

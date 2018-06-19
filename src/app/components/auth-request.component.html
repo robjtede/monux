@@ -1,0 +1,11 @@
+<h1>Auth Verify</h1>
+
+<a href="#" (click)="openAuthRequest($event)">Open auth request</a>
+
+<p>
+  Alternatively, enter the url after clicking the link in the email
+</p>
+<form action="#" (submit)="manualCode($event, code.value)">
+  <input #code type="text">
+  <input type="submit" value="Submit">
+</form>
