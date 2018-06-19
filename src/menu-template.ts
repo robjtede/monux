@@ -1,6 +1,10 @@
-import { shell } from 'electron'
+import { shell, MenuItemConstructorOptions, BrowserWindow } from 'electron'
 
-export const macOSMenu = [
+import { saveCode } from './lib/monzo/auth'
+
+export const makeMacOSMenu = (
+  window: BrowserWindow
+): MenuItemConstructorOptions[] => [
   {
     label: 'Application',
     submenu: [
@@ -36,6 +40,20 @@ export const macOSMenu = [
     ]
   },
   {
+    label: 'Login',
+    submenu: [
+      {
+        label: 'fake auth verify monzo',
+        click: async () => {
+          const token = 'eythere'
+
+          await saveCode('access_token', token)
+          window.webContents.send('auth-verify:monzo', token)
+        }
+      }
+    ]
+  },
+  {
     role: 'window',
     submenu: [{ role: 'minimize' }, { role: 'close' }]
   },
@@ -52,4 +70,4 @@ export const macOSMenu = [
       }
     ]
   }
-] as Electron.MenuItemConstructorOptions[]
+]

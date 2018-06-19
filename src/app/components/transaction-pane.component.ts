@@ -1,7 +1,7 @@
-import { Component, ChangeDetectionStrategy } from '@angular/core'
+import { Component, ChangeDetectionStrategy, OnInit } from '@angular/core'
 import { Store } from '@ngrx/store'
-import { iif, Observable, combineLatest } from 'rxjs'
-import { filter, map, tap } from 'rxjs/operators'
+import { Observable, combineLatest } from 'rxjs'
+import { filter, map } from 'rxjs/operators'
 
 import { AppState } from '../store'
 import { SelectTransactionAction } from '../store/actions/selectedTransaction.actions'
@@ -17,12 +17,14 @@ import { Transaction } from '../../lib/monzo/Transaction'
     '[class.pane]': 'true'
   }
 })
-export class TransactionPaneComponent {
-  readonly txs$: Observable<Transaction[]>
-  readonly selectedTxId$: Observable<string | undefined>
-  readonly selectedTx$: Observable<Transaction | undefined>
+export class TransactionPaneComponent implements OnInit {
+  txs$!: Observable<Transaction[]>
+  selectedTxId$!: Observable<string | undefined>
+  selectedTx$!: Observable<Transaction | undefined>
 
-  constructor(private readonly store$: Store<AppState>) {
+  constructor(private readonly store$: Store<AppState>) {}
+
+  ngOnInit() {
     this.selectedTxId$ = this.store$.select('selectedTransaction')
 
     this.txs$ = this.store$

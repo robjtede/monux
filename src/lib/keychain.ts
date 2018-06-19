@@ -13,7 +13,7 @@ export interface KeychainSetOpts extends KeychainOpts {
 }
 
 export const getPassword = async (opts: KeychainOpts): Promise<string> => {
-  debug('get password =>', opts.account, ':', opts.service)
+  debug('getting password =>', opts.account, ':', opts.service)
 
   const password = await keychain.getPassword(opts.service, opts.account)
 
@@ -25,11 +25,11 @@ export const getPassword = async (opts: KeychainOpts): Promise<string> => {
 }
 
 export const setPassword = async (opts: KeychainSetOpts): Promise<void> => {
-  debug('set password =>', opts.account, ':', opts.service)
+  debug('setting password =>', opts.account, ':', opts.service)
   return keychain.setPassword(opts.service, opts.account, opts.password)
 }
 
 export const deletePassword = async (opts: KeychainOpts): Promise<boolean> => {
-  debug('delete password =>', opts.account, ':', opts.service)
+  debug('deleting password =>', opts.account, ':', opts.service)
   return keychain.deletePassword(opts.service, opts.account)
 }

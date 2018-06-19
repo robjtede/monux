@@ -1,13 +1,14 @@
 import { resolve } from 'path'
-import { format } from 'url'
-import { URL } from 'url'
-import * as Debug from 'debug'
+import {
+  // URL,
+  format
+} from 'url'
+import Debug = require('debug')
 
 import { BrowserWindow, Menu } from 'electron'
 import windowState = require('electron-window-state')
 
-import { AppInfo } from './app'
-import { macOSMenu } from './menu-template'
+import { makeMacOSMenu } from './menu-template'
 
 const debug = Debug('app:window-manager')
 
@@ -62,7 +63,7 @@ export class WindowManager {
 
   setDefaultMenu(): void {
     debug('set default menu')
-    this.menu = macOSMenu
+    this.menu = makeMacOSMenu(this.window)
   }
 
   goToMonux(): void {

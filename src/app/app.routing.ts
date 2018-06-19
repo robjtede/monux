@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core'
 import { RouterModule, Routes } from '@angular/router'
 
 // routable components
-import { LoginComponent } from './components/login.component'
+import { AuthRequestComponent } from './components/auth-request.component'
 import { AppComponent } from './components/app.component'
 import { TransactionPaneComponent } from './components/transaction-pane.component'
 import { SpendingPaneComponent } from './components/spending-pane.component'
@@ -20,8 +20,8 @@ const routes: Routes = [
     pathMatch: 'full'
   },
   {
-    path: 'login',
-    component: LoginComponent
+    path: 'auth-request',
+    component: AuthRequestComponent
   },
   {
     path: 'app',
@@ -73,7 +73,7 @@ const routes: Routes = [
 })
 export class AppRoutingModule {}
 export const routingComponents = [
-  LoginComponent,
+  AuthRequestComponent,
   AppComponent,
   TransactionPaneComponent,
   SpendingPaneComponent,

@@ -7,7 +7,6 @@ import { app } from 'electron'
 
 import {
   getAccessToken,
-  refreshAccess,
   verifyAccess,
   getSavedCode,
   saveCode
@@ -18,7 +17,7 @@ const debug = Debug('app:app')
 
 debug(`starting`, app.getName(), 'version', app.getVersion())
 
-const mainWindow = new WindowManager()
+export const mainWindow = new WindowManager()
 
 if (!app.isDefaultProtocolClient(app.getName().toLowerCase())) {
   app.setAsDefaultProtocolClient(app.getName().toLowerCase())
@@ -83,7 +82,7 @@ const parseAuthUrl = async (forwardedUrl: string) => {
       if (refreshToken) await saveCode('refresh_token', refreshToken)
       else debug('no refresh token sent')
 
-      mainWindow.goToMonux()
+      mainWindow.window.webContents.send('auth-verify:monzo', accessToken)
     } else {
       console.error('Invalid access token')
       throw new Error('Invalid access token')

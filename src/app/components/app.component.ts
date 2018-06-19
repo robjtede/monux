@@ -7,11 +7,14 @@ import {
 import { Store } from '@ngrx/store'
 import { Observable } from 'rxjs'
 import { filter, map } from 'rxjs/operators'
+import Debug = require('debug')
 
 import { AppState } from '../store'
 
 import { Account, MonzoAccountResponse } from '../../lib/monzo/Account'
 import { Amount, MonzoBalanceResponse } from '../../lib/monzo/Amount'
+
+const debug = Debug('app:component:app')
 
 @Component({
   selector: 'monux-app',
@@ -19,12 +22,16 @@ import { Amount, MonzoBalanceResponse } from '../../lib/monzo/Amount'
   styleUrls: ['./app.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class AppComponent implements OnInit {
-  readonly accountHolder$: Observable<string>
-  readonly balance$: Observable<Amount>
-  readonly spent$: Observable<Amount>
+export class AppComponent implements OnInit, OnDestroy {
+  accountHolder$!: Observable<string>
+  balance$!: Observable<Amount>
+  spent$!: Observable<Amount>
 
-  constructor(private readonly store$: Store<AppState>) {
+  constructor(private store$: Store<AppState>) {}
+
+  ngOnInit() {
+    debug('app started')
+
     this.balance$ = this.store$.select('balance').pipe(
       filter(balance => !!balance),
       map(
@@ -57,7 +64,7 @@ export class AppComponent implements OnInit {
     )
   }
 
-  ngOnInit() {
-    console.log('app started')
+  ngOnDestroy() {
+    debug('app component destroyed')
   }
 }

@@ -1,5 +1,5 @@
+import { HttpHeaders } from '@angular/common/http'
 import * as rp from 'request-promise-native'
-
 import { Primitive } from 'json-types'
 
 type HttpMethods = 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE' | 'OPTIONS'
@@ -13,6 +13,7 @@ export interface MonzoRequest {
   qs?: QueryString
   method?: HttpMethods
   json?: boolean
+  headers?: HttpHeaders
 }
 
 export class MonzoApi {
@@ -43,4 +44,10 @@ export class MonzoApi {
 
     return rp(opts)
   }
+}
+
+export interface MonzoWhoAmIResponse {
+  authenticated: boolean
+  client_id: string
+  user_id: string
 }
