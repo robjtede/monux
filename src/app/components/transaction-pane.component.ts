@@ -9,7 +9,7 @@ import { SelectTransactionAction } from '../store/actions/selectedTransaction.ac
 import { Transaction } from '../../lib/monzo/Transaction'
 
 @Component({
-  selector: 'transaction-pane',
+  selector: 'm-transaction-pane',
   templateUrl: './transaction-pane.component.html',
   styleUrls: ['./transaction-pane.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,

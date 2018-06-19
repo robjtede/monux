@@ -1,7 +1,7 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core'
 
 @Component({
-  selector: 'export-pane',
+  selector: 'm-export-pane',
   template: `
     <div>
       <h1>📒️ Export</h1>

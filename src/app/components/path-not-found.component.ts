@@ -4,6 +4,9 @@ import {
   OnDestroy,
   ChangeDetectionStrategy
 } from '@angular/core'
+import Debug = require('debug')
+
+const debug = Debug('app:component:path-not-found')
 
 @Component({
   selector: 'path-not-found',
@@ -15,10 +18,10 @@ import {
 })
 export class PathNotFoundComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
-    console.log('path-not-found started')
+    debug('path-not-found started')
   }
 
   ngOnDestroy(): void {
-    console.log('path-not-found stopped')
+    debug('path-not-found stopped')
   }
 }

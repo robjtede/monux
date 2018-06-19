@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core'
 import { RouterModule, Routes } from '@angular/router'
 
 // routable components
+import { GetClientInfoComponent } from './components/get-client-info.component'
 import { AuthRequestComponent } from './components/auth-request.component'
 import { AppComponent } from './components/app.component'
 import { TransactionPaneComponent } from './components/transaction-pane.component'
@@ -12,6 +13,7 @@ import { PathNotFoundComponent } from './components/path-not-found.component'
 
 // guards
 import { ApiAccessGuard } from './guards/api-access.guard'
+import { ClientInfoGuard } from './guards/client-info.guard'
 
 const routes: Routes = [
   {
@@ -20,14 +22,18 @@ const routes: Routes = [
     pathMatch: 'full'
   },
   {
+    path: 'get-client-info',
+    component: GetClientInfoComponent
+  },
+  {
     path: 'auth-request',
-    component: AuthRequestComponent
+    component: AuthRequestComponent,
+    canActivate: [ClientInfoGuard]
   },
   {
     path: 'app',
     component: AppComponent,
-    canActivate: [ApiAccessGuard],
-    canActivateChild: [ApiAccessGuard],
+    canActivate: [ApiAccessGuard, ClientInfoGuard],
     children: [
       {
         path: '',
@@ -72,7 +78,8 @@ const routes: Routes = [
   exports: [RouterModule]
 })
 export class AppRoutingModule {}
-export const routingComponents = [
+export const routedComponents = [
+  GetClientInfoComponent,
   AuthRequestComponent,
   AppComponent,
   TransactionPaneComponent,

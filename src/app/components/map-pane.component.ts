@@ -1,7 +1,7 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core'
 
 @Component({
-  selector: 'map-pane',
+  selector: 'm-map-pane',
   template: `
     <div>
       <h1>🗺️ Map View</h1>

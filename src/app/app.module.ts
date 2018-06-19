@@ -1,6 +1,6 @@
 // primary modules
 import { NgModule } from '@angular/core'
-import { AppRoutingModule, routingComponents } from './app.routing'
+import { AppRoutingModule, routedComponents } from './app.routing'
 import { BrowserModule } from '@angular/platform-browser'
 import { HttpClientModule } from '@angular/common/http'
 import { StoreModule } from '@ngrx/store'
@@ -27,6 +27,7 @@ import { MonzoService } from './services/monzo.service'
 import { CacheService } from './services/cache.service'
 
 // guards
+import { ClientInfoGuard } from './guards/client-info.guard'
 import { ApiAccessGuard } from './guards/api-access.guard'
 
 // components
@@ -41,7 +42,7 @@ import { TransactionDetailComponent } from './components/transaction-detail.comp
 
 @NgModule({
   declarations: [
-    routingComponents,
+    routedComponents,
     RootComponent,
     AmountComponent,
     AccountComponent,
@@ -65,7 +66,7 @@ import { TransactionDetailComponent } from './components/transaction-detail.comp
     }),
     Ng2ImgToolsModule
   ],
-  providers: [MonzoService, CacheService, ApiAccessGuard],
+  providers: [MonzoService, CacheService, ClientInfoGuard, ApiAccessGuard],
   bootstrap: [RootComponent]
 })
 export class AppModule {}

@@ -17,7 +17,7 @@ import { Amount, MonzoBalanceResponse } from '../../lib/monzo/Amount'
 const debug = Debug('app:component:app')
 
 @Component({
-  selector: 'monux-app',
+  selector: 'm-app',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush

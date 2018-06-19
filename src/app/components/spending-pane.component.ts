@@ -1,7 +1,7 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core'
 
 @Component({
-  selector: 'spending-pane',
+  selector: 'm-spending-pane',
   template: `
     <div class="spending-list">
       <h1>Months</h1>

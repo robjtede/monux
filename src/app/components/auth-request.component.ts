@@ -13,7 +13,7 @@ import { MonzoService } from '../services/monzo.service'
 const debug = Debug('app:component:auth-request')
 
 @Component({
-  selector: 'monux-login',
+  selector: 'm-auth-request',
   templateUrl: './auth-request.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush
 })

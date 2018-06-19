@@ -1,0 +1,20 @@
+<h1>
+  enter client info
+</h1>
+
+<form (submit)="onSubmit($event, clientId.value, clientSecret.value)">
+  <label>
+    Client ID
+    <input #clientId type="text">
+  </label>
+
+  <br>
+
+  <label>
+    Client Secret
+    <input #clientSecret type="text">
+  </label>
+
+  <br>
+  <input type="submit" value="Set Client ID and Secret" style="color: black">
+</form>

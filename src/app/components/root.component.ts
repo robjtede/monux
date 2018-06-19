@@ -4,9 +4,12 @@ import {
   OnDestroy,
   ChangeDetectionStrategy
 } from '@angular/core'
+import Debug = require('debug')
+
+const debug = Debug('app:component:root')
 
 @Component({
-  selector: 'monux-root',
+  selector: 'm-root',
   template: `
     <router-outlet></router-outlet>
   `,
@@ -14,10 +17,10 @@ import {
 })
 export class RootComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
-    console.log('monux started')
+    debug('monux started')
   }
 
   ngOnDestroy(): void {
-    console.log('monux stopped')
+    debug('monux destroyed')
   }
 }
