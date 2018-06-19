@@ -43,10 +43,11 @@ export class CacheService {
     }
   })()
 
-  deleteAllAccounts(): Observable<boolean> {
+  deleteAll(): Observable<boolean> {
     const deletions = Promise.all([
       this.db.accounts.clear(),
-      this.db.transactions.clear()
+      this.db.transactions.clear(),
+      this.db.delete()
     ])
 
     return from(deletions).pipe(switchMapTo(of(true)))

@@ -23,15 +23,15 @@
   <div class="logout">Log Out</div>
 
   <div class="tabgroup">
-    <div class="tab" [routerLink]="['/transactions']" routerLinkActive="active">Transactions</div>
-    <div class="tab" [routerLink]="['/spending']" routerLinkActive="active">Spending</div>
-    <div class="tab" [routerLink]="['/map']" routerLinkActive="active">Map</div>
-    <div class="tab" [routerLink]="['/export']" routerLinkActive="active">Export</div>
+    <div class="tab" [routerLink]="[{outlets: {pane: 'transactions'}}]" routerLinkActive="active">Transactions</div>
+    <div class="tab" [routerLink]="[{outlets: {pane: 'spending'}}]" routerLinkActive="active">Spending</div>
+    <div class="tab" [routerLink]="[{outlets: {pane: 'map'}}]" routerLinkActive="active">Map</div>
+    <div class="tab" [routerLink]="[{outlets: {pane: 'export'}}]" routerLinkActive="active">Export</div>
   </div>
 </nav>
 
 <main>
-  <router-outlet></router-outlet>
+  <router-outlet name="pane"></router-outlet>
 </main>
 
 <div class="lightbox">

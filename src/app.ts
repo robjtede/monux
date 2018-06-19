@@ -142,53 +142,55 @@ app.on('ready', async () => {
 
   import('devtron').then(({ install }) => install())
 
-  try {
-    const appInfo = await getAppInfo()
+  mainWindow.goToMonux()
 
-    try {
-      const accessToken = await getSavedCode('access_token')
+  // try {
+  //   const appInfo = await getAppInfo()
 
-      try {
-        const access = await verifyAccess(accessToken)
+  //   try {
+  //     const accessToken = await getSavedCode('access_token')
 
-        if (access) {
-          mainWindow.goToMonux()
-        } else {
-          try {
-            const refreshToken = await getSavedCode('refresh_token')
+  //     try {
+  //       const access = await verifyAccess(accessToken)
 
-            const {
-              accessToken: newAccessToken,
-              refreshToken: newRefreshToken
-            } = await refreshAccess(appInfo, refreshToken)
+  //       if (access) {
+  //         mainWindow.goToMonux()
+  //       } else {
+  //         try {
+  //           const refreshToken = await getSavedCode('refresh_token')
 
-            if (await verifyAccess(newAccessToken)) {
-              await saveCode('access_token', newAccessToken)
-              await saveCode('refresh_token', newRefreshToken)
+  //           const {
+  //             accessToken: newAccessToken,
+  //             refreshToken: newRefreshToken
+  //           } = await refreshAccess(appInfo, refreshToken)
 
-              mainWindow.goToMonux()
-            } else {
-              console.error('Invalid refresh token')
-              throw new Error('Invalid refresh token')
-            }
-          } catch (err) {
-            debug('no refresh token found')
-            mainWindow.goToAuthRequest(appInfo)
-          }
-        }
-      } catch (err) {
-        console.warn(err.name)
-        if (err.name === 'RequestError') mainWindow.goToMonux()
-        else throw new Error(err)
-      }
-    } catch (err) {
-      debug('no access token found')
-      mainWindow.goToAuthRequest(appInfo)
-    }
-  } catch (err) {
-    debug('no client info found')
-    mainWindow.goToClientInfo()
-  }
+  //           if (await verifyAccess(newAccessToken)) {
+  //             await saveCode('access_token', newAccessToken)
+  //             await saveCode('refresh_token', newRefreshToken)
+
+  //             mainWindow.goToMonux()
+  //           } else {
+  //             console.error('Invalid refresh token')
+  //             throw new Error('Invalid refresh token')
+  //           }
+  //         } catch (err) {
+  //           debug('no refresh token found')
+  //           mainWindow.goToAuthRequest(appInfo)
+  //         }
+  //       }
+  //     } catch (err) {
+  //       console.warn(err.name)
+  //       if (err.name === 'RequestError') mainWindow.goToMonux()
+  //       else throw new Error(err)
+  //     }
+  //   } catch (err) {
+  //     debug('no access token found')
+  //     mainWindow.goToAuthRequest(appInfo)
+  //   }
+  // } catch (err) {
+  //   debug('no client info found')
+  //   mainWindow.goToClientInfo()
+  // }
 })
 
 app.on('open-url', async (_, forwardedUrl) => {

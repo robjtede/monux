@@ -12,14 +12,14 @@ const ACCOUNT = 'Monux'
 const SERVICE = 'monux'
 const MONZO_SERVICE = `${SERVICE}.monzo`
 
-export type EMonzoSaveableCodes =
+export type MonzoSaveableCodes =
   | 'client_id'
   | 'client_secret'
   | 'access_token'
   | 'refresh_token'
 
 export const getSavedCode = async (
-  code: EMonzoSaveableCodes
+  code: MonzoSaveableCodes
 ): Promise<string> => {
   debug('getting code =>', `${MONZO_SERVICE}.${code}`)
 
@@ -30,7 +30,7 @@ export const getSavedCode = async (
 }
 
 export const saveCode = async (
-  code: EMonzoSaveableCodes,
+  code: MonzoSaveableCodes,
   value: string
 ): Promise<void> => {
   debug('saving code =>', `${MONZO_SERVICE}.${code}`)
@@ -43,7 +43,7 @@ export const saveCode = async (
 }
 
 export const deleteSavedCode = async (
-  code: EMonzoSaveableCodes
+  code: MonzoSaveableCodes
 ): Promise<{}> => {
   debug('deleting code =>', `${MONZO_SERVICE}.${code}`)
 

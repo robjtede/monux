@@ -57,9 +57,9 @@ export class AccountEffects {
   @Effect({ dispatch: false })
   logout$: Observable<any> = this.actions$.pipe(
     ofType('LOGOUT'),
-    switchMapTo(this.cacheService.deleteAllAccounts()),
+    switchMapTo(this.cacheService.deleteAll()),
     switchMap(x => {
-      const deletions = Promise.all([
+      const tokenDeletions = Promise.all([
         deletePassword({
           account: 'Monux',
           service: 'monux.monzo.access_token'
@@ -70,7 +70,7 @@ export class AccountEffects {
         })
       ])
 
-      return from(deletions).pipe(mapTo({ type: 'LOGOUT_SUCCESS' }))
+      return from(tokenDeletions).pipe(mapTo({ type: 'LOGOUT_SUCCESS' }))
     }),
     catchError(err => of({ type: 'LOGOUT_FAILED' })),
     tap(_ => {

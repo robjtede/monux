@@ -14,14 +14,12 @@ import { Account, MonzoAccountResponse } from '../../lib/monzo/Account'
 import { Amount, MonzoBalanceResponse } from '../../lib/monzo/Amount'
 
 @Component({
-  selector: 'monux-root',
+  selector: 'monux-app',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class AppComponent implements OnInit, OnDestroy {
-  readonly name = 'Monux'
-
+export class AppComponent implements OnInit {
   readonly accountHolder$: Observable<string>
   readonly balance$: Observable<Amount>
   readonly spent$: Observable<Amount>
@@ -59,14 +57,7 @@ export class AppComponent implements OnInit, OnDestroy {
     )
   }
 
-  ngOnInit(): void {
-    console.log('monux started')
-
-    // this.redux.dispatch(this.txActions.getNewTransactions())
-    // this.redux.dispatch(this.txActions.getPendingTransactions())
-  }
-
-  ngOnDestroy(): void {
-    console.log('monux stopped')
+  ngOnInit() {
+    console.log('app started')
   }
 }

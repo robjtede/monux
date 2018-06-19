@@ -69,32 +69,30 @@ export class WindowManager {
     debug('go to monux')
     this.location = format({
       pathname: resolve(__dirname, 'app', 'index.html'),
-      protocol: 'file:',
-      slashes: true
+      protocol: 'file:'
     })
     this.setDefaultMenu()
   }
 
-  goToAuthRequest(appInfo: AppInfo): void {
-    debug('go to auth request')
-    const url = new URL('https://auth.monzo.com/')
-    url.searchParams.set('client_id', appInfo.client_id)
-    url.searchParams.set('redirect_uri', appInfo.redirect_uri)
-    url.searchParams.set('response_type', appInfo.response_type)
-    url.searchParams.set('state', appInfo.state)
+  // goToAuthRequest(appInfo: AppInfo): void {
+  //   debug('go to auth request')
+  //   const url = new URL('https://auth.monzo.com/')
+  //   url.searchParams.set('client_id', appInfo.client_id)
+  //   url.searchParams.set('redirect_uri', appInfo.redirect_uri)
+  //   url.searchParams.set('response_type', appInfo.response_type)
+  //   url.searchParams.set('state', appInfo.state)
 
-    this.location = url.toString()
+  //   this.location = url.toString()
 
-    this.setDefaultMenu()
-  }
+  //   this.setDefaultMenu()
+  // }
 
-  goToClientInfo(): void {
-    debug('go to client info')
-    this.location = format({
-      pathname: resolve(__dirname, 'app', 'get-client-info.html'),
-      protocol: 'file:',
-      slashes: true
-    })
-    this.setDefaultMenu()
-  }
+  // goToClientInfo(): void {
+  //   debug('go to client info')
+  //   this.location = format({
+  //     pathname: resolve(__dirname, 'app', 'get-client-info.html'),
+  //     protocol: 'file:',
+  //   })
+  //   this.setDefaultMenu()
+  // }
 }

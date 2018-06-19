@@ -1,6 +1,6 @@
 // primary modules
 import { NgModule } from '@angular/core'
-import { AppRoutingModule, routingComponents } from './app-routing.module'
+import { AppRoutingModule, routingComponents } from './app.routing'
 import { BrowserModule } from '@angular/platform-browser'
 import { HttpClientModule } from '@angular/common/http'
 import { StoreModule } from '@ngrx/store'
@@ -26,8 +26,11 @@ import { Autosize } from './directives/autosize.directive'
 import { MonzoService } from './services/monzo.service'
 import { CacheService } from './services/cache.service'
 
+// guards
+import { ApiAccessGuard } from './guards/api-access.guard'
+
 // components
-import { AppComponent } from './components/app.component'
+import { RootComponent } from './components/root.component'
 import { AmountComponent } from './components/amount.component'
 import { AccountComponent } from './components/account.component'
 import { TransactionListComponent } from './components/transaction-list.component'
@@ -38,8 +41,8 @@ import { TransactionDetailComponent } from './components/transaction-detail.comp
 
 @NgModule({
   declarations: [
-    Autosize,
-    AppComponent,
+    routingComponents,
+    RootComponent,
     AmountComponent,
     AccountComponent,
     TransactionListComponent,
@@ -47,7 +50,7 @@ import { TransactionDetailComponent } from './components/transaction-detail.comp
     TransactionSummaryComponent,
     TransactionAttachmentComponent,
     TransactionDetailComponent,
-    routingComponents
+    Autosize
   ],
   imports: [
     BrowserModule,
@@ -62,7 +65,7 @@ import { TransactionDetailComponent } from './components/transaction-detail.comp
     }),
     Ng2ImgToolsModule
   ],
-  providers: [MonzoService, CacheService],
-  bootstrap: [AppComponent]
+  providers: [MonzoService, CacheService, ApiAccessGuard],
+  bootstrap: [RootComponent]
 })
 export class AppModule {}
