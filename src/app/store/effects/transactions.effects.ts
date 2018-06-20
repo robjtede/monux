@@ -94,14 +94,14 @@ export class TransactionsEffects {
     })
   )
 
-  @Effect()
-  init$: Observable<Action> = defer(() => {
-    const startDate = subMonths(startOfMonth(Date.now()), 1)
+  // @Effect()
+  // init$: Observable<Action> = defer(() => {
+  //   const startDate = subMonths(startOfMonth(Date.now()), 1)
 
-    return of(
-      new GetTransactionsAction({
-        since: startDate
-      })
-    )
-  })
+  //   return of(
+  //     new GetTransactionsAction({
+  //       since: startDate
+  //     })
+  //   )
+  // })
 }

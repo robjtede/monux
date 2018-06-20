@@ -78,5 +78,5 @@ export class AccountEffects {
     })
   )
 
-  @Effect() init$: Observable<Action> = defer(() => of(new GetAccountAction()))
+  // @Effect() init$: Observable<Action> = defer(() => of(new GetAccountAction()))
 }

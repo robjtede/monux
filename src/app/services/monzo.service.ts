@@ -3,18 +3,24 @@ import Debug = require('debug')
 
 import { Injectable } from '@angular/core'
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http'
-import { Observable, from } from 'rxjs'
-import {} from 'rxjs/operators'
-import { switchMap, map, pluck, tap } from 'rxjs/operators'
+import { forkJoin, from, Observable, of, combineLatest } from 'rxjs'
+import { switchMap, map, pluck, tap, first } from 'rxjs/operators'
+
 // TODO: remove need for compat
 import 'rxjs-compat/operator/toPromise'
 
 import {
   MonzoApi,
   MonzoRequest,
-  MonzoWhoAmIResponse
+  MonzoWhoAmIResponse,
+  MonzoRefreshAccessResponse
 } from '../../lib/monzo/api'
-import { getPassword, setPassword, deletePassword } from '../../lib/keychain'
+import {
+  deletePassword,
+  getPassword,
+  hasPassword,
+  setPassword
+} from '../../lib/keychain'
 
 const debug = Debug('app:service:monzo')
 
@@ -81,6 +87,17 @@ export class MonzoService {
     )
   }
 
+  hasCode(code: MonzoSaveableCodes): Observable<boolean> {
+    debug('getting code =>', `${MONZO_SERVICE}.${code}`)
+
+    return from(
+      hasPassword({
+        account: ACCOUNT,
+        service: `${MONZO_SERVICE}.${code}`
+      })
+    )
+  }
+
   getCode(code: MonzoSaveableCodes): Observable<string> {
     debug('getting code =>', `${MONZO_SERVICE}.${code}`)
 
@@ -135,5 +152,37 @@ export class MonzoService {
         tap(res => debug('whoami response =>', res)),
         pluck('authenticated')
       )
+  }
+
+  // returns new access token
+  refreshAccess(refresh_token: string): Observable<string> {
+    debug('refreshing access token')
+
+    return forkJoin(
+      this.getCode('client_id'),
+      this.getCode('client_secret')
+    ).pipe(
+      switchMap(([client_id, client_secret]) => {
+        const url = `${this.proto}${this.apiRoot}/oauth2/token`
+        const params = new HttpParams({
+          fromObject: {
+            grant_type: 'refresh_token',
+            client_id,
+            client_secret,
+            refresh_token
+          }
+        })
+
+        return this.http.post<MonzoRefreshAccessResponse>(url, params)
+      }),
+      switchMap(({ access_token, refresh_token }) => {
+        return forkJoin(
+          of(access_token),
+          this.saveCode('access_token', access_token),
+          this.saveCode('refresh_token', refresh_token)
+        )
+      }),
+      pluck('0')
+    )
   }
 }
