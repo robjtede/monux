@@ -57,6 +57,8 @@ const getAppInfo = (() => {
 
 const parseAuthUrl = async (forwardedUrl: string) => {
   const appInfo = await getAppInfo()
+  // TODO: swap out for URL construct
+  // TODO: handle no query
   const query = parseUrl(forwardedUrl).query as string
   const authResponse = parseQueryString(query)
 
@@ -96,11 +98,11 @@ const parseAuthUrl = async (forwardedUrl: string) => {
 }
 
 const isSecondInstance = app.makeSingleInstance(async (argv, _) => {
-  // Someone tried to run a second instance, we should focus our window.
+  // focus main window if second instance started
   if (wm.hasMainWindow() && wm.mainWindow.isMinimized()) {
     wm.mainWindow.restore()
   }
-  wm.focus()
+  wm.focusMainWindow()
 
   if (process.platform === 'win32' && argv.length > 1) {
     const authUrl = argv.find(param => {
@@ -128,9 +130,11 @@ if (isSecondInstance) {
 app.on('ready', async () => {
   debug('ready event')
 
-  import('devtron').then(({ install }) => install())
-  import('electron-devtools-installer').then(
-    ({ default: installExtension, REDUX_DEVTOOLS }) => {
+  import('devtron')
+    .then(({ install }) => install())
+    .catch(console.error)
+  import('electron-devtools-installer')
+    .then(({ default: installExtension, REDUX_DEVTOOLS }) => {
       const extensions = [
         installExtension(REDUX_DEVTOOLS),
         installExtension('elgalmkoelokbchhkhacckoklkejnhcd')
@@ -139,8 +143,8 @@ app.on('ready', async () => {
       return Promise.all(extensions)
         .then(names => console.log('Added Extensions:', names.join(', ')))
         .catch(err => console.log('An error occurred adding extension:', err))
-    }
-  )
+    })
+    .catch(console.error)
 
   wm.goToMonux()
 
@@ -173,6 +177,6 @@ app.on('window-all-closed', () => {
 
 app.on('activate', () => {
   debug('activate event')
-  if (wm.hasMainWindow()) wm.focus()
+  if (wm.hasMainWindow()) wm.focusMainWindow()
   else wm.goToMonux()
 })

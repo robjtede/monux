@@ -1,12 +1,11 @@
 import { Injectable } from '@angular/core'
 import {
-  ActivatedRoute,
   ActivatedRouteSnapshot,
   CanActivate,
   Router,
   RouterStateSnapshot
 } from '@angular/router'
-import { combineLatest, of } from 'rxjs'
+import { combineLatest, of, Observable } from 'rxjs'
 import { map, tap, catchError } from 'rxjs/operators'
 import Debug = require('debug')
 
@@ -18,17 +17,23 @@ const debug = Debug('app:guard:client-info')
 export class ClientInfoGuard implements CanActivate {
   constructor(private monzo: MonzoService, private router: Router) {}
 
-  canActivate(_route: ActivatedRouteSnapshot, _state: RouterStateSnapshot) {
-    debug('checking acitvation')
+  canActivate(
+    _route: ActivatedRouteSnapshot,
+    _state: RouterStateSnapshot
+  ): Observable<boolean> {
+    debug('checking existence of client info')
 
     return combineLatest(
-      this.monzo.getSavedCode('client_id'),
-      this.monzo.getSavedCode('client_secret')
+      this.monzo.getCode('client_id'),
+      this.monzo.getCode('client_secret')
     ).pipe(
       map(([id, secret]) => !!id && !!secret),
       catchError((err: Error) => {
-        debug(err.message)
+        console.error(err.message)
+
+        debug('navigating to client info entry')
         this.router.navigate(['/get-client-info'])
+
         return of(false)
       })
     )

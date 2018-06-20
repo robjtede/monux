@@ -16,7 +16,7 @@ export class WindowManager {
   private _mainWindow: BrowserWindow | undefined
   private _authWindow: BrowserWindow | undefined
 
-  focus() {
+  focusMainWindow() {
     if (this._mainWindow) {
       debug('focus main window')
       this._mainWindow.focus()

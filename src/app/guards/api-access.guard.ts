@@ -3,12 +3,11 @@ import {
   ActivatedRoute,
   ActivatedRouteSnapshot,
   CanActivate,
-  CanActivateChild,
   Router,
   RouterStateSnapshot
 } from '@angular/router'
 import { of } from 'rxjs'
-import { map, tap, catchError } from 'rxjs/operators'
+import { catchError, map, switchMap, tap } from 'rxjs/operators'
 import Debug = require('debug')
 
 import { MonzoService } from '../services/monzo.service'
@@ -16,22 +15,27 @@ import { MonzoService } from '../services/monzo.service'
 const debug = Debug('app:guard:api-access')
 
 @Injectable()
-export class ApiAccessGuard implements CanActivate, CanActivateChild {
+export class ApiAccessGuard implements CanActivate {
   constructor(
     private monzo: MonzoService,
     private router: Router,
     private route: ActivatedRoute
   ) {}
 
-  canActivate(_route: ActivatedRouteSnapshot, _state: RouterStateSnapshot) {
-    debug('checking acitvation')
+  canActivate(
+    _route: ActivatedRouteSnapshot,
+    _state: RouterStateSnapshot
+  ): Observable<boolean> {
+    debug('checking access token validity')
 
-    return this.monzo.getSavedCode('access_token').pipe(
-      // needs switchmap to check validity
-      map(code => !!code),
+    return this.monzo.getCode('access_token').pipe(
+      switchMap(token => this.monzo.verifyAccess(token)),
       catchError((err: Error) => {
-        debug(err.message)
+        console.error(err.message)
+
+        debug('navigating to auth request')
         this.router.navigate(['/auth-request'])
+
         return of(false)
       })
     )

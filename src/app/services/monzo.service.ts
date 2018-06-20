@@ -34,7 +34,7 @@ export class MonzoService {
   private readonly apiRoot: string = 'api.monzo.com'
 
   // TODO: remove need for compat
-  private accessToken: Promise<string> = this.getSavedCode(
+  private accessToken: Promise<string> = this.getCode(
     'access_token'
   ).toPromise()
 
@@ -81,7 +81,7 @@ export class MonzoService {
     )
   }
 
-  getSavedCode(code: MonzoSaveableCodes): Observable<string> {
+  getCode(code: MonzoSaveableCodes): Observable<string> {
     debug('getting code =>', `${MONZO_SERVICE}.${code}`)
 
     return from(
@@ -104,7 +104,7 @@ export class MonzoService {
     )
   }
 
-  deleteSavedCode(code: MonzoSaveableCodes): Observable<boolean> {
+  deleteCode(code: MonzoSaveableCodes): Observable<boolean> {
     debug('deleting code =>', `${MONZO_SERVICE}.${code}`)
 
     return from(
@@ -115,10 +115,8 @@ export class MonzoService {
     )
   }
 
-  getSavedMonzo(): Observable<MonzoApi> {
-    return this.getSavedCode('access_token').pipe(
-      map(token => new MonzoApi(token))
-    )
+  getMonzo(): Observable<MonzoApi> {
+    return this.getCode('access_token').pipe(map(token => new MonzoApi(token)))
   }
 
   verifyAccess(accessToken: string): Observable<boolean> {
