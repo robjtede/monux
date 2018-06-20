@@ -2,7 +2,7 @@
   enter client info
 </h1>
 
-<form (submit)="onSubmit($event, clientId.value, clientSecret.value)">
+<form (submit)="saveClientInfo($event, clientId.value, clientSecret.value)">
   <label>
     Client ID
     <input #clientId type="text">

@@ -1,4 +1,3 @@
-import { ipcRenderer, EventEmitter } from 'electron'
 import {
   ChangeDetectionStrategy,
   Component,
@@ -6,6 +5,8 @@ import {
   OnInit
 } from '@angular/core'
 import { Router } from '@angular/router'
+import { combineLatest, of } from 'rxjs'
+import { catchError, tap, first } from 'rxjs/operators'
 import Debug = require('debug')
 
 import { MonzoService } from '../services/monzo.service'
@@ -18,13 +19,24 @@ const debug = Debug('app:component:get-client-info')
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class GetClientInfoComponent implements OnInit {
-  constructor(
-    private monzo: MonzoService,
-    private router: Router,
-    private zone: NgZone
-  ) {}
+  constructor(private monzo: MonzoService, private router: Router) {}
 
   ngOnInit(): void {
     debug('component initialized')
+  }
+
+  saveClientInfo(ev: Event, clientId: string, clientSecret: string): void {
+    ev.preventDefault()
+    ev.stopPropagation()
+
+    debug('saving client info')
+
+    combineLatest(
+      this.monzo.saveCode('client_id', clientId),
+      this.monzo.saveCode('client_secret', clientSecret)
+    ).subscribe(() => {
+      debug('saved id and secret')
+      this.router.navigate(['/auth-request'])
+    })
   }
 }

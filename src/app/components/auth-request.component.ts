@@ -35,8 +35,8 @@ export class AuthRequestComponent implements OnInit {
             // send signal to close auth window
             ipcRenderer.send('auth-success:monzo', true)
 
+            // run redirect in angular's zone so components init correctly
             this.zone.run(() => {
-              // running in zone so ngOnInit will fire
               this.router.navigate(['/app'])
             })
           } else {
