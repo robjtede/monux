@@ -12,9 +12,9 @@ import 'rxjs-compat/operator/toPromise'
 import {
   MonzoApi,
   MonzoRequest,
-  MonzoWhoAmIResponse,
-  MonzoRefreshAccessResponse
+  MonzoWhoAmIResponse
 } from '../../lib/monzo/api'
+import { MonzoRefreshAccessResponse } from '../../lib/monzo/auth'
 import {
   deletePassword,
   getPassword,
@@ -176,11 +176,13 @@ export class MonzoService {
         return this.http.post<MonzoRefreshAccessResponse>(url, params)
       }),
       switchMap(({ access_token, refresh_token }) => {
-        return forkJoin(
+        return forkJoin([
           of(access_token),
           this.saveCode('access_token', access_token),
-          this.saveCode('refresh_token', refresh_token)
-        )
+          refresh_token
+            ? this.saveCode('refresh_token', refresh_token)
+            : undefined
+        ])
       }),
       pluck('0')
     )

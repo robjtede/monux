@@ -26,7 +26,7 @@ export class ApiAccessGuard implements CanActivate {
     _route: ActivatedRouteSnapshot,
     _state: RouterStateSnapshot
   ): Observable<boolean> {
-    debug('checking access token validity')
+    debug('checking API access')
 
     // TODO: refactor and flatten for readability
     return this.monzo.hasCode('access_token').pipe(

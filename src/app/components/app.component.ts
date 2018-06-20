@@ -62,6 +62,8 @@ export class AppComponent implements OnInit, OnDestroy {
           })
       )
     )
+
+    this.store$.dispatch({ type: '@monux/init' })
   }
 
   ngOnDestroy() {

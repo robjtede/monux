@@ -45,5 +45,9 @@ export class BalanceEffects {
     catchError(err => of(new GetBalanceFailedAction()))
   )
 
-  // @Effect() init$: Observable<Action> = defer(() => of(new GetBalanceAction()))
+  @Effect()
+  init$: Observable<Action> = this.actions$.pipe(
+    ofType('@monux/init'),
+    switchMapTo(of(new GetBalanceAction()))
+  )
 }
