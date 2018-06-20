@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core'
 import { Actions, Effect, ofType } from '@ngrx/effects'
 import { Action, Store } from '@ngrx/store'
 import { startOfMonth, subMonths } from 'date-fns'
-import { defer, Observable, of } from 'rxjs'
+import { defer, forkJoin, Observable, of } from 'rxjs'
 import {
   catchError,
   map,
@@ -48,9 +48,14 @@ export class TransactionsEffects {
   ) {}
 
   @Effect()
-  get$: Observable<Action> = this.actions$.pipe(
+  getTransactions$: Observable<Action> = this.actions$.pipe(
     ofType(GET_TRANSACTIONS),
-    zip(this.monzo.request<MonzoAccountsResponse>(accountsRequest())),
+    switchMap(action => {
+      return forkJoin(
+        of(action),
+        this.monzo.request<MonzoAccountsResponse>(accountsRequest())
+      )
+    }),
     switchMap(
       ([action, accounts]: [GetTransactionsAction, MonzoAccountsResponse]) => {
         const account = new Account(accounts.accounts[0])
