@@ -8,7 +8,11 @@ import {
 } from '@angular/core'
 import { Ng2ImgToolsService } from 'ng2-img-tools'
 
+import 'rxjs-compat/operator/toPromise'
+
 import { Attachment } from '../../lib/monzo/Attachment'
+
+import { MonzoService } from '../services/monzo.service'
 
 @Component({
   selector: 'm-transaction-attachment',
@@ -22,7 +26,10 @@ export class TransactionAttachmentComponent implements OnInit {
 
   @ViewChild('attachment') $attachment!: ElementRef
 
-  constructor(private imgTools: Ng2ImgToolsService) {}
+  constructor(
+    private monzo: MonzoService,
+    private imgTools: Ng2ImgToolsService
+  ) {}
 
   ngOnInit() {
     this.orientImage()
@@ -42,9 +49,9 @@ export class TransactionAttachmentComponent implements OnInit {
   async delete() {
     try {
       const req = this.attachment.attachmentDeregisterRequest()
-      // const res = await this.monzo.request(req)
+      const res = await this.monzo.request(req).toPromise()
 
-      // console.log(res)
+      console.log(res)
     } catch (err) {
       console.error(err)
     }

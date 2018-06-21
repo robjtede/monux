@@ -7,8 +7,9 @@ import {
 } from '@angular/core'
 import { HttpClient, HttpHeaders } from '@angular/common/http'
 import { Store } from '@ngrx/store'
-
 import { format } from 'date-fns'
+
+import 'rxjs-compat/operator/toPromise'
 
 import {
   MonzoAttachmentUploadResponse,
@@ -17,6 +18,7 @@ import {
 import { SignModes } from '../../lib/monzo/Amount'
 import { Transaction } from '../../lib/monzo/Transaction'
 
+import { MonzoService } from '../services/monzo.service'
 import { AppState } from '../store'
 import { PatchTransactionNotesAction } from '../store/actions/transactions.actions'
 
@@ -37,8 +39,9 @@ export class TransactionDetailComponent {
   @ViewChild('uploader') readonly $uploader!: ElementRef
 
   constructor(
-    private readonly http: HttpClient,
-    private readonly store$: Store<AppState>
+    private http: HttpClient,
+    private monzo: MonzoService,
+    private store$: Store<AppState>
   ) {}
 
   get createdTime() {
@@ -75,32 +78,37 @@ export class TransactionDetailComponent {
     const file: File = this.$uploader.nativeElement.files[0]
     console.log(file)
 
-    // const contentType = 'image/jpeg'
+    const contentType = 'image/jpeg'
 
-    // const {
-    //   upload_url: uploadUrl,
-    //   file_url: fileUrl
-    // } = await this.monzo.request<MonzoAttachmentUploadResponse>(
-    //   this.tx.attachmentUploadRequest(contentType)
-    // )
-    // console.log('got attachment upload url', uploadUrl)
+    const {
+      upload_url: uploadUrl,
+      file_url: fileUrl
+    } = await this.monzo
+      .request<MonzoAttachmentUploadResponse>(
+        this.tx.attachmentUploadRequest(contentType)
+      )
+      .toPromise()
 
-    // const headers = new HttpHeaders()
-    // headers.set('Content-Type', contentType)
+    console.log('got attachment upload url', uploadUrl, fileUrl)
 
-    // await this.http
-    //   .put(uploadUrl, file, {
-    //     headers
-    //   })
-    //   .toPromise()
+    const headers = new HttpHeaders()
+    headers.set('Content-Type', contentType)
 
-    // console.log('done uploading')
+    await this.http
+      .put(uploadUrl, file, {
+        headers
+      })
+      .toPromise()
 
-    // const registerRes = await this.monzo.request<{
-    //   attachment: MonzoAttachmentResponse
-    // }>(this.tx.attachmentRegisterRequest(fileUrl, contentType))
+    console.log('done uploading')
 
-    // console.log('registered attachment', fileUrl, registerRes)
+    const registerRes = await this.monzo
+      .request<{
+        attachment: MonzoAttachmentResponse
+      }>(this.tx.attachmentRegisterRequest(fileUrl, contentType))
+      .toPromise()
+
+    console.log('registered attachment', fileUrl, registerRes)
   }
 
   updateNotes(notes: string) {
