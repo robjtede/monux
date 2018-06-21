@@ -1,5 +1,5 @@
 import { format } from 'date-fns'
-import { JSONMap } from 'json-types'
+import { Primitive, JSONMap } from 'json-types'
 
 import { Amount } from './Amount'
 import { Attachment, MonzoAttachmentResponse } from './Attachment'
@@ -181,10 +181,11 @@ export class Transaction {
   }
 
   get notes() {
+    // TODO: replace with cross env '+' solution
     return {
-      short: this.tx.notes.split('\n')[0],
-      full: this.tx.notes,
-      toString: () => this.tx.notes
+      short: decodeURIComponent(this.tx.notes.split('\n')[0]),
+      full: decodeURIComponent(this.tx.notes),
+      toString: () => decodeURIComponent(this.tx.notes)
     }
   }
 
@@ -237,13 +238,14 @@ export class Transaction {
     }
   }
 
-  annotateRequest(key: string, val: string | number | null): MonzoRequest {
+  annotateRequest(key: string, val: Primitive): MonzoRequest {
     const metaKey = `metadata[${key}]`
 
     return {
       path: `/transactions/${this.id}`,
       qs: {
-        [metaKey]: val
+        // TODO: replace with cross env '+' solution
+        [metaKey]: typeof val === 'string' ? encodeURIComponent(val) : val
       },
       method: 'PATCH'
     }

@@ -79,6 +79,7 @@ export class TransactionsEffects {
       )
     ),
     switchMap(({ transaction: tx }) =>
+      // TODO: remove extraneous api call
       this.monzo.request<MonzoOuterTransactionResponse>(
         new Transaction(tx).selfRequest()
       )
