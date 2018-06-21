@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core'
 import { from, Observable, of } from 'rxjs'
-import { map, pluck, switchMap, switchMapTo } from 'rxjs/operators'
+import { map, switchMap, switchMapTo } from 'rxjs/operators'
 
 import Dexie from 'dexie'
 
@@ -34,7 +34,7 @@ export class CacheService {
     const cachedAccount = this.db.accounts.limit(1).toArray()
 
     return (): Observable<CachedAccount> => {
-      return from(cachedAccount).pipe(pluck('0'))
+      return from(cachedAccount).pipe(map(([account]) => account))
     }
   })()
 

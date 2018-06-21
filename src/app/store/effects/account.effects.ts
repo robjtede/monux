@@ -81,6 +81,6 @@ export class AccountEffects {
   @Effect()
   init$: Observable<Action> = this.actions$.pipe(
     ofType('@monux/init'),
-    switchMapTo(of(new GetAccountAction()))
+    switchMapTo(defer(() => of(new GetAccountAction())))
   )
 }

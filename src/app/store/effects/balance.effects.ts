@@ -48,6 +48,6 @@ export class BalanceEffects {
   @Effect()
   init$: Observable<Action> = this.actions$.pipe(
     ofType('@monux/init'),
-    switchMapTo(of(new GetBalanceAction()))
+    switchMapTo(defer(() => of(new GetBalanceAction())))
   )
 }

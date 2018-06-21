@@ -1,12 +1,6 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  NgZone,
-  OnInit
-} from '@angular/core'
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core'
 import { Router } from '@angular/router'
-import { combineLatest, of } from 'rxjs'
-import { catchError, tap, first } from 'rxjs/operators'
+import { combineLatest } from 'rxjs'
 import Debug = require('debug')
 
 import { MonzoService } from '../services/monzo.service'

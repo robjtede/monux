@@ -90,7 +90,7 @@ export class ApiAccessGuard implements CanActivate {
       }),
 
       catchError((err: Error) => {
-        console.error(err.message)
+        console.error(err)
 
         debug('navigating to auth request')
         this.router.navigate(['/auth-request'])

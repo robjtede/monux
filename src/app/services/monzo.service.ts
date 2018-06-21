@@ -3,8 +3,8 @@ import Debug = require('debug')
 
 import { Injectable } from '@angular/core'
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http'
-import { forkJoin, from, Observable, of, combineLatest } from 'rxjs'
-import { switchMap, map, pluck, tap, first } from 'rxjs/operators'
+import { forkJoin, from, Observable, of, throwError } from 'rxjs'
+import { switchMap, map, tap, catchError } from 'rxjs/operators'
 
 // TODO: remove need for compat
 import 'rxjs-compat/operator/toPromise'
@@ -45,6 +45,10 @@ export class MonzoService {
   ).toPromise()
 
   constructor(private readonly http: HttpClient) {}
+
+  updateCachedAccessToken() {
+    this.accessToken = this.getCode('access_token').toPromise()
+  }
 
   request<T>(
     { path = '/ping/whoami', qs = {}, method = 'GET' }: MonzoRequest = {
@@ -150,7 +154,15 @@ export class MonzoService {
       })
       .pipe(
         tap(res => debug('whoami response =>', res)),
-        pluck('authenticated')
+        map(res => res.authenticated),
+        catchError(err => {
+          if (err.status && err.status === 401) {
+            debug('access token expired')
+            return of(false)
+          }
+
+          return throwError(err)
+        })
       )
   }
 
@@ -181,10 +193,14 @@ export class MonzoService {
           this.saveCode('access_token', access_token),
           refresh_token
             ? this.saveCode('refresh_token', refresh_token)
-            : undefined
+            : of(undefined)
         ])
       }),
-      pluck('0')
+      map(([token]) => {
+        this.updateCachedAccessToken()
+        return token
+      })
     )
   }
+  x
 }
