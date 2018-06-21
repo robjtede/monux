@@ -6,6 +6,7 @@ import { HttpClientModule } from '@angular/common/http'
 import { StoreModule } from '@ngrx/store'
 import { EffectsModule } from '@ngrx/effects'
 import { StoreDevtoolsModule } from '@ngrx/store-devtools'
+import { StoreRouterConnectingModule } from '@ngrx/router-store'
 
 // secondary modules
 import { Ng2ImgToolsModule } from 'ng2-img-tools'
@@ -61,6 +62,9 @@ import { TransactionDetailComponent } from './components/transaction-detail.comp
       initialState
     }),
     EffectsModule.forRoot(effects),
+    StoreRouterConnectingModule.forRoot({
+      stateKey: 'router'
+    }),
     StoreDevtoolsModule.instrument({
       logOnly: environment.production
     }),
