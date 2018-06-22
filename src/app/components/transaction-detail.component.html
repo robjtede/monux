@@ -47,9 +47,12 @@
 <div class="attachments">
   <div class="scroll-wrap">
     <div class="scroll-inner">
-      <label>
-        <p><br>📎️</p>
-        <p>Click or drop attachment here</p>
+      <label class="file-drop">
+        <p>
+          <br>
+          📎
+        ️</p>
+        <p>Click to upload attachments</p>
         <input #uploader type="file" class="new-attachment" (change)="uploadAttachment($event)">
       </label>
       <m-transaction-attachment *ngFor="let attachment of tx.attachments" [attachment]="attachment"></m-transaction-attachment>

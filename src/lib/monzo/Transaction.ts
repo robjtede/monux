@@ -1,3 +1,4 @@
+import { escape, unescape } from 'querystring'
 import { format } from 'date-fns'
 import { Primitive, JSONMap } from 'json-types'
 
@@ -181,11 +182,12 @@ export class Transaction {
   }
 
   get notes() {
-    // TODO: replace with cross env '+' solution
+    const notes = this.tx.notes.replace('%2B', '+')
+
     return {
-      short: decodeURIComponent(this.tx.notes.split('\n')[0]),
-      full: decodeURIComponent(this.tx.notes),
-      toString: () => decodeURIComponent(this.tx.notes)
+      short: notes.split('\n')[0],
+      full: notes,
+      toString: () => notes
     }
   }
 
@@ -244,8 +246,7 @@ export class Transaction {
     return {
       path: `/transactions/${this.id}`,
       qs: {
-        // TODO: replace with cross env '+' solution
-        [metaKey]: typeof val === 'string' ? encodeURIComponent(val) : val
+        [metaKey]: typeof val === 'string' ? val.replace('+', '%2B') : val
       },
       method: 'PATCH'
     }

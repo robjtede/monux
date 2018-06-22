@@ -264,7 +264,7 @@ m-amount {
     }
   }
 
-  & label {
+  & .file-drop {
     display: inline-block;
     margin-right: 0.5em;
     padding: 1em;
@@ -275,21 +275,26 @@ m-amount {
 
     border: 1px solid var(--label-grey);
     border-radius: 5px;
+    cursor: pointer;
 
     &:hover {
       background-color: var(--off-white);
     }
 
+    &:active {
+      background-color: var(--light-grey);
+    }
+
     & > p {
       text-align: center;
     }
-  }
 
-  & input[type='file'] {
-    position: relative;
-    left: -99999999px;
-    width: 0.1px;
-    height: 0.1px;
+    & > input {
+      position: relative;
+      left: -999999px;
+      width: 0.1px;
+      height: 0.1px;
+    }
   }
 }
 
