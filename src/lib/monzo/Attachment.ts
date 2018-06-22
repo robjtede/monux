@@ -54,10 +54,11 @@ export interface MonzoAttachmentResponse extends JSONMap {
   file_type: string
   file_url: string
   id: string
-  // TODO: full mime-type list
-  type: string
-  url: string
   user_id: string
+}
+
+export interface MonzoAttachmentOuterResponse extends JSONMap {
+  attachment: MonzoAttachmentResponse
 }
 
 export interface MonzoAttachmentUploadResponse extends JSONMap {

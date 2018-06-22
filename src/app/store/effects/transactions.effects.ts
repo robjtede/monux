@@ -1,3 +1,4 @@
+import { HttpClient, HttpHeaders } from '@angular/common/http'
 import { Injectable } from '@angular/core'
 import { Actions, Effect, ofType } from '@ngrx/effects'
 import { Action, Store } from '@ngrx/store'
@@ -12,6 +13,7 @@ import {
   withLatestFrom,
   zip
 } from 'rxjs/operators'
+import Debug = require('debug')
 
 import { AppState } from '../'
 import {
@@ -19,6 +21,10 @@ import {
   accountsRequest,
   MonzoAccountsResponse
 } from '../../../lib/monzo/Account'
+import {
+  MonzoAttachmentUploadResponse,
+  MonzoAttachmentOuterResponse
+} from '../../../lib/monzo/Attachment'
 import {
   MonzoOuterTransactionResponse,
   MonzoTransactionsResponse,
@@ -37,15 +43,20 @@ import {
   PatchTransactionNotesAction,
   PatchTransactionNotesFailedAction,
   SetTransactionAction,
-  SetTransactionsAction
+  SetTransactionsAction,
+  UPLOAD_ATTACHMENT,
+  UploadAttachmentAction
 } from '../actions/transactions.actions'
+
+const debug = Debug('app:effects:transactions')
 
 @Injectable()
 export class TransactionsEffects {
   constructor(
     private readonly store$: Store<AppState>,
     private readonly actions$: Actions,
-    private readonly monzo: MonzoService
+    private readonly monzo: MonzoService,
+    private http: HttpClient
   ) {}
 
   @Effect()
@@ -75,7 +86,7 @@ export class TransactionsEffects {
     ofType(PATCH_TRANSACTION_NOTES),
     switchMap(({ tx, notes }: PatchTransactionNotesAction) =>
       this.monzo.request<MonzoOuterTransactionResponse>(
-        new Transaction(tx).setNotesRequest(notes)
+        tx.setNotesRequest(notes)
       )
     ),
     switchMap(({ transaction: tx }) =>
@@ -86,6 +97,58 @@ export class TransactionsEffects {
     ),
     map(({ transaction: tx }) => new SetTransactionAction(tx)),
     catchError(err => of(new PatchTransactionNotesFailedAction()))
+  )
+
+  @Effect()
+  uploadAttachment$: Observable<Action> = this.actions$.pipe(
+    ofType(UPLOAD_ATTACHMENT),
+    switchMap(({ tx, file }: UploadAttachmentAction) => {
+      debug('uploading attachment', file)
+
+      const contentType = 'image/jpeg'
+
+      return forkJoin(
+        of(tx),
+        of(file),
+        of(contentType),
+        this.monzo.request<MonzoAttachmentUploadResponse>(
+          tx.attachmentUploadRequest(contentType)
+        )
+      )
+    }),
+    switchMap(([tx, file, type, { upload_url, file_url }]) => {
+      debug('got attachment upload url', upload_url, file_url)
+
+      const headers = new HttpHeaders()
+      headers.set('Content-Type', type)
+
+      return forkJoin(
+        of(tx),
+        of(file_url),
+        of(type),
+        this.http.put(upload_url, file, {
+          headers
+        })
+      )
+    }),
+    switchMap(([tx, file_url, type, res]) => {
+      debug('done uploading', res)
+
+      return forkJoin(
+        of(tx),
+        this.monzo.request<MonzoAttachmentOuterResponse>(
+          tx.attachmentRegisterRequest(file_url, type)
+        )
+      )
+    }),
+    tap(([_, { file_url }]) => {
+      debug('registered attachment', file_url)
+    }),
+    switchMap(([tx]) =>
+      // TODO: remove extraneous api call
+      this.monzo.request<MonzoOuterTransactionResponse>(tx.selfRequest())
+    ),
+    map(({ transaction: tx }) => new SetTransactionAction(tx))
   )
 
   @Effect({ dispatch: false })

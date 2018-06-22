@@ -21,10 +21,12 @@ export const SET_TRANSACTIONS = `${actionMultiplePrefix} Set`
 export const SET_TRANSACTION = `${actionSinglePrefix} Set`
 
 export const PATCH_TRANSACTION_NOTES = `${actionSinglePrefix} HTTP/Patch Note`
-export const PATCH_TRANSACTION_NOTES_SUCCESS = `${PATCH_TRANSACTION_NOTES} ${
-  suffixes.success
-}`
 export const PATCH_TRANSACTION_NOTES_FAILED = `${PATCH_TRANSACTION_NOTES} ${
+  suffixes.failed
+}`
+
+export const UPLOAD_ATTACHMENT = `${actionSinglePrefix} HTTP/Put Attachment`
+export const UPLOAD_ATTACHMENT_FAILED = `${PATCH_TRANSACTION_NOTES} ${
   suffixes.failed
 }`
 
@@ -48,10 +50,18 @@ export class SetTransactionAction implements Action {
 
 export class PatchTransactionNotesAction implements Action {
   readonly type = PATCH_TRANSACTION_NOTES
-  constructor(public tx: MonzoTransactionResponse, public notes: string) {}
+  constructor(public tx: Transaction, public notes: string) {}
 }
 export class PatchTransactionNotesFailedAction implements Action {
   readonly type = PATCH_TRANSACTION_NOTES_FAILED
+}
+
+export class UploadAttachmentAction implements Action {
+  readonly type = UPLOAD_ATTACHMENT
+  constructor(public tx: Transaction, public file: File) {}
+}
+export class UploadAttachmentFailedAction implements Action {
+  readonly type = UPLOAD_ATTACHMENT_FAILED
 }
 
 export type Actions =
