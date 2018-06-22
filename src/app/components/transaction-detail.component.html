@@ -45,12 +45,16 @@
 </div>
 
 <div class="attachments">
-  <div class="scroll-wrap" *ngIf="hasAttachments">
+  <div class="scroll-wrap">
     <div class="scroll-inner">
+      <label>
+        <p><br>📎️</p>
+        <p>Click or drop attachment here</p>
+        <input #uploader type="file" class="new-attachment" (change)="uploadAttachment($event)">
+      </label>
       <m-transaction-attachment *ngFor="let attachment of tx.attachments" [attachment]="attachment"></m-transaction-attachment>
     </div>
   </div>
-  <input #uploader type="file" class="new-attachment" (change)="uploadAttachment($event)">
 </div>
 
 <div class="smallprint date">{{ createdTime }}</div>
