@@ -6,7 +6,8 @@ import {
   EventEmitter,
   ViewChild,
   ElementRef,
-  AfterViewInit
+  AfterViewInit,
+  ChangeDetectorRef
 } from '@angular/core'
 
 import {
@@ -35,6 +36,8 @@ export class TransactionGroupComponent implements AfterViewInit {
   private txsTargetHeight!: string
   txsHeight!: string
 
+  constructor(private ref: ChangeDetectorRef) {}
+
   get groupTitle(): string {
     return getGroupTitle(this.group)
   }
@@ -50,14 +53,17 @@ export class TransactionGroupComponent implements AfterViewInit {
   }
 
   ngAfterViewInit() {
-    const height = window.getComputedStyle(this.$groupTxs.nativeElement).height
+    const height = this.$groupTxs.nativeElement.getBoundingClientRect().height
 
     if (height) {
-      this.txsTargetHeight = height
+      this.txsTargetHeight = `${height}px`
       this.txsHeight = this.txsTargetHeight
     } else {
       console.error('could not set group height')
     }
+
+    // apply inline height style on initialization
+    this.ref.detectChanges()
   }
 
   toggleCollapse(): void {
