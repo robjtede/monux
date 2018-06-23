@@ -329,7 +329,7 @@ export interface MonzoTransactionResponse extends JSONMap {
   updated: string
 }
 
-export interface MonzoOuterTransactionResponse extends JSONMap {
+export interface MonzoTransactionOuterResponse extends JSONMap {
   transaction: MonzoTransactionResponse
 }
 

@@ -7,6 +7,7 @@ import {
 } from '@angular/core'
 import { Store } from '@ngrx/store'
 import { format } from 'date-fns'
+import Debug = require('debug')
 
 import { SignModes } from '../../lib/monzo/Amount'
 import { Transaction } from '../../lib/monzo/Transaction'
@@ -16,6 +17,10 @@ import {
   PatchTransactionNotesAction,
   UploadAttachmentAction
 } from '../store/actions/transactions.actions'
+import { Attachment } from '../../lib/monzo/Attachment'
+import { DeregisterAttachmentAction } from '../store/actions/attachment.actions'
+
+const debug = Debug('app:component:tx-detail')
 
 @Component({
   selector: 'm-transaction-detail',
@@ -37,12 +42,12 @@ export class TransactionDetailComponent {
 
   // TEMP
   ngAfterContentChecked() {
-    console.log('content checked')
+    debug('content checked')
   }
 
   // TEMP
   ngAfterViewChecked() {
-    console.log('view checked')
+    debug('view checked')
   }
 
   get createdTime(): string {
@@ -73,6 +78,10 @@ export class TransactionDetailComponent {
     this.$icon.nativeElement.src = this.tx.iconFallback
   }
 
+  updateNotes(notes: string): void {
+    this.store$.dispatch(new PatchTransactionNotesAction(this.tx, notes))
+  }
+
   uploadAttachment(ev: Event): void {
     ev.preventDefault()
 
@@ -82,7 +91,7 @@ export class TransactionDetailComponent {
     this.store$.dispatch(new UploadAttachmentAction(this.tx, file))
   }
 
-  updateNotes(notes: string): void {
-    this.store$.dispatch(new PatchTransactionNotesAction(this.tx.json, notes))
+  deregisterAttachment(attachment: Attachment): void {
+    this.store$.dispatch(new DeregisterAttachmentAction(attachment))
   }
 }

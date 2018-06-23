@@ -17,8 +17,7 @@ export const reducers = {
 
 // TODO: should be AppState compatible
 export const initialState = {
-  transactions: [] as TransactionsState,
-  selectedTransaction: 'tx_00009Xs5V2XQx3d9Rsuwjp'
+  transactions: [] as TransactionsState
 }
 
 export * from './states'

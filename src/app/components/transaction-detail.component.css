@@ -269,6 +269,7 @@ m-amount {
     margin-right: 0.5em;
     padding: 1em;
     min-width: 150px;
+    max-width: 150px;
     align-self: stretch;
 
     white-space: normal;

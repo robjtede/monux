@@ -1,5 +1,5 @@
-import { HttpClient, HttpHeaders } from '@angular/common/http'
 import { Injectable } from '@angular/core'
+import { HttpClient, HttpHeaders } from '@angular/common/http'
 import { Actions, Effect, ofType } from '@ngrx/effects'
 import { Action, Store } from '@ngrx/store'
 import { startOfMonth, subMonths } from 'date-fns'
@@ -26,7 +26,7 @@ import {
   MonzoAttachmentOuterResponse
 } from '../../../lib/monzo/Attachment'
 import {
-  MonzoOuterTransactionResponse,
+  MonzoTransactionOuterResponse,
   MonzoTransactionsResponse,
   Transaction
 } from '../../../lib/monzo/Transaction'
@@ -85,13 +85,13 @@ export class TransactionsEffects {
   patchNote$: Observable<Action> = this.actions$.pipe(
     ofType(PATCH_TRANSACTION_NOTES),
     switchMap(({ tx, notes }: PatchTransactionNotesAction) =>
-      this.monzo.request<MonzoOuterTransactionResponse>(
+      this.monzo.request<MonzoTransactionOuterResponse>(
         tx.setNotesRequest(notes)
       )
     ),
     switchMap(({ transaction: tx }) =>
       // TODO: remove extraneous api call
-      this.monzo.request<MonzoOuterTransactionResponse>(
+      this.monzo.request<MonzoTransactionOuterResponse>(
         new Transaction(tx).selfRequest()
       )
     ),
@@ -146,7 +146,7 @@ export class TransactionsEffects {
     }),
     switchMap(([tx]) =>
       // TODO: remove extraneous api call
-      this.monzo.request<MonzoOuterTransactionResponse>(tx.selfRequest())
+      this.monzo.request<MonzoTransactionOuterResponse>(tx.selfRequest())
     ),
     map(({ transaction: tx }) => new SetTransactionAction(tx))
   )
@@ -160,7 +160,7 @@ export class TransactionsEffects {
       if (!selTxId) return
 
       const tx = store.transactions.find(tx => tx.id === selTxId)
-      console.log(tx ? tx : 'no tx found')
+      debug('selected tx =>', tx || 'no tx found')
     })
   )
 

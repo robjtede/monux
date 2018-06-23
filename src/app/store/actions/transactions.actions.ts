@@ -1,4 +1,4 @@
-import { Action, UPDATE } from '@ngrx/store'
+import { Action } from '@ngrx/store'
 
 import { suffixes } from './'
 
@@ -7,6 +7,10 @@ import {
   MonzoTransactionResponse,
   TransactionRequestOpts
 } from '../../../lib/monzo/Transaction'
+
+/*
+* action type strings
+*/
 
 const actionSinglePrefix = '[Transaction]'
 const actionMultiplePrefix = '[Transactions]'
@@ -25,10 +29,14 @@ export const PATCH_TRANSACTION_NOTES_FAILED = `${PATCH_TRANSACTION_NOTES} ${
   suffixes.failed
 }`
 
-export const UPLOAD_ATTACHMENT = `${actionSinglePrefix} HTTP/Put Attachment`
+export const UPLOAD_ATTACHMENT = `${actionSinglePrefix} HTTP/Put Upload Attachment`
 export const UPLOAD_ATTACHMENT_FAILED = `${PATCH_TRANSACTION_NOTES} ${
   suffixes.failed
 }`
+
+/*
+ * action creators
+ */
 
 export class GetTransactionsAction implements Action {
   readonly type = GET_TRANSACTIONS
@@ -63,6 +71,10 @@ export class UploadAttachmentAction implements Action {
 export class UploadAttachmentFailedAction implements Action {
   readonly type = UPLOAD_ATTACHMENT_FAILED
 }
+
+/*
+ * aggregate type
+ */
 
 export type Actions =
   | GetTransactionsAction

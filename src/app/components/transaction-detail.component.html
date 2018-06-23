@@ -9,7 +9,7 @@
   </div>
 </div>
 
-<div class="location" *ngIf="!tx.online">{{ tx.location }}</div>
+<div class="location" *ngIf="!tx.online && tx.location">{{ tx.location }}</div>
 <div class="category-wrap">
   <div class="category" [attr.data-emoji]="emoji">
     {{ tx.category.formatted }}
@@ -55,7 +55,11 @@
         <p>Click to upload attachments</p>
         <input #uploader type="file" class="new-attachment" (change)="uploadAttachment($event)">
       </label>
-      <m-transaction-attachment *ngFor="let attachment of tx.attachments" [attachment]="attachment"></m-transaction-attachment>
+      <m-transaction-attachment
+        *ngFor="let attachment of tx.attachments"
+        [attachment]="attachment"
+        (delete)="deregisterAttachment($event)"
+      ></m-transaction-attachment>
     </div>
   </div>
 </div>

@@ -1,35 +1,31 @@
 import {
-  Component,
-  OnInit,
-  Input,
   ChangeDetectionStrategy,
+  Component,
   ElementRef,
+  EventEmitter,
+  Input,
+  OnInit,
+  Output,
   ViewChild
 } from '@angular/core'
 import { Ng2ImgToolsService } from 'ng2-img-tools'
 
-import 'rxjs-compat/operator/toPromise'
-
 import { Attachment } from '../../lib/monzo/Attachment'
-
-import { MonzoService } from '../services/monzo.service'
 
 @Component({
   selector: 'm-transaction-attachment',
   templateUrl: './transaction-attachment.component.html',
   styleUrls: ['./transaction-attachment.component.css'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  host: {}
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TransactionAttachmentComponent implements OnInit {
   @Input() readonly attachment!: Attachment
 
+  @Output() delete = new EventEmitter<Attachment>()
+
   @ViewChild('attachment') $attachment!: ElementRef
 
-  constructor(
-    private monzo: MonzoService,
-    private imgTools: Ng2ImgToolsService
-  ) {}
+  constructor(private imgTools: Ng2ImgToolsService) {}
 
   ngOnInit() {
     this.orientImage()
@@ -46,14 +42,7 @@ export class TransactionAttachmentComponent implements OnInit {
     })
   }
 
-  async delete() {
-    try {
-      const req = this.attachment.attachmentDeregisterRequest()
-      const res = await this.monzo.request(req).toPromise()
-
-      console.log(res)
-    } catch (err) {
-      console.error(err)
-    }
+  deleteAttachment() {
+    this.delete.emit(this.attachment)
   }
 }
