@@ -1,10 +1,13 @@
 :host {
   display: block;
+  overflow: hidden;
 }
 
 .group-heading {
   display: grid;
-  grid-template-areas: 'title total' 'title total';
+  grid-template-columns: auto 1fr auto;
+  grid-template-areas: 'collapser title total';
+  gap: 1em;
   justify-content: space-between;
 
   position: sticky;
@@ -19,6 +22,16 @@
     grid-area: title;
 
     font-size: 1.2rem;
+  }
+
+  & .group-collapser {
+    grid-area: collapser;
+    position: relative;
+    top: 0.45em;
+
+    line-height: 1;
+
+    cursor: pointer;
   }
 
   & .group-size {
@@ -38,6 +51,10 @@
     color: var(--medium-grey);
     font-size: 1.1rem;
   }
+}
+
+.group-txs {
+  transition: height 250ms ease-in-out;
 }
 
 m-transaction-summary:not(:last-of-type) {

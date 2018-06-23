@@ -35,8 +35,8 @@ const debug = Debug('app:component:tx-detail')
 export class TransactionDetailComponent {
   @Input() readonly tx!: Transaction
 
-  @ViewChild('icon') readonly $icon!: ElementRef
-  @ViewChild('uploader') readonly $uploader!: ElementRef
+  @ViewChild('icon') readonly $icon!: ElementRef<HTMLImageElement>
+  @ViewChild('uploader') readonly $uploader!: ElementRef<HTMLInputElement>
 
   constructor(private store$: Store<AppState>) {}
 

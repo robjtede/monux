@@ -23,7 +23,7 @@ export class TransactionAttachmentComponent implements OnInit {
 
   @Output() delete = new EventEmitter<Attachment>()
 
-  @ViewChild('attachment') $attachment!: ElementRef
+  @ViewChild('attachment') $attachment!: ElementRef<HTMLImageElement>
 
   constructor(private imgTools: Ng2ImgToolsService) {}
 

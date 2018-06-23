@@ -3,7 +3,10 @@ import {
   Input,
   ChangeDetectionStrategy,
   Output,
-  EventEmitter
+  EventEmitter,
+  ViewChild,
+  ElementRef,
+  AfterViewInit
 } from '@angular/core'
 
 import {
@@ -20,11 +23,17 @@ import { Transaction } from '../../lib/monzo/Transaction'
   styleUrls: ['./transaction-group.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class TransactionGroupComponent {
+export class TransactionGroupComponent implements AfterViewInit {
   @Input() readonly group!: TransactionGroup
   @Input() readonly selectedTx?: Transaction
 
   @Output() select = new EventEmitter<string>()
+
+  @ViewChild('groupTxs') $groupTxs!: ElementRef<HTMLDivElement>
+
+  private collapsed = false
+  private txsTargetHeight!: string
+  txsHeight!: string
 
   get groupTitle(): string {
     return getGroupTitle(this.group)
@@ -38,6 +47,27 @@ export class TransactionGroupComponent {
     return sumGroup(this.group.txs).html({
       signMode: SignModes.Never
     })
+  }
+
+  ngAfterViewInit() {
+    const height = window.getComputedStyle(this.$groupTxs.nativeElement).height
+
+    if (height) {
+      this.txsTargetHeight = height
+      this.txsHeight = this.txsTargetHeight
+    } else {
+      console.error('could not set group height')
+    }
+  }
+
+  toggleCollapse(): void {
+    if (this.collapsed) {
+      this.txsHeight = this.txsTargetHeight
+    } else {
+      this.txsHeight = '0px'
+    }
+
+    this.collapsed = !this.collapsed
   }
 
   selectTx(txId: string): void {

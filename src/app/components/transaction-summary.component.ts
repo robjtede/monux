@@ -33,7 +33,7 @@ export class TransactionSummaryComponent implements OnInit {
   @Output() select = new EventEmitter<string>()
   @Output() hide = new EventEmitter<Transaction>()
 
-  @ViewChild('icon') readonly $icon!: ElementRef
+  @ViewChild('icon') readonly $icon!: ElementRef<HTMLImageElement>
 
   private iconObserver = new IntersectionObserver(
     this.onIconIntersection.bind(this),
@@ -62,7 +62,8 @@ export class TransactionSummaryComponent implements OnInit {
 
   onIconIntersection(entries: IntersectionObserverEntry[]) {
     if (entries.length && entries[0].intersectionRatio > 0) {
-      this.$icon.nativeElement.src = this.$icon.nativeElement.dataset.src
+      this.$icon.nativeElement.src = this.$icon.nativeElement.dataset
+        .src as string
 
       this.iconObserver.unobserve(this.$icon.nativeElement)
     }

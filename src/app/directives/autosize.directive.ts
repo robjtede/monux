@@ -1,6 +1,7 @@
 // Original code from https://github.com/stevepapa/ng-autosize
 // by Steve Papa
 //
+// Edited by Rob Ede (@robjtede)
 // Removed from package due to build errors caused by incorrect packaging.
 // Updated to use modifications from stevepapa/ng-autosize#17. Also added
 // definite assignment operators.
@@ -54,7 +55,7 @@ export class Autosize implements AfterViewInit {
     this.adjust()
   }
 
-  constructor(public element: ElementRef) {
+  constructor(public element: ElementRef<HTMLElement>) {
     this.el = element.nativeElement
     this._clientWidth = this.el.clientWidth
   }
