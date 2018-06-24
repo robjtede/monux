@@ -10,6 +10,7 @@ const debug = Debug('app:component:get-client-info')
 @Component({
   selector: 'm-get-client-info',
   templateUrl: './get-client-info.component.html',
+  styleUrls: ['./get-client-info.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class GetClientInfoComponent implements OnInit {

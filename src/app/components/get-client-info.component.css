@@ -1,0 +1,68 @@
+:host {
+  display: block;
+  min-height: 100vh;
+  padding: 2em;
+
+  color: var(--monzo-blue);
+
+  background-color: var(--monzo-blue);
+}
+
+.wrap {
+  margin: 0 auto;
+  max-width: 35em;
+}
+
+header {
+  padding: 2em;
+
+  text-align: center;
+
+  background: var(--off-white);
+  border-radius: 5px;
+}
+
+form {
+  margin-top: 2em;
+  padding: 2em;
+  background: var(--off-white);
+
+  border-radius: 5px;
+
+  & label {
+    display: block;
+    margin: 0 auto;
+
+    & p {
+      margin: 0em;
+
+      font-size: 1.2em;
+    }
+
+    & input[type='text'] {
+      padding: 0.5em;
+
+      font-size: 1rem;
+
+      border-radius: 5px;
+      border: 1px solid var(--label-grey);
+    }
+  }
+
+  & .submit {
+    padding: 0.5em;
+
+    color: var(--black);
+    font-size: 1.2rem;
+
+    background-color: inherit;
+    border-radius: 5px;
+    border: 1px solid var(--label-grey);
+
+    &:hover {
+      cursor: pointer;
+      background-color: gray(90%);
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2), 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+  }
+}
