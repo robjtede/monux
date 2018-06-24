@@ -6,7 +6,7 @@ import {
   RouterStateSnapshot
 } from '@angular/router'
 import { combineLatest, of, Observable } from 'rxjs'
-import { map, tap, catchError } from 'rxjs/operators'
+import { map, catchError } from 'rxjs/operators'
 import Debug = require('debug')
 
 import { MonzoService } from '../services/monzo.service'

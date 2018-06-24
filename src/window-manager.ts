@@ -33,7 +33,7 @@ export class WindowManager {
 
   get mainWindow(): BrowserWindow {
     if (this._mainWindow) {
-      debug('get main window')
+      debug('getting main window')
       return this._mainWindow
     }
 
@@ -63,10 +63,6 @@ export class WindowManager {
     return this._mainWindow
   }
 
-  // get authWindow (): BrowserWindow | undefined {
-  //   return this.authWindow
-  // }
-
   set mainLocation(url: string) {
     debug('set window location =>', url)
     this.mainWindow.loadURL(url)
@@ -79,7 +75,7 @@ export class WindowManager {
 
   setDefaultMenu(): void {
     debug('set default menu')
-    this.menu = makeMacOSMenu(this)
+    this.menu = makeMacOSMenu()
   }
 
   goToMonux(): void {

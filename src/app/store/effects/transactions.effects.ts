@@ -1,18 +1,9 @@
 import { Injectable } from '@angular/core'
-import { HttpClient, HttpHeaders } from '@angular/common/http'
 import { Actions, Effect, ofType } from '@ngrx/effects'
 import { Action, Store } from '@ngrx/store'
 import { startOfMonth, subMonths } from 'date-fns'
-import { defer, forkJoin, Observable, of } from 'rxjs'
-import {
-  catchError,
-  map,
-  switchMap,
-  switchMapTo,
-  tap,
-  withLatestFrom,
-  zip
-} from 'rxjs/operators'
+import { forkJoin, Observable, of } from 'rxjs'
+import { catchError, map, switchMap, tap, withLatestFrom } from 'rxjs/operators'
 import Debug = require('debug')
 
 import { AppState } from '../'
@@ -21,10 +12,6 @@ import {
   accountsRequest,
   MonzoAccountsResponse
 } from '../../../lib/monzo/Account'
-import {
-  MonzoAttachmentUploadResponse,
-  MonzoAttachmentOuterResponse
-} from '../../../lib/monzo/Attachment'
 import {
   MonzoTransactionOuterResponse,
   MonzoTransactionsResponse,
@@ -43,9 +30,7 @@ import {
   PatchTransactionNotesAction,
   PatchTransactionNotesFailedAction,
   SetTransactionAction,
-  SetTransactionsAction,
-  UPLOAD_ATTACHMENT,
-  UploadAttachmentAction
+  SetTransactionsAction
 } from '../actions/transactions.actions'
 
 const debug = Debug('app:effects:transactions')
@@ -53,10 +38,9 @@ const debug = Debug('app:effects:transactions')
 @Injectable()
 export class TransactionsEffects {
   constructor(
-    private readonly store$: Store<AppState>,
-    private readonly actions$: Actions,
-    private readonly monzo: MonzoService,
-    private http: HttpClient
+    private store$: Store<AppState>,
+    private actions$: Actions,
+    private monzo: MonzoService
   ) {}
 
   @Effect()
@@ -78,7 +62,10 @@ export class TransactionsEffects {
       }
     ),
     map(txs => new SetTransactionsAction(txs.transactions)),
-    catchError(err => of(new GetTransactionsFailedAction()))
+    catchError(err => {
+      console.error(err)
+      return of(new GetTransactionsFailedAction())
+    })
   )
 
   @Effect()
@@ -96,59 +83,10 @@ export class TransactionsEffects {
       )
     ),
     map(({ transaction: tx }) => new SetTransactionAction(tx)),
-    catchError(err => of(new PatchTransactionNotesFailedAction()))
-  )
-
-  @Effect()
-  uploadAttachment$: Observable<Action> = this.actions$.pipe(
-    ofType(UPLOAD_ATTACHMENT),
-    switchMap(({ tx, file }: UploadAttachmentAction) => {
-      debug('uploading attachment', file)
-
-      const contentType = 'image/jpeg'
-
-      return forkJoin(
-        of(tx),
-        of(file),
-        of(contentType),
-        this.monzo.request<MonzoAttachmentUploadResponse>(
-          tx.attachmentUploadRequest(contentType)
-        )
-      )
-    }),
-    switchMap(([tx, file, type, { upload_url, file_url }]) => {
-      debug('got attachment upload url', upload_url, file_url)
-
-      const headers = new HttpHeaders()
-      headers.set('Content-Type', type)
-
-      return forkJoin(
-        of(tx),
-        of(file_url),
-        of(type),
-        this.http.put(upload_url, file, {
-          headers
-        })
-      )
-    }),
-    switchMap(([tx, file_url, type, res]) => {
-      debug('done uploading', res)
-
-      return forkJoin(
-        of(tx),
-        this.monzo.request<MonzoAttachmentOuterResponse>(
-          tx.attachmentRegisterRequest(file_url, type)
-        )
-      )
-    }),
-    tap(([_, { file_url }]) => {
-      debug('registered attachment', file_url)
-    }),
-    switchMap(([tx]) =>
-      // TODO: remove extraneous api call
-      this.monzo.request<MonzoTransactionOuterResponse>(tx.selfRequest())
-    ),
-    map(({ transaction: tx }) => new SetTransactionAction(tx))
+    catchError(err => {
+      console.error(err)
+      return of(new PatchTransactionNotesFailedAction())
+    })
   )
 
   @Effect({ dispatch: false })
@@ -168,8 +106,7 @@ export class TransactionsEffects {
   init$: Observable<Action> = this.actions$.pipe(
     ofType('@monux/init'),
     switchMap(() => {
-      // const startDate = subMonths(startOfMonth(Date.now()), 1)
-      const startDate = startOfMonth(Date.now())
+      const startDate = subMonths(startOfMonth(Date.now()), 1)
 
       return of(
         new GetTransactionsAction({

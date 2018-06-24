@@ -1,11 +1,6 @@
 import { shell, MenuItemConstructorOptions } from 'electron'
 
-import { saveCode } from './lib/monzo/auth'
-import { WindowManager } from './window-manager'
-
-export const makeMacOSMenu = (
-  windowManager: WindowManager
-): MenuItemConstructorOptions[] => [
+export const makeMacOSMenu = (): MenuItemConstructorOptions[] => [
   {
     label: 'Application',
     submenu: [

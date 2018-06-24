@@ -141,8 +141,8 @@ app.on('ready', async () => {
       ]
 
       return Promise.all(extensions)
-        .then(names => console.log('Added Extensions:', names.join(', ')))
-        .catch(err => console.log('An error occurred adding extension:', err))
+        .then(names => debug('Added Extensions:', names.join(', ')))
+        .catch(err => debug('An error occurred adding extension:', err))
     })
     .catch(console.error)
 

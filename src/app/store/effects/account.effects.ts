@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core'
 import { Router } from '@angular/router'
 import { Store, Action } from '@ngrx/store'
-import { Actions, Effect, ofType, ROOT_EFFECTS_INIT } from '@ngrx/effects'
+import { Actions, Effect, ofType } from '@ngrx/effects'
 import { defer, from, Observable, of } from 'rxjs'
 import {
   catchError,
@@ -33,7 +33,6 @@ import { deletePassword } from '../../../lib/keychain'
 @Injectable()
 export class AccountEffects {
   constructor(
-    private readonly store$: Store<AppState>,
     private readonly actions$: Actions,
     private readonly monzoService: MonzoService,
     private readonly cacheService: CacheService,
@@ -72,7 +71,10 @@ export class AccountEffects {
 
       return from(tokenDeletions).pipe(mapTo({ type: 'LOGOUT_SUCCESS' }))
     }),
-    catchError(err => of({ type: 'LOGOUT_FAILED' })),
+    catchError(err => {
+      console.error(err)
+      return of({ type: 'LOGOUT_FAILED' })
+    }),
     tap(_ => {
       this.router.navigate(['login'])
     })

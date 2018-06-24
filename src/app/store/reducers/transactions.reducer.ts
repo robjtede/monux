@@ -1,4 +1,4 @@
-import { sortBy, filter } from 'lodash'
+import { sortBy } from 'lodash'
 import { getTime } from 'date-fns'
 
 import {

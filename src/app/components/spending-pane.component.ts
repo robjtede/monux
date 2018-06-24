@@ -15,6 +15,7 @@ import { Component, ChangeDetectionStrategy } from '@angular/core'
         </g>
       </svg>
     </div>
+
     <!-- <m-spending></m-spending> -->
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,

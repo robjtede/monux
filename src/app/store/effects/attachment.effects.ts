@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core'
+import { HttpClient, HttpHeaders } from '@angular/common/http'
 import { Actions, Effect, ofType } from '@ngrx/effects'
 import { Action, Store } from '@ngrx/store'
 import { forkJoin, Observable, of } from 'rxjs'
-import { catchError, switchMap, withLatestFrom } from 'rxjs/operators'
+import { catchError, switchMap, tap, withLatestFrom, map } from 'rxjs/operators'
 import Debug = require('debug')
 
 import { MonzoService } from '../../services/monzo.service'
@@ -14,21 +15,82 @@ import {
   DeregisterAttachmentFailedAction
 } from '../actions/attachment.actions'
 import {
+  SetTransactionAction,
+  UPLOAD_ATTACHMENT,
+  UploadAttachmentAction
+} from '../actions/transactions.actions'
+import {
+  MonzoAttachmentOuterResponse,
+  MonzoAttachmentUploadResponse
+} from '../../../lib/monzo/Attachment'
+import {
   MonzoTransactionOuterResponse,
   MonzoTransactionResponse,
   Transaction
 } from '../../../lib/monzo/Transaction'
-import { SetTransactionAction } from '../actions/transactions.actions'
 
 const debug = Debug('app:effects:attachment')
 
 @Injectable()
 export class AttachmentEffects {
   constructor(
-    private readonly actions$: Actions,
-    private readonly store$: Store<AppState>,
-    private readonly monzo: MonzoService
+    private actions$: Actions,
+    private store$: Store<AppState>,
+    private monzo: MonzoService,
+    private http: HttpClient
   ) {}
+
+  @Effect()
+  uploadAttachment$: Observable<Action> = this.actions$.pipe(
+    ofType(UPLOAD_ATTACHMENT),
+    switchMap(({ tx, file }: UploadAttachmentAction) => {
+      debug('uploading attachment', file)
+
+      const contentType = 'image/jpeg'
+
+      return forkJoin(
+        of(tx),
+        of(file),
+        of(contentType),
+        this.monzo.request<MonzoAttachmentUploadResponse>(
+          tx.attachmentUploadRequest(contentType)
+        )
+      )
+    }),
+    switchMap(([tx, file, type, { upload_url, file_url }]) => {
+      debug('got attachment upload url', upload_url, file_url)
+
+      const headers = new HttpHeaders()
+      headers.set('Content-Type', type)
+
+      return forkJoin(
+        of(tx),
+        of(file_url),
+        of(type),
+        this.http.put(upload_url, file, {
+          headers
+        })
+      )
+    }),
+    switchMap(([tx, file_url, type, res]) => {
+      debug('done uploading', res)
+
+      return forkJoin(
+        of(tx),
+        this.monzo.request<MonzoAttachmentOuterResponse>(
+          tx.attachmentRegisterRequest(file_url, type)
+        )
+      )
+    }),
+    tap(([_, { file_url }]) => {
+      debug('registered attachment', file_url)
+    }),
+    switchMap(([tx]) =>
+      // TODO: remove extraneous api call
+      this.monzo.request<MonzoTransactionOuterResponse>(tx.selfRequest())
+    ),
+    map(({ transaction: tx }) => new SetTransactionAction(tx))
+  )
 
   @Effect()
   deregisterAttachment$: Observable<Action> = this.actions$.pipe(

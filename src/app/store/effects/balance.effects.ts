@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core'
-import { Store, Action } from '@ngrx/store'
-import { Actions, Effect, ofType, ROOT_EFFECTS_INIT } from '@ngrx/effects'
+import { Action } from '@ngrx/store'
+import { Actions, Effect, ofType } from '@ngrx/effects'
 import { defer, Observable, of } from 'rxjs'
 import { catchError, map, switchMap, switchMapTo } from 'rxjs/operators'
 
@@ -12,7 +12,6 @@ import {
 } from '../../../lib/monzo/Account'
 import { MonzoBalanceResponse } from '../../../lib/monzo/Amount'
 
-import { AppState } from '../'
 import {
   GET_BALANCE,
   SetBalanceAction,
@@ -23,7 +22,6 @@ import {
 @Injectable()
 export class BalanceEffects {
   constructor(
-    private readonly store$: Store<AppState>,
     private readonly actions$: Actions,
     private readonly monzoService: MonzoService
   ) {}
@@ -42,7 +40,10 @@ export class BalanceEffects {
       )
     }),
     map(data => new SetBalanceAction(data)),
-    catchError(err => of(new GetBalanceFailedAction()))
+    catchError(err => {
+      console.error(err)
+      return of(new GetBalanceFailedAction())
+    })
   )
 
   @Effect()

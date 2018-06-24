@@ -9,7 +9,6 @@ import { Store } from '@ngrx/store'
 import { format } from 'date-fns'
 import Debug = require('debug')
 
-import { SignModes } from '../../lib/monzo/Amount'
 import { Transaction } from '../../lib/monzo/Transaction'
 
 import { AppState } from '../store'
@@ -85,8 +84,8 @@ export class TransactionDetailComponent {
   uploadAttachment(ev: Event): void {
     ev.preventDefault()
 
-    const file: File = this.$uploader.nativeElement.files[0]
-    console.log(file)
+    const file = (this.$uploader.nativeElement.files as FileList)[0]
+    debug(file)
 
     this.store$.dispatch(new UploadAttachmentAction(this.tx, file))
   }

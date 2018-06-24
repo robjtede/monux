@@ -15,7 +15,7 @@ import { Ng2ImgToolsModule } from 'ng2-img-tools'
 import { environment } from '../environments/environment'
 
 // store
-import { AppState, reducers, initialState } from './store'
+import { reducers, initialState } from './store'
 import { effects } from './store/effects'
 
 // directives

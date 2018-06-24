@@ -38,9 +38,9 @@ export class TransactionSummaryComponent implements OnInit {
   private iconObserver = new IntersectionObserver(
     this.onIconIntersection.bind(this),
     {
-      rootMargin: '50px 0px',
-      threshold: 0.01,
-      root: document.documentElement
+      root: null,
+      rootMargin: '500px',
+      threshold: 0.001
     }
   )
 

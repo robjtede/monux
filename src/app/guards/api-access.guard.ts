@@ -1,13 +1,12 @@
 import { Injectable } from '@angular/core'
 import {
-  ActivatedRoute,
   ActivatedRouteSnapshot,
   CanActivate,
   Router,
   RouterStateSnapshot
 } from '@angular/router'
 import { defer, forkJoin, iif, Observable, of, throwError } from 'rxjs'
-import { catchError, map, switchMap, switchMapTo, tap } from 'rxjs/operators'
+import { catchError, switchMap } from 'rxjs/operators'
 import Debug = require('debug')
 
 import { MonzoService } from '../services/monzo.service'
@@ -16,11 +15,7 @@ const debug = Debug('app:guard:api-access')
 
 @Injectable()
 export class ApiAccessGuard implements CanActivate {
-  constructor(
-    private monzo: MonzoService,
-    private router: Router,
-    private route: ActivatedRoute
-  ) {}
+  constructor(private monzo: MonzoService, private router: Router) {}
 
   canActivate(
     _route: ActivatedRouteSnapshot,
