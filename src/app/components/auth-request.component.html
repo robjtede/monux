@@ -1,11 +1,23 @@
-<h1>Auth Verify</h1>
+<div class="wrap">
+  <header>
+    <img src="../../../build/icon.png" height="100">
+    <h1>Authenicate Monux with Monzo</h1>
 
-<a href="#" (click)="openAuthRequest($event)">Open auth request</a>
+    <p>
+      If the Monzo window does not appear, click below.
+      <br>
+      <a href="#" (click)="openAuthRequest($event)">Open auth request</a>
+    </p>
+  </header>
 
-<p>
-  Alternatively, enter the url after clicking the link in the email
-</p>
-<form action="#" (submit)="manualCode($event, code.value)">
-  <input #code type="text">
-  <input type="submit" value="Submit">
-</form>
+  <form action="#" (submit)="manualCode($event, code.value)">
+    <p>
+      Or paste the url shown after clicking the link in the email:
+    </p>
+
+    <div class="manual">
+      <input #code type="text" class="manual__field">
+      <button type="submit" class="manual__submit">Authenticate Manually</button>
+    </div>
+  </form>
+</div>

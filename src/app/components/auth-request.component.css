@@ -30,8 +30,6 @@ form {
   border-radius: 5px;
 
   & p {
-    margin: 0em;
-
     font-size: 1.2em;
   }
 
@@ -43,26 +41,32 @@ form {
   & input[type='text'] {
     padding: 0.5em;
 
-    font-size: 1.2rem;
+    font-size: 1rem;
 
     border-radius: 5px;
     border: 1px solid var(--label-grey);
   }
+}
 
-  & .submit {
-    padding: 0.5em;
+.manual {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 1em;
+}
 
-    color: var(--black);
-    font-size: 1rem;
+.manual__submit {
+  padding: 0.5em;
 
-    background-color: inherit;
-    border-radius: 5px;
-    border: 1px solid var(--label-grey);
+  color: var(--black);
+  font-size: 1rem;
 
-    &:hover {
-      cursor: pointer;
-      background-color: gray(90%);
-      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2), 0 4px 10px rgba(0, 0, 0, 0.1);
-    }
+  background-color: inherit;
+  border-radius: 5px;
+  border: 1px solid var(--label-grey);
+
+  &:hover {
+    cursor: pointer;
+    background-color: gray(90%);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2), 0 4px 10px rgba(0, 0, 0, 0.1);
   }
 }

@@ -15,6 +15,7 @@ const debug = Debug('app:component:auth-request')
 @Component({
   selector: 'm-auth-request',
   templateUrl: './auth-request.component.html',
+  styleUrls: ['./auth-request.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AuthRequestComponent implements OnInit {
@@ -45,17 +46,19 @@ export class AuthRequestComponent implements OnInit {
         })
       }
     )
+
+    this.openAuthRequest()
   }
 
-  openAuthRequest(ev: MouseEvent) {
-    ev.preventDefault()
-    ev.stopPropagation()
-
-    if (ev.target) {
-      debug('opening auth request window')
-
-      ipcRenderer.send('open-auth-window', 'monzo')
+  openAuthRequest(ev?: MouseEvent) {
+    if (ev) {
+      ev.preventDefault()
+      ev.stopPropagation()
     }
+
+    debug('sending signal to open auth window')
+
+    ipcRenderer.send('open-auth-window', 'monzo')
   }
 
   manualCode(ev: Event, token: string) {
