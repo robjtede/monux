@@ -51,7 +51,7 @@ form {
 .manual {
   display: grid;
   grid-template-columns: 1fr auto;
-  gap: 1em;
+  grid-gap: 1em;
 }
 
 .manual__submit {

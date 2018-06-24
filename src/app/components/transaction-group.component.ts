@@ -32,8 +32,8 @@ export class TransactionGroupComponent implements AfterViewInit {
 
   @ViewChild('groupTxs') $groupTxs!: ElementRef<HTMLDivElement>
 
-  private collapsed = false
-  private txsTargetHeight!: string
+  collapsed = false
+  txsTargetHeight!: string
   txsHeight!: string
 
   constructor(private ref: ChangeDetectorRef) {}

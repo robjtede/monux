@@ -7,7 +7,7 @@
   display: grid;
   grid-template-columns: auto 1fr auto;
   grid-template-areas: 'collapser title total';
-  gap: 1em;
+  grid-gap: 1em;
   justify-content: space-between;
 
   position: sticky;
