@@ -39,16 +39,6 @@ export class TransactionDetailComponent {
 
   constructor(private store$: Store<AppState>) {}
 
-  // TEMP
-  ngAfterContentChecked() {
-    debug('content checked')
-  }
-
-  // TEMP
-  ngAfterViewChecked() {
-    debug('view checked')
-  }
-
   get createdTime(): string {
     return format(this.tx.created, 'h:mma - Do MMMM YYYY')
   }

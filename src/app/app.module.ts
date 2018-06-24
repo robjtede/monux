@@ -43,7 +43,6 @@ import { TransactionDetailComponent } from './components/transaction-detail.comp
 
 @NgModule({
   declarations: [
-    routedComponents,
     RootComponent,
     AmountComponent,
     AccountComponent,
@@ -52,7 +51,8 @@ import { TransactionDetailComponent } from './components/transaction-detail.comp
     TransactionSummaryComponent,
     TransactionAttachmentComponent,
     TransactionDetailComponent,
-    Autosize
+    Autosize,
+    ...routedComponents
   ],
   imports: [
     BrowserModule,

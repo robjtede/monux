@@ -55,6 +55,7 @@
 
 .group-txs {
   transition: height 250ms ease-in-out;
+  will-change: height;
 }
 
 m-transaction-summary:not(:last-of-type) {

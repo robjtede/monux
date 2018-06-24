@@ -106,7 +106,8 @@ export class TransactionsEffects {
   init$: Observable<Action> = this.actions$.pipe(
     ofType('@monux/init'),
     switchMap(() => {
-      const startDate = subMonths(startOfMonth(Date.now()), 1)
+      // const startDate = subMonths(startOfMonth(Date.now()), 1)
+      const startDate = subMonths(startOfMonth(Date.now()), 0)
 
       return of(
         new GetTransactionsAction({

@@ -1,26 +1,41 @@
-import { Component, ChangeDetectionStrategy } from '@angular/core'
+import {
+  ChangeDetectionStrategy,
+  Component,
+  ElementRef,
+  OnInit,
+  ViewChild
+} from '@angular/core'
+import { Store } from '@ngrx/store'
+import * as d3 from 'd3'
+
+import { Amount } from '../../lib/monzo/Amount'
+import { Transaction } from '../../lib/monzo/Transaction'
+import { AppState } from '../store'
 
 @Component({
   selector: 'm-spending-pane',
   template: `
-    <div class="spending-list">
-      <h1>Months</h1>
-    </div>
     <div class="spending-vis">
       <h1>This Month</h1>
-      <svg>
-        <g>
-          <text class="label"></text>
-          <text class="amount"></text>
-        </g>
+      <svg #chart>
+          <g>
+            <text class="label"></text>
+            <text class="amount"></text>
+          </g>
       </svg>
     </div>
-
-    <!-- <m-spending></m-spending> -->
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
     '[class.pane]': 'true'
   }
 })
-export class SpendingPaneComponent {}
+export class SpendingPaneComponent implements OnInit {
+  @ViewChild('chart') chart!: ElementRef<SVGSVGElement>
+
+  constructor(private store$: Store<AppState>) {}
+
+  ngOnInit() {
+    console.log('TODO')
+  }
+}
