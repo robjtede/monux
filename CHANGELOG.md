@@ -5,6 +5,32 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
 
+## [0.10.0] - 2018-08-26
+### Added
+- Search transactions by name, category or notes using the search field above the transaction list.
+- Windows support
+
+### Changed
+- Current accounts are now supported.
+- The login flow has been vastly improved both functionally and stylistically.
+- Monux is built using Angular.
+- Attachment upload UI has been improved.
+
+### Fixed
+- Logout did not clear all caches.
+- Plus symbols (+) would be removed from notes.
+
+
+### Known Issues
+- Nothing is cached yet. An active internet connection is required, at present.
+- Transaction history only goes back to the beginning of last month.
+- Spending pie chart says "This month" but actually includes all available history.
+- [macOS] Touch Bar support has been lost for now.
+- [macOS] Far too many keychain authentication prompts on first launch. Make sure to click "Always allow".
+
+[0.10.0 Milestone](https://github.com/robjtede/monux/milestone/7?closed=1)
+
+
 ## [0.9.3] - 2017-07-14
 ### Changed
 - Authentication now requires a secure proxy (hosted on https://monux.robjte.de) to support webmail clients.
@@ -152,6 +178,7 @@ Bugs fixed (and probably some introduced).
 - View transaction list.
 - View limited transaction details.
 
+[0.10.3]: https://github.com/robjtede/monux/compare/v0.9.3...v0.10.0
 [0.9.3]: https://github.com/robjtede/monux/compare/v0.9.2...v0.9.3
 [0.9.2]: https://github.com/robjtede/monux/compare/v0.9.1...v0.9.2
 [0.9.1]: https://github.com/robjtede/monux/compare/v0.9.0...v0.9.1
