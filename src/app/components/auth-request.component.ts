@@ -58,7 +58,7 @@ export class AuthRequestComponent implements OnInit {
 
     debug('sending signal to open auth window')
 
-    ipcRenderer.send('open-auth-window', 'monzo')
+    setTimeout(() => ipcRenderer.send('open-auth-window', 'monzo'), 1000)
   }
 
   manualCode(ev: Event, token: string) {

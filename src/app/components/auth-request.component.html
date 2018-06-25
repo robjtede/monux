@@ -10,7 +10,7 @@
     </p>
   </header>
 
-  <form action="#" (submit)="manualCode($event, code.value)">
+  <form action="#" (submit)="manualCode($event, code.value)" class="manual-code">
     <p>
       Or paste the url shown after clicking the link in the email:
     </p>
@@ -20,4 +20,13 @@
       <button type="submit" class="manual__submit">Authenticate Manually</button>
     </div>
   </form>
+
+  <div class="back-to-client-info">
+    <p>
+      Only seeing a white window? Check your internet connection. If you think
+      you've made a mistake entering your Client Info,
+      <a [routerLink]="['/get-client-info']">click here</a>
+      to go back.
+    </p>
+  </div>
 </div>
