@@ -13,6 +13,7 @@ import { AppState } from '../store'
 
 import { Account, MonzoAccountResponse } from '../../lib/monzo/Account'
 import { Amount, MonzoBalanceResponse } from '../../lib/monzo/Amount'
+import { LogoutAction } from '../store/actions/account.actions'
 
 const debug = Debug('app:component:app')
 
@@ -64,6 +65,16 @@ export class AppComponent implements OnInit, OnDestroy {
     )
 
     this.store$.dispatch({ type: '@monux/init' })
+  }
+
+  logout(ev?: MouseEvent) {
+    if (ev) {
+      ev.preventDefault()
+      ev.stopPropagation()
+    }
+
+    debug('starting logout')
+    this.store$.dispatch(new LogoutAction())
   }
 
   ngOnDestroy() {

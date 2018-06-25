@@ -24,7 +24,9 @@ import {
   GET_ACCOUNT,
   SetAccountAction,
   GetAccountAction,
-  GetAccountFailedAction
+  GetAccountFailedAction,
+  LOGOUT,
+  LOGOUT_FAILED
 } from '../actions/account.actions'
 
 import { CacheService } from '../../services/cache.service'
@@ -55,7 +57,7 @@ export class AccountEffects {
 
   @Effect({ dispatch: false })
   logout$: Observable<any> = this.actions$.pipe(
-    ofType('LOGOUT'),
+    ofType(LOGOUT),
     switchMapTo(this.cacheService.deleteAll()),
     switchMap(() => {
       const tokenDeletions = Promise.all([
@@ -73,10 +75,10 @@ export class AccountEffects {
     }),
     catchError(err => {
       console.error(err)
-      return of({ type: 'LOGOUT_FAILED' })
+      return of({ type: LOGOUT_FAILED })
     }),
     tap(_ => {
-      this.router.navigate(['login'])
+      this.router.navigate(['/auth-request'])
     })
   )
 

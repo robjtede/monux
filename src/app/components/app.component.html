@@ -20,7 +20,7 @@
 
 <nav class="tabs">
   <m-account [holder]="accountHolder$ | async"></m-account>
-  <div class="logout">Log Out</div>
+  <div class="logout" (click)="logout($event)">Log Out</div>
 
   <div class="tabgroup">
     <div class="tab" [routerLink]="[{outlets: {pane: 'transactions'}}]" routerLinkActive="active">Transactions</div>
