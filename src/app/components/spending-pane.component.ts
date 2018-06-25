@@ -1,28 +1,25 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  ElementRef,
-  OnInit,
-  ViewChild
-} from '@angular/core'
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core'
 import { Store } from '@ngrx/store'
-import * as d3 from 'd3'
-
-import { Amount } from '../../lib/monzo/Amount'
-import { Transaction } from '../../lib/monzo/Transaction'
+import { schemeSet1 } from 'd3'
 import { AppState } from '../store'
+
+import { txdata } from '../txdata'
+import { Transaction } from '../../lib/monzo/Transaction'
+import { GroupingStrategy, groupTransactions } from '../../lib/monzo/helpers'
 
 @Component({
   selector: 'm-spending-pane',
   template: `
-    <div class="spending-vis">
-      <h1>This Month</h1>
-      <svg #chart>
-          <g>
-            <text class="label"></text>
-            <text class="amount"></text>
-          </g>
-      </svg>
+    <div class="spending-vis" style="flex: 1;">
+      <ngx-charts-pie-chart
+        [results]="data"
+        [doughnut]="true"
+        [legend]="true"
+        [legendTitle]="legendTitle"
+        [scheme]="colorScheme"
+        [labels]="true"
+        [trimLabels]="false"
+      ></ngx-charts-pie-chart>
     </div>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -31,11 +28,28 @@ import { AppState } from '../store'
   }
 })
 export class SpendingPaneComponent implements OnInit {
-  @ViewChild('chart') chart!: ElementRef<SVGSVGElement>
+  legendTitle = 'This Month'
+
+  data = groupTransactions(
+    txdata.map((tx: any) => new Transaction(tx)),
+    GroupingStrategy.Category
+  ).map(cat => {
+    return {
+      name: cat.id,
+      value: cat.txs.reduce(
+        (sum, tx) => sum + (tx.amount.negative ? tx.amount.amount : 0),
+        0
+      )
+    }
+  })
+
+  colorScheme = {
+    domain: schemeSet1
+  }
 
   constructor(private store$: Store<AppState>) {}
 
   ngOnInit() {
-    console.log('TODO')
+    console.log(this.data)
   }
 }

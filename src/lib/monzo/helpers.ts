@@ -6,6 +6,7 @@ import { Amount, SimpleAmount, MonzoBalanceResponse } from './Amount'
 
 export const enum GroupingStrategy {
   Day = 'day',
+  Category = 'category',
   Merchant = 'merchant',
   None = 'none'
 }
@@ -20,13 +21,19 @@ export const groupTransactions = (
       return (+startOfDay(created)).toString()
     },
 
+    [GroupingStrategy.Category]: tx => {
+      return tx.category.formatted
+    },
+
     [GroupingStrategy.Merchant]: tx => {
       if (typeof tx.merchant === 'string') {
         return tx.merchant
       } else {
         return tx.merchant
           ? tx.merchant.groupId
-          : tx.counterparty.user_id ? 'monzo-contacts' : 'top-ups'
+          : tx.counterparty.user_id
+            ? 'monzo-contacts'
+            : 'top-ups'
       }
     },
 
@@ -64,7 +71,9 @@ export const getGroupTitle = (group: TransactionGroup): string => {
       } else {
         return tx.merchant
           ? tx.merchant.name
-          : tx.counterparty.user_id ? 'Monzo Contacts' : 'Top Ups'
+          : tx.counterparty.user_id
+            ? 'Monzo Contacts'
+            : 'Top Ups'
       }
     },
 

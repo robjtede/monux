@@ -1,7 +1,10 @@
+import { LocationStrategy, HashLocationStrategy } from '@angular/common'
+
 // primary modules
 import { NgModule } from '@angular/core'
 import { AppRoutingModule, routedComponents } from './app.routing'
 import { BrowserModule } from '@angular/platform-browser'
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations'
 import { HttpClientModule } from '@angular/common/http'
 import { StoreModule } from '@ngrx/store'
 import { EffectsModule } from '@ngrx/effects'
@@ -10,6 +13,7 @@ import { StoreRouterConnectingModule } from '@ngrx/router-store'
 
 // secondary modules
 import { Ng2ImgToolsModule } from 'ng2-img-tools'
+import { NgxChartsModule } from '@swimlane/ngx-charts'
 
 // environment
 import { environment } from '../environments/environment'
@@ -57,6 +61,7 @@ import { TransactionDetailComponent } from './components/transaction-detail.comp
   imports: [
     BrowserModule,
     AppRoutingModule,
+    BrowserAnimationsModule,
     HttpClientModule,
     StoreModule.forRoot(reducers as any, {
       initialState
@@ -68,9 +73,19 @@ import { TransactionDetailComponent } from './components/transaction-detail.comp
     StoreDevtoolsModule.instrument({
       logOnly: environment.production
     }),
-    Ng2ImgToolsModule
+    Ng2ImgToolsModule,
+    NgxChartsModule
   ],
-  providers: [MonzoService, CacheService, ClientInfoGuard, ApiAccessGuard],
+  providers: [
+    MonzoService,
+    CacheService,
+    ClientInfoGuard,
+    ApiAccessGuard,
+    {
+      provide: LocationStrategy,
+      useClass: HashLocationStrategy
+    }
+  ],
   bootstrap: [RootComponent]
 })
 export class AppModule {}

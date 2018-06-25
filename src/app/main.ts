@@ -11,5 +11,6 @@ if (environment.production) {
 }
 
 platformBrowserDynamic().bootstrapModule(AppModule, {
-  defaultEncapsulation: ViewEncapsulation.Native
+  // disabled due to weak @anuglar/animations support
+  // defaultEncapsulation: ViewEncapsulation.Native
 })
