@@ -12,10 +12,7 @@ import { Transaction } from '../../lib/monzo/Transaction'
   selector: 'm-transaction-pane',
   templateUrl: './transaction-pane.component.html',
   styleUrls: ['./transaction-pane.component.css'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  host: {
-    '[class.pane]': 'true'
-  }
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TransactionPaneComponent implements OnInit {
   txs$!: Observable<Transaction[]>

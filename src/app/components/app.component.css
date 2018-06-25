@@ -148,22 +148,13 @@ nav {
 main {
   grid-area: main;
 
-  display: flex;
-  flex-flow: row nowrap;
+  display: grid;
+  grid-template: 1fr / 1fr;
   justify-content: center;
   align-items: stretch;
 
   max-width: 100vw;
   max-height: var(--main-height);
-}
-
-.pane {
-  display: flex;
-  flex: 1 0 auto;
-  flex-flow: row nowrap;
-  justify-content: space-between;
-  align-items: stretch;
-  max-width: 100%;
 }
 
 .lightboxable {

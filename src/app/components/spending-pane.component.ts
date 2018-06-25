@@ -49,7 +49,5 @@ export class SpendingPaneComponent implements OnInit {
 
   constructor(private store$: Store<AppState>) {}
 
-  ngOnInit() {
-    console.log(this.data)
-  }
+  ngOnInit() {}
 }

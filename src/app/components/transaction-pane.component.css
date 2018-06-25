@@ -1,3 +1,9 @@
+:host {
+  display: flex;
+  justify-content: flex-start;
+  align-items: stretch;
+}
+
 m-transaction-list {
   flex: 4;
 }

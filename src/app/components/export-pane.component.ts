@@ -12,9 +12,6 @@ import { Component, ChangeDetectionStrategy } from '@angular/core'
     <!-- <m-export></m-export> -->
   `,
   styleUrls: ['unfinished-pane.component.css'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  host: {
-    '[class.pane]': 'true'
-  }
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ExportPaneComponent {}
