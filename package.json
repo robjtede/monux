@@ -25,6 +25,8 @@
     "postinstall": "electron-builder install-app-deps"
   },
   "dependencies": {
+    "@angular/animations": "^6.1.0-beta.2",
+    "@angular/cdk": "^6.3.0",
     "@angular/common": "^6.1.0-beta.2",
     "@angular/compiler": "^6.1.0-beta.2",
     "@angular/core": "^6.1.0-beta.2",
@@ -35,6 +37,7 @@
     "@ngrx/router-store": "^6.0.1",
     "@ngrx/store": "^6.0.1",
     "@ngrx/store-devtools": "^6.0.1",
+    "@swimlane/ngx-charts": "^8.1.0",
     "common-tags": "^1.8.0",
     "core-js": "^2.5.7",
     "d3": "^5.5.0",
@@ -88,12 +91,12 @@
     "postcss": "^6.0.23",
     "postcss-cssnext": "^3.1.0",
     "postcss-loader": "^2.1.5",
-    "prettier": "^1.13.5",
+    "prettier": "^1.13.6",
     "style-loader": "^0.21.0",
     "to-string-loader": "^1.1.5",
     "tslib": "^1.9.3",
     "tslint": "^5.10.0",
-    "typescript": "^2.8.4",
+    "typescript": "~2.8.4",
     "webpack": "^4.12.1",
     "webpack-cli": "^3.0.8"
   }
