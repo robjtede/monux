@@ -6,11 +6,15 @@
   color: var(--monzo-blue);
 
   background-color: var(--monzo-blue);
+
+  -webkit-app-region: drag;
 }
 
 .wrap {
   margin: 0 auto;
   max-width: 35em;
+
+  -webkit-app-region: inherit;
 }
 
 header {
@@ -20,6 +24,8 @@ header {
 
   background: var(--off-white);
   border-radius: 5px;
+
+  -webkit-app-region: no-drag;
 }
 
 form {
@@ -28,6 +34,8 @@ form {
   background: var(--off-white);
 
   border-radius: 5px;
+
+  -webkit-app-region: no-drag;
 
   & p {
     font-size: 1.2em;
