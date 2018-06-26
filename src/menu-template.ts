@@ -1,6 +1,6 @@
-import { shell } from 'electron'
+import { shell, MenuItemConstructorOptions } from 'electron'
 
-export default [
+export const makeMacOSMenu = (): MenuItemConstructorOptions[] => [
   {
     label: 'Application',
     submenu: [
@@ -52,4 +52,4 @@ export default [
       }
     ]
   }
-] as Electron.MenuItemConstructorOptions[]
+]

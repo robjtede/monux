@@ -1,0 +1,330 @@
+:host {
+  display: block;
+  padding-bottom: 15px;
+
+  &([data-category=groceries]) {
+    --category-color: gold;
+  }
+
+  &([data-category=transport]) {
+    --category-color: teal;
+  }
+
+  &([data-category=entertainment]) {
+    --category-color: orangered;
+  }
+
+  &([data-category=eating_out]) {
+    --category-color: crimson;
+  }
+
+  &([data-category=cash]) {
+    --category-color: olivedrab;
+  }
+
+  &([data-category=mondo]) {
+    --category-color: olivedrab;
+  }
+
+  &([data-category=monzo]) {
+    --category-color: olivedrab;
+  }
+
+  &([data-category=general]) {
+    --category-color: slategrey;
+  }
+
+  &([data-category=bills]) {
+    --category-color: cornflowerblue;
+  }
+
+  &([data-category=holidays]) {
+    --category-color: orchid;
+  }
+
+  &([data-category=shopping]) {
+    --category-color: coral;
+  }
+
+  &([data-category=expenses]) {
+    --category-color: darkkhaki;
+  }
+}
+
+.info {
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: space-between;
+  align-items: center;
+
+  padding: 0 15px;
+
+  border-left: 10px solid var(--category-color);
+  border-bottom: var(--thin-border);
+}
+
+.map {
+  min-height: 100px;
+  background: lightblue;
+}
+
+.header {
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: flex-start;
+  align-items: stretch;
+
+  padding: 0 15px 15px;
+}
+
+.icon-wrap {
+  flex: 0 1 130px;
+
+  & .icon {
+    width: 3em;
+    height: 3em;
+
+    border: var(--thin-border);
+    border-radius: 25%;
+    background: var(--white);
+
+    transform: scale(1.8);
+    transform-origin: bottom left;
+  }
+}
+
+.merchant {
+  flex: 1;
+
+  font-size: 2rem;
+  word-break: break-word;
+
+  & .online::after {
+    content: '\01F310';
+    font-size: 0.7em;
+    padding-left: 0.5em;
+    color: rgba(123, 198, 255, 1);
+    vertical-align: middle;
+  }
+}
+
+.location {
+  padding: 0 15px 0.8em;
+
+  font-size: 1rem;
+}
+
+.category-wrap {
+  padding: 0 15px;
+}
+
+.category {
+  display: inline-block;
+  padding: 0.2em 0.6em 0.2em 0.4em;
+
+  border: 2px solid var(--category-color, black);
+  border-radius: 5px;
+
+  color: var(--category-color, black);
+  font-size: 1.2rem;
+  text-transform: capitalize;
+
+  &:hover {
+    background-color: var(--category-color);
+
+    color: var(--white);
+
+    cursor: pointer;
+  }
+
+  &::before {
+    content: attr(data-emoji);
+    display: inline-block;
+    width: 1em;
+    height: 1em;
+    margin-right: 0.25em;
+
+    font-size: 1.25em;
+    line-height: 1;
+    vertical-align: middle;
+    text-shadow: 1.5px 1.5px 0 white, -1.5px 1.5px 0 white, 1.5px -1.5px 0 white,
+      -1.5px -1.5px 0 white, 1.5px 0px 0 white, -1.5px 0px 0 white,
+      0px -1.5px 0 white, 0px 1.5px 0 white;
+  }
+}
+
+.decline-reason {
+  padding: 1em 15px 0;
+
+  font-size: 1.2rem;
+  color: color(red saturation(-20%));
+}
+
+.amount-wrap {
+  padding: 0.8em 15px 0.5em;
+
+  border-bottom: var(--thin-border);
+}
+
+m-amount {
+  display: block;
+
+  font-size: 2rem;
+  line-height: 1.4;
+
+  --positive-color: green;
+
+  @nest :host(.declined) & {
+    --negative-color: color(red saturation(-20%));
+  }
+}
+
+.balance-wrap::before,
+.notes-wrap::before {
+  content: var(--label-text);
+  display: block;
+
+  color: var(--label-grey);
+  font-size: 1rem;
+}
+
+.balance-wrap {
+  --label-text: 'Balance (after transaction):';
+
+  padding: 0.5em 15px;
+
+  border-bottom: var(--thin-border);
+
+  & m-amount {
+    font-size: 1.8rem;
+
+    --positive-color: inherit;
+  }
+}
+
+.notes-wrap {
+  --label-text: 'Notes:';
+
+  padding: 0.8em 15px 0.5em;
+
+  border-bottom: var(--thin-border);
+
+  & textarea {
+    width: calc(100% - 1em);
+    min-height: 2em;
+    padding: 0.5em;
+
+    border-radius: 5px;
+    border: 1px solid;
+    border-color: transparent;
+
+    font-size: inherit;
+    line-height: inherit;
+
+    resize: none;
+  }
+
+  & textarea:hover {
+    border-color: var(--light-grey);
+  }
+
+  & a {
+    text-decoration: none;
+  }
+}
+
+.attachments {
+  padding: 0.8em 0 0.5em;
+
+  border-bottom: var(--thin-border);
+
+  &::before {
+    content: 'Attachments:';
+    display: block;
+    padding-left: 15px;
+    padding-right: 15px;
+
+    color: var(--label-grey);
+  }
+
+  & .scroll-wrap {
+    padding-bottom: 5px;
+    overflow-x: scroll;
+    overflow-y: hidden;
+  }
+
+  & .scroll-inner {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    padding: 0 0.5em;
+
+    & > * {
+      flex-basis: auto;
+    }
+  }
+
+  & .file-drop {
+    display: inline-block;
+    margin-right: 0.5em;
+    padding: 1em;
+    min-width: 150px;
+    max-width: 150px;
+    align-self: stretch;
+
+    white-space: normal;
+
+    border: 1px solid var(--label-grey);
+    border-radius: 5px;
+    cursor: pointer;
+
+    &:hover {
+      background-color: var(--off-white);
+    }
+
+    &:active {
+      background-color: var(--light-grey);
+    }
+
+    & > p {
+      text-align: center;
+    }
+
+    & > input {
+      position: relative;
+      left: -999999px;
+      width: 0.1px;
+      height: 0.1px;
+    }
+  }
+}
+
+.smallprint {
+  padding: 0.8em 15px;
+
+  font-size: 0.8rem;
+  color: var(--medium-grey);
+  white-space: pre-wrap;
+}
+
+.smallprint::before {
+  content: var(--label-text);
+  display: block;
+
+  color: var(--label-grey);
+}
+
+.date {
+  --label-text: 'Transaction Date and Time:';
+}
+.description {
+  --label-text: 'Transaction Description:';
+}
+
+.id {
+  --label-text: 'Transaction ID:';
+}
+
+.settled {
+  --label-text: 'Transaction Status:';
+}

@@ -1,0 +1,46 @@
+<div class="wrap">
+  <header>
+    <img src="../../../build/icon.png" height="100">
+    <h1>Authenicate Monux with Monzo</h1>
+
+    <p>
+      If the Monzo window does not appear, click below.
+      <br>
+      <a href="#" (click)="openAuthRequest($event)">Open auth request</a>
+    </p>
+  </header>
+
+  <form action="#" (submit)="manualCode($event, code.value)" class="section manual-code">
+    <h2>Alternatively...</h2>
+
+    <p>
+      Paste the url of the link shown after clicking the link in the email.
+      It should start with <q><code>monux://</code></q>.
+    </p>
+
+    <div class="manual">
+      <input #code type="text" class="manual__field">
+      <button type="submit" class="manual__submit">Authenticate Manually</button>
+    </div>
+  </form>
+
+  <section class="section having-trouble">
+    <h2>Having Trouble?</h2>
+    <p>
+      Only seeing a white window? Check your internet connection. If you think
+      you've made a mistake entering your Client Info,
+      <a [routerLink]="['/get-client-info']">click here</a>
+      to go back.
+    </p>
+  </section>
+
+  <section class="section privacy">
+    <h2>Privacy</h2>
+    <p>
+      This process is secure. None of your information is available to be seen
+      by others; your transaction data remains entirely local to your machine.
+      The creators of Monux do not collect information about your account or use
+      of this application and cannot use your API key in any way.
+    </p>
+  </section>
+</div>

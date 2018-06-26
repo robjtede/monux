@@ -1,28 +1,34 @@
 import { randomBytes } from 'crypto'
 import { parse as parseQueryString } from 'querystring'
 import { parse as parseUrl } from 'url'
-import * as Debug from 'debug'
+import Debug = require('debug')
 
-import { app } from 'electron'
-import { enableLiveReload } from 'electron-compile'
+import { app, ipcMain, EventEmitter } from 'electron'
 
 import {
   getAccessToken,
-  refreshAccess,
   verifyAccess,
   getSavedCode,
-  saveCode
-} from '../lib/monzo/auth'
-import WindowManager from './window-manager'
+  saveCode,
+  getAuthRequestUrl
+} from './lib/monzo/auth'
+import { WindowManager } from './window-manager'
 
 const debug = Debug('app:app')
-const mainWindow = new WindowManager()
-
-enableLiveReload()
 
 debug(`starting`, app.getName(), 'version', app.getVersion())
 
-export interface IAppInfo {
+export const wm = new WindowManager()
+
+if (!app.isDefaultProtocolClient(app.getName().toLowerCase())) {
+  app.setAsDefaultProtocolClient(app.getName().toLowerCase())
+}
+
+import('electron-reload')
+  .then(reloader => reloader(__dirname))
+  .catch(console.error)
+
+export interface AppInfo {
   client_id: string
   client_secret: string
   redirect_uri: string
@@ -38,7 +44,7 @@ const getAppInfo = (() => {
     })
   })
 
-  return async (): Promise<IAppInfo> => {
+  return async (): Promise<AppInfo> => {
     return {
       client_id: await getSavedCode('client_id'),
       client_secret: await getSavedCode('client_secret'),
@@ -49,67 +55,16 @@ const getAppInfo = (() => {
   }
 })()
 
-app.on('ready', async () => {
-  debug('ready event')
-
-  try {
-    const appInfo = await getAppInfo()
-
-    try {
-      const accessToken = await getSavedCode('access_token')
-
-      try {
-        const access = await verifyAccess(accessToken)
-
-        if (access) {
-          mainWindow.goToMonux()
-        } else {
-          try {
-            const refreshToken = await getSavedCode('refresh_token')
-
-            const {
-              accessToken: newAccessToken,
-              refreshToken: newRefreshToken
-            } = await refreshAccess(appInfo, refreshToken)
-
-            if (await verifyAccess(newAccessToken)) {
-              await saveCode('access_token', newAccessToken)
-              await saveCode('refresh_token', newRefreshToken)
-
-              mainWindow.goToMonux()
-            } else {
-              console.error('Invalid refresh token')
-              throw new Error('Invalid refresh token')
-            }
-          } catch (err) {
-            debug('no refresh token found')
-            mainWindow.goToAuthRequest(appInfo)
-          }
-        }
-      } catch (err) {
-        console.warn(err.name)
-        if (err.name === 'RequestError') mainWindow.goToMonux()
-        else throw new Error(err)
-      }
-    } catch (err) {
-      debug('no access token found')
-      mainWindow.goToAuthRequest(appInfo)
-    }
-  } catch (err) {
-    debug('no client info found')
-    mainWindow.goToClientInfo()
-  }
-})
-
-app.on('open-url', async (_, forwardedUrl) => {
-  debug('open-url event')
-
+const parseAuthUrl = async (forwardedUrl: string) => {
   const appInfo = await getAppInfo()
-
-  const query = parseUrl(forwardedUrl).query
+  // TODO: swap out for URL construct
+  // TODO: handle no query
+  const query = parseUrl(forwardedUrl).query as string
   const authResponse = parseQueryString(query)
 
   if (authResponse.state !== appInfo.state) {
+    debug('App state:', appInfo.state)
+    debug('Auth state:', authResponse.state)
     console.error('Auth state mismatch')
     throw new Error('Auth state mismatch')
   }
@@ -120,7 +75,7 @@ app.on('open-url', async (_, forwardedUrl) => {
   try {
     const { accessToken, refreshToken } = await getAccessToken(
       appInfo,
-      authCode
+      authCode as string
     )
 
     debug('token =>', accessToken)
@@ -130,7 +85,8 @@ app.on('open-url', async (_, forwardedUrl) => {
       if (refreshToken) await saveCode('refresh_token', refreshToken)
       else debug('no refresh token sent')
 
-      mainWindow.goToMonux()
+      wm.mainWindow.webContents.send('auth-verify:monzo', accessToken)
+      wm.closeAuthRequest()
     } else {
       console.error('Invalid access token')
       throw new Error('Invalid access token')
@@ -139,17 +95,88 @@ app.on('open-url', async (_, forwardedUrl) => {
     console.error(err)
     throw new Error(err)
   }
+}
+
+const isSecondInstance = app.makeSingleInstance(async (argv, _) => {
+  // focus main window if second instance started
+  if (wm.hasMainWindow() && wm.mainWindow.isMinimized()) {
+    wm.mainWindow.restore()
+  }
+  wm.focusMainWindow()
+
+  if (process.platform === 'win32' && argv.length > 1) {
+    const authUrl = argv.find(param => {
+      return param.toLowerCase().startsWith('monux://')
+    })
+
+    if (authUrl) {
+      try {
+        await parseAuthUrl(authUrl)
+      } catch (err) {
+        console.error(err)
+        throw new Error(err)
+      }
+    } else {
+      console.error('Auth url not found')
+      throw new Error('Auth url not found')
+    }
+  }
+})
+
+if (isSecondInstance) {
+  app.quit()
+}
+
+app.on('ready', async () => {
+  debug('ready event')
+
+  import('devtron')
+    .then(({ install }) => install())
+    .catch(console.error)
+  import('electron-devtools-installer')
+    .then(({ default: installExtension, REDUX_DEVTOOLS }) => {
+      const extensions = [
+        installExtension(REDUX_DEVTOOLS),
+        installExtension('elgalmkoelokbchhkhacckoklkejnhcd')
+      ]
+
+      return Promise.all(extensions)
+        .then(names => debug('Added Extensions:', names.join(', ')))
+        .catch(err => debug('An error occurred adding extension:', err))
+    })
+    .catch(console.error)
+
+  wm.goToMonux()
+
+  ipcMain.on('open-auth-window', async (_ev: EventEmitter, bank: string) => {
+    debug('opening auth request window for', bank)
+
+    const appInfo = await getAppInfo()
+    const url = getAuthRequestUrl(appInfo)
+    wm.openAuthRequest(url)
+  })
+
+  ipcMain.on('auth-verify:monzo', async (_ev: EventEmitter, url: string) => {
+    debug('getting acceess token from manually entered code')
+    await parseAuthUrl(url)
+  })
+})
+
+app.on('open-url', async (_, forwardedUrl) => {
+  debug('open-url event')
+
+  await parseAuthUrl(forwardedUrl)
 })
 
 app.on('window-all-closed', () => {
   debug('window-all-closed event')
 
   // conflicts with auth strategy for now
-  // if (process.platform !== 'darwin') app.quit()
+  if (process.platform !== 'darwin') app.quit()
 })
 
 app.on('activate', () => {
   debug('activate event')
-  if (mainWindow.hasWindow) mainWindow.focus()
-  else mainWindow.goToMonux()
+  if (wm.hasMainWindow()) wm.focusMainWindow()
+  else wm.goToMonux()
 })

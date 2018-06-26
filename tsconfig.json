@@ -1,26 +1,35 @@
 {
   "compilerOptions": {
-    "alwaysStrict": true,
+    "allowSyntheticDefaultImports": false,
+    "allowUnusedLabels": false,
     "declaration": false,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "forceConsistentCasingInFileNames": true,
     "importHelpers": true,
     "inlineSourceMap": true,
+    "inlineSources": true,
     "lib": ["esnext", "dom"],
     "module": "commonjs",
     "moduleResolution": "node",
     "noEmitHelpers": true,
-    "noImplicitAny": true,
     "noImplicitReturns": true,
-    "noImplicitThis": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
+    "outDir": "./dist",
     "preserveConstEnums": true,
     "removeComments": false,
-    "sourceMap": true,
+    "skipLibCheck": true,
     "strict": true,
     "target": "es2016"
   },
-  "exclude": ["node_modules"]
+  "angularCompilerOptions": {
+    "fullTemplateTypeCheck": true,
+    "preserveWhitespaces": true,
+    "strictInjectionParameters": true,
+    "enableIvy": true
+  },
+  "exclude": [
+    "./node_modules/"
+  ]
 }

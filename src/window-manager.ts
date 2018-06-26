@@ -1,62 +1,71 @@
 import { resolve } from 'path'
-import { format } from 'url'
-import * as Debug from 'debug'
+import {
+  // URL,
+  format
+} from 'url'
+import Debug = require('debug')
 
 import { BrowserWindow, Menu } from 'electron'
 import windowState = require('electron-window-state')
 
-import { oneLineTrim } from 'common-tags'
-
-import { IAppInfo } from './app'
-import menuTemplate from './menu-template'
+import { makeMacOSMenu } from './menu-template'
 
 const debug = Debug('app:window-manager')
 
-export default class WindowManager {
-  private _window: Electron.BrowserWindow | undefined
+export class WindowManager {
+  private _mainWindow: BrowserWindow | undefined
+  private _authWindow: BrowserWindow | undefined
 
-  focus() {
-    if (this._window) this._window.focus()
+  focusMainWindow() {
+    if (this._mainWindow) {
+      debug('focus main window')
+      this._mainWindow.focus()
+    }
   }
 
-  get hasWindow(): boolean {
-    return !!this._window
+  hasMainWindow(): boolean {
+    return !!this._mainWindow
   }
 
-  get window(): Electron.BrowserWindow {
-    debug('get window')
-    if (this._window) return this._window
+  hasAuthWindow(): boolean {
+    return !!this._authWindow
+  }
+
+  get mainWindow(): BrowserWindow {
+    if (this._mainWindow) {
+      debug('getting main window')
+      return this._mainWindow
+    }
+
+    debug('creating main window')
 
     const mainWindowState = windowState({
       defaultHeight: 800,
       defaultWidth: 1000
     })
 
-    this._window = new BrowserWindow({
+    this._mainWindow = new BrowserWindow({
       x: mainWindowState.x,
       y: mainWindowState.y,
       width: mainWindowState.width,
       height: mainWindowState.height,
       minWidth: 600,
       minHeight: 600,
-      titleBarStyle: 'hidden-inset',
-      webPreferences: {
-        experimentalFeatures: true
-      }
+      titleBarStyle: 'hiddenInset'
     })
 
-    mainWindowState.manage(this._window)
+    mainWindowState.manage(this._mainWindow)
 
-    this._window.on('closed', () => {
-      this._window = undefined
+    this._mainWindow.on('closed', () => {
+      this._mainWindow = undefined
     })
 
-    return this._window
+    return this._mainWindow
   }
 
-  set location(path: string) {
-    debug('set window location =>', path)
-    this.window.loadURL(path)
+  set mainLocation(url: string) {
+    debug('set window location =>', url)
+    this.mainWindow.loadURL(url)
   }
 
   set menu(menu: Electron.MenuItemConstructorOptions[]) {
@@ -66,38 +75,38 @@ export default class WindowManager {
 
   setDefaultMenu(): void {
     debug('set default menu')
-    this.menu = menuTemplate
+    this.menu = makeMacOSMenu()
   }
 
   goToMonux(): void {
     debug('go to monux')
-    this.location = format({
-      pathname: resolve(__dirname, '..', 'app', 'index.html'),
-      protocol: 'file:',
-      slashes: true
+    this.mainLocation = format({
+      pathname: resolve(__dirname, 'app', 'index.html'),
+      protocol: 'file:'
     })
     this.setDefaultMenu()
   }
 
-  goToAuthRequest(appInfo: IAppInfo): void {
-    debug('go to auth request')
-    this.location = oneLineTrim`
-      https://auth.getmondo.co.uk/
-      ?client_id=${appInfo.client_id}
-      &redirect_uri=${appInfo.redirect_uri}
-      &response_type=${appInfo.response_type}
-      &state=${appInfo.state}
-    `
-    this.setDefaultMenu()
+  openAuthRequest(url: string): void {
+    this.closeAuthRequest()
+
+    debug('open auth request', url)
+
+    this._authWindow = new BrowserWindow({
+      width: 600,
+      height: 800
+    })
+
+    this._authWindow.loadURL(url)
+    this._authWindow.focus()
+
+    this._authWindow.on('closed', () => {
+      this._authWindow = undefined
+    })
   }
 
-  goToClientInfo(): void {
-    debug('go to client info')
-    this.location = format({
-      pathname: resolve(__dirname, '..', 'app', 'get-client-info.html'),
-      protocol: 'file:',
-      slashes: true
-    })
-    this.setDefaultMenu()
+  closeAuthRequest(): void {
+    debug('close auth window')
+    if (this.hasAuthWindow()) (this._authWindow as BrowserWindow).close()
   }
 }

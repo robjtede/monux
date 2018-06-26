@@ -1,0 +1,28 @@
+:host {
+  margin: 0;
+}
+
+:host(.positive) {
+  color: var(--positive-color, inherit);
+}
+
+:host(.negative) {
+  color: var(--negative-color, inherit);
+}
+
+.amount {
+  display: flex;
+  justify-content: var(--align, flex-start);
+  align-items: baseline;
+
+  white-space: nowrap;
+}
+
+:host([large-major]) .native .major {
+  font-size: var(--large-major-size, 1.6em);
+}
+
+.local {
+  color: var(--local-color, var(--dark-grey, gray(128)));
+  font-size: var(--local-size, 0.8em);
+}

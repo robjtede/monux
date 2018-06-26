@@ -1,0 +1,30 @@
+<div class="wrap">
+  <header>
+    <img src="../assets/icons/monzo.png" height="100">
+    <h1>
+      Enter your Monzo API Client Info
+    </h1>
+  </header>
+
+  <form (submit)="saveClientInfo($event, clientId.value, clientSecret.value)">
+    <label>
+      <p>
+        Client ID
+      </p>
+      <input #clientId type="text">
+    </label>
+
+    <br>
+
+    <label>
+      <p>
+        Client Secret
+      </p>
+      <input #clientSecret type="text">
+    </label>
+
+    <br>
+
+    <button type="submit" class="submit">Set Client ID and Secret</button>
+  </form>
+</div>

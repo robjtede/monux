@@ -1,0 +1,64 @@
+<div class="map"></div>
+
+<div class="header">
+  <div class="icon-wrap">
+    <img #icon class="icon" [src]="tx.icon" (error)="iconFallback()">
+  </div>
+  <div class="merchant" [class.online]="tx.online">
+    {{ tx.displayName }}
+  </div>
+</div>
+
+<div class="location" *ngIf="!tx.online && tx.location">{{ tx.location }}</div>
+<div class="category-wrap">
+  <div class="category" [attr.data-emoji]="emoji">
+    {{ tx.category.formatted }}
+  </div>
+</div>
+
+<div class="decline-reason" *ngIf="tx.declined">
+  Declined due to {{ tx.declineReason }}.
+</div>
+<div class="amount-wrap">
+  <m-amount
+    *ngIf="!tx.is.metaAction"
+    [amount]="tx.amount"
+    sign-mode="never"
+    large-major
+  ></m-amount>
+</div>
+
+<div class="notes-wrap">
+  <textarea
+    #notes
+    autosize
+    (blur)="updateNotes(notes.value)"
+    value='{{ tx.notes }}'
+    placeholder="Click here to add a note..."
+  ></textarea>
+</div>
+
+<div class="attachments">
+  <div class="scroll-wrap">
+    <div class="scroll-inner">
+      <label class="file-drop">
+        <p>
+          <br>
+          📎
+        ️</p>
+        <p>Click to upload attachments</p>
+        <input #uploader type="file" class="new-attachment" (change)="uploadAttachment($event)">
+      </label>
+      <m-transaction-attachment
+        *ngFor="let attachment of tx.attachments"
+        [attachment]="attachment"
+        (delete)="deregisterAttachment($event)"
+      ></m-transaction-attachment>
+    </div>
+  </div>
+</div>
+
+<div class="smallprint date">{{ createdTime }}</div>
+<div class="smallprint id">{{ tx.id }}</div>
+<div class="smallprint description">{{ tx.description }}</div>
+<div class="smallprint settled" *ngIf="showAmount">{{ tx.settled }}</div>

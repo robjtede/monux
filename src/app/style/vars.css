@@ -1,0 +1,17 @@
+:root {
+  --white: gray(100%);
+  --off-white: gray(95%);
+  --light-grey: gray(80%);
+  --label-grey: gray(65%);
+  --medium-grey: gray(55%);
+  --dark-grey: gray(30%);
+  --black: gray(0%);
+
+  --monzo-blue: rgba(21, 35, 60, 1);
+
+  --thin-border: 1px solid var(--light-grey);
+
+  --header-height: 7.5em;
+  --nav-height: 4em;
+  --main-height: calc(100vh - var(--header-height) - var(--nav-height));
+}

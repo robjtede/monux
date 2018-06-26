@@ -18,11 +18,12 @@
 - [Support this project](#support-this-project)
 - [Goals](#goals)
 - [Screenshots](#screenshots)
+- [Contributors](#contributors)
 
 
 ## Vision
 
-Monux is being designed to support all OSes and any bank with a public API. For now, Monux supports [Monzo](https://monzo.com) on MacOS, only.
+Monux is being designed to support all OSes and any bank with a public API. At the moment, Monux only supports [Monzo](https://monzo.com) on macOS.
 
 
 ## Download
@@ -34,14 +35,14 @@ Monux is being designed to support all OSes and any bank with a public API. For 
 
 ## Features
 
-- [x] View balance / spend today
-- [x] Transaction list view
-- [x] Month-by-month spending breakdowns
-- [x] Transaction detail view
-- [x] Full notes and attachments
-- [x] Edit notes
-- [x] Add and remove attachments/receipts
-- [x] Filter transactions
+- ☑️ View balance / spend today
+- ☑️ Transaction list view
+- ☑️ Month-by-month spending breakdowns
+- ☑️ Transaction detail view
+- ☑️ Full notes and attachments
+- ☑️ Edit notes
+- ☑️ Add and remove attachments/receipts
+- ☑️ Filter transactions
 
 
 ## Usage
@@ -72,21 +73,23 @@ Monux is being designed to support all OSes and any bank with a public API. For 
 ### (Vote on what you want to see next)
 
 [![](https://m131jyck4m.execute-api.us-west-2.amazonaws.com/prod/poll/01BM7TWYY0DN4K8DS0DTV3V07B/Transaction%20location%20on%20map)](https://m131jyck4m.execute-api.us-west-2.amazonaws.com/prod/poll/01BM7TWYY0DN4K8DS0DTV3V07B/Transaction%20location%20on%20map/vote)
-[![](https://m131jyck4m.execute-api.us-west-2.amazonaws.com/prod/poll/01BM7TWYY0DN4K8DS0DTV3V07B/Search%20transactions)](https://m131jyck4m.execute-api.us-west-2.amazonaws.com/prod/poll/01BM7TWYY0DN4K8DS0DTV3V07B/Search%20transactions/vote)
 [![](https://m131jyck4m.execute-api.us-west-2.amazonaws.com/prod/poll/01BM7TWYY0DN4K8DS0DTV3V07B/Graph%20balance%20over%20time)](https://m131jyck4m.execute-api.us-west-2.amazonaws.com/prod/poll/01BM7TWYY0DN4K8DS0DTV3V07B/Graph%20balance%20over%20time/vote)
 [![](https://m131jyck4m.execute-api.us-west-2.amazonaws.com/prod/poll/01BM7TWYY0DN4K8DS0DTV3V07B/CSV%20JSON%20Excel%20export)](https://m131jyck4m.execute-api.us-west-2.amazonaws.com/prod/poll/01BM7TWYY0DN4K8DS0DTV3V07B/CSV%20JSON%20Excel%20export/vote)
-
-_(complete goals have been removed so numbers may be inaccurate)_
+[![](https://m131jyck4m.execute-api.us-west-2.amazonaws.com/prod/poll/01BM7TWYY0DN4K8DS0DTV3V07B/View%20spending%20targets)](https://m131jyck4m.execute-api.us-west-2.amazonaws.com/prod/poll/01BM7TWYY0DN4K8DS0DTV3V07B/View%20spending%20targets/vote)
+[![](https://m131jyck4m.execute-api.us-west-2.amazonaws.com/prod/poll/01BM7TWYY0DN4K8DS0DTV3V07B/Multiple%20accounts)](https://m131jyck4m.execute-api.us-west-2.amazonaws.com/prod/poll/01BM7TWYY0DN4K8DS0DTV3V07B/Multiple%20accounts/vote)
 
 
 ### Future Goals (Pending Monzo Support)
 
 [![](https://m131jyck4m.execute-api.us-west-2.amazonaws.com/prod/poll/01BM7TWYY0DN4K8DS0DTV3V07B/Change%20category)](https://m131jyck4m.execute-api.us-west-2.amazonaws.com/prod/poll/01BM7TWYY0DN4K8DS0DTV3V07B/Change%20category/vote)
-[![](https://m131jyck4m.execute-api.us-west-2.amazonaws.com/prod/poll/01BM7TWYY0DN4K8DS0DTV3V07B/Multiple%20accounts)](https://m131jyck4m.execute-api.us-west-2.amazonaws.com/prod/poll/01BM7TWYY0DN4K8DS0DTV3V07B/Multiple%20accounts/vote)
-[![](https://m131jyck4m.execute-api.us-west-2.amazonaws.com/prod/poll/01BM7TWYY0DN4K8DS0DTV3V07B/View%20spending%20targets)](https://m131jyck4m.execute-api.us-west-2.amazonaws.com/prod/poll/01BM7TWYY0DN4K8DS0DTV3V07B/View%20spending%20targets/vote)
 
 
 ## Screenshots
 
-![List Preview](http://i.imgur.com/DL0PHSe.png)
-![Spending Preview](http://i.imgur.com/1GFdvGf.png)
+![List Preview](https://i.imgur.com/Ydmg9cV.png)
+![Spending Preview](https://i.imgur.com/Qpd5Lye.png)
+
+
+## Contributors
+- [Rob Ede](https://github.com/robjtede)
+- [Andrew Schofield](https://github.com/andrew-schofield)

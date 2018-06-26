@@ -1,0 +1,39 @@
+<header class="balances">
+  <div class="card-balance">
+    <m-amount
+      *ngIf="balance$ | async"
+      [amount]="balance$ | async"
+      sign-mode="never"
+      large-major
+    ></m-amount>
+  </div>
+
+  <div class="spent-today">
+    <m-amount
+      *ngIf="spent$ | async"
+      [amount]="spent$ | async"
+      sign-mode="never"
+      large-major
+    ></m-amount>
+  </div>
+</header>
+
+<nav class="tabs">
+  <m-account [holder]="accountHolder$ | async"></m-account>
+  <div class="logout" (click)="logout($event)">Log Out</div>
+
+  <div class="tabgroup">
+    <div class="tab" [routerLink]="[{outlets: {pane: 'transactions'}}]" routerLinkActive="active">Transactions</div>
+    <div class="tab" [routerLink]="[{outlets: {pane: 'spending'}}]" routerLinkActive="active">Spending</div>
+    <div class="tab" [routerLink]="[{outlets: {pane: 'map'}}]" routerLinkActive="active">Map</div>
+    <div class="tab" [routerLink]="[{outlets: {pane: 'export'}}]" routerLinkActive="active">Export</div>
+  </div>
+</nav>
+
+<main>
+  <router-outlet name="pane"></router-outlet>
+</main>
+
+<div class="lightbox">
+  <img>
+</div>

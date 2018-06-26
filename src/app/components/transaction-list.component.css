@@ -1,0 +1,40 @@
+:host {
+  display: block;
+  overflow-x: hidden;
+  overflow-y: scroll;
+
+  border-right: var(--thin-border);
+
+  &(.inactive)::after {
+    content: 'Loading...';
+    width: 100%;
+    padding-top: 150px;
+
+    color: var(--medium-grey);
+    text-align: center;
+
+    -webkit-user-select: none;
+  }
+}
+
+.search {
+  display: flex;
+  align-items: center;
+  padding: 0.4em 0.75em;
+
+  & input {
+    flex-grow: 1;
+    margin-left: 0.4em;
+    padding: 0.4em;
+
+    font-size: inherit;
+  }
+}
+
+m-transaction-group:not(:last-of-type) {
+  border-bottom: var(--thin-border);
+}
+
+m-transaction-group:first-of-type {
+  border-top: var(--thin-border);
+}

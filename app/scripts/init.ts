@@ -1,7 +1,0 @@
-import './index'
-import './balances'
-import './transactions'
-import './lightbox'
-import './logout'
-import './tabs'
-import './spending'

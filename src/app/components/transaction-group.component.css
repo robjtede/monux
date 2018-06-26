@@ -1,0 +1,63 @@
+:host {
+  display: block;
+  overflow: hidden;
+}
+
+.group-heading {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  grid-template-areas: 'collapser title total';
+  grid-gap: 1em;
+  justify-content: space-between;
+
+  position: sticky;
+  top: -1px;
+  padding: 0.4em 0.75em;
+  padding-left: 20px;
+
+  border-bottom: var(--thin-border);
+  background-color: var(--off-white);
+
+  & .group-title {
+    grid-area: title;
+
+    font-size: 1.2rem;
+  }
+
+  & .group-collapser {
+    grid-area: collapser;
+    position: relative;
+    top: 0.45em;
+
+    line-height: 1;
+
+    cursor: pointer;
+  }
+
+  & .group-size {
+    display: none;
+    grid-area: size;
+
+    font-size: 0.9rem;
+    color: var(--label-grey);
+  }
+
+  & .group-total {
+    grid-area: total;
+    align-self: center;
+
+    padding-left: 1em;
+
+    color: var(--medium-grey);
+    font-size: 1.1rem;
+  }
+}
+
+.group-txs {
+  transition: height 250ms ease-in-out;
+  will-change: height;
+}
+
+m-transaction-summary:not(:last-of-type) {
+  border-bottom: var(--thin-border);
+}
