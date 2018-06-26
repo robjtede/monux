@@ -1,7 +1,7 @@
 {
   "name": "monux",
   "productName": "Monux",
-  "version": "0.9.3",
+  "version": "0.10.0",
   "description": "Secure desktop client for managing your Monzo current account",
   "private": true,
   "main": "./dist/app.js",
