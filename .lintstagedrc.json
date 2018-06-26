@@ -1,19 +1,9 @@
 {
-  "!*.{js,ts,css}": [
+  "*.{html, json}": [
     "eclint fix",
     "git add"
   ],
-  "*.js": [
-    "eclint fix",
-    "prettier --write",
-    "git add"
-  ],
-  "*.ts": [
-    "eclint fix",
-    "prettier --write",
-    "git add"
-  ],
-  "*.css": [
+  "*.{ts, js, css}": [
     "eclint fix",
     "prettier --write",
     "git add"
