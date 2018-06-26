@@ -5,6 +5,11 @@
 ></m-transaction-list>
 
 <div class="transaction-detail-pane">
+  <div *ngIf="!(selectedTx$ | async)" style="padding: 2em;">
+    If this is your first run, you may need to do a View -> Reload to see
+    your transactions (known bug). Otherwise check your internet connection.
+  </div>
+
   <m-transaction-detail
     *ngIf="selectedTx$ | async"
     [tx]="selectedTx$ | async"
