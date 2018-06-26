@@ -40,7 +40,7 @@ export class TransactionDetailComponent {
   constructor(private store$: Store<AppState>) {}
 
   get createdTime(): string {
-    return format(this.tx.created, 'h:mma - Do MMMM YYYY')
+    return format(this.tx.created, 'h:mma - do MMMM YYYY')
   }
 
   get emoji(): string {

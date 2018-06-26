@@ -225,7 +225,7 @@ export class Transaction {
     else {
       return `Settled: ${format(
         new Date(this.tx.settled),
-        'h:mma - Do MMMM YYYY'
+        'h:mma - do MMMM YYYY'
       )}`
     }
   }

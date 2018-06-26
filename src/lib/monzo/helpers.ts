@@ -57,10 +57,14 @@ export const getGroupTitle = (group: TransactionGroup): string => {
       } else if (isSameDay(created, subDays(new Date(), 1))) {
         return 'Yesterday'
       } else if (isSameYear(created, new Date())) {
-        return format(created, 'dddd, Do MMMM')
+        return format(created, 'EEEE, do MMMM')
       } else {
-        return format(created, 'dddd, Do MMMM YYYY')
+        return format(created, 'EEEE, do MMMM yyyy')
       }
+    },
+
+    [GroupingStrategy.Category]: group => {
+      return group.txs[0].category.formatted
     },
 
     [GroupingStrategy.Merchant]: group => {

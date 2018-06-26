@@ -41,7 +41,7 @@
     "common-tags": "^1.8.0",
     "core-js": "^2.5.7",
     "d3": "^5.5.0",
-    "date-fns": "^2.0.0-alpha.1",
+    "date-fns": "^2.0.0-alpha.10",
     "debug": "^3.1.0",
     "dexie": "^2.0.4",
     "electron-contextmenu-middleware": "^1.0.3",
