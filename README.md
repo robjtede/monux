@@ -86,8 +86,8 @@ Monux is being designed to support all OSes and any bank with a public API. At t
 
 ## Screenshots
 
-![List Preview](http://i.imgur.com/DL0PHSe.png)
-![Spending Preview](http://i.imgur.com/1GFdvGf.png)
+![List Preview](https://i.imgur.com/Ydmg9cV.png)
+![Spending Preview](https://i.imgur.com/Qpd5Lye.png)
 
 
 ## Contributors

@@ -8,7 +8,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ## [0.10.0] - 2018-08-26
 ### Added
 - Search transactions by name, category or notes using the search field above the transaction list.
-- Windows support
+- Groups of transactions can now be collapsed.
+- Windows support.
 
 ### Changed
 - Current accounts are now supported.
@@ -20,8 +21,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - Logout did not clear all caches.
 - Plus symbols (+) would be removed from notes.
 
-
 ### Known Issues
+- Various bug mean you may need to do a View -> Refresh on first load if your transactions do not appear.
 - Nothing is cached yet. An active internet connection is required, at present.
 - Transaction history only goes back to the beginning of last month.
 - Spending pie chart says "This month" but actually includes all available history.

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core'
 import { Router } from '@angular/router'
-import { Store, Action } from '@ngrx/store'
+import { Action } from '@ngrx/store'
 import { Actions, Effect, ofType } from '@ngrx/effects'
 import { defer, from, Observable, of } from 'rxjs'
 import {
@@ -15,11 +15,9 @@ import {
 import { MonzoService } from '../../services/monzo.service'
 import {
   accountsRequest,
-  Account,
   MonzoAccountsResponse
 } from '../../../lib/monzo/Account'
 
-import { AppState } from '../'
 import {
   GET_ACCOUNT,
   SetAccountAction,
@@ -52,7 +50,10 @@ export class AccountEffects {
 
       return new SetAccountAction(acc)
     }),
-    catchError(err => of(new GetAccountFailedAction()))
+    catchError(err => {
+      console.error(err)
+      return of(new GetAccountFailedAction())
+    })
   )
 
   @Effect({ dispatch: false })
