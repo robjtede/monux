@@ -1,7 +1,7 @@
 <h1 align="center">Monux</h1>
 
 <p align="center">
-  <img alt="Monux Logo" height="200" src="https://raw.githubusercontent.com/robjtede/monux/master/monux.png">
+  <img alt="Monux Logo" height="200" src="https://user-images.githubusercontent.com/3316789/41643946-9fb8fbac-7464-11e8-9dcf-083ec60bc178.png">
 </p>
 
 <p align="center">
