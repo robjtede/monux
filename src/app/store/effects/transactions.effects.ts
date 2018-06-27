@@ -2,9 +2,12 @@ import { Injectable } from '@angular/core'
 import { Actions, Effect, ofType } from '@ngrx/effects'
 import { Action, Store } from '@ngrx/store'
 import { startOfMonth, subMonths } from 'date-fns'
-import { forkJoin, Observable, of } from 'rxjs'
+import { combineLatest, forkJoin, Observable, of } from 'rxjs'
 import { catchError, map, switchMap, tap, withLatestFrom } from 'rxjs/operators'
 import Debug = require('debug')
+
+import { MonzoService } from '../../services/monzo.service'
+import { CacheService } from '../../services/cache.service'
 
 import { AppState } from '../'
 import {
@@ -17,7 +20,6 @@ import {
   MonzoTransactionsResponse,
   Transaction
 } from '../../../lib/monzo/Transaction'
-import { MonzoService } from '../../services/monzo.service'
 import {
   SELECT_TRANSACTION,
   SelectTransactionAction
@@ -30,7 +32,8 @@ import {
   PatchTransactionNotesAction,
   PatchTransactionNotesFailedAction,
   SetTransactionAction,
-  SetTransactionsAction
+  SetTransactionsAction,
+  SET_TRANSACTIONS
 } from '../actions/transactions.actions'
 
 const debug = Debug('app:effects:transactions')
@@ -40,7 +43,8 @@ export class TransactionsEffects {
   constructor(
     private store$: Store<AppState>,
     private actions$: Actions,
-    private monzo: MonzoService
+    private monzo: MonzoService,
+    private cache: CacheService
   ) {}
 
   @Effect()
@@ -85,6 +89,25 @@ export class TransactionsEffects {
       console.error(err)
       return of(new PatchTransactionNotesFailedAction())
     })
+  )
+
+  @Effect({ dispatch: false })
+  saveTransactions$: Observable<any> = this.actions$.pipe(
+    ofType(SET_TRANSACTIONS),
+    switchMap((action: SetTransactionsAction) =>
+      combineLatest(this.store$.select('account'), of(action.payload))
+    ),
+    switchMap(([account, txs]) => {
+      if (account) {
+        return this.cache.saveTransactions$(
+          new Account(account),
+          txs.map(tx => new Transaction(tx))
+        )
+      } else {
+        throw new Error('cannot save transaction of account that doesnt exist')
+      }
+    }),
+    tap(debug, debug)
   )
 
   @Effect({ dispatch: false })

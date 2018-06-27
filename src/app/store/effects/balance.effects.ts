@@ -31,22 +31,20 @@ export class BalanceEffects {
   constructor(
     private store$: Store<AppState>,
     private actions$: Actions,
-    private cache: CacheService,
-    private monzoService: MonzoService
+    private monzo: MonzoService,
+    private cache: CacheService
   ) {}
 
   @Effect()
   get$: Observable<Action> = this.actions$.pipe(
     ofType(GET_BALANCE),
     switchMap(() =>
-      this.monzoService.request<MonzoAccountsResponse>(accountsRequest())
+      this.monzo.request<MonzoAccountsResponse>(accountsRequest())
     ),
     switchMap(accounts => {
       const account = new Account(accounts.accounts[0])
 
-      return this.monzoService.request<MonzoBalanceResponse>(
-        account.balanceRequest()
-      )
+      return this.monzo.request<MonzoBalanceResponse>(account.balanceRequest())
     }),
     map(data => new SetBalanceAction(data)),
     catchError(err => {
@@ -56,15 +54,15 @@ export class BalanceEffects {
   )
 
   @Effect({ dispatch: false })
-  save$: Observable<any> = this.actions$.pipe(
+  saveAccount$: Observable<any> = this.actions$.pipe(
     ofType(SET_BALANCE),
-    switchMap((balance: SetBalanceAction) =>
-      combineLatest(this.store$.select('account'), of(balance.payload))
+    switchMap((action: SetBalanceAction) =>
+      combineLatest(this.store$.select('account'), of(action.payload))
     ),
     switchMap(([account, balanceRes]) => {
       if (account) {
         const { balance } = extractBalanceAndSpent(balanceRes)
-        return this.cache.saveAccount(new Account(account), balance)
+        return this.cache.saveAccount$(new Account(account), balance)
       } else {
         throw new Error('cannot save account that doesnt exist')
       }
