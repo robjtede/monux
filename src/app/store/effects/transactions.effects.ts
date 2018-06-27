@@ -46,21 +46,19 @@ export class TransactionsEffects {
   @Effect()
   getTransactions$: Observable<Action> = this.actions$.pipe(
     ofType(GET_TRANSACTIONS),
-    switchMap(action => {
+    switchMap((action: GetTransactionsAction) => {
       return forkJoin(
         of(action),
         this.monzo.request<MonzoAccountsResponse>(accountsRequest())
       )
     }),
-    switchMap(
-      ([action, accounts]: [GetTransactionsAction, MonzoAccountsResponse]) => {
-        const account = new Account(accounts.accounts[0])
+    switchMap(([action, accounts]) => {
+      const account = new Account(accounts.accounts[0])
 
-        return this.monzo.request<MonzoTransactionsResponse>(
-          account.transactionsRequest(action.payload)
-        )
-      }
-    ),
+      return this.monzo.request<MonzoTransactionsResponse>(
+        account.transactionsRequest(action.payload)
+      )
+    }),
     map(txs => new SetTransactionsAction(txs.transactions)),
     catchError(err => {
       console.error(err)

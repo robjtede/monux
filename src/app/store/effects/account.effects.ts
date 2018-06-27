@@ -11,6 +11,7 @@ import {
   mapTo,
   tap
 } from 'rxjs/operators'
+import Debug = require('debug')
 
 import { MonzoService } from '../../services/monzo.service'
 import {
@@ -30,21 +31,21 @@ import {
 import { CacheService } from '../../services/cache.service'
 import { deletePassword } from '../../../lib/keychain'
 
+const debug = Debug('app:effects:account')
+
 @Injectable()
 export class AccountEffects {
   constructor(
-    private readonly actions$: Actions,
-    private readonly monzoService: MonzoService,
-    private readonly cacheService: CacheService,
-    private readonly router: Router
+    private actions$: Actions,
+    private monzo: MonzoService,
+    private cache: CacheService,
+    private router: Router
   ) {}
 
   @Effect()
   get$: Observable<Action> = this.actions$.pipe(
     ofType(GET_ACCOUNT),
-    switchMapTo(
-      this.monzoService.request<MonzoAccountsResponse>(accountsRequest())
-    ),
+    switchMapTo(this.monzo.request<MonzoAccountsResponse>(accountsRequest())),
     map(accounts => {
       const acc = accounts.accounts[0]
 
@@ -59,7 +60,7 @@ export class AccountEffects {
   @Effect({ dispatch: false })
   logout$: Observable<any> = this.actions$.pipe(
     ofType(LOGOUT),
-    switchMapTo(this.cacheService.deleteAll()),
+    switchMapTo(defer(() => this.cache.deleteAll())),
     switchMap(() => {
       const tokenDeletions = Promise.all([
         deletePassword({

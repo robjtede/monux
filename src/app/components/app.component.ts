@@ -14,6 +14,7 @@ import { AppState } from '../store'
 import { Account, MonzoAccountResponse } from '../../lib/monzo/Account'
 import { Amount, MonzoBalanceResponse } from '../../lib/monzo/Amount'
 import { LogoutAction } from '../store/actions/account.actions'
+import { CacheService } from '../services/cache.service'
 
 const debug = Debug('app:component:app')
 
@@ -28,7 +29,7 @@ export class AppComponent implements OnInit, OnDestroy {
   balance$!: Observable<Amount>
   spent$!: Observable<Amount>
 
-  constructor(private store$: Store<AppState>) {}
+  constructor(private store$: Store<AppState>, private cache: CacheService) {}
 
   ngOnInit() {
     debug('app started')

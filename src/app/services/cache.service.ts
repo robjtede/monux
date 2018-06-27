@@ -28,15 +28,11 @@ export class MonuxCache extends Dexie {
 
 @Injectable()
 export class CacheService {
-  private readonly db = new MonuxCache()
+  private readonly db: MonuxCache
 
-  loadAccount = (() => {
-    const cachedAccount = this.db.accounts.limit(1).toArray()
-
-    return (): Observable<CachedAccount> => {
-      return from(cachedAccount).pipe(map(([account]) => account))
-    }
-  })()
+  constructor() {
+    this.db = new MonuxCache()
+  }
 
   deleteAll(): Observable<boolean> {
     const deletions = Promise.all([
@@ -48,24 +44,31 @@ export class CacheService {
     return from(deletions).pipe(switchMapTo(of(true)))
   }
 
-  loadBalance = (() => {
-    const cachedAccount = this.loadAccount()
+  loadAccounts(): Observable<CachedAccount[]> {
+    return from(this.db.accounts.toArray())
+  }
 
-    return (): Observable<{
-      account: MonzoAccountResponse
-      balance: AmountOpts
-    }> =>
-      cachedAccount.pipe(
-        switchMap(acc => {
-          const { native, local } = acc.balance
+  loadAccount(accId: string): Observable<CachedAccount> {
+    return from(this.db.accounts.get(accId)).pipe(
+      map(acc => {
+        if (!acc) throw new Error('no account with ID exists')
+        return acc
+      })
+    )
+  }
 
-          return {
-            account: acc.acc,
-            balance: { native, local }
-          } as any
-        })
-      )
-  })()
+  loadBalance(accId: string): Observable<any> {
+    return this.loadAccount(accId).pipe(
+      map(({ acc, balance }) => {
+        const { native, local } = balance
+
+        return {
+          account: acc,
+          balance: { native, local }
+        }
+      })
+    )
+  }
 
   loadTransactions({
     since,
@@ -94,27 +97,29 @@ export class CacheService {
     return from(txCol.toArray()).pipe(map(txs => txs.map(tx => tx.tx)))
   }
 
-  saveAccount = async (acc: Account, balance: Amount) => {
-    return this.db.accounts.put({
-      id: acc.id,
-      balance: balance.json,
-      type: 'monzo',
-      acc: acc.json,
-      createdAt: acc.created,
-      updatedAt: new Date()
-    })
+  saveAccount(acc: Account, balance: Amount): Observable<string> {
+    return from(
+      this.db.accounts.put({
+        id: acc.id,
+        balance: balance.json,
+        type: 'monzo',
+        acc: acc.json,
+        createdAt: acc.created,
+        updatedAt: new Date()
+      })
+    )
   }
 
-  saveTransactions = async (acc: Account, txs: Transaction[]) => {
-    await this.db.transactions.bulkPut(
-      txs.map(tx => ({
-        id: tx.id,
-        accId: acc.id,
-        tx: tx.json,
-        createdAt: tx.created,
-        updatedAt: new Date()
-      }))
-    )
+  saveTransactions(acc: Account, txs: Transaction[]): Observable<string> {
+    const entries = txs.map(tx => ({
+      id: tx.id,
+      accId: acc.id,
+      tx: tx.json,
+      createdAt: tx.created,
+      updatedAt: new Date()
+    }))
+
+    return from(this.db.transactions.bulkPut(entries))
   }
 }
 
