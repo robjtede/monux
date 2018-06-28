@@ -99,7 +99,7 @@ export class TransactionsEffects {
     ),
     switchMap(([account, txs]) => {
       if (account) {
-        return this.cache.saveTransactions$(
+        return this.cache.saveTransactions(
           new Account(account),
           txs.map(tx => new Transaction(tx))
         )

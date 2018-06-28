@@ -14,7 +14,6 @@ import { AppState } from '../store'
 import { Account, MonzoAccountResponse } from '../../lib/monzo/Account'
 import { Amount, MonzoBalanceResponse } from '../../lib/monzo/Amount'
 import { LogoutAction } from '../store/actions/account.actions'
-import { CacheService } from '../services/cache.service'
 
 const debug = Debug('app:component:app')
 
@@ -29,22 +28,14 @@ export class AppComponent implements OnInit, OnDestroy {
   balance$!: Observable<Amount>
   spent$!: Observable<Amount>
 
-  constructor(private store$: Store<AppState>, private cache: CacheService) {}
+  constructor(private store$: Store<AppState>) {}
 
   ngOnInit() {
     debug('app started')
 
     this.balance$ = this.store$.select('balance').pipe(
       filter(balance => !!balance),
-      map(
-        ({ balance, currency }: MonzoBalanceResponse) =>
-          new Amount({
-            native: {
-              amount: balance,
-              currency: currency
-            }
-          })
-      )
+      map(opts => new Amount(opts))
     )
 
     this.accountHolder$ = this.store$.select('account').pipe(

@@ -44,11 +44,11 @@ export class CacheService {
     return from(deletions).pipe(switchMapTo(of(true)))
   }
 
-  loadAccounts$(): Observable<CachedAccount[]> {
+  loadAccounts(): Observable<CachedAccount[]> {
     return from(this.db.accounts.toArray())
   }
 
-  loadAccount$(accId: string): Observable<CachedAccount> {
+  loadAccount(accId: string): Observable<CachedAccount> {
     return from(this.db.accounts.get(accId)).pipe(
       map(acc => {
         if (!acc) throw new Error('no account with ID exists')
@@ -57,8 +57,8 @@ export class CacheService {
     )
   }
 
-  loadBalance$(accId: string): Observable<any> {
-    return this.loadAccount$(accId).pipe(
+  loadBalance(accId: string): Observable<any> {
+    return this.loadAccount(accId).pipe(
       map(({ acc, balance }) => {
         const { native, local } = balance
 
@@ -70,7 +70,7 @@ export class CacheService {
     )
   }
 
-  loadTransactions$({
+  loadTransactions({
     since,
     before,
     limit
@@ -97,7 +97,7 @@ export class CacheService {
     return from(txCol.toArray()).pipe(map(txs => txs.map(tx => tx.tx)))
   }
 
-  saveAccount$(acc: Account, balance: Amount): Observable<string> {
+  saveAccount(acc: Account, balance: Amount): Observable<string> {
     return from(
       this.db.accounts.put({
         id: acc.id,
@@ -110,7 +110,7 @@ export class CacheService {
     )
   }
 
-  saveTransactions$(acc: Account, txs: Transaction[]): Observable<string> {
+  saveTransactions(acc: Account, txs: Transaction[]): Observable<string> {
     const entries = txs.map(tx => ({
       id: tx.id,
       accId: acc.id,

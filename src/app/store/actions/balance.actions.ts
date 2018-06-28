@@ -2,7 +2,7 @@ import { Action } from '@ngrx/store'
 
 import { suffixes } from './'
 
-import { MonzoBalanceResponse } from '../../../lib/monzo/Amount'
+import { AmountOpts } from '../../../lib/monzo/Amount'
 
 const actionPrefix = '[Balance]'
 
@@ -18,7 +18,7 @@ export class GetBalanceAction implements Action {
 export class SetBalanceAction implements Action {
   readonly type = SET_BALANCE
 
-  constructor(public payload: MonzoBalanceResponse) {}
+  constructor(public payload: AmountOpts) {}
 }
 
 export class GetBalanceFailedAction implements Action {
