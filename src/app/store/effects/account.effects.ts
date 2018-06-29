@@ -2,13 +2,14 @@ import { Injectable } from '@angular/core'
 import { Router } from '@angular/router'
 import { Action } from '@ngrx/store'
 import { Actions, Effect, ofType } from '@ngrx/effects'
-import { defer, from, Observable, of } from 'rxjs'
+import { concat, defer, from, Observable, of } from 'rxjs'
 import {
   catchError,
+  filter,
   map,
+  mapTo,
   switchMap,
   switchMapTo,
-  mapTo,
   tap
 } from 'rxjs/operators'
 import Debug = require('debug')
@@ -16,7 +17,8 @@ import Debug = require('debug')
 import { MonzoService } from '../../services/monzo.service'
 import {
   accountsRequest,
-  MonzoAccountsResponse
+  MonzoAccountsResponse,
+  MonzoAccountResponse
 } from '../../../lib/monzo/Account'
 
 import {
@@ -25,7 +27,8 @@ import {
   GetAccountAction,
   GetAccountFailedAction,
   LOGOUT,
-  LOGOUT_FAILED
+  LOGOUT_FAILED,
+  SET_ACCOUNT
 } from '../actions/account.actions'
 
 import { CacheService } from '../../services/cache.service'
@@ -45,15 +48,31 @@ export class AccountEffects {
   @Effect()
   get$: Observable<Action> = this.actions$.pipe(
     ofType(GET_ACCOUNT),
-    switchMapTo(this.monzo.request<MonzoAccountsResponse>(accountsRequest())),
-    map(accounts => {
-      const acc = accounts.accounts[0]
-
-      return new SetAccountAction(acc)
+    switchMap(() => {
+      return concat(
+        this.cache
+          .loadAccounts()
+          .pipe(map(([account]) => (account ? account.acc : undefined))),
+        this.monzo
+          .request<MonzoAccountsResponse>(accountsRequest())
+          .pipe(map(accounts => accounts.accounts[0]))
+      )
+    }),
+    filter(account => !!account),
+    map((account: MonzoAccountResponse) => {
+      return new SetAccountAction(account)
     }),
     catchError(err => {
       console.error(err)
       return of(new GetAccountFailedAction())
+    })
+  )
+
+  @Effect({ dispatch: false })
+  saveAccount$: Observable<any> = this.actions$.pipe(
+    ofType(SET_ACCOUNT),
+    switchMap((acc: SetAccountAction) => {
+      return this.cache.saveAccount(acc.payload)
     })
   )
 

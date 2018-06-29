@@ -1,9 +1,10 @@
 import { MonzoAccountResponse } from '../../lib/monzo/Account'
-import { AmountOpts } from '../../lib/monzo/Amount'
+import { MonzoBalanceResponse } from '../../lib/monzo/Amount'
 import { MonzoTransactionResponse } from '../../lib/monzo/Transaction'
+import { JSONMap } from 'json-types'
 
 export type AccountState = MonzoAccountResponse | undefined
-export type BalanceState = AmountOpts | undefined
+export type BalanceState = MonzoBalanceResponse | undefined
 export type SelectedTransactionState = string | undefined
 export type TransactionsState = MonzoTransactionResponse[]
 

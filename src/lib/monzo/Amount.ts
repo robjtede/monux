@@ -1,8 +1,4 @@
-export const enum Currencies {
-  EUR = 'EUR',
-  GBP = 'GBP',
-  USD = 'USD'
-}
+export type Currencies = 'EUR' | 'GBP' | 'USD' | 'ISK'
 
 export const enum SignModes {
   Always,
@@ -12,9 +8,10 @@ export const enum SignModes {
 }
 
 const currencies: CurrencyLibrary = {
-  [Currencies.EUR]: { symbol: '€', separator: '.' },
-  [Currencies.GBP]: { symbol: '£', separator: '.' },
-  [Currencies.USD]: { symbol: '$', separator: '.' }
+  EUR: { symbol: '€', separator: '.', subunits: 100 },
+  GBP: { symbol: '£', separator: '.', subunits: 100 },
+  USD: { symbol: '$', separator: '.', subunits: 100 },
+  ISK: { symbol: 'ISK_', separator: '_', subunits: 1 }
 }
 
 export class Amount {
@@ -108,7 +105,9 @@ export class Amount {
 
   // return number of minor units in major
   get scale(): number {
-    return 100
+    return this.native.currency in currencies
+      ? currencies[this.native.currency].subunits
+      : 1
   }
 
   // returns raw amount from api
@@ -204,6 +203,7 @@ export class Amount {
 export interface CurrencyDefinition {
   symbol: string
   separator: string
+  subunits: number
 }
 
 export interface CurrencyLibrary {
@@ -223,13 +223,12 @@ export interface AmountOpts {
 export interface MonzoBalanceResponse {
   balance: number
   total_balance: number
-  // TODO: currency enum-ify
-  currency: string
-  // TODO: currency enum-ify
-  local_currency: string
+  currency: Currencies
+  local_currency: Currencies
   local_exchange_rate: number
   local_spend: {
-    [currency: string]: number
+    spend_today: number
+    currency: Currencies
   }[]
   spend_today: number
 }

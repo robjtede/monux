@@ -9,11 +9,13 @@ import { Observable } from 'rxjs'
 import { filter, map } from 'rxjs/operators'
 import Debug = require('debug')
 
-import { AppState } from '../store'
+import { AppState, BalanceState } from '../store'
 
 import { Account, MonzoAccountResponse } from '../../lib/monzo/Account'
 import { Amount, MonzoBalanceResponse } from '../../lib/monzo/Amount'
+import { extractBalanceAndSpent } from '../../lib/monzo/helpers'
 import { LogoutAction } from '../store/actions/account.actions'
+import { CacheService } from '../services/cache.service'
 
 const debug = Debug('app:component:app')
 
@@ -28,35 +30,28 @@ export class AppComponent implements OnInit, OnDestroy {
   balance$!: Observable<Amount>
   spent$!: Observable<Amount>
 
-  constructor(private store$: Store<AppState>) {}
+  constructor(private store$: Store<AppState>, private cache: CacheService) {}
 
   ngOnInit() {
     debug('app started')
-
-    this.balance$ = this.store$.select('balance').pipe(
-      filter(balance => !!balance),
-      map(opts => new Amount(opts))
-    )
 
     this.accountHolder$ = this.store$.select('account').pipe(
       filter(acc => !!acc),
       map((acc: MonzoAccountResponse) => new Account(acc).name)
     )
 
-    this.spent$ = this.store$.select('balance').pipe(
-      filter(balance => !!balance),
-      map(
-        ({ spend_today, currency }: MonzoBalanceResponse) =>
-          new Amount({
-            native: {
-              amount: spend_today,
-              currency: currency
-            }
-          })
-      )
+    this.balance$ = this.store$.select('balance').pipe(
+      filter<MonzoBalanceResponse>(balance => !!balance),
+      map(balanceRes => extractBalanceAndSpent(balanceRes).balance)
     )
 
-    this.store$.dispatch({ type: '@monux/init' })
+    this.spent$ = this.store$.select('balance').pipe(
+      filter<MonzoBalanceResponse>(balance => !!balance),
+      map(balanceRes => extractBalanceAndSpent(balanceRes).spent)
+    )
+
+    // this.store$.dispatch({ type: '@monux/init' })
+    this.store$.dispatch({ type: '[Account] Get' })
   }
 
   logout(ev?: MouseEvent) {

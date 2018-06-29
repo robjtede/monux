@@ -6,7 +6,7 @@ import { MonzoAccountResponse } from '../../../lib/monzo/Account'
 
 const actionPrefix = '[Account]'
 
-export const GET_ACCOUNT = `${actionPrefix} HTTP/Get`
+export const GET_ACCOUNT = `${actionPrefix} Get`
 export const GET_ACCOUNT_SUCCESS = `${GET_ACCOUNT} ${suffixes.success}`
 export const GET_ACCOUNT_FAILED = `${GET_ACCOUNT} ${suffixes.failed}`
 export const SET_ACCOUNT = `${actionPrefix} Set`

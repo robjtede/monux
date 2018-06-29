@@ -40,15 +40,15 @@ export class MonzoService {
   private readonly apiRoot: string = 'api.monzo.com'
 
   // TODO: remove need for compat
-  private accessToken: Promise<string> = this.getCode(
-    'access_token'
-  ).toPromise()
+  private getAccessToken(): Observable<string> {
+    return this.getCode('access_token')
+  }
 
   constructor(private readonly http: HttpClient) {}
 
-  updateCachedAccessToken() {
-    this.accessToken = this.getCode('access_token').toPromise()
-  }
+  // updateCachedAccessToken() {
+  //   this.accessToken = this.getCode('access_token').toPromise()
+  // }
 
   request<T>(
     { path = '/ping/whoami', qs = {}, method = 'GET' }: MonzoRequest = {
@@ -57,7 +57,7 @@ export class MonzoService {
   ): Observable<T> {
     const url = `${this.proto}${this.apiRoot}${path}`
 
-    return from(this.accessToken).pipe(
+    return this.getAccessToken().pipe(
       switchMap(token => {
         const headers = new HttpHeaders({
           Authorization: `Bearer ${token}`
@@ -189,18 +189,15 @@ export class MonzoService {
       }),
       switchMap(({ access_token, refresh_token }) => {
         return forkJoin([
-          of(access_token),
           this.saveCode('access_token', access_token),
           refresh_token
             ? this.saveCode('refresh_token', refresh_token)
             : of(undefined)
         ])
       }),
-      map(([token]) => {
-        this.updateCachedAccessToken()
-        return token
+      switchMap(() => {
+        return this.getAccessToken()
       })
     )
   }
-  x
 }

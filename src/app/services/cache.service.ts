@@ -1,10 +1,14 @@
 import { Injectable } from '@angular/core'
 import { from, Observable, of } from 'rxjs'
 import { map, switchMapTo } from 'rxjs/operators'
-
 import Dexie from 'dexie'
+import Debug = require('debug')
 
-import { Amount, AmountOpts } from '../../lib/monzo/Amount'
+import {
+  Amount,
+  AmountOpts,
+  MonzoBalanceResponse
+} from '../../lib/monzo/Amount'
 import { Account, MonzoAccountResponse } from '../../lib/monzo/Account'
 import {
   Transaction,
@@ -12,16 +16,23 @@ import {
   TransactionRequestOpts
 } from '../../lib/monzo/Transaction'
 
+const debug = Debug('app:service:cache')
+
 export class MonuxCache extends Dexie {
-  transactions!: Dexie.Table<CachedTransaction, string>
   accounts!: Dexie.Table<CachedAccount, string>
+  transactions!: Dexie.Table<CachedTransaction, string>
+  balances!: Dexie.Table<CachedBalance, number>
 
   constructor() {
     super('MonuxCache')
 
     this.version(1).stores({
-      transactions: 'id, accId, createdAt, updatedAt',
-      accounts: 'id, createdAt, updatedAt'
+      accounts: 'id',
+      transactions: 'id, accId'
+    })
+
+    this.version(2).stores({
+      balances: '++, accId'
     })
   }
 }
@@ -45,6 +56,7 @@ export class CacheService {
   }
 
   loadAccounts(): Observable<CachedAccount[]> {
+    debug('getting all cached accounts')
     return from(this.db.accounts.toArray())
   }
 
@@ -57,15 +69,14 @@ export class CacheService {
     )
   }
 
-  loadBalance(accId: string): Observable<any> {
-    return this.loadAccount(accId).pipe(
-      map(({ acc, balance }) => {
-        const { native, local } = balance
-
-        return {
-          account: acc,
-          balance: { native, local }
+  loadBalance(accId: string): Observable<CachedBalance> {
+    return from(this.db.balances.get({ accId })).pipe(
+      map(balance => {
+        if (!balance) {
+          throw new Error(`cannot find balance with account ID ${accId}`)
         }
+
+        return balance
       })
     )
   }
@@ -97,26 +108,28 @@ export class CacheService {
     return from(txCol.toArray()).pipe(map(txs => txs.map(tx => tx.tx)))
   }
 
-  saveAccount(acc: Account, balance: Amount): Observable<string> {
+  saveAccount(acc: MonzoAccountResponse): Observable<string> {
     return from(
       this.db.accounts.put({
         id: acc.id,
-        balance: balance.json,
-        type: 'monzo',
-        acc: acc.json,
-        createdAt: acc.created,
+        type: 'monzo_uk_retail',
+        acc: acc,
+        createdAt: new Date(acc.created),
         updatedAt: new Date()
       })
     )
   }
 
-  saveTransactions(acc: Account, txs: Transaction[]): Observable<string> {
+  saveTransactions(
+    accId: string,
+    txs: MonzoTransactionResponse[]
+  ): Observable<string> {
     const entries = txs.map(tx => ({
       id: tx.id,
-      accId: acc.id,
-      tx: tx.json,
-      createdAt: tx.created,
-      updatedAt: new Date()
+      accId,
+      tx: tx,
+      createdAt: new Date(tx.created),
+      updatedAt: new Date(tx.updated)
     }))
 
     return from(this.db.transactions.bulkPut(entries))
@@ -133,9 +146,15 @@ export interface CachedTransaction {
 
 export interface CachedAccount {
   id: string
-  type: 'monzo'
   acc: MonzoAccountResponse
-  balance: AmountOpts
+  type: 'monzo_uk_retail'
+  createdAt: Date
+  updatedAt: Date
+}
+
+export interface CachedBalance {
+  accId: string
+  balance: MonzoBalanceResponse
   createdAt: Date
   updatedAt: Date
 }
