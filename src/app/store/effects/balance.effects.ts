@@ -1,18 +1,20 @@
-import { extractBalanceAndSpent } from '../../../lib/monzo/helpers'
 import { Injectable } from '@angular/core'
 import { Action, Store } from '@ngrx/store'
 import { Actions, Effect, ofType } from '@ngrx/effects'
-import { defer, Observable, of, combineLatest, merge } from 'rxjs'
-import { catchError, map, switchMap, switchMapTo, tap } from 'rxjs/operators'
+import { combineLatest, concat, defer, Observable, of, empty } from 'rxjs'
+import {
+  catchError,
+  filter,
+  map,
+  switchMap,
+  switchMapTo,
+  tap
+} from 'rxjs/operators'
 import Debug = require('debug')
 
 import { CacheService } from '../../services/cache.service'
 import { MonzoService } from '../../services/monzo.service'
-import {
-  accountsRequest,
-  Account,
-  MonzoAccountsResponse
-} from '../../../lib/monzo/Account'
+import { Account, MonzoAccountResponse } from '../../../lib/monzo/Account'
 import { MonzoBalanceResponse } from '../../../lib/monzo/Amount'
 
 import { AppState } from '..'
@@ -40,44 +42,57 @@ export class BalanceEffects {
     ofType(GET_BALANCE),
     switchMap(() =>
       // stream of cached balance then http balance
-      merge(
-        this.cache.loadAccounts().pipe(
-          map(cachedAcc => cachedAcc[0].balance),
-          tap(bal => debug('cached balance', bal))
-        ),
-        this.monzo.request<MonzoAccountsResponse>(accountsRequest()).pipe(
-          map(accRes => new Account(accRes.accounts[0])),
-          switchMap(account =>
-            this.monzo.request<MonzoBalanceResponse>(account.balanceRequest())
+      concat<MonzoBalanceResponse>(
+        this.store$.select('account').pipe(
+          filter(acc => !!acc),
+          switchMap((acc: MonzoAccountResponse) =>
+            this.cache.loadBalance(acc.id)
           ),
-          map(acc => extractBalanceAndSpent(acc).balance.json),
-          tap(acc => debug('http balance', acc))
+          map(({ balance }) => balance),
+          tap(balance => {
+            debug('cached balance:', balance)
+          }),
+          catchError(err => {
+            console.error(err)
+            return empty()
+          })
+        ),
+        this.store$.select('account').pipe(
+          filter(acc => !!acc),
+          map((accRes: MonzoAccountResponse) => new Account(accRes)),
+          switchMap(acc =>
+            this.monzo.request<MonzoBalanceResponse>(acc.balanceRequest())
+          ),
+          tap(balance => {
+            debug('http balance:', balance)
+          }),
+          catchError(err => {
+            console.error(err)
+            return of(new GetBalanceFailedAction())
+          })
         )
       )
     ),
-    map(data => new SetBalanceAction(data)),
-    catchError(err => {
-      console.error(err)
-      return of(new GetBalanceFailedAction())
-    })
+    map(data => new SetBalanceAction(data))
   )
 
-  // @Effect({ dispatch: false })
-  // saveAccount$: Observable<any> = this.actions$.pipe(
-  //   ofType(SET_BALANCE),
-  //   switchMap((action: SetBalanceAction) =>
-  //     combineLatest(this.store$.select('account'), of(action.payload))
-  //   ),
-  //   switchMap(([account, balanceRes]) => {
-  //     if (account) {
-  //       const { balance } = extractBalanceAndSpent(balanceRes)
-  //       return this.cache.saveAccount(new Account(account), balance)
-  //     } else {
-  //       throw new Error('cannot save account that doesnt exist')
-  //     }
-  //   }),
-  //   tap(debug, debug)
-  // )
+  @Effect({ dispatch: false })
+  saveBalance$: Observable<any> = this.actions$.pipe(
+    ofType(SET_BALANCE),
+    switchMap((action: SetBalanceAction) =>
+      combineLatest(
+        this.store$.select('account').pipe(filter(acc => !!acc)),
+        of(action.payload)
+      )
+    ),
+    switchMap(([account, balanceRes]) => {
+      if (account) {
+        return this.cache.saveBalance(account.id, balanceRes)
+      } else {
+        throw new Error('cannot save balance of account that doesnt exist')
+      }
+    })
+  )
 
   @Effect()
   init$: Observable<Action> = this.actions$.pipe(

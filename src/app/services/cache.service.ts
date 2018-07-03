@@ -4,14 +4,9 @@ import { map, switchMapTo } from 'rxjs/operators'
 import Dexie from 'dexie'
 import Debug = require('debug')
 
+import { MonzoBalanceResponse } from '../../lib/monzo/Amount'
+import { MonzoAccountResponse } from '../../lib/monzo/Account'
 import {
-  Amount,
-  AmountOpts,
-  MonzoBalanceResponse
-} from '../../lib/monzo/Amount'
-import { Account, MonzoAccountResponse } from '../../lib/monzo/Account'
-import {
-  Transaction,
   MonzoTransactionResponse,
   TransactionRequestOpts
 } from '../../lib/monzo/Transaction'
@@ -21,7 +16,7 @@ const debug = Debug('app:service:cache')
 export class MonuxCache extends Dexie {
   accounts!: Dexie.Table<CachedAccount, string>
   transactions!: Dexie.Table<CachedTransaction, string>
-  balances!: Dexie.Table<CachedBalance, number>
+  balances!: Dexie.Table<CachedBalance, string>
 
   constructor() {
     super('MonuxCache')
@@ -32,7 +27,7 @@ export class MonuxCache extends Dexie {
     })
 
     this.version(2).stores({
-      balances: '++, accId'
+      balances: 'accId'
     })
   }
 }
@@ -56,11 +51,12 @@ export class CacheService {
   }
 
   loadAccounts(): Observable<CachedAccount[]> {
-    debug('getting all cached accounts')
+    debug('loading all cached accounts')
     return from(this.db.accounts.toArray())
   }
 
   loadAccount(accId: string): Observable<CachedAccount> {
+    debug('loading account', accId)
     return from(this.db.accounts.get(accId)).pipe(
       map(acc => {
         if (!acc) throw new Error('no account with ID exists')
@@ -70,7 +66,8 @@ export class CacheService {
   }
 
   loadBalance(accId: string): Observable<CachedBalance> {
-    return from(this.db.balances.get({ accId })).pipe(
+    debug('loading balance for', accId)
+    return from(this.db.balances.get(accId)).pipe(
       map(balance => {
         if (!balance) {
           throw new Error(`cannot find balance with account ID ${accId}`)
@@ -86,6 +83,8 @@ export class CacheService {
     before,
     limit
   }: TransactionRequestOpts = {}): Observable<MonzoTransactionResponse[]> {
+    // debug('loading transactions for', accId)
+
     let txCol = this.db.transactions.orderBy('createdAt').reverse()
 
     if (since) {
@@ -109,6 +108,7 @@ export class CacheService {
   }
 
   saveAccount(acc: MonzoAccountResponse): Observable<string> {
+    debug('saving account', acc.id)
     return from(
       this.db.accounts.put({
         id: acc.id,
@@ -120,10 +120,26 @@ export class CacheService {
     )
   }
 
+  saveBalance(
+    accId: string,
+    balance: MonzoBalanceResponse
+  ): Observable<string> {
+    debug('saving balance of', balance.balance, 'for', accId)
+    return from(
+      this.db.balances.put({
+        accId,
+        balance,
+        createdAt: new Date(),
+        updatedAt: new Date()
+      })
+    )
+  }
+
   saveTransactions(
     accId: string,
     txs: MonzoTransactionResponse[]
   ): Observable<string> {
+    debug('saving', txs.length, 'transactions for', accId)
     const entries = txs.map(tx => ({
       id: tx.id,
       accId,

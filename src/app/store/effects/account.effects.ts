@@ -48,20 +48,20 @@ export class AccountEffects {
   @Effect()
   get$: Observable<Action> = this.actions$.pipe(
     ofType(GET_ACCOUNT),
-    switchMap(() => {
-      return concat(
-        this.cache
-          .loadAccounts()
-          .pipe(map(([account]) => (account ? account.acc : undefined))),
-        this.monzo
-          .request<MonzoAccountsResponse>(accountsRequest())
-          .pipe(map(accounts => accounts.accounts[0]))
+    switchMap(() =>
+      concat(
+        this.cache.loadAccounts().pipe(
+          map(([account]) => (account ? account.acc : undefined)),
+          tap(account => debug('cached account', account))
+        ),
+        this.monzo.request<MonzoAccountsResponse>(accountsRequest()).pipe(
+          map(accounts => accounts.accounts[0]),
+          tap(account => debug('http account', account))
+        )
       )
-    }),
+    ),
     filter(account => !!account),
-    map((account: MonzoAccountResponse) => {
-      return new SetAccountAction(account)
-    }),
+    map((account: MonzoAccountResponse) => new SetAccountAction(account)),
     catchError(err => {
       console.error(err)
       return of(new GetAccountFailedAction())
@@ -71,9 +71,7 @@ export class AccountEffects {
   @Effect({ dispatch: false })
   saveAccount$: Observable<any> = this.actions$.pipe(
     ofType(SET_ACCOUNT),
-    switchMap((acc: SetAccountAction) => {
-      return this.cache.saveAccount(acc.payload)
-    })
+    switchMap((acc: SetAccountAction) => this.cache.saveAccount(acc.payload))
   )
 
   @Effect({ dispatch: false })
@@ -98,7 +96,7 @@ export class AccountEffects {
       console.error(err)
       return of({ type: LOGOUT_FAILED })
     }),
-    tap(_ => {
+    tap(() => {
       this.router.navigate(['/auth-request'])
     })
   )

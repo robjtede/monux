@@ -9,10 +9,10 @@ import { Observable } from 'rxjs'
 import { filter, map } from 'rxjs/operators'
 import Debug = require('debug')
 
-import { AppState, BalanceState } from '../store'
+import { AppState, DefiniteAccountState, DefiniteBalanceState } from '../store'
 
-import { Account, MonzoAccountResponse } from '../../lib/monzo/Account'
-import { Amount, MonzoBalanceResponse } from '../../lib/monzo/Amount'
+import { Account } from '../../lib/monzo/Account'
+import { Amount } from '../../lib/monzo/Amount'
 import { extractBalanceAndSpent } from '../../lib/monzo/helpers'
 import { LogoutAction } from '../store/actions/account.actions'
 import { CacheService } from '../services/cache.service'
@@ -30,28 +30,27 @@ export class AppComponent implements OnInit, OnDestroy {
   balance$!: Observable<Amount>
   spent$!: Observable<Amount>
 
-  constructor(private store$: Store<AppState>, private cache: CacheService) {}
+  constructor(private store$: Store<AppState>) {}
 
   ngOnInit() {
     debug('app started')
 
     this.accountHolder$ = this.store$.select('account').pipe(
-      filter(acc => !!acc),
-      map((acc: MonzoAccountResponse) => new Account(acc).name)
+      filter<DefiniteAccountState>(acc => !!acc),
+      map(acc => new Account(acc).name)
     )
 
     this.balance$ = this.store$.select('balance').pipe(
-      filter<MonzoBalanceResponse>(balance => !!balance),
+      filter<DefiniteBalanceState>(balance => !!balance),
       map(balanceRes => extractBalanceAndSpent(balanceRes).balance)
     )
 
     this.spent$ = this.store$.select('balance').pipe(
-      filter<MonzoBalanceResponse>(balance => !!balance),
+      filter<DefiniteBalanceState>(balance => !!balance),
       map(balanceRes => extractBalanceAndSpent(balanceRes).spent)
     )
 
-    // this.store$.dispatch({ type: '@monux/init' })
-    this.store$.dispatch({ type: '[Account] Get' })
+    this.store$.dispatch({ type: '@monux/init' })
   }
 
   logout(ev?: MouseEvent) {
