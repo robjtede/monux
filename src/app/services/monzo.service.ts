@@ -188,12 +188,12 @@ export class MonzoService {
         return this.http.post<MonzoRefreshAccessResponse>(url, params)
       }),
       switchMap(({ access_token, refresh_token }) => {
-        return forkJoin([
+        return forkJoin(
           this.saveCode('access_token', access_token),
           refresh_token
             ? this.saveCode('refresh_token', refresh_token)
             : of(undefined)
-        ])
+        )
       }),
       switchMap(() => {
         return this.getAccessToken()

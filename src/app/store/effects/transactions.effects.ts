@@ -1,20 +1,24 @@
+import { Account } from '../../../lib/monzo/Account'
 import { Injectable } from '@angular/core'
 import { Actions, Effect, ofType } from '@ngrx/effects'
 import { Action, Store } from '@ngrx/store'
 import { startOfMonth, subMonths } from 'date-fns'
-import { combineLatest, forkJoin, Observable, of } from 'rxjs'
-import { catchError, map, switchMap, tap, withLatestFrom } from 'rxjs/operators'
+import { combineLatest, concat, empty, forkJoin, Observable, of } from 'rxjs'
+import {
+  catchError,
+  filter,
+  map,
+  switchMap,
+  tap,
+  withLatestFrom,
+  first
+} from 'rxjs/operators'
 import Debug = require('debug')
 
 import { MonzoService } from '../../services/monzo.service'
 import { CacheService } from '../../services/cache.service'
 
-import { AppState } from '../'
-import {
-  Account,
-  accountsRequest,
-  MonzoAccountsResponse
-} from '../../../lib/monzo/Account'
+import { AppState, DefiniteAccountState } from '../'
 import {
   MonzoTransactionOuterResponse,
   MonzoTransactionsResponse,
@@ -49,21 +53,40 @@ export class TransactionsEffects {
 
   @Effect()
   getTransactions$: Observable<Action> = this.actions$.pipe(
-    ofType(GET_TRANSACTIONS),
-    switchMap((action: GetTransactionsAction) => {
-      return forkJoin(
+    ofType<GetTransactionsAction>(GET_TRANSACTIONS),
+    switchMap(action =>
+      forkJoin<GetTransactionsAction, DefiniteAccountState>(
         of(action),
-        this.monzo.request<MonzoAccountsResponse>(accountsRequest())
+        this.store$.select('account').pipe(
+          filter(acc => !!acc),
+          first()
+        )
+      )
+    ),
+    switchMap(([action, acc]) => {
+      return concat(
+        this.cache.loadTransactions(acc.id, action.payload).pipe(
+          tap(txs => {
+            debug(txs.length, 'http txs:', txs)
+          }),
+          catchError(err => {
+            console.error(err)
+            return empty()
+          })
+        ),
+        this.monzo
+          .request<MonzoTransactionsResponse>(
+            new Account(acc).transactionsRequest(action.payload)
+          )
+          .pipe(
+            map(({ transactions }) => transactions),
+            tap(txs => {
+              debug(txs.length, 'http txs:', txs)
+            })
+          )
       )
     }),
-    switchMap(([action, accounts]) => {
-      const account = new Account(accounts.accounts[0])
-
-      return this.monzo.request<MonzoTransactionsResponse>(
-        account.transactionsRequest(action.payload)
-      )
-    }),
-    map(txs => new SetTransactionsAction(txs.transactions)),
+    map(txs => new SetTransactionsAction(txs)),
     catchError(err => {
       console.error(err)
       return of(new GetTransactionsFailedAction())
@@ -99,10 +122,7 @@ export class TransactionsEffects {
     ),
     switchMap(([account, txs]) => {
       if (account) {
-        return this.cache.saveTransactions(
-          new Account(account),
-          txs.map(tx => new Transaction(tx))
-        )
+        return this.cache.saveTransactions(account.id, txs)
       } else {
         throw new Error('cannot save transaction of account that doesnt exist')
       }

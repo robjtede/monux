@@ -1,23 +1,32 @@
 import { Injectable } from '@angular/core'
 import { Action, Store } from '@ngrx/store'
 import { Actions, Effect, ofType } from '@ngrx/effects'
-import { combineLatest, concat, defer, Observable, of, empty } from 'rxjs'
+import {
+  combineLatest,
+  concat,
+  defer,
+  Observable,
+  of,
+  empty,
+  forkJoin
+} from 'rxjs'
 import {
   catchError,
   filter,
   map,
   switchMap,
   switchMapTo,
-  tap
+  tap,
+  first
 } from 'rxjs/operators'
 import Debug = require('debug')
 
 import { CacheService } from '../../services/cache.service'
 import { MonzoService } from '../../services/monzo.service'
-import { Account, MonzoAccountResponse } from '../../../lib/monzo/Account'
+import { Account } from '../../../lib/monzo/Account'
 import { MonzoBalanceResponse } from '../../../lib/monzo/Amount'
 
-import { AppState } from '..'
+import { AppState, DefiniteAccountState } from '..'
 import {
   GET_BALANCE,
   SetBalanceAction,
@@ -41,13 +50,17 @@ export class BalanceEffects {
   get$: Observable<Action> = this.actions$.pipe(
     ofType(GET_BALANCE),
     switchMap(() =>
-      // stream of cached balance then http balance
-      concat<MonzoBalanceResponse>(
+      forkJoin<DefiniteAccountState>(
         this.store$.select('account').pipe(
           filter(acc => !!acc),
-          switchMap((acc: MonzoAccountResponse) =>
-            this.cache.loadBalance(acc.id)
-          ),
+          first()
+        )
+      )
+    ),
+    switchMap(([acc]) =>
+      // stream of cached balance then http balance
+      concat(
+        this.cache.loadBalance(acc.id).pipe(
           map(({ balance }) => balance),
           tap(balance => {
             debug('cached balance:', balance)
@@ -57,23 +70,20 @@ export class BalanceEffects {
             return empty()
           })
         ),
-        this.store$.select('account').pipe(
-          filter(acc => !!acc),
-          map((accRes: MonzoAccountResponse) => new Account(accRes)),
-          switchMap(acc =>
-            this.monzo.request<MonzoBalanceResponse>(acc.balanceRequest())
-          ),
-          tap(balance => {
-            debug('http balance:', balance)
-          }),
-          catchError(err => {
-            console.error(err)
-            return of(new GetBalanceFailedAction())
-          })
-        )
+        this.monzo
+          .request<MonzoBalanceResponse>(new Account(acc).balanceRequest())
+          .pipe(
+            tap(balance => {
+              debug('http balance:', balance)
+            })
+          )
       )
     ),
-    map(data => new SetBalanceAction(data))
+    map(data => new SetBalanceAction(data)),
+    catchError(err => {
+      console.error(err)
+      return of(new GetBalanceFailedAction())
+    })
   )
 
   @Effect({ dispatch: false })

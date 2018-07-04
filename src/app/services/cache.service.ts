@@ -27,7 +27,8 @@ export class MonuxCache extends Dexie {
     })
 
     this.version(2).stores({
-      balances: 'accId'
+      balances: 'accId, createdAt, updatedAt',
+      transactions: 'id, accId, createdAt, updatedAt'
     })
   }
 }
@@ -78,14 +79,13 @@ export class CacheService {
     )
   }
 
-  loadTransactions({
-    since,
-    before,
-    limit
-  }: TransactionRequestOpts = {}): Observable<MonzoTransactionResponse[]> {
-    // debug('loading transactions for', accId)
+  loadTransactions(
+    accId: string,
+    { since, before, limit }: TransactionRequestOpts = {}
+  ): Observable<MonzoTransactionResponse[]> {
+    debug('loading transactions for', accId)
 
-    let txCol = this.db.transactions.orderBy('createdAt').reverse()
+    let txCol = this.db.transactions.where({ accId })
 
     if (since) {
       if (since instanceof Date) {
@@ -104,7 +104,9 @@ export class CacheService {
       txCol = txCol.limit(limit)
     }
 
-    return from(txCol.toArray()).pipe(map(txs => txs.map(tx => tx.tx)))
+    return from(txCol.reverse().sortBy('createdAt')).pipe(
+      map(txs => txs.map(({ tx }) => tx))
+    )
   }
 
   saveAccount(acc: MonzoAccountResponse): Observable<string> {

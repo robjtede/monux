@@ -16,9 +16,8 @@ export type BalanceState = AppState['balance']
 export type SelectedTransactionState = AppState['selectedTransaction']
 export type TransactionsState = AppState['transactions']
 
-export type DefiniteAccountState = Exclude<AppState['account'], undefined>
-export type DefiniteBalanceState = Exclude<AppState['balance'], undefined>
-export type DefiniteSelectedTransactionState = Exclude<
-  AppState['selectedTransaction'],
-  undefined
+export type DefiniteAccountState = NonNullable<AppState['account']>
+export type DefiniteBalanceState = NonNullable<AppState['balance']>
+export type DefiniteSelectedTransactionState = NonNullable<
+  AppState['selectedTransaction']
 >

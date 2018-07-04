@@ -15,7 +15,7 @@ import {
 const actionSinglePrefix = '[Transaction]'
 const actionMultiplePrefix = '[Transactions]'
 
-export const GET_TRANSACTIONS = `${actionMultiplePrefix} HTTP/Get`
+export const GET_TRANSACTIONS = `${actionMultiplePrefix} Get`
 export const GET_TRANSACTIONS_SUCCESS = `${GET_TRANSACTIONS} ${
   suffixes.success
 }`
