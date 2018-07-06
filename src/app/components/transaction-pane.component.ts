@@ -2,11 +2,16 @@ import { Component, ChangeDetectionStrategy, OnInit } from '@angular/core'
 import { Store } from '@ngrx/store'
 import { Observable, combineLatest } from 'rxjs'
 import { filter, map } from 'rxjs/operators'
+import { startOfMonth, subMonths } from 'date-fns'
+import Debug = require('debug')
 
 import { AppState } from '../store'
 import { SelectTransactionAction } from '../store/actions/selectedTransaction.actions'
+import { GetTransactionsAction } from '../store/actions/transactions.actions'
 
 import { Transaction } from '../../lib/monzo/Transaction'
+
+const debug = Debug('app:component:transaction-pane')
 
 @Component({
   selector: 'm-transaction-pane',
@@ -36,5 +41,15 @@ export class TransactionPaneComponent implements OnInit {
 
   selectTx(txId: string): void {
     this.store$.dispatch(new SelectTransactionAction(txId))
+  }
+
+  loadNextPage(lastDate: Date): void {
+    debug('loading month before', lastDate)
+    this.store$.dispatch(
+      new GetTransactionsAction({
+        before: lastDate,
+        since: subMonths(startOfMonth(lastDate), 1)
+      })
+    )
   }
 }

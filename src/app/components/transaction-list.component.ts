@@ -27,6 +27,7 @@ export class TransactionListComponent implements OnChanges {
   @Input() readonly selectedTx?: Transaction
 
   @Output() select = new EventEmitter<string>()
+  @Output() loadNextPage = new EventEmitter<Date>()
 
   search?: string
   txGroups: TransactionGroup[] = []
@@ -67,5 +68,14 @@ export class TransactionListComponent implements OnChanges {
 
   selectTx(txId: string): void {
     this.select.emit(txId)
+  }
+
+  nextPage(ev: MouseEvent): void {
+    if (ev) {
+      ev.stopPropagation()
+      ev.preventDefault()
+    }
+
+    this.loadNextPage.emit(this.txs[this.txs.length - 1].created)
   }
 }

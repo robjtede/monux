@@ -4,9 +4,14 @@
   </label>
   <input id="l-search" name="l-search" type="text" #search (input)="updateSearch(search.value)" placeholder="Tesco / Shopping / Big Mac">
 </div>
+
 <m-transaction-group
   *ngFor="let group of txGroups"
   [group]="group"
   [selectedTx]="selectedTx"
   (select)="selectTx($event)"
 ></m-transaction-group>
+
+<button class="load-next-page" href="#" (click)="nextPage($event)">
+  ♻️ Load more transactions
+</button>

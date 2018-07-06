@@ -2,6 +2,7 @@
   [txs]="txs$ | async"
   [selectedTx]="selectedTx$ | async"
   (select)="selectTx($event)"
+  (loadNextPage)="loadNextPage($event)"
 ></m-transaction-list>
 
 <div class="transaction-detail-pane">

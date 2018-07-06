@@ -126,8 +126,7 @@ export class TransactionsEffects {
       } else {
         throw new Error('cannot save transaction of account that doesnt exist')
       }
-    }),
-    tap(debug, debug)
+    })
   )
 
   @Effect({ dispatch: false })
