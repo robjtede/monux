@@ -10,7 +10,7 @@ export class Transaction {
   constructor(private readonly tx: MonzoTransactionResponse) {}
 
   get amount(): Amount {
-    const native = {
+    const domestic = {
       amount: this.tx.amount,
       currency: this.tx.currency
     }
@@ -22,9 +22,9 @@ export class Transaction {
         currency: this.tx.local_currency
       }
 
-      return new Amount({ native, local })
+      return new Amount({ domestic, local })
     } else {
-      return new Amount({ native })
+      return new Amount({ domestic })
     }
   }
 
@@ -37,12 +37,12 @@ export class Transaction {
   }
 
   get balance(): Amount {
-    const native = {
+    const domestic = {
       amount: this.tx.account_balance,
       currency: this.tx.currency
     }
 
-    return new Amount({ native })
+    return new Amount({ domestic })
   }
 
   get category() {

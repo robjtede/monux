@@ -97,7 +97,7 @@ export const sumGroup = (txs: Transaction[]): Amount => {
   const sum = sumBy(filtered, tx => tx.amount.raw)
 
   return new Amount({
-    native: {
+    domestic: {
       amount: sum,
       currency: txs[0].amount.currency
     }
@@ -131,15 +131,15 @@ export const extractBalanceAndSpent = (bal: MonzoBalanceResponse) => {
 
     return {
       balance: new Amount({
-        native: nativeBalance,
+        domestic: nativeBalance,
         local: localBalance
       }),
-      spent: new Amount({ native: nativeSpend, local: localSpend })
+      spent: new Amount({ domestic: nativeSpend, local: localSpend })
     }
   } else {
     return {
-      balance: new Amount({ native: nativeBalance }),
-      spent: new Amount({ native: nativeSpend })
+      balance: new Amount({ domestic: nativeBalance }),
+      spent: new Amount({ domestic: nativeSpend })
     }
   }
 }

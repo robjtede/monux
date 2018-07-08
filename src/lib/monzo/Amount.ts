@@ -15,12 +15,19 @@ const currencies: CurrencyLibrary = {
 }
 
 export class Amount {
-  private readonly native: SimpleAmount
+  private readonly domestic: SimpleAmount
   private readonly local?: SimpleAmount
+  private readonly formatter: Intl.NumberFormat
 
-  constructor({ native, local }: AmountOpts) {
-    this.native = native
+  constructor({ domestic, local }: AmountOpts) {
+    this.domestic = domestic
     this.local = local
+
+    const language = (navigator && navigator.language) || 'en-GB'
+    this.formatter = Intl.NumberFormat(language, {
+      style: 'currency',
+      currency: (this.local && this.local.currency) || this.domestic.currency
+    })
   }
 
   // returns true if not home currency
@@ -30,13 +37,13 @@ export class Amount {
 
   // returns local currency as native currency
   get exchanged(): Amount | undefined {
-    if (this.local) return new Amount({ native: this.local })
+    if (this.local) return new Amount({ domestic: this.local })
     else return
   }
 
   // returns true if negative amount
   get negative(): boolean {
-    return this.native.amount <= 0
+    return this.domestic.amount <= 0
   }
 
   // returns true if positive amount
@@ -61,26 +68,26 @@ export class Amount {
 
   // returns currency symbol
   get currency(): string {
-    return this.native.currency
+    return this.domestic.currency
   }
 
   // returns currency symbol
   get symbol(): string {
-    return this.native.currency in currencies
-      ? currencies[this.native.currency].symbol
-      : ''
+    return this.domestic.currency in currencies
+      ? currencies[this.domestic.currency].symbol
+      : this.domestic.currency
   }
 
   // return currency separator
   get separator(): string {
-    return this.native.currency in currencies
-      ? currencies[this.native.currency].separator
+    return this.domestic.currency in currencies
+      ? currencies[this.domestic.currency].separator
       : ''
   }
 
   // returns amount in major units (no truncation)
   get amount(): number {
-    return Math.abs(this.native.amount) / this.scale
+    return Math.abs(this.domestic.amount) / this.scale
   }
 
   // returns truncated amount in major units
@@ -105,14 +112,14 @@ export class Amount {
 
   // return number of minor units in major
   get scale(): number {
-    return this.native.currency in currencies
-      ? currencies[this.native.currency].subunits
+    return this.domestic.currency in currencies
+      ? currencies[this.domestic.currency].subunits
       : 1
   }
 
   // returns raw amount from api
   get raw(): number {
-    return this.native.amount
+    return this.domestic.amount
   }
 
   // returns html formatted string
@@ -120,69 +127,69 @@ export class Amount {
     showCurrency = true,
     signMode = SignModes.Always
   }: { showCurrency?: boolean; signMode?: SignModes } = {}): string {
-    let str = '<span class="major">%j</span>'
-    str += '<span class="separator">%p</span>'
-    str += '<span class="minor">%n</span>'
+    type NumberPartTransformationFunction = (value: string) => string
 
-    if (showCurrency) str = '<span class="currency">%y</span>' + str
-
-    const signModes = {
-      [SignModes.Always]: '<span class="sign">%s</span>',
-      [SignModes.OnlyPositive]: '<span class="sign">%+</span>',
-      [SignModes.OnlyNegative]: '<span class="sign">%-</span>',
-      [SignModes.Never]: ''
+    const strfpart: {
+      [T in keyof Intl.NumberPartTypes]?: NumberPartTransformationFunction
+    } = {
+      currency: val => {
+        return showCurrency ? val : ''
+      },
+      minusSign: val => {
+        if (
+          signMode === SignModes.Always ||
+          signMode === SignModes.OnlyNegative
+        ) {
+          return val
+        } else {
+          return ''
+        }
+      },
+      plusSign: val => {
+        if (
+          signMode === SignModes.Always ||
+          signMode === SignModes.OnlyPositive
+        ) {
+          return val
+        } else {
+          return ''
+        }
+      }
     }
 
-    str = signModes[signMode] + str
-    str = this.format(str)
+    const str = this.formatter
+      .formatToParts(this.domestic.amount)
+      .map(
+        ({ type, value }) =>
+          type in strfpart
+            ? {
+                type,
+                value: (strfpart[type] as NumberPartTransformationFunction)(
+                  value
+                )
+              }
+            : { type, value }
+      )
+      .map(({ type, value }) => `<span class="amount__${type}">${value}</span>`)
+      .reduce((str, part) => str + part)
 
+    // construct wrapper
     const el = document.createElement('span')
     el.classList.add('amount')
-    el.classList.add(this.positive ? 'positive' : 'negative')
+    el.dataset.positive = this.positive ? 'positive' : 'negative'
+    el.dataset.currency = this.currency
     el.innerHTML = str
 
     return el.outerHTML
   }
 
-  // format currency with a strftime-like syntax
-  // replacements
-  // %s -> sign
-  // %c -> currency
-  // %s -> currency symbol
-  //
-  // %+ -> sign if positive
-  // %- -> sign if negative
-  //
-  // %r -> raw amount
-  // %a -> locally formatted amount
-  //
-  // %j -> major
-  // %n -> minor
-  // %p -> separator
-  format(formatString: string = '%s%y%j%p%n'): string {
-    let str = formatString
-
-    str = str.replace(/%s/g, this.sign)
-    str = str.replace(/%c/g, this.native.currency)
-    str = str.replace(/%y/g, this.symbol)
-
-    str = str.replace(/%\+/g, this.signIfPositive)
-    str = str.replace(/%-/g, this.signIfNegative)
-
-    str = str.replace(/%r/g, String(this.raw))
-    str = str.replace(/%a/g, String(this.amount))
-    str = str.replace(/%m/g, String(this.normalize))
-
-    str = str.replace(/%j/g, this.major)
-    str = str.replace(/%n/g, this.minor)
-    str = str.replace(/%p/g, this.separator)
-
-    return str
+  format(): string {
+    return this.formatter.format(this.domestic.amount)
   }
 
   get json(): AmountOpts {
     return {
-      native: this.native,
+      domestic: this.domestic,
       local: this.local
     }
   }
@@ -196,7 +203,7 @@ export class Amount {
   }
 
   valueOf(): number {
-    return this.native.amount
+    return this.domestic.amount
   }
 }
 
@@ -216,7 +223,7 @@ export interface SimpleAmount {
 }
 
 export interface AmountOpts {
-  native: SimpleAmount
+  domestic: SimpleAmount
   local?: SimpleAmount
 }
 
