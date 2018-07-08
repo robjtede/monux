@@ -1,4 +1,5 @@
 import { randomBytes } from 'crypto'
+import { resolve } from 'path'
 import { parse as parseQueryString } from 'querystring'
 import { parse as parseUrl } from 'url'
 import Debug = require('debug')
@@ -24,9 +25,13 @@ if (!app.isDefaultProtocolClient(app.getName().toLowerCase())) {
   app.setAsDefaultProtocolClient(app.getName().toLowerCase())
 }
 
-import('electron-reload')
-  .then(reloader => reloader(__dirname))
-  .catch(console.error)
+// load auto reloader in development
+if (!app.isPackaged) {
+  debug('starting auto reloader')
+  import('electron-reload')
+    .then(reloader => reloader(resolve(__dirname)))
+    .catch(console.error)
+}
 
 export interface AppInfo {
   client_id: string
@@ -130,21 +135,8 @@ if (isSecondInstance) {
 app.on('ready', async () => {
   debug('ready event')
 
-  import('devtron')
-    .then(({ install }) => install())
-    .catch(console.error)
-  import('electron-devtools-installer')
-    .then(({ default: installExtension, REDUX_DEVTOOLS }) => {
-      const extensions = [
-        installExtension(REDUX_DEVTOOLS),
-        installExtension('elgalmkoelokbchhkhacckoklkejnhcd')
-      ]
-
-      return Promise.all(extensions)
-        .then(names => debug('Added Extensions:', names.join(', ')))
-        .catch(err => debug('An error occurred adding extension:', err))
-    })
-    .catch(console.error)
+  // load devtool extensions in development
+  if (!app.isPackaged) loadDevtoolExtensions()
 
   wm.goToMonux()
 
@@ -164,14 +156,11 @@ app.on('ready', async () => {
 
 app.on('open-url', async (_, forwardedUrl) => {
   debug('open-url event')
-
   await parseAuthUrl(forwardedUrl)
 })
 
 app.on('window-all-closed', () => {
   debug('window-all-closed event')
-
-  // conflicts with auth strategy for now
   if (process.platform !== 'darwin') app.quit()
 })
 
@@ -180,3 +169,24 @@ app.on('activate', () => {
   if (wm.hasMainWindow()) wm.focusMainWindow()
   else wm.goToMonux()
 })
+
+function loadDevtoolExtensions() {
+  debug('loading devtool extensions')
+
+  import('devtron')
+    .then(({ install }) => install())
+    .catch(console.error)
+
+  import('electron-devtools-installer')
+    .then(({ default: installExtension, REDUX_DEVTOOLS }) => {
+      const extensions = [
+        installExtension(REDUX_DEVTOOLS),
+        installExtension('elgalmkoelokbchhkhacckoklkejnhcd')
+      ]
+
+      return Promise.all(extensions)
+        .then(names => debug('Added Extensions:', names.join(', ')))
+        .catch(err => debug('An error occurred adding extension:', err))
+    })
+    .catch(console.error)
+}

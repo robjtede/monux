@@ -77,11 +77,8 @@ Monux is being designed to support all OSes and any bank with a public API. At t
 [![](https://m131jyck4m.execute-api.us-west-2.amazonaws.com/prod/poll/01BM7TWYY0DN4K8DS0DTV3V07B/CSV%20JSON%20Excel%20export)](https://m131jyck4m.execute-api.us-west-2.amazonaws.com/prod/poll/01BM7TWYY0DN4K8DS0DTV3V07B/CSV%20JSON%20Excel%20export/vote)
 [![](https://m131jyck4m.execute-api.us-west-2.amazonaws.com/prod/poll/01BM7TWYY0DN4K8DS0DTV3V07B/View%20spending%20targets)](https://m131jyck4m.execute-api.us-west-2.amazonaws.com/prod/poll/01BM7TWYY0DN4K8DS0DTV3V07B/View%20spending%20targets/vote)
 [![](https://m131jyck4m.execute-api.us-west-2.amazonaws.com/prod/poll/01BM7TWYY0DN4K8DS0DTV3V07B/Multiple%20accounts)](https://m131jyck4m.execute-api.us-west-2.amazonaws.com/prod/poll/01BM7TWYY0DN4K8DS0DTV3V07B/Multiple%20accounts/vote)
-
-
-### Future Goals (Pending Monzo Support)
-
 [![](https://m131jyck4m.execute-api.us-west-2.amazonaws.com/prod/poll/01BM7TWYY0DN4K8DS0DTV3V07B/Change%20category)](https://m131jyck4m.execute-api.us-west-2.amazonaws.com/prod/poll/01BM7TWYY0DN4K8DS0DTV3V07B/Change%20category/vote)
+
 
 
 ## Screenshots
