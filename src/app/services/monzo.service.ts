@@ -1,130 +1,101 @@
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http'
 import { Injectable } from '@angular/core'
 import Debug = require('debug')
+import { forkJoin, Observable, of, throwError } from 'rxjs'
+import { switchMap, map, tap, catchError } from 'rxjs/operators'
+
 import {
   MonzoAccessResponse,
   MonzoRequest,
   MonzoWhoAmIResponse
 } from 'monzolib'
 import { stringify } from 'querystring'
-import { forkJoin, from, Observable, of, throwError } from 'rxjs'
-import { catchError, map, switchMap, tap } from 'rxjs/operators'
+
 
 import {
-  deletePassword,
-  getPassword,
-  hasPassword,
-  setPassword
-} from '../../lib/keychain'
+  Keychain,
+  KeychainService,
+  MonzoSavableCodes
+} from './keychain.service'
 
-// TODO: remove need for compat
 const debug = Debug('app:service:monzo')
-
-const ACCOUNT = 'Monux'
-const SERVICE = 'monux'
-const MONZO_SERVICE = `${SERVICE}.monzo`
-
-export type MonzoSaveableCodes =
-  | 'client_id'
-  | 'client_secret'
-  | 'access_token'
-  | 'refresh_token'
 
 @Injectable()
 export class MonzoService {
   private readonly proto: string = 'https://'
   private readonly apiRoot: string = 'api.monzo.com'
 
-  private get accessToken$(): Observable<string> {
+  constructor(private keychain: KeychainService, private http: HttpClient) {}
+
+  getAccessToken(): Observable<string> {
     return this.getCode('access_token')
   }
 
-  constructor(private readonly http: HttpClient) {}
+  hasCode(code: keyof MonzoSavableCodes): Observable<boolean> {
+    debug('checking code existence =>', code)
 
-  request<R>(
-    { path = '/ping/whoami', qs = {}, method = 'GET' }: MonzoRequest = {
-      path: '/ping/whoami'
-    }
-  ): Observable<R> {
-    const url = `${this.proto}${this.apiRoot}${path}`
+    return this.keychain.getKeychain().pipe(
+      map(chain => {
+        return !!(
+          chain &&
+          chain.accounts &&
+          chain.accounts.monzo &&
+          chain.accounts.monzo[code]
+        )
+      })
+    )
+  }
 
-    return this.accessToken$.pipe(
-      switchMap(token => {
-        const headers = new HttpHeaders({
-          Authorization: `Bearer ${token}`
-        })
+  getCode(code: keyof MonzoSavableCodes): Observable<string> {
+    debug('getting code =>', code)
 
-        const params = new HttpParams({
-          fromString: stringify(qs)
-        })
-
-        if (method === 'GET') {
-          return this.http.get<R>(url, {
-            headers,
-            params
-          })
-        } else if (method === 'POST') {
-          return this.http.post<R>(url, params, {
-            headers
-          })
-        } else if (method === 'PUT') {
-          return this.http.put<R>(url, params, {
-            headers
-          })
-        } else if (method === 'PATCH') {
-          return this.http.patch<R>(url, params, {
-            headers
-          })
+    return this.keychain.getKeychain().pipe(
+      switchMap(chain => {
+        return forkJoin(of(chain), this.hasCode(code))
+      }),
+      map(([chain, codeExists]) => {
+        if (codeExists) {
+          return (chain as any).accounts.monzo[code] as string
         } else {
-          throw new Error(`Unhandled HTTP call with ${method} method.`)
+          throw new Error(`monzo.${code} is not saved`)
         }
       })
     )
   }
 
-  hasCode(code: MonzoSaveableCodes): Observable<boolean> {
-    debug('getting code =>', `${MONZO_SERVICE}.${code}`)
+  saveCode(code: string, value: string | undefined): Observable<void> {
+    debug('saving code =>', code)
 
-    return from(
-      hasPassword({
-        account: ACCOUNT,
-        service: `${MONZO_SERVICE}.${code}`
+    return this.keychain.hasKeychain().pipe(
+      switchMap(hasKeychain => {
+        debug('has keychain', hasKeychain)
+        return hasKeychain ? this.keychain.getKeychain() : of({} as Keychain)
+      }),
+      switchMap(chain => {
+        debug('current keychain', chain)
+        const newChain = {
+          ...chain,
+          accounts: {
+            ...(chain.accounts ? chain.accounts : {}),
+            monzo: {
+              ...(chain.accounts && chain.accounts.monzo
+                ? chain.accounts.monzo
+                : {}),
+              [code]: value
+            }
+          }
+        }
+
+        debug('modified keychain', newChain)
+        return this.keychain.overwriteKeychain(newChain)
       })
     )
   }
 
-  getCode(code: MonzoSaveableCodes): Observable<string> {
-    debug('getting code =>', `${MONZO_SERVICE}.${code}`)
+  deleteCode(code: string): Observable<void> {
+    debug('deleting code =>', code)
 
-    return from(
-      getPassword({
-        account: ACCOUNT,
-        service: `${MONZO_SERVICE}.${code}`
-      })
-    )
-  }
-
-  saveCode(code: MonzoSaveableCodes, value: string): Observable<void> {
-    debug('saving code =>', `${MONZO_SERVICE}.${code}`)
-
-    return from(
-      setPassword({
-        account: ACCOUNT,
-        service: `${MONZO_SERVICE}.${code}`,
-        password: value
-      })
-    )
-  }
-
-  deleteCode(code: MonzoSaveableCodes): Observable<boolean> {
-    debug('deleting code =>', `${MONZO_SERVICE}.${code}`)
-
-    return from(
-      deletePassword({
-        account: ACCOUNT,
-        service: `${MONZO_SERVICE}.${code}`
-      })
-    )
+    return this.saveCode(code, undefined)
   }
 
   verifyAccess(accessToken: string): Observable<boolean> {
@@ -153,6 +124,7 @@ export class MonzoService {
       )
   }
 
+  // assumes existence of refresh token
   // returns new access token
   refreshAccess(refresh_token: string): Observable<string> {
     debug('refreshing access token')
@@ -177,6 +149,7 @@ export class MonzoService {
       switchMap(({ access_token, refresh_token }) => {
         return forkJoin(
           this.saveCode('access_token', access_token),
+          // conditional not assuming existence of refresh token
           refresh_token
             ? this.saveCode('refresh_token', refresh_token)
             : of(undefined)
@@ -184,6 +157,47 @@ export class MonzoService {
       }),
       switchMap(() => {
         return this.accessToken$
+      })
+    )
+  }
+
+  request<T>(
+    { path = '/ping/whoami', qs = {}, method = 'GET' }: MonzoRequest = {
+      path: '/ping/whoami'
+    }
+  ): Observable<T> {
+    const url = `${this.proto}${this.apiRoot}${path}`
+
+    return this.getAccessToken().pipe(
+      switchMap(token => {
+        const headers = new HttpHeaders({
+          Authorization: `Bearer ${token}`
+        })
+
+        const params = new HttpParams({
+          fromString: stringify(qs)
+        })
+
+        if (method === 'GET') {
+          return this.http.get<T>(url, {
+            headers,
+            params
+          })
+        } else if (method === 'POST') {
+          return this.http.post<T>(url, params, {
+            headers
+          })
+        } else if (method === 'PUT') {
+          return this.http.put<T>(url, params, {
+            headers
+          })
+        } else if (method === 'PATCH') {
+          return this.http.patch<T>(url, params, {
+            headers
+          })
+        } else {
+          throw new Error(`Unhandled HTTP call with ${method} method.`)
+        }
       })
     )
   }

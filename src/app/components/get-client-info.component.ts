@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core'
 import { Router } from '@angular/router'
-import { combineLatest } from 'rxjs'
+import { switchMap } from 'rxjs/operators'
 import Debug = require('debug')
 
 import { MonzoService } from '../services/monzo.service'
@@ -26,12 +26,13 @@ export class GetClientInfoComponent implements OnInit {
 
     debug('saving client info')
 
-    combineLatest(
-      this.monzo.saveCode('client_id', clientId),
-      this.monzo.saveCode('client_secret', clientSecret)
-    ).subscribe(() => {
-      debug('saved id and secret')
-      this.router.navigate(['/auth-request'])
-    })
+    // no parallelism allowed due to get-get-set-set problem
+    this.monzo
+      .saveCode('client_id', clientId)
+      .pipe(switchMap(() => this.monzo.saveCode('client_secret', clientSecret)))
+      .subscribe(() => {
+        debug('saved id and secret')
+        this.router.navigate(['/auth-request'])
+      })
   }
 }
