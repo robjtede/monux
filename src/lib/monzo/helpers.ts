@@ -104,13 +104,15 @@ export const sumGroup = (txs: Transaction[]): Amount => {
   })
 }
 
-export const extractBalanceAndSpent = (bal: MonzoBalanceResponse) => {
-  const nativeBalance: SimpleAmount = {
+export function extractBalanceAndSpent(
+  bal: MonzoBalanceResponse
+): { balance: Amount; spent: Amount } {
+  const domesticBalance: SimpleAmount = {
     amount: bal.balance,
     currency: bal.currency
   }
 
-  const nativeSpend: SimpleAmount = {
+  const domesticSpend: SimpleAmount = {
     amount: bal.spend_today,
     currency: bal.currency
   }
@@ -131,15 +133,15 @@ export const extractBalanceAndSpent = (bal: MonzoBalanceResponse) => {
 
     return {
       balance: new Amount({
-        domestic: nativeBalance,
+        domestic: domesticBalance,
         local: localBalance
       }),
-      spent: new Amount({ domestic: nativeSpend, local: localSpend })
+      spent: new Amount({ domestic: domesticSpend, local: localSpend })
     }
   } else {
     return {
-      balance: new Amount({ domestic: nativeBalance }),
-      spent: new Amount({ domestic: nativeSpend })
+      balance: new Amount({ domestic: domesticBalance }),
+      spent: new Amount({ domestic: domesticSpend })
     }
   }
 }

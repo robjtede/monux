@@ -8,10 +8,46 @@ export const enum SignModes {
 }
 
 const currencies: CurrencyLibrary = {
-  EUR: { symbol: '€', separator: '.', subunits: 100 },
-  GBP: { symbol: '£', separator: '.', subunits: 100 },
-  USD: { symbol: '$', separator: '.', subunits: 100 },
-  ISK: { symbol: 'ISK_', separator: '_', subunits: 1 }
+  EUR: { symbol: '€', separator: '.' },
+  GBP: { symbol: '£', separator: '.' },
+  USD: { symbol: '$', separator: '.' },
+  ISK: { symbol: 'ISK_', separator: '_' }
+}
+
+const irregularExponents: { [currencyCode: string]: number } = {
+  BIF: 0,
+  CLP: 0,
+  CVE: 0,
+  DJF: 0,
+  GNF: 0,
+  ISK: 0,
+  JPY: 0,
+  KMF: 0,
+  KRW: 0,
+  PYG: 0,
+  RWF: 0,
+  UGX: 0,
+  UYI: 0,
+  VND: 0,
+  VUV: 0,
+  XAF: 0,
+  XOF: 0,
+  XPF: 0,
+  MGA: 1,
+  MRU: 1,
+  BHD: 3,
+  IQD: 3,
+  JOD: 3,
+  KWD: 3,
+  LYD: 3,
+  OMR: 3,
+  TND: 3,
+  CLF: 4
+}
+
+export function getScale(currencyCode: string) {
+  const exponent = irregularExponents[currencyCode] || 2
+  return 10 ** exponent
 }
 
 export class Amount {
@@ -23,7 +59,12 @@ export class Amount {
     this.domestic = domestic
     this.local = local
 
-    const language = (navigator && navigator.language) || 'en-GB'
+    const language =
+      (typeof navigator !== 'undefined' &&
+        navigator &&
+        (navigator.language || navigator.browserLanguage)) ||
+      'en-GB'
+
     this.formatter = Intl.NumberFormat(language, {
       style: 'currency',
       currency: (this.local && this.local.currency) || this.domestic.currency
@@ -112,9 +153,12 @@ export class Amount {
 
   // return number of minor units in major
   get scale(): number {
-    return this.domestic.currency in currencies
-      ? currencies[this.domestic.currency].subunits
-      : 1
+    const exponent =
+      this.domestic.currency in irregularExponents
+        ? irregularExponents[this.domestic.currency]
+        : 2
+
+    return 10 ** exponent
   }
 
   // returns raw amount from api
@@ -122,16 +166,14 @@ export class Amount {
     return this.domestic.amount
   }
 
-  // returns html formatted string
-  html({
+  // returns formatted parts
+  formatParts({
     showCurrency = true,
     signMode = SignModes.Always
-  }: { showCurrency?: boolean; signMode?: SignModes } = {}): string {
-    type NumberPartTransformationFunction = (value: string) => string
+  }: AmountFormatOpts = {}): Intl.NumberPart[] {
+    type NumPartTransformFn = (value: string) => string
 
-    const strfpart: {
-      [T in keyof Intl.NumberPartTypes]?: NumberPartTransformationFunction
-    } = {
+    const strfpart: { [T in Intl.NumberPartTypes]?: NumPartTransformFn } = {
       currency: val => {
         return showCurrency ? val : ''
       },
@@ -157,19 +199,29 @@ export class Amount {
       }
     }
 
-    const str = this.formatter
-      .formatToParts(this.domestic.amount)
-      .map(
-        ({ type, value }) =>
-          type in strfpart
-            ? {
-                type,
-                value: (strfpart[type] as NumberPartTransformationFunction)(
-                  value
-                )
-              }
-            : { type, value }
-      )
+    return this.formatter.formatToParts(this.amount).map(({ type, value }) => {
+      if (type in strfpart) {
+        return {
+          type,
+          value: (strfpart[type] as NumPartTransformFn)(value)
+        }
+      } else {
+        return { type, value }
+      }
+    })
+  }
+
+  format(formatOpts?: AmountFormatOpts): string {
+    return this.formatParts(formatOpts).reduce(
+      (str, part) => str + part.value,
+      ''
+    )
+  }
+
+  // returns html formatted string
+  // TODO: formalise forma  tting opts
+  html(formatOpts?: AmountFormatOpts): string {
+    const str = this.formatParts(formatOpts)
       .map(({ type, value }) => `<span class="amount__${type}">${value}</span>`)
       .reduce((str, part) => str + part)
 
@@ -181,10 +233,6 @@ export class Amount {
     el.innerHTML = str
 
     return el.outerHTML
-  }
-
-  format(): string {
-    return this.formatter.format(this.domestic.amount)
   }
 
   get json(): AmountOpts {
@@ -210,7 +258,6 @@ export class Amount {
 export interface CurrencyDefinition {
   symbol: string
   separator: string
-  subunits: number
 }
 
 export interface CurrencyLibrary {
@@ -218,13 +265,20 @@ export interface CurrencyLibrary {
 }
 
 export interface SimpleAmount {
+  // always use subunits
   amount: number
+  // three-letter currency code
   currency: string
 }
 
 export interface AmountOpts {
   domestic: SimpleAmount
   local?: SimpleAmount
+}
+
+export interface AmountFormatOpts {
+  showCurrency?: boolean
+  signMode?: SignModes
 }
 
 export interface MonzoBalanceResponse {
