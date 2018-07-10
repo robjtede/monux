@@ -1,5 +1,6 @@
 import { Component, Input, ChangeDetectionStrategy } from '@angular/core'
-import { Amount } from '../../lib/monzo/Amount'
+
+import { Amount, SignModes } from '../../lib/monzo/Amount'
 
 @Component({
   selector: 'm-amount',
@@ -12,14 +13,36 @@ import { Amount } from '../../lib/monzo/Amount'
   }
 })
 export class AmountComponent {
-  @Input() readonly amount!: Amount
-  @Input() readonly show: ShowModes = 'both'
-  @Input('sign-mode') readonly signMode?: SignModes = 'always'
-  @Input('currency-mode') readonly currencyMode?: CurrencyModes = 'both'
-  @Input('large-major') readonly largeMajor?: boolean = false
+  @Input() amount!: Amount
 
-  get showNative() {
-    return this.show === 'both' || this.show === 'native'
+  // formatting parameters
+  @Input() show: ShowModes = 'both'
+  @Input('sign-mode') signMode?: SignModes = 'always'
+  @Input('currency-mode') currencyMode?: CurrencyModes = 'both'
+  @Input('large-major') largeMajor?: boolean = false
+
+  get domesticParts(): Intl.NumberPart[] {
+    const showCurrency =
+      this.currencyMode === 'both' || this.currencyMode === 'domestic'
+
+    return this.amount.formatParts({
+      showCurrency: showCurrency,
+      signMode: this.signMode
+    })
+  }
+
+  get localParts(): Intl.NumberPart[] | undefined {
+    if (!this.amount.exchanged) return
+
+    return this.amount.exchanged.formatParts({
+      showCurrency: true,
+      signMode: this.signMode
+    })
+  }
+
+  // TODO: rename to primary/secondary
+  get showDomestic() {
+    return this.show === 'both' || this.show === 'domestic'
   }
 
   get showLocal() {
@@ -29,6 +52,5 @@ export class AmountComponent {
   }
 }
 
-export type SignModes = 'always' | 'onlyPositive' | 'onlyNegative' | 'never'
-export type ShowModes = 'both' | 'local' | 'native' | 'neither'
-export type CurrencyModes = 'both' | 'local' | 'native' | 'neither'
+export type ShowModes = 'both' | 'local' | 'domestic' | 'neither'
+export type CurrencyModes = 'both' | 'local' | 'domestic' | 'neither'

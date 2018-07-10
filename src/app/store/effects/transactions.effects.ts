@@ -67,7 +67,7 @@ export class TransactionsEffects {
       return concat(
         this.cache.loadTransactions(acc.id, action.payload).pipe(
           tap(txs => {
-            debug(txs.length, 'http txs:', txs)
+            debug(txs.length, 'cache txs:', txs)
           }),
           catchError(err => {
             console.error(err)

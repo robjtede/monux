@@ -15,7 +15,6 @@ import {
   getGroupTitle,
   sumGroup
 } from '../../lib/monzo/helpers'
-import { SignModes } from '../../lib/monzo/Amount'
 import { Transaction } from '../../lib/monzo/Transaction'
 
 @Component({
@@ -48,7 +47,7 @@ export class TransactionGroupComponent implements AfterViewInit {
 
   get groupTotal() {
     return sumGroup(this.group.txs).html({
-      signMode: SignModes.Never
+      signMode: 'never'
     })
   }
 

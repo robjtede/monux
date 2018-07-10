@@ -18,7 +18,8 @@
   white-space: nowrap;
 }
 
-:host([large-major]) .native .major {
+:host([large-major]) .domestic .amount__integer,
+:host([large-major]) .domestic .amount__decimal {
   font-size: var(--large-major-size, 1.6em);
 }
 

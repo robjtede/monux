@@ -307,7 +307,6 @@ export interface MonzoTransactionResponse extends JSONMap {
   category: string
   counterparty: MonzoCounterpartyResponse
   created: string
-  // TODO: full currency code list
   currency: string
   // TODO: this could be undefined
   decline_reason: string
@@ -317,7 +316,6 @@ export interface MonzoTransactionResponse extends JSONMap {
   include_in_spending: boolean
   is_load: boolean
   local_amount: number
-  // TODO: full currency code list
   local_currency: string
   merchant: MonzoMerchantResponse | string | null
   metadata: JSONMap

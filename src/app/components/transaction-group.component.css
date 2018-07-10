@@ -1,6 +1,7 @@
 :host {
   display: block;
-  overflow: hidden;
+  /* TODO: conflicts with sticky group header */
+  /* overflow: hidden; */
 }
 
 .group-heading {

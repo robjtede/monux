@@ -1,18 +1,4 @@
-export type Currencies = 'EUR' | 'GBP' | 'USD' | 'ISK'
-
-export const enum SignModes {
-  Always,
-  OnlyPositive,
-  OnlyNegative,
-  Never
-}
-
-const currencies: CurrencyLibrary = {
-  EUR: { symbol: '€', separator: '.' },
-  GBP: { symbol: '£', separator: '.' },
-  USD: { symbol: '$', separator: '.' },
-  ISK: { symbol: 'ISK_', separator: '_' }
-}
+export type SignModes = 'always' | 'onlyPositive' | 'onlyNegative' | 'never'
 
 const irregularExponents: { [currencyCode: string]: number } = {
   BIF: 0,
@@ -67,8 +53,13 @@ export class Amount {
 
     this.formatter = Intl.NumberFormat(language, {
       style: 'currency',
-      currency: (this.local && this.local.currency) || this.domestic.currency
+      currency: (this.local && this.local.currency) || this.domestic.currency,
+      minimumFractionDigits: this.exponent
     })
+  }
+
+  get currency(): string {
+    return this.domestic.currency
   }
 
   // returns true if not home currency
@@ -97,68 +88,20 @@ export class Amount {
     return this.negative ? '-' : '+'
   }
 
-  // returns sign only when positive
-  get signIfPositive(): string {
-    return this.positive ? '+' : ''
-  }
-
-  // returns sign only when negative
-  get signIfNegative(): string {
-    return this.negative ? '-' : ''
-  }
-
-  // returns currency symbol
-  get currency(): string {
-    return this.domestic.currency
-  }
-
-  // returns currency symbol
-  get symbol(): string {
-    return this.domestic.currency in currencies
-      ? currencies[this.domestic.currency].symbol
-      : this.domestic.currency
-  }
-
-  // return currency separator
-  get separator(): string {
-    return this.domestic.currency in currencies
-      ? currencies[this.domestic.currency].separator
-      : ''
-  }
-
   // returns amount in major units (no truncation)
   get amount(): number {
     return Math.abs(this.domestic.amount) / this.scale
   }
 
-  // returns truncated amount in major units
-  get normalize(): string {
-    return this.amount.toFixed(2)
-  }
-
-  // returns amount split into major and minor units
-  get split(): string[] {
-    return String(this.normalize).split('.')
-  }
-
-  // returns major unit
-  get major(): string {
-    return this.split[0]
-  }
-
-  // returns minor unit
-  get minor(): string {
-    return this.split[1]
+  get exponent(): number {
+    return this.domestic.currency in irregularExponents
+      ? irregularExponents[this.domestic.currency]
+      : 2
   }
 
   // return number of minor units in major
   get scale(): number {
-    const exponent =
-      this.domestic.currency in irregularExponents
-        ? irregularExponents[this.domestic.currency]
-        : 2
-
-    return 10 ** exponent
+    return 10 ** this.exponent
   }
 
   // returns raw amount from api
@@ -166,10 +109,10 @@ export class Amount {
     return this.domestic.amount
   }
 
-  // returns formatted parts
+  // returns formatted parts array
   formatParts({
     showCurrency = true,
-    signMode = SignModes.Always
+    signMode = 'always'
   }: AmountFormatOpts = {}): Intl.NumberPart[] {
     type NumPartTransformFn = (value: string) => string
 
@@ -178,20 +121,14 @@ export class Amount {
         return showCurrency ? val : ''
       },
       minusSign: val => {
-        if (
-          signMode === SignModes.Always ||
-          signMode === SignModes.OnlyNegative
-        ) {
+        if (signMode === 'always' || signMode === 'onlyNegative') {
           return val
         } else {
           return ''
         }
       },
       plusSign: val => {
-        if (
-          signMode === SignModes.Always ||
-          signMode === SignModes.OnlyPositive
-        ) {
+        if (signMode === 'always' || signMode === 'onlyPositive') {
           return val
         } else {
           return ''
@@ -211,6 +148,7 @@ export class Amount {
     })
   }
 
+  // returns formatted string
   format(formatOpts?: AmountFormatOpts): string {
     return this.formatParts(formatOpts).reduce(
       (str, part) => str + part.value,
@@ -218,8 +156,7 @@ export class Amount {
     )
   }
 
-  // returns html formatted string
-  // TODO: formalise forma  tting opts
+  // returns formatted html string
   html(formatOpts?: AmountFormatOpts): string {
     const str = this.formatParts(formatOpts)
       .map(({ type, value }) => `<span class="amount__${type}">${value}</span>`)
@@ -284,12 +221,12 @@ export interface AmountFormatOpts {
 export interface MonzoBalanceResponse {
   balance: number
   total_balance: number
-  currency: Currencies
-  local_currency: Currencies
+  currency: string
+  local_currency: string
   local_exchange_rate: number
   local_spend: {
     spend_today: number
-    currency: Currencies
+    currency: string
   }[]
   spend_today: number
 }
