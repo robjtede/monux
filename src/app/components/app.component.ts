@@ -9,6 +9,11 @@ import { Observable } from 'rxjs'
 import { filter, map } from 'rxjs/operators'
 import Debug = require('debug')
 
+import { library } from '@fortawesome/fontawesome-svg-core'
+import { fas } from '@fortawesome/free-solid-svg-icons'
+import { far } from '@fortawesome/free-regular-svg-icons'
+import { fab } from '@fortawesome/free-brands-svg-icons'
+
 import { AppState, DefiniteAccountState, DefiniteBalanceState } from '../store'
 
 import { Account } from '../../lib/monzo/Account'
@@ -18,6 +23,8 @@ import { LogoutAction } from '../store/actions/account.actions'
 import { CacheService } from '../services/cache.service'
 
 const debug = Debug('app:component:app')
+
+library.add(fas, far, fab)
 
 @Component({
   selector: 'm-app',

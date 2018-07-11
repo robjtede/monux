@@ -19,7 +19,7 @@
 }
 
 :host([large-major]) .domestic .amount__integer,
-:host([large-major]) .domestic .amount__decimal {
+:host([large-major]) .domestic .amount__group {
   font-size: var(--large-major-size, 1.6em);
 }
 

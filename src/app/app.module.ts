@@ -14,6 +14,7 @@ import { StoreRouterConnectingModule } from '@ngrx/router-store'
 // secondary modules
 import { Ng2ImgToolsModule } from 'ng2-img-tools'
 import { NgxChartsModule } from '@swimlane/ngx-charts'
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome'
 
 // environment
 import { environment } from '../environments/environment'
@@ -74,7 +75,8 @@ import { TransactionDetailComponent } from './components/transaction-detail.comp
       logOnly: environment.production
     }),
     Ng2ImgToolsModule,
-    NgxChartsModule
+    NgxChartsModule,
+    FontAwesomeModule
   ],
   providers: [
     MonzoService,

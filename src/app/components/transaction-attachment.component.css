@@ -16,8 +16,8 @@ img {
   display: inline-block;
   position: absolute;
   box-sizing: border-box;
-  width: 1rem;
-  height: 1rem;
+  width: calc(1rem + 1px);
+  height: calc(1rem + 1px);
   padding-top: 2px;
 
   background: rgb(200, 50, 30);

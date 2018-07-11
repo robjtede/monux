@@ -1,10 +1,10 @@
 <div class="group-heading">
   <div class="group-collapser" (click)="toggleCollapse()">
     <ng-container *ngIf="!collapsed">
-      ▼
+      <fa-icon [icon]="['fas', 'caret-down']" size="lg" fixedWidth="true"></fa-icon>
     </ng-container>
     <ng-container *ngIf="collapsed">
-      ▶
+      <fa-icon [icon]="['fas', 'caret-right']" size="lg" fixedWidth="true"></fa-icon>
     </ng-container>
   </div>
 

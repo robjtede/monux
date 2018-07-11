@@ -31,11 +31,6 @@ const irregularExponents: { [currencyCode: string]: number } = {
   CLF: 4
 }
 
-export function getScale(currencyCode: string) {
-  const exponent = irregularExponents[currencyCode] || 2
-  return 10 ** exponent
-}
-
 export class Amount {
   private readonly domestic: SimpleAmount
   private readonly local?: SimpleAmount
@@ -94,7 +89,7 @@ export class Amount {
   }
 
   get exponent(): number {
-    return this.domestic.currency in irregularExponents
+    return irregularExponents.hasOwnProperty(this.domestic.currency)
       ? irregularExponents[this.domestic.currency]
       : 2
   }
@@ -114,36 +109,39 @@ export class Amount {
     showCurrency = true,
     signMode = 'always'
   }: AmountFormatOpts = {}): Intl.NumberPart[] {
-    type NumPartTransformFn = (value: string) => string
+    type NumPartFilterFn = (part: Intl.NumberPart) => boolean
 
-    const strfpart: { [T in Intl.NumberPartTypes]?: NumPartTransformFn } = {
-      currency: val => {
-        return showCurrency ? val : ''
+    const parts = this.formatter.formatToParts(this.amount)
+
+    if (this.positive) {
+      parts.unshift({
+        type: 'plusSign',
+        value: '+'
+      })
+    } else {
+      parts.unshift({
+        type: 'minusSign',
+        value: '−'
+      })
+    }
+
+    const strfpart: { [T in Intl.NumberPartTypes]?: NumPartFilterFn } = {
+      currency: part => {
+        return showCurrency
       },
-      minusSign: val => {
-        if (signMode === 'always' || signMode === 'onlyNegative') {
-          return val
-        } else {
-          return ''
-        }
+      minusSign: part => {
+        return signMode === 'always' || signMode === 'onlyNegative'
       },
-      plusSign: val => {
-        if (signMode === 'always' || signMode === 'onlyPositive') {
-          return val
-        } else {
-          return ''
-        }
+      plusSign: part => {
+        return signMode === 'always' || signMode === 'onlyPositive'
       }
     }
 
-    return this.formatter.formatToParts(this.amount).map(({ type, value }) => {
-      if (type in strfpart) {
-        return {
-          type,
-          value: (strfpart[type] as NumPartTransformFn)(value)
-        }
+    return parts.filter(({ type, value }) => {
+      if (strfpart.hasOwnProperty(type)) {
+        return (strfpart[type] as NumPartFilterFn)({ type, value })
       } else {
-        return { type, value }
+        return true
       }
     })
   }

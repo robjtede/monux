@@ -20,14 +20,32 @@
 
 <nav class="tabs">
   <m-account [holder]="accountHolder$ | async"></m-account>
-  <div class="logout" (click)="logout($event)">Log Out</div>
+  <div class="logout" (click)="logout($event)">
+    Log Out
+    <fa-icon [icon]="['fas', 'sign-out-alt']"></fa-icon>
+  </div>
 
   <div class="tabgroup">
-    <div class="tab" [routerLink]="[{outlets: {pane: 'transactions'}}]" routerLinkActive="active">Transactions</div>
-    <div class="tab" routerLinkActive="active">Pots</div>
-    <div class="tab" [routerLink]="[{outlets: {pane: 'spending'}}]" routerLinkActive="active">Spending</div>
-    <div class="tab" [routerLink]="[{outlets: {pane: 'map'}}]" routerLinkActive="active">Map</div>
-    <div class="tab" [routerLink]="[{outlets: {pane: 'export'}}]" routerLinkActive="active">Export</div>
+    <div class="tab" [routerLink]="[{outlets: {pane: 'transactions'}}]" routerLinkActive="active">
+      <fa-icon [icon]="['far', 'list-alt']"></fa-icon>
+      Transactions
+    </div>
+    <div class="tab" routerLinkActive="active">
+      <fa-icon [icon]="['fas', 'piggy-bank']"></fa-icon>
+      Pots
+    </div>
+    <div class="tab" [routerLink]="[{outlets: {pane: 'spending'}}]" routerLinkActive="active">
+      <fa-icon [icon]="['fas', 'chart-pie']"></fa-icon>
+      Spending
+    </div>
+    <div class="tab" [routerLink]="[{outlets: {pane: 'map'}}]" routerLinkActive="active">
+      <fa-icon [icon]="['far', 'map']"></fa-icon>
+      Map
+    </div>
+    <div class="tab" [routerLink]="[{outlets: {pane: 'export'}}]" routerLinkActive="active">
+      <fa-icon [icon]="['fas', 'file-export']"></fa-icon>
+      Export
+    </div>
   </div>
 </nav>
 

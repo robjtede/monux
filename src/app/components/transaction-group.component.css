@@ -28,7 +28,7 @@
   & .group-collapser {
     grid-area: collapser;
     position: relative;
-    top: 0.45em;
+    top: 0.25em;
 
     line-height: 1;
 

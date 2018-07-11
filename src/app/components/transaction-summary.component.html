@@ -6,8 +6,8 @@
   <div class="info">
     <p class="merchant">{{ tx.displayName }}</p>
     <div class="meta">
-      <span class="meta-pending" *ngIf="tx.pending">P</span>
-      <span class="meta-attachments" *ngIf="hasAttachments" [attr.data-attachments]="tx.attachments.length">A: </span>
+      <fa-icon [icon]="['far', 'clock']" fixedWidth="true" class="meta-pending" *ngIf="tx.pending"></fa-icon>
+      <fa-icon [icon]="['fas', 'paperclip']" fixedWidth="true" class="meta-attachments" *ngIf="hasAttachments" [attr.data-attachments]="tx.attachments.length"></fa-icon>
     </div>
   </div>
   <p class="notes" *ngIf="tx.declined || tx.notes.short.trim()">
@@ -29,6 +29,6 @@
 
 <ng-template #hider>
   <div class="amount-wrap">
-    <div class="hider" (click)="hideTx($event)">X</div>
+    <fa-icon [icon]="['fas', 'times']" size="lg" fixedWidth="true" class="hider" (click)="hideTx($event)"></fa-icon>
   </div>
 </ng-template>
