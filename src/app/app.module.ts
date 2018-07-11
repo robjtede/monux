@@ -29,8 +29,10 @@ import { Autosize } from './directives/autosize.directive'
 // pipes
 
 // services
-import { MonzoService } from './services/monzo.service'
+import { DomService } from './services/dom.service'
+import { ModalService } from './services/modal.service'
 import { CacheService } from './services/cache.service'
+import { MonzoService } from './services/monzo.service'
 
 // guards
 import { ClientInfoGuard } from './guards/client-info.guard'
@@ -79,8 +81,10 @@ import { TransactionDetailComponent } from './components/transaction-detail.comp
     FontAwesomeModule
   ],
   providers: [
-    MonzoService,
+    DomService,
+    ModalService,
     CacheService,
+    MonzoService,
     ClientInfoGuard,
     ApiAccessGuard,
     {
@@ -88,6 +92,7 @@ import { TransactionDetailComponent } from './components/transaction-detail.comp
       useClass: HashLocationStrategy
     }
   ],
+  entryComponents: [],
   bootstrap: [RootComponent]
 })
 export class AppModule {}

@@ -20,7 +20,6 @@ import { Account } from '../../lib/monzo/Account'
 import { Amount } from '../../lib/monzo/Amount'
 import { extractBalanceAndSpent } from '../../lib/monzo/helpers'
 import { LogoutAction } from '../store/actions/account.actions'
-import { CacheService } from '../services/cache.service'
 
 const debug = Debug('app:component:app')
 
