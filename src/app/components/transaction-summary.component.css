@@ -111,6 +111,7 @@
 
 .merchant {
   margin: 0;
+  margin-right: 0.5ch;
 
   font-size: 1rem;
   overflow-wrap: break-word;
@@ -118,8 +119,6 @@
 }
 
 .meta {
-  margin-left: 1ch;
-
   color: var(--label-grey);
 
   & .meta-attachments::after {

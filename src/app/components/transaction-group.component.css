@@ -1,7 +1,5 @@
 :host {
   display: block;
-  /* TODO: conflicts with sticky group header */
-  /* overflow: hidden; */
 }
 
 .group-heading {
@@ -9,7 +7,9 @@
   grid-template-columns: auto 1fr auto;
   grid-template-areas: 'collapser title total';
   grid-gap: 1em;
+  align-items: center;
   justify-content: space-between;
+  z-index: 1;
 
   position: sticky;
   top: -1px;
@@ -27,8 +27,6 @@
 
   & .group-collapser {
     grid-area: collapser;
-    position: relative;
-    top: 0.25em;
 
     line-height: 1;
 
@@ -45,7 +43,6 @@
 
   & .group-total {
     grid-area: total;
-    align-self: center;
 
     padding-left: 1em;
 
@@ -55,8 +52,12 @@
 }
 
 .group-txs {
-  transition: height 250ms ease-in-out;
-  will-change: height;
+  overflow: hidden;
+
+  transform-origin: top;
+
+  transition: height 250ms ease-in-out, transform 250ms ease-in-out, opacity 250ms ease-in-out;
+  will-change: height transform opacity;
 }
 
 m-transaction-summary:not(:last-of-type) {

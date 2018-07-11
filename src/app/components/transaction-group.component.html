@@ -13,7 +13,7 @@
   <div class="group-total" [innerHTML]="groupTotal"></div>
 </div>
 
-<div #groupTxs class="group-txs" [style.height]="txsHeight">
+<div #groupTxs class="group-txs" [style.height]="txsHeight" [style.transform]="txsTransform" [style.opacity]="txsOpacity">
   <m-transaction-summary
     *ngFor="let tx of group.txs"
     [tx]="tx"

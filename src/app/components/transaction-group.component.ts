@@ -34,6 +34,8 @@ export class TransactionGroupComponent implements AfterViewInit {
   collapsed = false
   txsTargetHeight!: string
   txsHeight!: string
+  txsTransform!: string
+  txsOpacity!: number
 
   constructor(private ref: ChangeDetectorRef) {}
 
@@ -68,8 +70,12 @@ export class TransactionGroupComponent implements AfterViewInit {
   toggleCollapse(): void {
     if (this.collapsed) {
       this.txsHeight = this.txsTargetHeight
+      this.txsTransform = 'rotateX(0)'
+      this.txsOpacity = 1
     } else {
       this.txsHeight = '0px'
+      this.txsTransform = 'rotateX(90deg)'
+      this.txsOpacity = 0
     }
 
     this.collapsed = !this.collapsed
