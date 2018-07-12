@@ -9,15 +9,16 @@ import { Store } from '@ngrx/store'
 import { format } from 'date-fns'
 import Debug = require('debug')
 
-import { Transaction } from '../../lib/monzo/Transaction'
-
 import { AppState } from '../store'
 import {
   PatchTransactionNotesAction,
   UploadAttachmentAction
 } from '../store/actions/transactions.actions'
+import { Transaction } from '../../lib/monzo/Transaction'
 import { Attachment } from '../../lib/monzo/Attachment'
 import { DeregisterAttachmentAction } from '../store/actions/attachment.actions'
+import { CategoryDialogComponent } from './category-dialog.component'
+import { ModalService } from '../services/modal.service'
 
 const debug = Debug('app:component:tx-detail')
 
@@ -37,7 +38,10 @@ export class TransactionDetailComponent {
   @ViewChild('icon') readonly $icon!: ElementRef<HTMLImageElement>
   @ViewChild('uploader') readonly $uploader!: ElementRef<HTMLInputElement>
 
-  constructor(private store$: Store<AppState>) {}
+  constructor(
+    private store$: Store<AppState>,
+    private modalService: ModalService
+  ) {}
 
   get createdTime(): string {
     return format(this.tx.created, 'h:mma - do MMMM YYYY')
@@ -69,6 +73,15 @@ export class TransactionDetailComponent {
 
   updateNotes(notes: string): void {
     this.store$.dispatch(new PatchTransactionNotesAction(this.tx, notes))
+  }
+
+  openCategoryModal(ev?: MouseEvent): void {
+    if (ev) {
+      ev.stopPropagation()
+      ev.preventDefault()
+    }
+
+    this.modalService.init(CategoryDialogComponent)
   }
 
   uploadAttachment(ev: Event): void {

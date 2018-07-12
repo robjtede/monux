@@ -1,0 +1,102 @@
+:host {
+  display: grid;
+  grid-template-columns: repeat(2, auto);
+  grid-template-rows: repeat(3, auto);
+  grid-gap: 0.8em;
+  width: 100%;
+  max-width: 45em;
+  margin: 0 auto;
+  padding: 1.5em 2em 1em;
+
+  background-color: #fff;
+  border-radius: 10px;
+}
+
+h1 {
+  grid-column: 1 / -2;
+  margin: 0;
+
+  font-size: 2em;
+  line-height: 1;
+}
+
+.close {
+  grid-column: -2 / -1;
+  justify-self: end;
+}
+
+.categories {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(auto, 160px));
+  justify-content: space-between;
+  grid-gap: 0.8em;
+}
+
+.category {
+  margin: 0;
+  padding: 0.8em;
+
+  color: var(--category-color);
+  font-weight: bold;
+  text-align: center;
+
+  border: 4px solid var(--category-color);
+  border-radius: 10px;
+  cursor: pointer;
+
+  /* pass in via var() from component */
+  &[data-category=groceries] {
+    --category-color: gold;
+  }
+  &[data-category=transport] {
+    --category-color: teal;
+  }
+  &[data-category=entertainment] {
+    --category-color: orangered;
+  }
+  &[data-category=eating_out] {
+    --category-color: crimson;
+  }
+  &[data-category=cash] {
+    --category-color: olivedrab;
+  }
+  &[data-category=mondo] {
+    --category-color: olivedrab;
+  }
+  &[data-category=monzo] {
+    --category-color: olivedrab;
+  }
+  &[data-category=general] {
+    --category-color: slategrey;
+  }
+  &[data-category=bills] {
+    --category-color: cornflowerblue;
+  }
+  &[data-category=holidays] {
+    --category-color: orchid;
+  }
+  &[data-category=shopping] {
+    --category-color: coral;
+  }
+  &[data-category=expenses] {
+    --category-color: darkkhaki;
+  }
+  &[data-category=family] {
+    --category-color: var(--red);
+  }
+  &[data-category=personal_care] {
+    --category-color: var(--pink);
+  }
+
+  &:hover {
+    color: var(--white);
+    background-color: var(--category-color);
+  }
+
+  & img {
+    display: block;
+    height: auto;
+    max-width: 100%;
+  }
+}

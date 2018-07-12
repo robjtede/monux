@@ -2,6 +2,7 @@
   display: block;
   padding-bottom: 15px;
 
+  /* pass in via var() from component */
   &([data-category=groceries]) {
     --category-color: gold;
   }
@@ -48,6 +49,14 @@
 
   &([data-category=expenses]) {
     --category-color: darkkhaki;
+  }
+
+  &([data-category=family]) {
+    --category-color: var(--red);
+  }
+
+  &([data-category=personal_care]) {
+    --category-color: var(--pink);
   }
 }
 

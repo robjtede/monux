@@ -20,6 +20,7 @@ import { Account } from '../../lib/monzo/Account'
 import { Amount } from '../../lib/monzo/Amount'
 import { extractBalanceAndSpent } from '../../lib/monzo/helpers'
 import { LogoutAction } from '../store/actions/account.actions'
+import { ModalService } from '../services/modal.service'
 
 const debug = Debug('app:component:app')
 
@@ -36,7 +37,10 @@ export class AppComponent implements OnInit, OnDestroy {
   balance$!: Observable<Amount>
   spent$!: Observable<Amount>
 
-  constructor(private store$: Store<AppState>) {}
+  constructor(
+    private store$: Store<AppState>,
+    private modalService: ModalService
+  ) {}
 
   ngOnInit() {
     debug('app started')
@@ -67,6 +71,14 @@ export class AppComponent implements OnInit, OnDestroy {
 
     debug('starting logout')
     this.store$.dispatch(new LogoutAction())
+  }
+
+  closeModal(ev?: MouseEvent, el?: HTMLElement) {
+    if (ev && el) {
+      if (ev.target === el) this.modalService.destroy()
+    } else {
+      this.modalService.destroy()
+    }
   }
 
   ngOnDestroy() {

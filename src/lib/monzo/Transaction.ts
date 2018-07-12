@@ -303,7 +303,6 @@ export interface MonzoTransactionResponse extends JSONMap {
   account_id: string
   amount: number
   attachments: MonzoAttachmentResponse[]
-  // TODO: category enum
   category: string
   counterparty: MonzoCounterpartyResponse
   created: string

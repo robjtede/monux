@@ -1,8 +1,11 @@
-import { LocationStrategy, HashLocationStrategy } from '@angular/common'
+import { NgModule } from '@angular/core'
+import {
+  LocationStrategy,
+  HashLocationStrategy,
+  TitleCasePipe
+} from '@angular/common'
 
 // primary modules
-import { NgModule } from '@angular/core'
-import { AppRoutingModule, routedComponents } from './app.routing'
 import { BrowserModule } from '@angular/platform-browser'
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations'
 import { HttpClientModule } from '@angular/common/http'
@@ -10,6 +13,7 @@ import { StoreModule } from '@ngrx/store'
 import { EffectsModule } from '@ngrx/effects'
 import { StoreDevtoolsModule } from '@ngrx/store-devtools'
 import { StoreRouterConnectingModule } from '@ngrx/router-store'
+import { AppRoutingModule, routedComponents } from './app.routing'
 
 // secondary modules
 import { Ng2ImgToolsModule } from 'ng2-img-tools'
@@ -27,6 +31,7 @@ import { effects } from './store/effects'
 import { Autosize } from './directives/autosize.directive'
 
 // pipes
+import { CategoryPipe } from './pipes/category.pipe'
 
 // services
 import { DomService } from './services/dom.service'
@@ -47,6 +52,7 @@ import { TransactionGroupComponent } from './components/transaction-group.compon
 import { TransactionSummaryComponent } from './components/transaction-summary.component'
 import { TransactionAttachmentComponent } from './components/transaction-attachment.component'
 import { TransactionDetailComponent } from './components/transaction-detail.component'
+import { CategoryDialogComponent } from './components/category-dialog.component'
 
 @NgModule({
   declarations: [
@@ -58,7 +64,9 @@ import { TransactionDetailComponent } from './components/transaction-detail.comp
     TransactionSummaryComponent,
     TransactionAttachmentComponent,
     TransactionDetailComponent,
+    CategoryDialogComponent,
     Autosize,
+    CategoryPipe,
     ...routedComponents
   ],
   imports: [
@@ -87,12 +95,13 @@ import { TransactionDetailComponent } from './components/transaction-detail.comp
     MonzoService,
     ClientInfoGuard,
     ApiAccessGuard,
+    TitleCasePipe,
     {
       provide: LocationStrategy,
       useClass: HashLocationStrategy
     }
   ],
-  entryComponents: [],
+  entryComponents: [CategoryDialogComponent],
   bootstrap: [RootComponent]
 })
 export class AppModule {}

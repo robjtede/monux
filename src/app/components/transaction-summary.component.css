@@ -33,6 +33,7 @@
     background: #fee;
   }
 
+  /* pass in via var() from component */
   &([data-category=groceries]) {
     border-left-color: gold;
   }
@@ -68,6 +69,12 @@
   }
   &([data-category=expenses]) {
     border-left-color: darkkhaki;
+  }
+  &([data-category=family]) {
+    border-left-color: var(--red);
+  }
+  &([data-category=personal_care]) {
+    border-left-color: var(--pink);
   }
 }
 

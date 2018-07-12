@@ -54,6 +54,6 @@
 </main>
 
 
-<dialog class="modal-wrapper">
+<dialog #modalWrapper class="modal-wrapper" (click)="closeModal($event, modalWrapper)">
   <div class="modal"></div>
 </dialog>

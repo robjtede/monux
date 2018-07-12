@@ -1,0 +1,12 @@
+<h1>Select Category</h1>
+
+<div class="close">
+  <fa-icon [icon]="['fas', 'times-circle']" size="2x" (click)="closeModal($event)"></fa-icon>
+</div>
+
+<div class="categories">
+  <figure *ngFor="let category of categories" class="category" [attr.data-category]="category" (click)="changeCategory($event)">
+    <img [src]="'./assets/icons/' + category  + '.png'">
+    <figcaption>{{ category | category }}</figcaption>
+  </figure>
+</div>
