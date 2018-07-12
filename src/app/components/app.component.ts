@@ -37,10 +37,7 @@ export class AppComponent implements OnInit, OnDestroy {
   balance$!: Observable<Amount>
   spent$!: Observable<Amount>
 
-  constructor(
-    private store$: Store<AppState>,
-    private modalService: ModalService
-  ) {}
+  constructor(private store$: Store<AppState>, private modal: ModalService) {}
 
   ngOnInit() {
     debug('app started')
@@ -75,9 +72,9 @@ export class AppComponent implements OnInit, OnDestroy {
 
   closeModal(ev?: MouseEvent, el?: HTMLElement) {
     if (ev && el) {
-      if (ev.target === el) this.modalService.destroy()
+      if (ev.target === el) this.modal.destroy()
     } else {
-      this.modalService.destroy()
+      this.modal.destroy()
     }
   }
 

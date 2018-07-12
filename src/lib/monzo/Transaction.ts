@@ -239,6 +239,16 @@ export class Transaction {
     }
   }
 
+  changeCategoryRequest(category: string): MonzoRequest {
+    return {
+      path: `/transactions/${this.id}`,
+      qs: {
+        category: category
+      },
+      method: 'PATCH'
+    }
+  }
+
   annotateRequest(key: string, val: Primitive): MonzoRequest {
     const metaKey = `metadata[${key}]`
 
@@ -256,6 +266,7 @@ export class Transaction {
   }
 
   hideRequest(): MonzoRequest {
+    // TODO: update to official api "hide_amount"
     return this.annotateRequest('monux_hidden', 'true')
   }
 

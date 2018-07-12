@@ -12,6 +12,8 @@ import Debug = require('debug')
 
 import { AppState } from '../store'
 import { Transaction } from '../../lib/monzo/Transaction'
+import { ModalService } from '../services/modal.service'
+import { ChangeCategoryAction } from '../store/actions/transactions.actions'
 
 const debug = Debug('app:component:category-dialog')
 
@@ -39,10 +41,30 @@ export class CategoryDialogComponent implements OnInit, OnDestroy {
     'personal_care'
   ]
 
-  constructor(private store$: Store<AppState>) {}
+  constructor(private store$: Store<AppState>, private modal: ModalService) {}
 
   ngOnInit() {
     debug('init')
+  }
+
+  closeModal(ev?: MouseEvent) {
+    if (ev) {
+      ev.preventDefault()
+      ev.stopPropagation()
+    }
+
+    this.modal.destroy()
+  }
+
+  changeCategory(category: string, ev?: MouseEvent) {
+    if (ev) {
+      ev.preventDefault()
+      ev.stopPropagation()
+    }
+
+    this.store$.dispatch(new ChangeCategoryAction(this.tx, category))
+
+    this.modal.destroy()
   }
 
   ngOnDestroy() {

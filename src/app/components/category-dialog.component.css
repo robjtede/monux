@@ -23,6 +23,8 @@ h1 {
 .close {
   grid-column: -2 / -1;
   justify-self: end;
+
+  cursor: pointer;
 }
 
 .categories {
@@ -89,7 +91,8 @@ h1 {
     --category-color: var(--pink);
   }
 
-  &:hover {
+  &:hover,
+  &.active {
     color: var(--white);
     background-color: var(--category-color);
   }
@@ -98,5 +101,19 @@ h1 {
     display: block;
     height: auto;
     max-width: 100%;
+  }
+
+  & p {
+    margin: 0;
+  }
+
+  & .current {
+    display: none;
+
+    font-weight: normal;
+  }
+
+  &.active .current {
+    display: block;
   }
 }

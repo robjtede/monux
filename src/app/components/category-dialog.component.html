@@ -1,12 +1,25 @@
-<h1>Select Category</h1>
+<h1>Select New Category</h1>
 
 <div class="close">
   <fa-icon [icon]="['fas', 'times-circle']" size="2x" (click)="closeModal($event)"></fa-icon>
 </div>
 
 <div class="categories">
-  <figure *ngFor="let category of categories" class="category" [attr.data-category]="category" (click)="changeCategory($event)">
+  <figure
+    *ngFor="let category of categories"
+    class="category"
+    [class.active]="tx.category.raw === category"
+    [attr.data-category]="category"
+    (click)="changeCategory(category, $event)"
+  >
     <img [src]="'./assets/icons/' + category  + '.png'">
-    <figcaption>{{ category | category }}</figcaption>
+    <figcaption>
+      <p>
+        {{ category | category }}
+      </p>
+      <p class="current">
+        (current)
+      </p>
+    </figcaption>
   </figure>
 </div>

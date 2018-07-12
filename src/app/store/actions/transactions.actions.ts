@@ -29,8 +29,11 @@ export const PATCH_TRANSACTION_NOTES_FAILED = `${PATCH_TRANSACTION_NOTES} ${
   suffixes.failed
 }`
 
+export const PATCH_CATEGORY = `${actionSinglePrefix} HTTP/Patch Category`
+export const PATCH_CATEGORY_FAILED = `${PATCH_CATEGORY} ${suffixes.failed}`
+
 export const UPLOAD_ATTACHMENT = `${actionSinglePrefix} HTTP/Put Upload Attachment`
-export const UPLOAD_ATTACHMENT_FAILED = `${PATCH_TRANSACTION_NOTES} ${
+export const UPLOAD_ATTACHMENT_FAILED = `${UPLOAD_ATTACHMENT} ${
   suffixes.failed
 }`
 
@@ -62,6 +65,14 @@ export class PatchTransactionNotesAction implements Action {
 }
 export class PatchTransactionNotesFailedAction implements Action {
   readonly type = PATCH_TRANSACTION_NOTES_FAILED
+}
+
+export class ChangeCategoryAction implements Action {
+  readonly type = PATCH_CATEGORY
+  constructor(public tx: Transaction, public category: string) {}
+}
+export class ChangeCategoryFailedAction implements Action {
+  readonly type = PATCH_CATEGORY_FAILED
 }
 
 export class UploadAttachmentAction implements Action {

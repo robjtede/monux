@@ -37,7 +37,9 @@ import {
   PatchTransactionNotesFailedAction,
   SetTransactionAction,
   SetTransactionsAction,
-  SET_TRANSACTIONS
+  SET_TRANSACTIONS,
+  PATCH_CATEGORY,
+  ChangeCategoryAction
 } from '../actions/transactions.actions'
 
 const debug = Debug('app:effects:transactions')
@@ -99,6 +101,27 @@ export class TransactionsEffects {
     switchMap(({ tx, notes }: PatchTransactionNotesAction) =>
       this.monzo.request<MonzoTransactionOuterResponse>(
         tx.setNotesRequest(notes)
+      )
+    ),
+    switchMap(({ transaction: tx }) =>
+      // TODO: remove extraneous api call
+      this.monzo.request<MonzoTransactionOuterResponse>(
+        new Transaction(tx).selfRequest()
+      )
+    ),
+    map(({ transaction: tx }) => new SetTransactionAction(tx)),
+    catchError(err => {
+      console.error(err)
+      return of(new PatchTransactionNotesFailedAction())
+    })
+  )
+
+  @Effect()
+  patchCategory$: Observable<Action> = this.actions$.pipe(
+    ofType(PATCH_CATEGORY),
+    switchMap(({ tx, category }: ChangeCategoryAction) =>
+      this.monzo.request<MonzoTransactionOuterResponse>(
+        tx.changeCategoryRequest(category)
       )
     ),
     switchMap(({ transaction: tx }) =>

@@ -38,10 +38,7 @@ export class TransactionDetailComponent {
   @ViewChild('icon') readonly $icon!: ElementRef<HTMLImageElement>
   @ViewChild('uploader') readonly $uploader!: ElementRef<HTMLInputElement>
 
-  constructor(
-    private store$: Store<AppState>,
-    private modalService: ModalService
-  ) {}
+  constructor(private store$: Store<AppState>, private modal: ModalService) {}
 
   get createdTime(): string {
     return format(this.tx.created, 'h:mma - do MMMM YYYY')
@@ -81,7 +78,9 @@ export class TransactionDetailComponent {
       ev.preventDefault()
     }
 
-    this.modalService.init(CategoryDialogComponent)
+    this.modal.init(CategoryDialogComponent, {
+      tx: this.tx
+    })
   }
 
   uploadAttachment(ev: Event): void {
