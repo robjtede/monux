@@ -53,7 +53,7 @@ export class CategoryDialogComponent implements OnInit, OnDestroy {
       ev.stopPropagation()
     }
 
-    this.modal.destroy()
+    this.modal.close()
   }
 
   changeCategory(category: string, ev?: MouseEvent) {
@@ -64,7 +64,7 @@ export class CategoryDialogComponent implements OnInit, OnDestroy {
 
     this.store$.dispatch(new ChangeCategoryAction(this.tx, category))
 
-    this.modal.destroy()
+    this.modal.close()
   }
 
   ngOnDestroy() {

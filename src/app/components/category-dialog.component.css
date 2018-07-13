@@ -25,6 +25,11 @@ h1 {
   justify-self: end;
 
   cursor: pointer;
+  color: var(--dark-grey);
+
+  &:hover {
+    color: var(--black);
+  }
 }
 
 .categories {

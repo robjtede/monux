@@ -78,7 +78,7 @@ export class TransactionDetailComponent {
       ev.preventDefault()
     }
 
-    this.modal.init(CategoryDialogComponent, {
+    this.modal.open(CategoryDialogComponent, {
       tx: this.tx
     })
   }

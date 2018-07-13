@@ -36,6 +36,7 @@ export class AppComponent implements OnInit, OnDestroy {
   accountHolder$!: Observable<string>
   balance$!: Observable<Amount>
   spent$!: Observable<Amount>
+  modalOpen$!: Observable<boolean>
 
   constructor(private store$: Store<AppState>, private modal: ModalService) {}
 
@@ -57,6 +58,8 @@ export class AppComponent implements OnInit, OnDestroy {
       map(balanceRes => extractBalanceAndSpent(balanceRes).spent)
     )
 
+    this.modalOpen$ = this.store$.select('modal').pipe(map(modal => modal.open))
+
     this.store$.dispatch({ type: '@monux/init' })
   }
 
@@ -72,9 +75,9 @@ export class AppComponent implements OnInit, OnDestroy {
 
   closeModal(ev?: MouseEvent, el?: HTMLElement) {
     if (ev && el) {
-      if (ev.target === el) this.modal.destroy()
+      if (ev.target === el) this.modal.close()
     } else {
-      this.modal.destroy()
+      this.modal.close()
     }
   }
 

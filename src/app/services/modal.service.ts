@@ -1,15 +1,20 @@
 import { Injectable } from '@angular/core'
+import { Store } from '@ngrx/store'
 
 import { DomService, ChildConfig } from './dom.service'
+import { AppState } from '../store'
+import {
+  OpenModalAction,
+  CloseModalAction
+} from '../store/actions/modal.actions'
 
 @Injectable()
 export class ModalService {
-  constructor(private domService: DomService) {}
+  constructor(private store$: Store<AppState>, private dom: DomService) {}
 
   private modalSelector = '.modal'
-  private overlaySelector = '.modal-wrapper'
 
-  init(
+  open(
     component: any,
     inputs: ChildConfig['inputs'] = {},
     outputs: ChildConfig['outputs'] = {}
@@ -19,32 +24,14 @@ export class ModalService {
       outputs
     }
 
-    this.domService.appendComponentTo(
-      this.modalSelector,
-      component,
-      componentConfig
-    )
+    this.dom.appendComponentTo(this.modalSelector, component, componentConfig)
 
-    const modalElement = document.querySelector(this.modalSelector)
-    if (modalElement) modalElement.classList.add('show')
-
-    const overlayElement = document.querySelector(this.overlaySelector)
-    if (overlayElement) {
-      overlayElement.setAttribute('open', '')
-      overlayElement.classList.add('show')
-    }
+    this.store$.dispatch(new OpenModalAction())
   }
 
-  destroy() {
-    this.domService.removeComponent()
+  close() {
+    this.dom.removeComponent()
 
-    const modalElement = document.querySelector(this.modalSelector)
-    if (modalElement) modalElement.classList.remove('show')
-
-    const overlayElement = document.querySelector(this.overlaySelector)
-    if (overlayElement) {
-      overlayElement.removeAttribute('open')
-      overlayElement.classList.remove('show')
-    }
+    this.store$.dispatch(new CloseModalAction())
   }
 }

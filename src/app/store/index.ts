@@ -4,6 +4,7 @@ import { reducer as accountReducer } from './reducers/account.reducer'
 import { reducer as balanceReducer } from './reducers/balance.reducer'
 import { reducer as selectedTransactionReducer } from './reducers/selectedTransaction.reducer'
 import { reducer as transactionsReducer } from './reducers/transactions.reducer'
+import { reducer as modalReducer } from './reducers/modal.reducer'
 
 import { AppState, TransactionsState } from './states'
 
@@ -12,12 +13,16 @@ export const reducers = {
   balance: balanceReducer,
   router: routerReducer,
   selectedTransaction: selectedTransactionReducer,
-  transactions: transactionsReducer
+  transactions: transactionsReducer,
+  modal: modalReducer
 }
 
 // TODO: should be AppState compatible
 export const initialState = {
-  transactions: [] as TransactionsState
+  transactions: [] as TransactionsState,
+  modal: {
+    open: false
+  }
 }
 
 export * from './states'
