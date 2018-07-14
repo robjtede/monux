@@ -1,6 +1,5 @@
-import { Component, Input, ChangeDetectionStrategy } from '@angular/core'
-
-import { Amount, SignModes } from '../../lib/monzo/Amount'
+import { ChangeDetectionStrategy, Component, Input } from '@angular/core'
+import { Amount, SignModes } from 'monzolib'
 
 @Component({
   selector: 'm-amount',

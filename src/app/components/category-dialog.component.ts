@@ -1,18 +1,16 @@
 import {
-  Component,
-  OnInit,
-  OnDestroy,
   ChangeDetectionStrategy,
-  Input
+  Component,
+  Input,
+  OnDestroy,
+  OnInit
 } from '@angular/core'
 import { Store } from '@ngrx/store'
-// import { Observable } from 'rxjs'
-// import { filter, map } from 'rxjs/operators'
 import Debug = require('debug')
+import { Transaction } from 'monzolib'
 
-import { AppState } from '../store'
-import { Transaction } from '../../lib/monzo/Transaction'
 import { ModalService } from '../services/modal.service'
+import { AppState } from '../store'
 import { ChangeCategoryAction } from '../store/actions/transactions.actions'
 
 const debug = Debug('app:component:category-dialog')
@@ -63,7 +61,6 @@ export class CategoryDialogComponent implements OnInit, OnDestroy {
     }
 
     this.store$.dispatch(new ChangeCategoryAction(this.tx, category))
-
     this.modal.close()
   }
 

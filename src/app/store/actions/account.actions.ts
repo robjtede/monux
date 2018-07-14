@@ -1,8 +1,7 @@
 import { Action } from '@ngrx/store'
+import { MonzoAccountResponse } from 'monzolib'
 
 import { suffixes } from './'
-
-import { MonzoAccountResponse } from '../../../lib/monzo/Account'
 
 const actionPrefix = '[Account]'
 

@@ -1,8 +1,7 @@
 import { Action } from '@ngrx/store'
+import { Attachment } from 'monzolib'
 
 import { suffixes } from './'
-
-import { Attachment } from '../../../lib/monzo/Attachment'
 
 export const DEREGISTER_ATTACHMENT = '[Attachment] HTTP/Post Deregister'
 export const DEREGISTER_ATTACHMENT_FAILED = `${DEREGISTER_ATTACHMENT} ${

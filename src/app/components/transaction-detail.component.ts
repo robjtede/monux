@@ -1,24 +1,23 @@
 import {
-  Component,
-  Input,
   ChangeDetectionStrategy,
+  Component,
   ElementRef,
+  Input,
   ViewChild
 } from '@angular/core'
 import { Store } from '@ngrx/store'
 import { format } from 'date-fns'
 import Debug = require('debug')
+import { Attachment, Transaction } from 'monzolib'
 
+import { ModalService } from '../services/modal.service'
 import { AppState } from '../store'
+import { DeregisterAttachmentAction } from '../store/actions/attachment.actions'
 import {
   PatchTransactionNotesAction,
   UploadAttachmentAction
 } from '../store/actions/transactions.actions'
-import { Transaction } from '../../lib/monzo/Transaction'
-import { Attachment } from '../../lib/monzo/Attachment'
-import { DeregisterAttachmentAction } from '../store/actions/attachment.actions'
 import { CategoryDialogComponent } from './category-dialog.component'
-import { ModalService } from '../services/modal.service'
 
 const debug = Debug('app:component:tx-detail')
 

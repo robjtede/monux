@@ -1,14 +1,20 @@
-import { Injectable } from '@angular/core'
 import { HttpClient, HttpHeaders } from '@angular/common/http'
+import { Injectable } from '@angular/core'
 import { Actions, Effect, ofType } from '@ngrx/effects'
 import { Action, Store } from '@ngrx/store'
-import { forkJoin, Observable, of } from 'rxjs'
-import { catchError, switchMap, tap, withLatestFrom, map } from 'rxjs/operators'
 import Debug = require('debug')
-
-import { MonzoService } from '../../services/monzo.service'
+import {
+  MonzoAttachmentOuterResponse,
+  MonzoAttachmentUploadResponse,
+  MonzoTransactionOuterResponse,
+  MonzoTransactionResponse,
+  Transaction
+} from 'monzolib'
+import { forkJoin, Observable, of } from 'rxjs'
+import { catchError, map, switchMap, tap, withLatestFrom } from 'rxjs/operators'
 
 import { AppState } from '../'
+import { MonzoService } from '../../services/monzo.service'
 import {
   DEREGISTER_ATTACHMENT,
   DeregisterAttachmentAction,
@@ -19,15 +25,6 @@ import {
   UPLOAD_ATTACHMENT,
   UploadAttachmentAction
 } from '../actions/transactions.actions'
-import {
-  MonzoAttachmentOuterResponse,
-  MonzoAttachmentUploadResponse
-} from '../../../lib/monzo/Attachment'
-import {
-  MonzoTransactionOuterResponse,
-  MonzoTransactionResponse,
-  Transaction
-} from '../../../lib/monzo/Transaction'
 
 const debug = Debug('app:effects:attachment')
 

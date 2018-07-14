@@ -1,19 +1,18 @@
 import {
+  AfterContentInit,
   ChangeDetectionStrategy,
   Component,
   OnInit,
-  AfterContentInit,
   ViewChild
 } from '@angular/core'
 import { Store } from '@ngrx/store'
+import { PieChartComponent } from '@swimlane/ngx-charts'
+import { schemeCategory10 as colorScheme } from 'd3'
+import { GroupingStrategy, groupTransactions, Transaction } from 'monzolib'
 import { Observable } from 'rxjs'
 import { map } from 'rxjs/operators'
-import { schemeCategory10 as colorScheme } from 'd3'
-import { PieChartComponent } from '@swimlane/ngx-charts'
 
 import { AppState } from '../store'
-import { Transaction } from '../../lib/monzo/Transaction'
-import { GroupingStrategy, groupTransactions } from '../../lib/monzo/helpers'
 
 @Component({
   selector: 'm-spending-pane',

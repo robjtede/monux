@@ -1,20 +1,17 @@
-import { stringify } from 'querystring'
-import Debug = require('debug')
-
-import { Injectable } from '@angular/core'
-import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http'
-import { forkJoin, from, Observable, of, throwError } from 'rxjs'
-import { switchMap, map, tap, catchError } from 'rxjs/operators'
-
-// TODO: remove need for compat
 import 'rxjs-compat/operator/toPromise'
 
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http'
+import { Injectable } from '@angular/core'
+import Debug = require('debug')
 import {
-  MonzoApi,
+  MonzoAccessResponse,
   MonzoRequest,
   MonzoWhoAmIResponse
-} from '../../lib/monzo/api'
-import { MonzoRefreshAccessResponse } from '../../lib/monzo/auth'
+} from 'monzolib'
+import { stringify } from 'querystring'
+import { forkJoin, from, Observable, of, throwError } from 'rxjs'
+import { catchError, map, switchMap, tap } from 'rxjs/operators'
+
 import {
   deletePassword,
   getPassword,
@@ -22,6 +19,7 @@ import {
   setPassword
 } from '../../lib/keychain'
 
+// TODO: remove need for compat
 const debug = Debug('app:service:monzo')
 
 const ACCOUNT = 'Monux'
@@ -45,10 +43,6 @@ export class MonzoService {
   }
 
   constructor(private readonly http: HttpClient) {}
-
-  // updateCachedAccessToken() {
-  //   this.accessToken = this.getCode('access_token').toPromise()
-  // }
 
   request<T>(
     { path = '/ping/whoami', qs = {}, method = 'GET' }: MonzoRequest = {
@@ -136,10 +130,6 @@ export class MonzoService {
     )
   }
 
-  getMonzo(): Observable<MonzoApi> {
-    return this.getCode('access_token').pipe(map(token => new MonzoApi(token)))
-  }
-
   verifyAccess(accessToken: string): Observable<boolean> {
     debug('verifying access token (whoami)')
 
@@ -185,7 +175,7 @@ export class MonzoService {
           }
         })
 
-        return this.http.post<MonzoRefreshAccessResponse>(url, params)
+        return this.http.post<MonzoAccessResponse>(url, params)
       }),
       switchMap(({ access_token, refresh_token }) => {
         return forkJoin(

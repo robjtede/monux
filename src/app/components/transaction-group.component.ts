@@ -1,21 +1,20 @@
 import {
-  Component,
-  Input,
-  ChangeDetectionStrategy,
-  Output,
-  EventEmitter,
-  ViewChild,
-  ElementRef,
   AfterViewInit,
-  ChangeDetectorRef
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  ElementRef,
+  EventEmitter,
+  Input,
+  Output,
+  ViewChild
 } from '@angular/core'
-
 import {
-  TransactionGroup,
   getGroupTitle,
-  sumGroup
-} from '../../lib/monzo/helpers'
-import { Transaction } from '../../lib/monzo/Transaction'
+  sumGroup,
+  Transaction,
+  TransactionGroup
+} from 'monzolib'
 
 @Component({
   selector: 'm-transaction-group',

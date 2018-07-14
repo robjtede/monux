@@ -1,26 +1,22 @@
 import {
+  ChangeDetectionStrategy,
   Component,
-  OnInit,
   OnDestroy,
-  ChangeDetectionStrategy
+  OnInit
 } from '@angular/core'
+import { library } from '@fortawesome/fontawesome-svg-core'
+import { fab } from '@fortawesome/free-brands-svg-icons'
+import { far } from '@fortawesome/free-regular-svg-icons'
+import { fas } from '@fortawesome/free-solid-svg-icons'
 import { Store } from '@ngrx/store'
+import Debug = require('debug')
+import { Account, Amount, extractBalanceAndSpent } from 'monzolib'
 import { Observable } from 'rxjs'
 import { filter, map } from 'rxjs/operators'
-import Debug = require('debug')
 
-import { library } from '@fortawesome/fontawesome-svg-core'
-import { fas } from '@fortawesome/free-solid-svg-icons'
-import { far } from '@fortawesome/free-regular-svg-icons'
-import { fab } from '@fortawesome/free-brands-svg-icons'
-
-import { AppState, DefiniteAccountState, DefiniteBalanceState } from '../store'
-
-import { Account } from '../../lib/monzo/Account'
-import { Amount } from '../../lib/monzo/Amount'
-import { extractBalanceAndSpent } from '../../lib/monzo/helpers'
-import { LogoutAction } from '../store/actions/account.actions'
 import { ModalService } from '../services/modal.service'
+import { AppState, DefiniteAccountState, DefiniteBalanceState } from '../store'
+import { LogoutAction } from '../store/actions/account.actions'
 
 const debug = Debug('app:component:app')
 

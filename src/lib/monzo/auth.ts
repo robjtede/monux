@@ -2,9 +2,8 @@ import { URL } from 'url'
 import rp = require('request-promise-native')
 import Debug = require('debug')
 
-import { AppInfo } from '../../app'
+import { AppInfo } from 'monzolib'
 import { getPassword, setPassword, deletePassword } from '../keychain'
-import { MonzoApi } from './api'
 
 const debug = Debug('app:monzo:auth')
 
@@ -52,14 +51,6 @@ export const deleteSavedCode = async (
     service: `${MONZO_SERVICE}.${code}`
   })
 }
-
-export const getSavedMonzo = (() => {
-  const accessToken = getSavedCode('access_token')
-
-  return async (): Promise<MonzoApi> => {
-    return new MonzoApi(await accessToken)
-  }
-})()
 
 export const getAccessToken = async (
   appInfo: AppInfo,
@@ -169,22 +160,4 @@ export const verifyAccess = async (accessToken: string) => {
     if (err.name === 'RequestError') throw err
     else throw new Error(err)
   }
-}
-
-export interface MonzoGetAccessResponse {
-  access_token: string
-  client_id: string
-  expires_in: number
-  refresh_token?: string
-  token_type: string
-  user_id: string
-}
-
-export interface MonzoRefreshAccessResponse {
-  access_token: string
-  client_id: string
-  expires_in: number
-  refresh_token?: string
-  token_type: string
-  user_id: string
 }

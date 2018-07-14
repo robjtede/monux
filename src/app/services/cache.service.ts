@@ -1,15 +1,14 @@
 import { Injectable } from '@angular/core'
-import { from, Observable, of } from 'rxjs'
-import { map, switchMapTo } from 'rxjs/operators'
-import Dexie from 'dexie'
 import Debug = require('debug')
-
-import { MonzoBalanceResponse } from '../../lib/monzo/Amount'
-import { MonzoAccountResponse } from '../../lib/monzo/Account'
+import Dexie from 'dexie'
 import {
+  MonzoAccountResponse,
+  MonzoBalanceResponse,
   MonzoTransactionResponse,
   TransactionRequestOpts
-} from '../../lib/monzo/Transaction'
+} from 'monzolib'
+import { from, Observable, of } from 'rxjs'
+import { map, switchMapTo } from 'rxjs/operators'
 
 const debug = Debug('app:service:cache')
 

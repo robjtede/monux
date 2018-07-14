@@ -3,15 +3,14 @@ import {
   Component,
   ElementRef,
   EventEmitter,
+  HostBinding,
   HostListener,
   Input,
   OnInit,
   Output,
-  ViewChild,
-  HostBinding
+  ViewChild
 } from '@angular/core'
-
-import { Transaction } from '../../lib/monzo/Transaction'
+import { Transaction } from 'monzolib'
 
 @Component({
   selector: 'm-transaction-summary',

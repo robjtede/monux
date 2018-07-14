@@ -1,15 +1,14 @@
-import { Component, ChangeDetectionStrategy, OnInit } from '@angular/core'
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core'
 import { Store } from '@ngrx/store'
-import { Observable, combineLatest } from 'rxjs'
-import { filter, map } from 'rxjs/operators'
 import { startOfMonth, subMonths } from 'date-fns'
 import Debug = require('debug')
+import { Transaction } from 'monzolib'
+import { combineLatest, Observable } from 'rxjs'
+import { filter, map } from 'rxjs/operators'
 
 import { AppState } from '../store'
 import { SelectTransactionAction } from '../store/actions/selectedTransaction.actions'
 import { GetTransactionsAction } from '../store/actions/transactions.actions'
-
-import { Transaction } from '../../lib/monzo/Transaction'
 
 const debug = Debug('app:component:transaction-pane')
 

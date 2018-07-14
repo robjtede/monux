@@ -33,7 +33,7 @@ const routes: Routes = [
   {
     path: 'app',
     component: AppComponent,
-    canActivate: [ApiAccessGuard, ClientInfoGuard],
+    // canActivate: [ApiAccessGuard, ClientInfoGuard],
     children: [
       {
         path: '',

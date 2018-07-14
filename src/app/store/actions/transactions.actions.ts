@@ -1,12 +1,11 @@
 import { Action } from '@ngrx/store'
+import {
+  MonzoTransactionResponse,
+  Transaction,
+  TransactionRequestOpts
+} from 'monzolib'
 
 import { suffixes } from './'
-
-import {
-  Transaction,
-  MonzoTransactionResponse,
-  TransactionRequestOpts
-} from '../../../lib/monzo/Transaction'
 
 /*
 * action type strings

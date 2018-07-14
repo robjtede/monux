@@ -1,7 +1,13 @@
 import { Injectable } from '@angular/core'
 import { Router } from '@angular/router'
-import { Action } from '@ngrx/store'
 import { Actions, Effect, ofType } from '@ngrx/effects'
+import { Action } from '@ngrx/store'
+import Debug = require('debug')
+import {
+  accountsRequest,
+  MonzoAccountResponse,
+  MonzoAccountsResponse
+} from 'monzolib'
 import { concat, defer, from, Observable, of } from 'rxjs'
 import {
   catchError,
@@ -12,27 +18,19 @@ import {
   switchMapTo,
   tap
 } from 'rxjs/operators'
-import Debug = require('debug')
 
+import { deletePassword } from '../../../lib/keychain'
+import { CacheService } from '../../services/cache.service'
 import { MonzoService } from '../../services/monzo.service'
 import {
-  accountsRequest,
-  MonzoAccountsResponse,
-  MonzoAccountResponse
-} from '../../../lib/monzo/Account'
-
-import {
   GET_ACCOUNT,
-  SetAccountAction,
   GetAccountAction,
   GetAccountFailedAction,
   LOGOUT,
   LOGOUT_FAILED,
-  SET_ACCOUNT
+  SET_ACCOUNT,
+  SetAccountAction
 } from '../actions/account.actions'
-
-import { CacheService } from '../../services/cache.service'
-import { deletePassword } from '../../../lib/keychain'
 
 const debug = Debug('app:effects:account')
 

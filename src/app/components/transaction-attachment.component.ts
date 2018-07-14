@@ -8,9 +8,8 @@ import {
   Output,
   ViewChild
 } from '@angular/core'
+import { Attachment } from 'monzolib'
 import { Ng2ImgToolsService } from 'ng2-img-tools'
-
-import { Attachment } from '../../lib/monzo/Attachment'
 
 @Component({
   selector: 'm-transaction-attachment',
@@ -34,12 +33,12 @@ export class TransactionAttachmentComponent implements OnInit {
   orientImage() {
     const img = new Image()
     img.src = this.attachment.url
+    this.$attachment.nativeElement.src = this.attachment.url
 
-    img.addEventListener('load', async () => {
-      const rotatedImg = await this.imgTools.getEXIFOrientedImage(img)
-
-      this.$attachment.nativeElement.src = rotatedImg.src
-    })
+    // TODO: improve performance
+    // img.addEventListener('load', async () => {
+    //   const rotatedImg = await this.imgTools.getEXIFOrientedImage(img)
+    // })
   }
 
   deleteAttachment() {

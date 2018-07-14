@@ -1,6 +1,9 @@
-import { MonzoAccountResponse } from '../../lib/monzo/Account'
-import { MonzoBalanceResponse } from '../../lib/monzo/Amount'
-import { MonzoTransactionResponse } from '../../lib/monzo/Transaction'
+import {
+  MonzoAccountResponse,
+  MonzoBalanceResponse,
+  MonzoTransactionResponse
+} from 'monzolib'
+
 // import { JSONMap } from 'json-types'
 
 // should conform to JSONMap with undefineds

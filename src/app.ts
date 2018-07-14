@@ -6,13 +6,8 @@ import Debug = require('debug')
 
 import { app, ipcMain, EventEmitter } from 'electron'
 
-import {
-  getAccessToken,
-  verifyAccess,
-  getSavedCode,
-  saveCode,
-  getAuthRequestUrl
-} from './lib/monzo/auth'
+import { verifyAccess, getAuthRequestUrl, AppInfo } from 'monzolib'
+import { getAccessToken, getSavedCode, saveCode } from './lib/monzo/auth'
 import { WindowManager } from './window-manager'
 
 const debug = Debug('app:app')
@@ -33,13 +28,49 @@ if (!app.isPackaged) {
     .catch(console.error)
 }
 
-export interface AppInfo {
-  client_id: string
-  client_secret: string
-  redirect_uri: string
-  response_type: string
-  state: string
-}
+// electron events
+
+app.on('ready', async () => {
+  debug('ready event')
+
+  // load devtool extensions in development
+  if (!app.isPackaged) loadDevtoolExtensions()
+
+  wm.goToMonux()
+})
+
+app.on('open-url', async (_, forwardedUrl) => {
+  debug('open-url event')
+  await parseAuthUrl(forwardedUrl)
+})
+
+app.on('window-all-closed', () => {
+  debug('window-all-closed event')
+  if (process.platform !== 'darwin') app.quit()
+})
+
+app.on('activate', () => {
+  debug('activate event')
+  if (wm.hasMainWindow()) wm.focusMainWindow()
+  else wm.goToMonux()
+})
+
+// ipc events
+
+ipcMain.on('open-auth-window', async (_ev: EventEmitter, bank: string) => {
+  debug('opening auth request window for', bank)
+
+  const appInfo = await getAppInfo()
+  const url = getAuthRequestUrl(appInfo)
+  wm.openAuthRequest(url)
+})
+
+ipcMain.on('auth-verify:monzo', async (_ev: EventEmitter, url: string) => {
+  debug('getting acceess token from manually entered code')
+  await parseAuthUrl(url)
+})
+
+// helpers
 
 const getAppInfo = (() => {
   const state = new Promise<string>((resolve, reject) => {
@@ -60,7 +91,7 @@ const getAppInfo = (() => {
   }
 })()
 
-const parseAuthUrl = async (forwardedUrl: string) => {
+async function parseAuthUrl(forwardedUrl: string) {
   const appInfo = await getAppInfo()
   // TODO: swap out for URL construct
   // TODO: handle no query
@@ -102,6 +133,7 @@ const parseAuthUrl = async (forwardedUrl: string) => {
   }
 }
 
+// TODO: `makeSingleInstance` deprecated in electron 3
 const isSecondInstance = app.makeSingleInstance(async (argv, _) => {
   // focus main window if second instance started
   if (wm.hasMainWindow() && wm.mainWindow.isMinimized()) {
@@ -131,44 +163,6 @@ const isSecondInstance = app.makeSingleInstance(async (argv, _) => {
 if (isSecondInstance) {
   app.quit()
 }
-
-app.on('ready', async () => {
-  debug('ready event')
-
-  // load devtool extensions in development
-  if (!app.isPackaged) loadDevtoolExtensions()
-
-  wm.goToMonux()
-
-  ipcMain.on('open-auth-window', async (_ev: EventEmitter, bank: string) => {
-    debug('opening auth request window for', bank)
-
-    const appInfo = await getAppInfo()
-    const url = getAuthRequestUrl(appInfo)
-    wm.openAuthRequest(url)
-  })
-
-  ipcMain.on('auth-verify:monzo', async (_ev: EventEmitter, url: string) => {
-    debug('getting acceess token from manually entered code')
-    await parseAuthUrl(url)
-  })
-})
-
-app.on('open-url', async (_, forwardedUrl) => {
-  debug('open-url event')
-  await parseAuthUrl(forwardedUrl)
-})
-
-app.on('window-all-closed', () => {
-  debug('window-all-closed event')
-  if (process.platform !== 'darwin') app.quit()
-})
-
-app.on('activate', () => {
-  debug('activate event')
-  if (wm.hasMainWindow()) wm.focusMainWindow()
-  else wm.goToMonux()
-})
 
 function loadDevtoolExtensions() {
   debug('loading devtool extensions')

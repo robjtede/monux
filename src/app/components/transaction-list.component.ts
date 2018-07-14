@@ -7,14 +7,13 @@ import {
   Output,
   SimpleChanges
 } from '@angular/core'
-
-import { Transaction } from '../../lib/monzo/Transaction'
 import {
+  GroupingStrategy,
   groupTransactions,
-  TransactionGroup,
-  GroupingStrategy
-} from '../../lib/monzo/helpers'
-import { Merchant } from '../../lib/monzo/Merchant'
+  Merchant,
+  Transaction,
+  TransactionGroup
+} from 'monzolib'
 
 @Component({
   selector: 'm-transaction-list',

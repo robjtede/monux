@@ -59,8 +59,8 @@
     "reflect-metadata": "^0.1.12",
     "request": "^2.87.0",
     "request-promise-native": "^1.0.5",
-    "rxjs": "^6.2.1",
-    "rxjs-compat": "^6.2.1",
+    "rxjs": "^6.2.2",
+    "rxjs-compat": "^6.2.2",
     "zone.js": "^0.8.26"
   },
   "devDependencies": {

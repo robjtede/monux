@@ -1,38 +1,36 @@
 import { Injectable } from '@angular/core'
-import { Action, Store } from '@ngrx/store'
 import { Actions, Effect, ofType } from '@ngrx/effects'
+import { Action, Store } from '@ngrx/store'
+import Debug = require('debug')
+import { Account, MonzoBalanceResponse } from 'monzolib'
 import {
   combineLatest,
   concat,
   defer,
-  Observable,
-  of,
   empty,
-  forkJoin
+  forkJoin,
+  Observable,
+  of
 } from 'rxjs'
 import {
   catchError,
   filter,
+  first,
   map,
   switchMap,
   switchMapTo,
-  tap,
-  first
+  tap
 } from 'rxjs/operators'
-import Debug = require('debug')
-
-import { CacheService } from '../../services/cache.service'
-import { MonzoService } from '../../services/monzo.service'
-import { Account } from '../../../lib/monzo/Account'
-import { MonzoBalanceResponse } from '../../../lib/monzo/Amount'
 
 import { AppState, DefiniteAccountState } from '..'
+import { CacheService } from '../../services/cache.service'
+import { MonzoService } from '../../services/monzo.service'
 import {
   GET_BALANCE,
-  SetBalanceAction,
   GetBalanceAction,
   GetBalanceFailedAction,
-  SET_BALANCE
+  SET_BALANCE,
+  SetBalanceAction
 } from '../actions/balance.actions'
 
 const debug = Debug('app:effects:balance')

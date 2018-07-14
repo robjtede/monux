@@ -51,10 +51,9 @@ export class WindowManager {
       height: mainWindowState.height,
       minWidth: 600,
       minHeight: 600,
-      titleBarStyle: 'hiddenInset',
+      // titleBarStyle: 'hiddenInset',
       webPreferences: {
-        experimentalFeatures: true,
-        scrollBounce: true
+        experimentalFeatures: true
       }
     })
 
