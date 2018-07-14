@@ -1,6 +1,7 @@
 import {
   MonzoAccountResponse,
   MonzoBalanceResponse,
+  MonzoPotResponse,
   MonzoTransactionResponse
 } from 'monzolib'
 
@@ -10,6 +11,7 @@ import {
 export interface AppState {
   account?: MonzoAccountResponse
   balance?: MonzoBalanceResponse
+  pots: MonzoPotResponse[]
   selectedTransaction?: string
   transactions: MonzoTransactionResponse[]
   modal: { open: boolean }
@@ -17,6 +19,7 @@ export interface AppState {
 
 export type AccountState = AppState['account']
 export type BalanceState = AppState['balance']
+export type PotsState = AppState['pots']
 export type SelectedTransactionState = AppState['selectedTransaction']
 export type TransactionsState = AppState['transactions']
 export type ModalState = AppState['modal']

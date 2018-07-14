@@ -1,9 +1,9 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core'
 import { Observable } from 'rxjs'
-import { map } from 'rxjs/operators'
-import { potsRequest, MonzoPotsResponse, MonzoPotResponse } from 'monzolib'
+import { MonzoPotResponse } from 'monzolib'
+import { Store } from '@ngrx/store'
 
-import { MonzoService } from '../services/monzo.service'
+import { AppState } from '../store'
 
 @Component({
   selector: 'm-pots-pane',
@@ -14,11 +14,9 @@ import { MonzoService } from '../services/monzo.service'
 export class PotsPaneComponent implements OnInit {
   pots!: Observable<MonzoPotResponse[]>
 
-  constructor(private monzo: MonzoService) {}
+  constructor(private store$: Store<AppState>) {}
 
   ngOnInit(): void {
-    this.pots = this.monzo
-      .request<MonzoPotsResponse>(potsRequest())
-      .pipe(map(({ pots }) => pots))
+    this.pots = this.store$.select('pots')
   }
 }
