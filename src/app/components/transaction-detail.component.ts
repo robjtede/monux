@@ -9,7 +9,12 @@ import {
 import { Store } from '@ngrx/store'
 import { format } from 'date-fns'
 import Debug = require('debug')
-import { Attachment, Transaction } from 'monzolib'
+import {
+  Attachment,
+  Transaction,
+  MonzoTransactionResponse,
+  MonzoPotResponse
+} from 'monzolib'
 import { Observable, of, BehaviorSubject, Subject, combineLatest } from 'rxjs'
 import { map } from 'rxjs/operators'
 
@@ -36,7 +41,8 @@ const debug = Debug('app:component:tx-detail')
 })
 export class TransactionDetailComponent implements OnInit {
   private tx$: BehaviorSubject<Transaction> = new BehaviorSubject<Transaction>(
-    null
+    // Somehow this is type-safe...
+    new Transaction({} as MonzoTransactionResponse)
   )
 
   @Input()
@@ -50,29 +56,30 @@ export class TransactionDetailComponent implements OnInit {
   @ViewChild('icon') readonly $icon!: ElementRef<HTMLImageElement>
   @ViewChild('uploader') readonly $uploader!: ElementRef<HTMLInputElement>
 
+  pot$!: Observable<MonzoPotResponse | undefined>
   potName$!: Observable<string | undefined>
   potImage$!: Observable<string | undefined>
 
   constructor(private store$: Store<AppState>, private modal: ModalService) {}
 
   ngOnInit(): void {
-    this.potName$ = combineLatest(this.store$.select('pots'), this.tx$).pipe(
+    this.pot$ = combineLatest(this.store$.select('pots'), this.tx$).pipe(
       map(([pots, tx]) => {
-        const pot = pots.find(pot => {
+        return pots.find(pot => {
           return pot.id === (tx.is.pot && tx.description)
         })
+      })
+    )
 
+    this.potName$ = this.pot$.pipe(
+      map(pot => {
         if (pot) return pot.name
         else return undefined
       })
     )
 
-    this.potImage$ = combineLatest(this.store$.select('pots'), this.tx$).pipe(
-      map(([pots, tx]) => {
-        const pot = pots.find(pot => {
-          return pot.id === (tx.is.pot && tx.description)
-        })
-
+    this.potImage$ = this.pot$.pipe(
+      map(pot => {
         if (pot) return `./assets/monzo-pots-images/${pot.style}.png`
         else return undefined
       })
