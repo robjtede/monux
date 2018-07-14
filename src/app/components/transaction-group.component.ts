@@ -47,9 +47,7 @@ export class TransactionGroupComponent implements AfterViewInit {
   }
 
   get groupTotal() {
-    return sumGroup(this.group.txs).html({
-      signMode: 'never'
-    })
+    return sumGroup(this.group.txs)
   }
 
   ngAfterViewInit() {

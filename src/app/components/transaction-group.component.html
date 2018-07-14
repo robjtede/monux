@@ -10,7 +10,9 @@
 
   <div class="group-title">{{ groupTitle }}</div>
 
-  <div class="group-total" [innerHTML]="groupTotal"></div>
+  <div class="group-total">
+    <m-amount [amount]="groupTotal" sign-mode="never"></m-amount>
+  </div>
 </div>
 
 <div #groupTxs class="group-txs" [style.height]="txsHeight" [style.transform]="txsTransform" [style.opacity]="txsOpacity">
