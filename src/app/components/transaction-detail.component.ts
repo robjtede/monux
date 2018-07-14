@@ -10,7 +10,7 @@ import { Store } from '@ngrx/store'
 import { format } from 'date-fns'
 import Debug = require('debug')
 import { Attachment, Transaction } from 'monzolib'
-import { Observable, of } from 'rxjs'
+import { Observable, of, BehaviorSubject, Subject, combineLatest } from 'rxjs'
 import { map } from 'rxjs/operators'
 
 import { ModalService } from '../services/modal.service'
@@ -35,7 +35,17 @@ const debug = Debug('app:component:tx-detail')
   }
 })
 export class TransactionDetailComponent implements OnInit {
-  @Input() readonly tx!: Transaction
+  private tx$: BehaviorSubject<Transaction> = new BehaviorSubject<Transaction>(
+    null
+  )
+
+  @Input()
+  set tx(tx: Transaction) {
+    this.tx$.next(tx)
+  }
+  get tx(): Transaction {
+    return this.tx$.getValue()
+  }
 
   @ViewChild('icon') readonly $icon!: ElementRef<HTMLImageElement>
   @ViewChild('uploader') readonly $uploader!: ElementRef<HTMLInputElement>
@@ -46,10 +56,10 @@ export class TransactionDetailComponent implements OnInit {
   constructor(private store$: Store<AppState>, private modal: ModalService) {}
 
   ngOnInit(): void {
-    this.potName$ = this.store$.select('pots').pipe(
-      map(pots => {
+    this.potName$ = combineLatest(this.store$.select('pots'), this.tx$).pipe(
+      map(([pots, tx]) => {
         const pot = pots.find(pot => {
-          return pot.id === (this.tx.is.pot && this.tx.description)
+          return pot.id === (tx.is.pot && tx.description)
         })
 
         if (pot) return pot.name
@@ -57,10 +67,10 @@ export class TransactionDetailComponent implements OnInit {
       })
     )
 
-    this.potImage$ = this.store$.select('pots').pipe(
-      map(pots => {
+    this.potImage$ = combineLatest(this.store$.select('pots'), this.tx$).pipe(
+      map(([pots, tx]) => {
         const pot = pots.find(pot => {
-          return pot.id === (this.tx.is.pot && this.tx.description)
+          return pot.id === (tx.is.pot && tx.description)
         })
 
         if (pot) return `./assets/monzo-pots-images/${pot.style}.png`

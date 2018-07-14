@@ -92,6 +92,7 @@
   & .icon {
     width: 3em;
     height: 3em;
+    object-fit: cover;
 
     border: var(--thin-border);
     border-radius: 25%;
