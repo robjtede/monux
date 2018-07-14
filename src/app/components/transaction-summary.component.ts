@@ -53,7 +53,7 @@ export class TransactionSummaryComponent implements OnInit {
 
   constructor(private store$: Store<AppState>) {}
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.iconObserver.observe(this.$icon.nativeElement)
 
     this.potName$ = this.store$.select('pots').pipe(

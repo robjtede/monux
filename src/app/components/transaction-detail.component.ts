@@ -3,12 +3,15 @@ import {
   Component,
   ElementRef,
   Input,
+  OnInit,
   ViewChild
 } from '@angular/core'
 import { Store } from '@ngrx/store'
 import { format } from 'date-fns'
 import Debug = require('debug')
 import { Attachment, Transaction } from 'monzolib'
+import { Observable, of } from 'rxjs'
+import { map } from 'rxjs/operators'
 
 import { ModalService } from '../services/modal.service'
 import { AppState } from '../store'
@@ -31,13 +34,48 @@ const debug = Debug('app:component:tx-detail')
     '[attr.data-category]': 'tx.category'
   }
 })
-export class TransactionDetailComponent {
+export class TransactionDetailComponent implements OnInit {
   @Input() readonly tx!: Transaction
 
   @ViewChild('icon') readonly $icon!: ElementRef<HTMLImageElement>
   @ViewChild('uploader') readonly $uploader!: ElementRef<HTMLInputElement>
 
+  potName$!: Observable<string | undefined>
+  potImage$!: Observable<string | undefined>
+
   constructor(private store$: Store<AppState>, private modal: ModalService) {}
+
+  ngOnInit(): void {
+    this.potName$ = this.store$.select('pots').pipe(
+      map(pots => {
+        const pot = pots.find(pot => {
+          return pot.id === (this.tx.is.pot && this.tx.description)
+        })
+
+        if (pot) return pot.name
+        else return undefined
+      })
+    )
+
+    this.potImage$ = this.store$.select('pots').pipe(
+      map(pots => {
+        const pot = pots.find(pot => {
+          return pot.id === (this.tx.is.pot && this.tx.description)
+        })
+
+        if (pot) return `./assets/monzo-pots-images/${pot.style}.png`
+        else return undefined
+      })
+    )
+  }
+
+  get icon$(): Observable<string> {
+    if (this.tx.is.pot) {
+      return this.potImage$ as Observable<string>
+    } else {
+      return of(this.tx.icon)
+    }
+  }
 
   get createdTime(): string {
     return format(this.tx.created, 'h:mma - do MMMM YYYY')

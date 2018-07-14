@@ -2,10 +2,10 @@
 
 <div class="header">
   <div class="icon-wrap">
-    <img #icon class="icon" [src]="tx.icon" (error)="iconFallback()">
+    <img #icon class="icon" [src]="icon$ | async" (error)="iconFallback()">
   </div>
   <div class="merchant" [class.online]="tx.online">
-    {{ tx.displayName }}
+    <ng-container *ngIf="tx.is.pot; then potName else displayName"></ng-container>
   </div>
 </div>
 
@@ -24,7 +24,7 @@
   <m-amount
     *ngIf="!tx.is.metaAction"
     [amount]="tx.amount"
-    sign-mode="never"
+    sign-mode="onlyPositive"
     large-major
   ></m-amount>
 </div>
@@ -63,3 +63,11 @@
 <div class="smallprint id">{{ tx.id }}</div>
 <div class="smallprint description">{{ tx.description }}</div>
 <div class="smallprint settled" *ngIf="showAmount">{{ tx.settled }}</div>
+
+<ng-template #displayName>
+  {{ tx.displayName }}
+</ng-template>
+
+<ng-template #potName>
+  {{ potName$ | async }}
+</ng-template>
