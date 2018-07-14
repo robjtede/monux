@@ -1,26 +1,39 @@
 <div class="icon-wrap">
-  <img #icon class="icon" [attr.data-src]="tx.icon" (error)="iconFallback()">
+  <img #icon class="icon" [attr.data-src]="icon$ | async" (error)="iconFallback()">
 </div>
 
 <div class="info-wrap">
   <div class="info">
-    <p class="merchant">{{ tx.displayName }}</p>
+    <p class="merchant">
+      <ng-container *ngIf="tx.is.pot; then potName else displayName"></ng-container>
+    </p>
     <div class="meta">
       <fa-icon [icon]="['far', 'clock']" fixedWidth="true" class="meta-pending" *ngIf="tx.pending"></fa-icon>
       <fa-icon [icon]="['fas', 'paperclip']" fixedWidth="true" class="meta-attachments" *ngIf="hasAttachments" [attr.data-attachments]="tx.attachments.length"></fa-icon>
     </div>
   </div>
-  <p class="notes" *ngIf="tx.declined || tx.notes.short.trim()">
+  <p class="notes" *ngIf="tx.displaySub">
     <ng-container *ngIf="tx.declined">
         Declined: {{ tx.declineReason | declineReason }}
     </ng-container>
-    <ng-container *ngIf="!tx.declined && tx.notes.short.trim()">
+    <ng-container *ngIf="!tx.declined && tx.is.pot">
+        {{ tx.displaySub }}
+    </ng-container>
+    <ng-container *ngIf="!tx.declined && !tx.is.pot && tx.notes.short.trim()">
         {{ tx.notes.short }}
     </ng-container>
   </p>
 </div>
 
 <ng-container *ngIf="showAmount; then amount else hider"></ng-container>
+
+<ng-template #displayName>
+  {{ tx.displayName }}
+</ng-template>
+
+<ng-template #potName>
+  {{ potName$ | async }}
+</ng-template>
 
 <ng-template #amount>
   <div class="amount-wrap">

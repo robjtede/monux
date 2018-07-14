@@ -1,0 +1,8 @@
+amber = #F5BA45
+orange = #EB8249
+raspberry = #E64B60
+pink = #F09696
+lavender = #B983FF
+aqua = #50B8DD
+mint = #9ABBA8
+teal = #23788A

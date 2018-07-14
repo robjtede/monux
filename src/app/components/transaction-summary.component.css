@@ -91,6 +91,7 @@
   & .icon {
     width: 3.25em;
     height: 3.25em;
+    object-fit: cover;
 
     background: var(--white);
     border: var(--thin-border);

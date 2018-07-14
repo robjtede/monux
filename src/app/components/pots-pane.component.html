@@ -1,5 +1,5 @@
 <h1>pots</h1>
 
-<div *ngFor="let pot of pots | async">
+<div *ngFor="let pot of pots$ | async">
   {{ pot | json }}
 </div>

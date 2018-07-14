@@ -10,7 +10,12 @@ import {
   Output,
   ViewChild
 } from '@angular/core'
+import { Store } from '@ngrx/store'
 import { Transaction } from 'monzolib'
+import { Observable, of } from 'rxjs'
+import { map } from 'rxjs/operators'
+
+import { AppState } from '../store'
 
 @Component({
   selector: 'm-transaction-summary',
@@ -34,6 +39,9 @@ export class TransactionSummaryComponent implements OnInit {
 
   @ViewChild('icon') readonly $icon!: ElementRef<HTMLImageElement>
 
+  potName$!: Observable<string | undefined>
+  potImage$!: Observable<string | undefined>
+
   private iconObserver = new IntersectionObserver(
     this.onIconIntersection.bind(this),
     {
@@ -43,8 +51,40 @@ export class TransactionSummaryComponent implements OnInit {
     }
   )
 
+  constructor(private store$: Store<AppState>) {}
+
   ngOnInit() {
     this.iconObserver.observe(this.$icon.nativeElement)
+
+    this.potName$ = this.store$.select('pots').pipe(
+      map(pots => {
+        const pot = pots.find(pot => {
+          return pot.id === (this.tx.is.pot && this.tx.description)
+        })
+
+        if (pot) return pot.name
+        else return undefined
+      })
+    )
+
+    this.potImage$ = this.store$.select('pots').pipe(
+      map(pots => {
+        const pot = pots.find(pot => {
+          return pot.id === (this.tx.is.pot && this.tx.description)
+        })
+
+        if (pot) return `./assets/monzo-pots-images/${pot.style}.png`
+        else return undefined
+      })
+    )
+  }
+
+  get icon$(): Observable<string> {
+    if (this.tx.is.pot) {
+      return this.potImage$ as Observable<string>
+    } else {
+      return of(this.tx.icon)
+    }
   }
 
   get showAmount(): boolean {

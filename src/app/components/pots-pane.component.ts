@@ -12,11 +12,11 @@ import { AppState } from '../store'
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class PotsPaneComponent implements OnInit {
-  pots!: Observable<MonzoPotResponse[]>
+  pots$!: Observable<MonzoPotResponse[]>
 
   constructor(private store$: Store<AppState>) {}
 
   ngOnInit(): void {
-    this.pots = this.store$.select('pots')
+    this.pots$ = this.store$.select('pots')
   }
 }
