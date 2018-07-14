@@ -17,8 +17,9 @@
 </div>
 
 <div class="decline-reason" *ngIf="tx.declined">
-  Declined due to {{ tx.declineReason }}.
+  Declined: {{ tx.declineReason | declineReason }}
 </div>
+
 <div class="amount-wrap">
   <m-amount
     *ngIf="!tx.is.metaAction"

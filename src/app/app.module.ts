@@ -32,6 +32,7 @@ import { Autosize } from './directives/autosize.directive'
 
 // pipes
 import { CategoryPipe } from './pipes/category.pipe'
+import { DeclineReasonPipe } from './pipes/decline-reason.pipe'
 
 // services
 import { DomService } from './services/dom.service'
@@ -67,6 +68,7 @@ import { CategoryDialogComponent } from './components/category-dialog.component'
     CategoryDialogComponent,
     Autosize,
     CategoryPipe,
+    DeclineReasonPipe,
     ...routedComponents
   ],
   imports: [

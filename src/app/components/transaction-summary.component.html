@@ -11,7 +11,12 @@
     </div>
   </div>
   <p class="notes" *ngIf="tx.declined || tx.notes.short.trim()">
-    {{ tx.declineReason || tx.notes.short }}
+    <ng-container *ngIf="tx.declined">
+        Declined: {{ tx.declineReason | declineReason }}
+    </ng-container>
+    <ng-container *ngIf="!tx.declined && tx.notes.short.trim()">
+        {{ tx.notes.short }}
+    </ng-container>
   </p>
 </div>
 
