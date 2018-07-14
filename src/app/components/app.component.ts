@@ -59,7 +59,7 @@ export class AppComponent implements OnInit, OnDestroy {
     this.store$.dispatch({ type: '@monux/init' })
   }
 
-  logout(ev?: MouseEvent) {
+  logout(ev?: MouseEvent): void {
     if (ev) {
       ev.preventDefault()
       ev.stopPropagation()
@@ -69,7 +69,7 @@ export class AppComponent implements OnInit, OnDestroy {
     this.store$.dispatch(new LogoutAction())
   }
 
-  closeModal(ev?: MouseEvent, el?: HTMLElement) {
+  closeModal(ev?: MouseEvent, el?: HTMLElement): void {
     if (ev && el) {
       if (ev.target === el) this.modal.close()
     } else {
