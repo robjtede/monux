@@ -14,4 +14,12 @@ import { Pot } from 'monzolib'
 })
 export class PotSummaryComponent implements OnInit {
   @Input() pot!: Pot
+
+  get imageUrl(): string {
+    return `./assets/monzo-pots-images/${this.pot.style}.png`
+  }
+
+  ngOnInit(): void {
+    // init
+  }
 }

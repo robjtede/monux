@@ -18,8 +18,19 @@ export class PotsPaneComponent implements OnInit {
   constructor(private store$: Store<AppState>) {}
 
   ngOnInit(): void {
-    this.pots$ = this.store$
-      .select('pots')
-      .pipe(map(pots => pots.map(pot => new Pot(pot))))
+    this.pots$ = this.store$.select('pots').pipe(
+      map(pots =>
+        pots.map(pot => new Pot(pot)).sort((a, b) => {
+          // sort by deleted then updated date
+          if (a.deleted === b.deleted) {
+            // most recently updated first
+            return +b.updated - +a.updated
+          } else {
+            // active first
+            return +a.deleted - +b.deleted
+          }
+        })
+      )
+    )
   }
 }

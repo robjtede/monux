@@ -1,0 +1,12 @@
+:host {
+  display: block;
+
+  border: 1px solid var(--medium-grey);
+  border-radius: 5px;
+}
+
+.image img {
+  display: block;
+  height: auto;
+  max-width: 100%;
+}

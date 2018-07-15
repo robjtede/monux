@@ -1,0 +1,16 @@
+:host {
+  overflow-y: auto;
+  padding: 1em;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(auto, 300px));
+  grid-gap: 1em;
+  justify-content: center;
+}
+
+.grid__heading {
+  margin: 0;
+  grid-column: 1 / -1;
+}

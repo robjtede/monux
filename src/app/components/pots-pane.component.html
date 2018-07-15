@@ -1,5 +1,6 @@
-<h1>pots</h1>
-
-<div *ngFor="let pot of pots$ | async">
-  <m-pot-summary [pot]="pot"></m-pot-summary>
+<div class="grid">
+  <h1 class="grid__heading">Pots</h1>
+  <div *ngFor="let pot of pots$ | async">
+    <m-pot-summary [pot]="pot"></m-pot-summary>
+  </div>
 </div>
