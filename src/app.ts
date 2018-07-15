@@ -1,12 +1,12 @@
 import { randomBytes } from 'crypto'
+import Debug = require('debug')
+import { app, EventEmitter, ipcMain } from 'electron'
+import { AppInfo, getAuthRequestUrl, verifyAccess } from 'monzolib'
 import { resolve } from 'path'
 import { parse as parseQueryString } from 'querystring'
 import { parse as parseUrl } from 'url'
-import Debug = require('debug')
+import { install as installExifRotate } from 'electron-exif-rotate'
 
-import { app, ipcMain, EventEmitter } from 'electron'
-
-import { verifyAccess, getAuthRequestUrl, AppInfo } from 'monzolib'
 import { getAccessToken, getSavedCode, saveCode } from './lib/monzo/auth'
 import { WindowManager } from './window-manager'
 
@@ -30,8 +30,11 @@ if (!app.isPackaged) {
 
 // electron events
 
-app.on('ready', async () => {
+app.on('ready', () => {
   debug('ready event')
+
+  // configure HTTPS interceptor for auto image rotation
+  installExifRotate()
 
   // load devtool extensions in development
   if (!app.isPackaged) loadDevtoolExtensions()

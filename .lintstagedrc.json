@@ -1,9 +1,9 @@
 {
-  "*.{html, json}": [
+  "*.{html,json}": [
     "eclint fix",
     "git add"
   ],
-  "*.{ts, js, css}": [
+  "*.{ts,js,css}": [
     "eclint fix",
     "prettier --write",
     "git add"

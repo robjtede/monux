@@ -16,7 +16,6 @@ import { StoreRouterConnectingModule } from '@ngrx/router-store'
 import { AppRoutingModule, routedComponents } from './app.routing'
 
 // secondary modules
-import { Ng2ImgToolsModule } from 'ng2-img-tools'
 import { NgxChartsModule } from '@swimlane/ngx-charts'
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome'
 
@@ -86,7 +85,6 @@ import { CategoryDialogComponent } from './components/category-dialog.component'
     StoreDevtoolsModule.instrument({
       logOnly: environment.production
     }),
-    Ng2ImgToolsModule,
     NgxChartsModule,
     FontAwesomeModule
   ],
