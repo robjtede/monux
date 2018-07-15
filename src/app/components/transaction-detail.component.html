@@ -10,6 +10,7 @@
 </div>
 
 <div class="location" *ngIf="!tx.online && tx.location">{{ tx.location }}</div>
+<div class="location" *ngIf="tx.is.pot">{{ tx.displaySub }}</div>
 <div class="category-wrap" (click)="openCategoryModal($event)">
   <div class="category" [attr.data-emoji]="emoji">
     {{ tx.category.formatted }}

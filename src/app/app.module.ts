@@ -52,6 +52,7 @@ import { TransactionGroupComponent } from './components/transaction-group.compon
 import { TransactionSummaryComponent } from './components/transaction-summary.component'
 import { TransactionAttachmentComponent } from './components/transaction-attachment.component'
 import { TransactionDetailComponent } from './components/transaction-detail.component'
+import { PotSummaryComponent } from './components/pot-summary.component'
 import { CategoryDialogComponent } from './components/category-dialog.component'
 
 @NgModule({
@@ -64,6 +65,7 @@ import { CategoryDialogComponent } from './components/category-dialog.component'
     TransactionSummaryComponent,
     TransactionAttachmentComponent,
     TransactionDetailComponent,
+    PotSummaryComponent,
     CategoryDialogComponent,
     Autosize,
     CategoryPipe,
