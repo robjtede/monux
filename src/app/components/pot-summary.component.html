@@ -2,19 +2,24 @@
   <img [src]="imageUrl">
 </div>
 
-<h2>{{ pot.name }}</h2>
+<div class="info">
+  <h2 class="name">{{ pot.name }}</h2>
+  <ng-container *ngIf="pot.deleted; then deleted else info"></ng-container>
+</div>
 
-<h3>
-  <m-amount [amount]="pot.balance" large-major="true" sign-mode="never"></m-amount>
-</h3>
+<div class="buttons">
 
-<ng-container *ngIf="pot.deleted; then deleted else info"></ng-container>
+</div>
 
 <!--
   partials
 -->
 
 <ng-template #info>
+  <h3 class="amount">
+    <m-amount [amount]="pot.balance" large-major="true" sign-mode="never"></m-amount>
+  </h3>
+
   <p class="round-up">
     Round up: {{ pot.roundUp }}
   </p>

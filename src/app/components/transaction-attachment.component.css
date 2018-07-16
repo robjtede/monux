@@ -19,6 +19,7 @@ img {
   width: calc(1rem + 1px);
   height: calc(1rem + 1px);
   padding-top: 2px;
+  padding-left: 1px;
 
   background: rgb(200, 50, 30);
   border: 1px solid var(--medium-grey);

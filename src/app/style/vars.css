@@ -1,6 +1,6 @@
 :root {
   --white: gray(100%);
-  --off-white: gray(95%);
+  --off-white: gray(97%);
   --light-grey: gray(80%);
   --label-grey: gray(65%);
   --medium-grey: gray(55%);
@@ -15,7 +15,6 @@
   --blue: rgba(0, 122, 255, 1);
   --purple: rgba(88, 86, 214, 1);
   --pink: rgba(255, 45, 85, 1);
-
   --monzo-blue: rgba(21, 35, 60, 1);
 
   --thin-border: 1px solid var(--light-grey);
