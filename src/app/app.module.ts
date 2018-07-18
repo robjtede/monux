@@ -54,9 +54,11 @@ import { TransactionAttachmentComponent } from './components/transaction-attachm
 import { TransactionDetailComponent } from './components/transaction-detail.component'
 import { PotSummaryComponent } from './components/pot-summary.component'
 import { CategoryDialogComponent } from './components/category-dialog.component'
+import { BtnComponent } from './components/btn.component'
 
 @NgModule({
   declarations: [
+    // components
     RootComponent,
     AmountComponent,
     AccountComponent,
@@ -67,9 +69,13 @@ import { CategoryDialogComponent } from './components/category-dialog.component'
     TransactionDetailComponent,
     PotSummaryComponent,
     CategoryDialogComponent,
+    BtnComponent,
+    // directives
     Autosize,
+    // pipes
     CategoryPipe,
     DeclineReasonPipe,
+    // router
     ...routedComponents
   ],
   imports: [
@@ -91,13 +97,17 @@ import { CategoryDialogComponent } from './components/category-dialog.component'
     FontAwesomeModule
   ],
   providers: [
+    // services
     DomService,
     ModalService,
     CacheService,
     MonzoService,
+    // guards
     ClientInfoGuard,
     ApiAccessGuard,
+    // pipes
     TitleCasePipe,
+    // custom
     {
       provide: LocationStrategy,
       useClass: HashLocationStrategy

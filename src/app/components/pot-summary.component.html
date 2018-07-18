@@ -1,32 +1,55 @@
-<div class="image">
-  <img [src]="imageUrl">
+<div class="header">
+  <div class="image">
+    <img [src]="imageUrl">
+  </div>
+
+  <div class="header-info">
+    <h2 class="name">{{ pot.name }}</h2>
+    <h3 *ngIf="!pot.deleted" class="amount">
+      <m-amount [amount]="pot.balance" large-major="true" sign-mode="never"></m-amount>
+    </h3>
+  </div>
+
 </div>
 
-<div class="info">
-  <h2 class="name">{{ pot.name }}</h2>
+<div class="content">
   <ng-container *ngIf="pot.deleted; then deleted else info"></ng-container>
 </div>
 
-<div class="buttons">
-
-</div>
-
-<!--
-  partials
--->
-
 <ng-template #info>
-  <h3 class="amount">
-    <m-amount [amount]="pot.balance" large-major="true" sign-mode="never"></m-amount>
-  </h3>
+  <div class="info">
+    <div>
+      <span>
+        <fa-icon [icon]="['fas', 'arrow-alt-circle-up']" size="lg"></fa-icon>
+      </span>
+      <span>
+        Round Up
+      </span>
+      <span>
+        <fa-icon *ngIf="pot.roundUp" [icon]="['fas', 'toggle-on']" size="2x" style="color: var(--green)"></fa-icon>
+        <fa-icon *ngIf="!pot.roundUp" [icon]="['fas', 'toggle-off']" size="2x"></fa-icon>
+      </span>
+    </div>
+  </div>
 
-  <p class="round-up">
-    Round up: {{ pot.roundUp }}
-  </p>
+  <hr>
+
+  <div class="buttons">
+    <m-btn primary>
+      <fa-icon [icon]="['fas', 'exchange-alt']"></fa-icon>
+      Transfer
+    </m-btn>
+    <m-btn secondary disabled>
+      <fa-icon [icon]="['fas', 'list-ul']"></fa-icon>
+      Log
+    </m-btn>
+  </div>
 </ng-template>
 
 <ng-template #deleted>
   <p class="deleted">
+    <fa-icon [icon]="['far', 'trash-alt']" size="lg"></fa-icon>
+    <br>
     Deleted
   </p>
 </ng-template>
