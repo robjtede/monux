@@ -85,6 +85,7 @@ hr {
 
 .content {
   display: grid;
+  grid-template-rows: 1fr auto auto;
   padding: 1em;
 }
 

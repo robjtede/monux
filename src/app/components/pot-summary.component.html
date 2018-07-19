@@ -17,7 +17,23 @@
 </div>
 
 <ng-template #info>
+  <progress *ngIf="pot.goalAmount > 0" [value]="pot.balance" [max]="pot.goalAmount" style="width: 100%"></progress>
+
   <div class="info">
+    <div *ngIf="pot.goalAmount > 0">
+      <span>
+        <fa-icon [icon]="['fas', 'bullseye']" size="lg"></fa-icon>
+      </span>
+      <span>
+        Pot Goal
+      </span>
+      <span>
+        {{ (pot.balance / pot.goalAmount) * 100 }}%
+        <br> of
+        <strong>{{ pot.goalAmount.format({ signMode: 'never', showCurrency: true }) }}</strong>
+      </span>
+    </div>
+
     <div>
       <span>
         <fa-icon [icon]="['fas', 'arrow-alt-circle-up']" size="lg"></fa-icon>
@@ -35,6 +51,7 @@
   <hr>
 
   <div class="buttons">
+
     <m-btn primary>
       <fa-icon [icon]="['fas', 'exchange-alt']"></fa-icon>
       Transfer
@@ -49,7 +66,6 @@
 <ng-template #deleted>
   <p class="deleted">
     <fa-icon [icon]="['far', 'trash-alt']" size="lg"></fa-icon>
-    <br>
-    Deleted
+    <br> Deleted
   </p>
 </ng-template>
