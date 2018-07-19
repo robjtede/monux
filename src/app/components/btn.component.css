@@ -1,0 +1,75 @@
+:host {
+  --bg-color: var(--off-white);
+  --text-color: var(--dark-grey);
+
+  display: contents;
+}
+
+:host([primary]) {
+  --bg-color: var(--blue);
+  --text-color: var(--off-white);
+}
+
+:host([secondary]) {
+  /* color(var(--green) shade(10%)) */
+  --bg-color: hsl(130, 51%, 52%);
+  --text-color: var(--off-white);
+}
+
+:host([warning]) {
+  --bg-color: var(--orange);
+  --text-color: var(--off-white);
+}
+
+:host([danger]) {
+  --bg-color: var(--red);
+  --text-color: var(--off-white);
+}
+
+:host([dark]) {
+  --bg-color: var(--dark-grey);
+  --text-color: var(--off-white);
+}
+
+:host button {
+  color: var(--text-color);
+  font-size: inherit;
+  line-height: inherit;
+  font-family: inherit;
+  padding: 0.4em 0.8em;
+
+  appearance: none;
+  border: 0;
+  border-radius: 5px;
+  background-color: var(--bg-color);
+  outline: none;
+  box-shadow: 0 0 6px hsla(0, 0%, 0%, 0.1), 0 2px 4px hsla(0, 0%, 0%, 0.1);
+  cursor: pointer;
+
+  transition: all 150ms ease;
+
+  &:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 0 8px hsla(0, 0%, 0%, 0.08), 0 3px 5px hsla(0, 0%, 0%, 0.08),
+      inset 0 0 0 10000px hsla(0, 0%, 0%, 0.08);
+  }
+
+  &:active {
+    box-shadow: 0 0 8px hsla(0, 0%, 0%, 0.08), 0 3px 5px hsla(0, 0%, 0%, 0.08),
+      inset 0 0 0 10000px hsla(0, 0%, 0%, 0.16);
+  }
+}
+
+:host([disabled]) button {
+  cursor: not-allowed;
+  filter: grayscale(70%);
+
+  &:hover {
+    transform: none;
+    box-shadow: 0 0 6px hsla(0, 0%, 0%, 0.1), 0 2px 4px hsla(0, 0%, 0%, 0.1);
+  }
+
+  &:active {
+    box-shadow: 0 0 6px hsla(0, 0%, 0%, 0.1), 0 2px 4px hsla(0, 0%, 0%, 0.1);
+  }
+}

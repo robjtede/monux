@@ -6,6 +6,7 @@ import { GetClientInfoComponent } from './components/get-client-info.component'
 import { AuthRequestComponent } from './components/auth-request.component'
 import { AppComponent } from './components/app.component'
 import { TransactionPaneComponent } from './components/transaction-pane.component'
+import { PotsPaneComponent } from './components/pots-pane.component'
 import { SpendingPaneComponent } from './components/spending-pane.component'
 import { MapPaneComponent } from './components/map-pane.component'
 import { ExportPaneComponent } from './components/export-pane.component'
@@ -33,7 +34,7 @@ const routes: Routes = [
   {
     path: 'app',
     component: AppComponent,
-    // canActivate: [ApiAccessGuard, ClientInfoGuard],
+    canActivate: [ApiAccessGuard, ClientInfoGuard],
     children: [
       {
         path: '',
@@ -44,6 +45,11 @@ const routes: Routes = [
         outlet: 'pane',
         path: 'transactions',
         component: TransactionPaneComponent
+      },
+      {
+        outlet: 'pane',
+        path: 'pots',
+        component: PotsPaneComponent
       },
       {
         outlet: 'pane',
@@ -83,6 +89,7 @@ export const routedComponents = [
   AuthRequestComponent,
   AppComponent,
   TransactionPaneComponent,
+  PotsPaneComponent,
   SpendingPaneComponent,
   MapPaneComponent,
   ExportPaneComponent,

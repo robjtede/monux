@@ -44,7 +44,7 @@ export class AccountEffects {
   ) {}
 
   @Effect()
-  get$: Observable<Action> = this.actions$.pipe(
+  getAll$: Observable<Action> = this.actions$.pipe(
     ofType(GET_ACCOUNT),
     switchMap(() =>
       concat(
@@ -67,7 +67,7 @@ export class AccountEffects {
   )
 
   @Effect({ dispatch: false })
-  saveAccount$: Observable<any> = this.actions$.pipe(
+  save$: Observable<any> = this.actions$.pipe(
     ofType(SET_ACCOUNT),
     switchMap((acc: SetAccountAction) => this.cache.saveAccount(acc.payload))
   )

@@ -3,12 +3,20 @@ import {
   Component,
   ElementRef,
   Input,
+  OnInit,
   ViewChild
 } from '@angular/core'
 import { Store } from '@ngrx/store'
 import { format } from 'date-fns'
 import Debug = require('debug')
-import { Attachment, Transaction } from 'monzolib'
+import {
+  Attachment,
+  Transaction,
+  MonzoTransactionResponse,
+  MonzoPotResponse
+} from 'monzolib'
+import { Observable, of, BehaviorSubject, Subject, combineLatest } from 'rxjs'
+import { map } from 'rxjs/operators'
 
 import { ModalService } from '../services/modal.service'
 import { AppState } from '../store'
@@ -31,13 +39,60 @@ const debug = Debug('app:component:tx-detail')
     '[attr.data-category]': 'tx.category'
   }
 })
-export class TransactionDetailComponent {
-  @Input() readonly tx!: Transaction
+export class TransactionDetailComponent implements OnInit {
+  private tx$: BehaviorSubject<Transaction> = new BehaviorSubject<Transaction>(
+    // Somehow this is type-safe...
+    new Transaction({} as MonzoTransactionResponse)
+  )
+
+  @Input()
+  set tx(tx: Transaction) {
+    this.tx$.next(tx)
+  }
+  get tx(): Transaction {
+    return this.tx$.getValue()
+  }
 
   @ViewChild('icon') readonly $icon!: ElementRef<HTMLImageElement>
   @ViewChild('uploader') readonly $uploader!: ElementRef<HTMLInputElement>
 
+  pot$!: Observable<MonzoPotResponse | undefined>
+  potName$!: Observable<string | undefined>
+  potImage$!: Observable<string | undefined>
+
   constructor(private store$: Store<AppState>, private modal: ModalService) {}
+
+  ngOnInit(): void {
+    this.pot$ = combineLatest(this.store$.select('pots'), this.tx$).pipe(
+      map(([pots, tx]) => {
+        return pots.find(pot => {
+          return pot.id === (tx.is.pot && tx.description)
+        })
+      })
+    )
+
+    this.potName$ = this.pot$.pipe(
+      map(pot => {
+        if (pot) return pot.name
+        else return undefined
+      })
+    )
+
+    this.potImage$ = this.pot$.pipe(
+      map(pot => {
+        if (pot) return `./assets/monzo-pots-images/${pot.style}.png`
+        else return undefined
+      })
+    )
+  }
+
+  get icon$(): Observable<string> {
+    if (this.tx.is.pot) {
+      return this.potImage$ as Observable<string>
+    } else {
+      return of(this.tx.icon)
+    }
+  }
 
   get createdTime(): string {
     return format(this.tx.created, 'h:mma - do MMMM YYYY')

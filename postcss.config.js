@@ -1,7 +1,8 @@
 module.exports = {
   plugins: {
     'postcss-cssnext': {
-      browsers: 'Chrome 61'
-    }
+      browsers: 'Chrome 66'
+    },
+    'postcss-easing-gradients': {}
   }
 }

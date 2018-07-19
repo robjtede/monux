@@ -38,7 +38,7 @@ export class AttachmentEffects {
   ) {}
 
   @Effect()
-  uploadAttachment$: Observable<Action> = this.actions$.pipe(
+  upload$: Observable<Action> = this.actions$.pipe(
     ofType(UPLOAD_ATTACHMENT),
     switchMap(({ tx, file }: UploadAttachmentAction) => {
       debug('uploading attachment', file)
@@ -90,7 +90,7 @@ export class AttachmentEffects {
   )
 
   @Effect()
-  deregisterAttachment$: Observable<Action> = this.actions$.pipe(
+  deregister$: Observable<Action> = this.actions$.pipe(
     ofType(DEREGISTER_ATTACHMENT),
     switchMap(({ payload: attachment }: DeregisterAttachmentAction) => {
       const req = attachment.selfDeregisterRequest()

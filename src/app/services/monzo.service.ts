@@ -1,5 +1,3 @@
-import 'rxjs-compat/operator/toPromise'
-
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http'
 import { Injectable } from '@angular/core'
 import Debug = require('debug')
@@ -37,21 +35,20 @@ export class MonzoService {
   private readonly proto: string = 'https://'
   private readonly apiRoot: string = 'api.monzo.com'
 
-  // TODO: remove need for compat
-  private getAccessToken(): Observable<string> {
+  private get accessToken$(): Observable<string> {
     return this.getCode('access_token')
   }
 
   constructor(private readonly http: HttpClient) {}
 
-  request<T>(
+  request<R>(
     { path = '/ping/whoami', qs = {}, method = 'GET' }: MonzoRequest = {
       path: '/ping/whoami'
     }
-  ): Observable<T> {
+  ): Observable<R> {
     const url = `${this.proto}${this.apiRoot}${path}`
 
-    return this.getAccessToken().pipe(
+    return this.accessToken$.pipe(
       switchMap(token => {
         const headers = new HttpHeaders({
           Authorization: `Bearer ${token}`
@@ -62,20 +59,20 @@ export class MonzoService {
         })
 
         if (method === 'GET') {
-          return this.http.get<T>(url, {
+          return this.http.get<R>(url, {
             headers,
             params
           })
         } else if (method === 'POST') {
-          return this.http.post<T>(url, params, {
+          return this.http.post<R>(url, params, {
             headers
           })
         } else if (method === 'PUT') {
-          return this.http.put<T>(url, params, {
+          return this.http.put<R>(url, params, {
             headers
           })
         } else if (method === 'PATCH') {
-          return this.http.patch<T>(url, params, {
+          return this.http.patch<R>(url, params, {
             headers
           })
         } else {
@@ -186,7 +183,7 @@ export class MonzoService {
         )
       }),
       switchMap(() => {
-        return this.getAccessToken()
+        return this.accessToken$
       })
     )
   }

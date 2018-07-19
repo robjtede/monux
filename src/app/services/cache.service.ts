@@ -5,7 +5,8 @@ import {
   MonzoAccountResponse,
   MonzoBalanceResponse,
   MonzoTransactionResponse,
-  TransactionRequestOpts
+  TransactionRequestOpts,
+  MonzoPotResponse
 } from 'monzolib'
 import { from, Observable, of } from 'rxjs'
 import { map, switchMapTo } from 'rxjs/operators'
@@ -16,6 +17,7 @@ export class MonuxCache extends Dexie {
   accounts!: Dexie.Table<CachedAccount, string>
   transactions!: Dexie.Table<CachedTransaction, string>
   balances!: Dexie.Table<CachedBalance, string>
+  pots!: Dexie.Table<CachedPot, string>
 
   constructor() {
     super('MonuxCache')
@@ -27,7 +29,8 @@ export class MonuxCache extends Dexie {
 
     this.version(2).stores({
       balances: 'accId, createdAt, updatedAt',
-      transactions: 'id, accId, createdAt, updatedAt'
+      transactions: 'id, accId, createdAt, updatedAt',
+      pots: 'id, createdAt, updatedAt'
     })
   }
 }
@@ -108,13 +111,18 @@ export class CacheService {
     )
   }
 
+  loadPots(): Observable<CachedPot[]> {
+    debug('loading all cached pots')
+    return from(this.db.pots.toArray())
+  }
+
   saveAccount(acc: MonzoAccountResponse): Observable<string> {
     debug('saving account', acc.id)
     return from(
       this.db.accounts.put({
         id: acc.id,
         type: 'monzo_uk_retail',
-        acc: acc,
+        acc,
         createdAt: new Date(acc.created),
         updatedAt: new Date()
       })
@@ -141,15 +149,29 @@ export class CacheService {
     txs: MonzoTransactionResponse[]
   ): Observable<string> {
     debug('saving', txs.length, 'transactions for', accId)
+
     const entries = txs.map(tx => ({
       id: tx.id,
       accId,
-      tx: tx,
+      tx,
       createdAt: new Date(tx.created),
       updatedAt: new Date(tx.updated)
     }))
 
     return from(this.db.transactions.bulkPut(entries))
+  }
+
+  savePots(pots: MonzoPotResponse[]): Observable<string> {
+    debug('saving', pots.length, 'pots')
+
+    const entries = pots.map(pot => ({
+      id: pot.id,
+      pot,
+      createdAt: new Date(pot.created),
+      updatedAt: new Date(pot.updated)
+    }))
+
+    return from(this.db.pots.bulkPut(entries))
   }
 }
 
@@ -172,6 +194,13 @@ export interface CachedAccount {
 export interface CachedBalance {
   accId: string
   balance: MonzoBalanceResponse
+  createdAt: Date
+  updatedAt: Date
+}
+
+export interface CachedPot {
+  id: string
+  pot: MonzoPotResponse
   createdAt: Date
   updatedAt: Date
 }

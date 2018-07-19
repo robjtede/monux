@@ -53,7 +53,7 @@ export class TransactionsEffects {
   ) {}
 
   @Effect()
-  getTransactions$: Observable<Action> = this.actions$.pipe(
+  getAll$: Observable<Action> = this.actions$.pipe(
     ofType<GetTransactionsAction>(GET_TRANSACTIONS),
     switchMap(action =>
       forkJoin<GetTransactionsAction, DefiniteAccountState>(
@@ -64,8 +64,9 @@ export class TransactionsEffects {
         )
       )
     ),
-    switchMap(([action, acc]) => {
-      return concat(
+    switchMap(([action, acc]) =>
+      // stream of cached pots then http pots
+      concat(
         this.cache.loadTransactions(acc.id, action.payload).pipe(
           tap(txs => {
             debug(txs.length, 'cache txs:', txs)
@@ -86,7 +87,7 @@ export class TransactionsEffects {
             })
           )
       )
-    }),
+    ),
     map(txs => new SetTransactionsAction(txs)),
     catchError(err => {
       console.error(err)
@@ -137,7 +138,7 @@ export class TransactionsEffects {
   )
 
   @Effect({ dispatch: false })
-  saveTransactions$: Observable<any> = this.actions$.pipe(
+  save$: Observable<any> = this.actions$.pipe(
     ofType(SET_TRANSACTIONS),
     switchMap((action: SetTransactionsAction) =>
       combineLatest(this.store$.select('account'), of(action.payload))
@@ -152,7 +153,7 @@ export class TransactionsEffects {
   )
 
   @Effect({ dispatch: false })
-  logSelectTx$: Observable<any> = this.actions$.pipe(
+  logSelected$: Observable<any> = this.actions$.pipe(
     ofType(SELECT_TRANSACTION),
     withLatestFrom(this.store$),
     tap(([action, store]: [SelectTransactionAction, AppState]) => {
@@ -168,7 +169,7 @@ export class TransactionsEffects {
   init$: Observable<Action> = this.actions$.pipe(
     ofType('@monux/init'),
     switchMap(() => {
-      const startDate = subMonths(startOfMonth(Date.now()), 1)
+      const startDate = subMonths(startOfMonth(Date.now()), 0)
 
       return of(
         new GetTransactionsAction({

@@ -1,0 +1,21 @@
+:host {
+  padding: 1em;
+  overflow-y: auto;
+
+  background-color: var(--off-white);
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(auto, 300px));
+  grid-gap: 1em;
+  justify-content: center;
+  align-items: stretch;
+  max-width: 1280px;
+  margin: 0 auto;
+}
+
+.grid__heading {
+  margin: 0;
+  grid-column: 1 / -1;
+}
