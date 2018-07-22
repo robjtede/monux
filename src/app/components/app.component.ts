@@ -11,12 +11,16 @@ import { fas } from '@fortawesome/free-solid-svg-icons'
 import { Store } from '@ngrx/store'
 import Debug = require('debug')
 import { Account, Amount, extractBalanceAndSpent } from 'monzolib'
-import { Observable } from 'rxjs'
-import { filter, map } from 'rxjs/operators'
+import { Observable, fromEvent } from 'rxjs'
+import { filter, map, tap } from 'rxjs/operators'
 
 import { ModalService } from '../services/modal.service'
 import { AppState, DefiniteAccountState, DefiniteBalanceState } from '../store'
 import { LogoutAction } from '../store/actions/account.actions'
+import {
+  SetOnlineAction,
+  SetOfflineAction
+} from '../store/actions/online.actions'
 
 const debug = Debug('app:component:app')
 
@@ -56,6 +60,13 @@ export class AppComponent implements OnInit, OnDestroy {
 
     this.modalOpen$ = this.store$.select('modal').pipe(map(modal => modal.open))
 
+    fromEvent(window, 'online').subscribe(() =>
+      this.store$.dispatch(new SetOnlineAction())
+    )
+    fromEvent(window, 'offline').subscribe(() =>
+      this.store$.dispatch(new SetOfflineAction())
+    )
+
     this.store$.dispatch({ type: '@monux/init' })
   }
 
@@ -78,6 +89,6 @@ export class AppComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    debug('app component destroyed')
+    debug('destroy')
   }
 }

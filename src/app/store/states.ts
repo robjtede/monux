@@ -15,6 +15,7 @@ export interface AppState {
   selectedTransaction?: string
   transactions: MonzoTransactionResponse[]
   modal: { open: boolean }
+  online: boolean
 }
 
 export type AccountState = AppState['account']
@@ -23,6 +24,7 @@ export type PotsState = AppState['pots']
 export type SelectedTransactionState = AppState['selectedTransaction']
 export type TransactionsState = AppState['transactions']
 export type ModalState = AppState['modal']
+export type OnlineState = AppState['online']
 
 export type DefiniteAccountState = NonNullable<AppState['account']>
 export type DefiniteBalanceState = NonNullable<AppState['balance']>

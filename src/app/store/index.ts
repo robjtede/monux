@@ -6,6 +6,7 @@ import { reducer as selectedTransactionReducer } from './reducers/selectedTransa
 import { reducer as transactionsReducer } from './reducers/transactions.reducer'
 import { reducer as potsReducer } from './reducers/pots.reducer'
 import { reducer as modalReducer } from './reducers/modal.reducer'
+import { reducer as onlineReducer } from './reducers/online.reducer'
 
 import { AppState, TransactionsState, PotsState } from './states'
 
@@ -16,7 +17,8 @@ export const reducers = {
   selectedTransaction: selectedTransactionReducer,
   transactions: transactionsReducer,
   modal: modalReducer,
-  pots: potsReducer
+  pots: potsReducer,
+  online: onlineReducer
 }
 
 // TODO: should be AppState compatible
@@ -25,7 +27,8 @@ export const initialState = {
   pots: [] as PotsState,
   modal: {
     open: false
-  }
+  },
+  online: navigator.onLine
 }
 
 export * from './states'
