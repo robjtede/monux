@@ -17,5 +17,51 @@
 
 .grid__heading {
   margin: 0;
-  grid-column: 1 / -1;
+  grid-column: 1 / -3;
+}
+
+.pot-filters {
+  grid-column: -3 / -1;
+  align-self: end;
+
+  text-align: right;
+  font-size: 0;
+}
+
+.btn-group {
+  display: inline-block;
+  overflow: hidden;
+
+  border: 1px solid var(--blue);
+  border-radius: 5px;
+
+  font-size: 0;
+
+  & .btn {
+    display: inline-block;
+    padding: 0.4em 0.8em;
+
+    border-color: currentColor;
+
+    color: var(--blue);
+    font-size: 1.1rem;
+
+    cursor: pointer;
+
+    &:focus {
+      outline: none;
+    }
+  }
+
+  & .btn:not(:last-child) {
+    border-right: var(--thin-border);
+    border-color: currentColor;
+  }
+
+  & .btn.active {
+    color: var(--off-white);
+    background: var(--blue);
+    border-color: var(--blue);
+    cursor: default;
+  }
 }

@@ -1,4 +1,13 @@
 <div class="grid">
   <h1 class="grid__heading">Pots</h1>
-  <m-pot-summary *ngFor="let pot of pots$ | async" [pot]="pot"></m-pot-summary>
+
+  <div class="pot-filters">
+    <div class="btn-group">
+      <div class="btn" [class.active]="(filter$ | async) === 'all'" (click)="setFilter('all')">All</div>
+      <div class="btn" [class.active]="(filter$ | async) === 'open'" (click)="setFilter('open')">Open</div>
+      <div class="btn" [class.active]="(filter$ | async) === 'deleted'" (click)="setFilter('deleted')">Deleted</div>
+    </div>
+  </div>
+
+  <m-pot-summary *ngFor="let pot of filteredPots$ | async" [pot]="pot"></m-pot-summary>
 </div>

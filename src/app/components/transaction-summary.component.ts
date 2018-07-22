@@ -12,7 +12,7 @@ import {
 } from '@angular/core'
 import { Store } from '@ngrx/store'
 import { Transaction } from 'monzolib'
-import { Observable, of } from 'rxjs'
+import { Observable, of, concat } from 'rxjs'
 import { map } from 'rxjs/operators'
 
 import { AppState } from '../store'
@@ -56,26 +56,32 @@ export class TransactionSummaryComponent implements OnInit {
   ngOnInit(): void {
     this.iconObserver.observe(this.$icon.nativeElement)
 
-    this.potName$ = this.store$.select('pots').pipe(
-      map(pots => {
-        const pot = pots.find(pot => {
-          return pot.id === (this.tx.is.pot && this.tx.description)
-        })
+    this.potName$ = concat(
+      of(this.tx.displayName),
+      this.store$.select('pots').pipe(
+        map(pots => {
+          const pot = pots.find(pot => {
+            return pot.id === (this.tx.is.pot && this.tx.description)
+          })
 
-        if (pot) return pot.name
-        else return undefined
-      })
+          if (pot) return pot.name
+          else return undefined
+        })
+      )
     )
 
-    this.potImage$ = this.store$.select('pots').pipe(
-      map(pots => {
-        const pot = pots.find(pot => {
-          return pot.id === (this.tx.is.pot && this.tx.description)
-        })
+    this.potImage$ = concat(
+      of(this.tx.icon),
+      this.store$.select('pots').pipe(
+        map(pots => {
+          const pot = pots.find(pot => {
+            return pot.id === (this.tx.is.pot && this.tx.description)
+          })
 
-        if (pot) return `./assets/monzo-pots-images/${pot.style}.png`
-        else return undefined
-      })
+          if (pot) return `./assets/monzo-pots-images/${pot.style}.png`
+          else return undefined
+        })
+      )
     )
   }
 

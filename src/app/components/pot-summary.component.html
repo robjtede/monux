@@ -28,7 +28,7 @@
         Pot Goal
       </span>
       <span>
-        {{ (pot.balance / pot.goalAmount) * 100 }}%
+        {{ pot.balance / pot.goalAmount | percent : '1.0-1' }}
         <br> of
         <strong>{{ pot.goalAmount.format({ signMode: 'never', showCurrency: true }) }}</strong>
       </span>
