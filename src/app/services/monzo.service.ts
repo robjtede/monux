@@ -1,128 +1,93 @@
-import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http'
+import {
+  HttpClient,
+  HttpHeaders,
+  HttpParams,
+  HttpErrorResponse
+} from '@angular/common/http'
 import { Injectable } from '@angular/core'
 import Debug = require('debug')
+import { forkJoin, Observable, of, from, throwError } from 'rxjs'
+import { switchMap, map, catchError } from 'rxjs/operators'
+import { has, get, set, cloneDeep } from 'lodash'
+
 import {
   MonzoAccessResponse,
   MonzoRequest,
   MonzoWhoAmIResponse
 } from 'monzolib'
 import { stringify } from 'querystring'
-import { forkJoin, from, Observable, of, throwError } from 'rxjs'
-import { catchError, map, switchMap, tap } from 'rxjs/operators'
 
-import {
-  deletePassword,
-  getPassword,
-  hasPassword,
-  setPassword
-} from '../../lib/keychain'
+import { KeychainService, MonzoSavableCodes } from './keychain.service'
 
-// TODO: remove need for compat
 const debug = Debug('app:service:monzo')
-
-const ACCOUNT = 'Monux'
-const SERVICE = 'monux'
-const MONZO_SERVICE = `${SERVICE}.monzo`
-
-export type MonzoSaveableCodes =
-  | 'client_id'
-  | 'client_secret'
-  | 'access_token'
-  | 'refresh_token'
 
 @Injectable()
 export class MonzoService {
   private readonly proto: string = 'https://'
   private readonly apiRoot: string = 'api.monzo.com'
 
-  private get accessToken$(): Observable<string> {
+  constructor(private keychain: KeychainService, private http: HttpClient) {}
+
+  getAccessToken(): Promise<string> {
     return this.getCode('access_token')
   }
 
-  constructor(private readonly http: HttpClient) {}
+  async hasCode(code: MonzoSavableCodes) {
+    debug('checking code existence =>', code)
+    const chain = await this.keychain.getKeychain()
+    return !!get(chain, ['accounts', 'monzo', code])
+  }
 
-  request<R>(
-    { path = '/ping/whoami', qs = {}, method = 'GET' }: MonzoRequest = {
-      path: '/ping/whoami'
+  async getCode(code: MonzoSavableCodes): Promise<string> {
+    debug('getting code =>', code)
+    const chain = await this.keychain.getKeychain()
+
+    if (has(chain, ['accounts', 'monzo', code])) {
+      return (chain as any).accounts.monzo[code] as string
+    } else {
+      throw new Error(`monzo.${code} is not saved`)
     }
-  ): Observable<R> {
-    const url = `${this.proto}${this.apiRoot}${path}`
-
-    return this.accessToken$.pipe(
-      switchMap(token => {
-        const headers = new HttpHeaders({
-          Authorization: `Bearer ${token}`
-        })
-
-        const params = new HttpParams({
-          fromString: stringify(qs)
-        })
-
-        if (method === 'GET') {
-          return this.http.get<R>(url, {
-            headers,
-            params
-          })
-        } else if (method === 'POST') {
-          return this.http.post<R>(url, params, {
-            headers
-          })
-        } else if (method === 'PUT') {
-          return this.http.put<R>(url, params, {
-            headers
-          })
-        } else if (method === 'PATCH') {
-          return this.http.patch<R>(url, params, {
-            headers
-          })
-        } else {
-          throw new Error(`Unhandled HTTP call with ${method} method.`)
-        }
-      })
-    )
   }
 
-  hasCode(code: MonzoSaveableCodes): Observable<boolean> {
-    debug('getting code =>', `${MONZO_SERVICE}.${code}`)
+  async saveCode(
+    code: MonzoSavableCodes,
+    value: string | undefined
+  ): Promise<void> {
+    debug('saving code =>', code)
 
-    return from(
-      hasPassword({
-        account: ACCOUNT,
-        service: `${MONZO_SERVICE}.${code}`
-      })
-    )
+    const hasKeychain = await this.keychain.keychainExists()
+    debug('has keychain', hasKeychain)
+
+    const chain = hasKeychain ? await this.keychain.getKeychain() : {}
+    debug('current keychain', chain)
+
+    const newChain = set(cloneDeep(chain), ['accounts', 'monzo', code], value)
+    debug('modified keychain', newChain)
+
+    return this.keychain.overwriteKeychain(newChain)
   }
 
-  getCode(code: MonzoSaveableCodes): Observable<string> {
-    debug('getting code =>', `${MONZO_SERVICE}.${code}`)
-
-    return from(
-      getPassword({
-        account: ACCOUNT,
-        service: `${MONZO_SERVICE}.${code}`
-      })
-    )
+  deleteCode(code: MonzoSavableCodes): Promise<void> {
+    debug('deleting code =>', code)
+    return this.saveCode(code, undefined)
   }
 
-  saveCode(code: MonzoSaveableCodes, value: string): Observable<void> {
-    debug('saving code =>', `${MONZO_SERVICE}.${code}`)
-
-    return from(
-      setPassword({
-        account: ACCOUNT,
-        service: `${MONZO_SERVICE}.${code}`,
-        password: value
-      })
-    )
-  }
-
-  deleteCode(code: MonzoSaveableCodes): Observable<boolean> {
-    debug('deleting code =>', `${MONZO_SERVICE}.${code}`)
-
-    return from(
-      deletePassword({
-        account: ACCOUNT,
-        service: `${MONZO_SERVICE}.${code}`
+  getAccess(tokenRequest: MonzoRequest): Observable<boolean> {
+    return this.request<MonzoAccessResponse>(tokenRequest, false).pipe(
+      switchMap(({ access_token, refresh_token }) => {
+        debug('saving token(s) after auth')
+        return from(this.saveCode('access_token', access_token)).pipe(
+          switchMap(() => this.saveCode('refresh_token', refresh_token))
+        )
+      }),
+      map(() => {
+        debug('saved token(s)')
+        return true
+      }),
+      catchError(err => {
+        debug('failed to save token(s)')
+        console.error(err)
+        return of(false)
       })
     )
   }
@@ -140,10 +105,12 @@ export class MonzoService {
         headers
       })
       .pipe(
-        tap(res => debug('whoami response =>', res)),
-        map(res => res.authenticated),
+        map(res => {
+          debug('whoami response =>', res)
+          return res.authenticated
+        }),
         catchError(err => {
-          if (err.status && err.status === 401) {
+          if (err && err.status === 401) {
             debug('access token expired')
             return of(false)
           }
@@ -153,13 +120,14 @@ export class MonzoService {
       )
   }
 
+  // assumes existence of refresh token
   // returns new access token
   refreshAccess(refresh_token: string): Observable<string> {
     debug('refreshing access token')
 
     return forkJoin(
-      this.getCode('client_id'),
-      this.getCode('client_secret')
+      from(this.getCode('client_id')),
+      from(this.getCode('client_secret'))
     ).pipe(
       switchMap(([client_id, client_secret]) => {
         const url = `${this.proto}${this.apiRoot}/oauth2/token`
@@ -175,15 +143,67 @@ export class MonzoService {
         return this.http.post<MonzoAccessResponse>(url, params)
       }),
       switchMap(({ access_token, refresh_token }) => {
-        return forkJoin(
-          this.saveCode('access_token', access_token),
-          refresh_token
-            ? this.saveCode('refresh_token', refresh_token)
-            : of(undefined)
+        debug('saving token(s) after refresh')
+        return from(this.saveCode('access_token', access_token)).pipe(
+          switchMap(() => this.saveCode('refresh_token', refresh_token))
         )
       }),
       switchMap(() => {
-        return this.accessToken$
+        return from(this.getAccessToken())
+      })
+    )
+  }
+
+  request<T>(
+    { path = '/ping/whoami', qs = {}, body = {}, method = 'GET' }: MonzoRequest,
+    withToken = true
+  ): Observable<T> {
+    const debug = Debug(`app:monzo:request:${path}`)
+    debug('making request', !withToken ? 'without token' : '')
+
+    const url = `${this.proto}${this.apiRoot}${path}`
+
+    return (withToken ? from(this.getAccessToken()) : of(undefined)).pipe(
+      switchMap(token => {
+        let headers = new HttpHeaders()
+
+        if (withToken) {
+          headers = headers.set('Authorization', `Bearer ${token}`)
+        }
+
+        const params = new HttpParams({
+          fromString: stringify(qs)
+        })
+
+        const data = new HttpParams({
+          fromString: stringify(body)
+        })
+
+        debug('using', { params, data, headers })
+
+        if (method === 'GET') {
+          return this.http.get<T>(url, {
+            headers,
+            params
+          })
+        } else if (method === 'POST') {
+          return this.http.post<T>(url, data, {
+            headers,
+            params
+          })
+        } else if (method === 'PUT') {
+          return this.http.put<T>(url, data, {
+            headers,
+            params
+          })
+        } else if (method === 'PATCH') {
+          return this.http.patch<T>(url, data, {
+            headers,
+            params
+          })
+        } else {
+          throw new Error(`Unhandled HTTP call with ${method} method.`)
+        }
       })
     )
   }

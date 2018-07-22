@@ -36,6 +36,7 @@ import { DeclineReasonPipe } from './pipes/decline-reason.pipe'
 // services
 import { DomService } from './services/dom.service'
 import { ModalService } from './services/modal.service'
+import { KeychainService } from './services/keychain.service'
 import { CacheService } from './services/cache.service'
 import { MonzoService } from './services/monzo.service'
 
@@ -100,6 +101,7 @@ import { BtnComponent } from './components/btn.component'
     // services
     DomService,
     ModalService,
+    KeychainService,
     CacheService,
     MonzoService,
     // guards

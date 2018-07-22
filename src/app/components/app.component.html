@@ -19,7 +19,7 @@
 </header>
 
 <nav class="tabs">
-  <m-account [holder]="accountHolder$ | async"></m-account>
+  <m-account [account]="account$ | async"></m-account>
   <div class="logout" (click)="logout($event)">
     Log Out
     <fa-icon [icon]="['fas', 'sign-out-alt']"></fa-icon>

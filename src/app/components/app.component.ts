@@ -33,7 +33,7 @@ library.add(fas, far, fab)
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AppComponent implements OnInit, OnDestroy {
-  accountHolder$!: Observable<string>
+  account$!: Observable<Account>
   balance$!: Observable<Amount>
   spent$!: Observable<Amount>
   modalOpen$!: Observable<boolean>
@@ -43,9 +43,9 @@ export class AppComponent implements OnInit, OnDestroy {
   ngOnInit() {
     debug('app started')
 
-    this.accountHolder$ = this.store$.select('account').pipe(
+    this.account$ = this.store$.select('account').pipe(
       filter<DefiniteAccountState>(acc => !!acc),
-      map(acc => new Account(acc).name)
+      map(acc => new Account(acc))
     )
 
     this.balance$ = this.store$.select('balance').pipe(
@@ -68,6 +68,7 @@ export class AppComponent implements OnInit, OnDestroy {
     )
 
     this.store$.dispatch({ type: '@monux/init' })
+    // this.store$.dispatch({ type: '[Balance] Get' })
   }
 
   logout(ev?: MouseEvent): void {

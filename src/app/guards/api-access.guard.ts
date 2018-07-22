@@ -5,7 +5,7 @@ import {
   Router,
   RouterStateSnapshot
 } from '@angular/router'
-import { defer, forkJoin, iif, Observable, of, throwError } from 'rxjs'
+import { defer, Observable, from, of, throwError } from 'rxjs'
 import { catchError, switchMap } from 'rxjs/operators'
 import Debug = require('debug')
 
@@ -23,65 +23,28 @@ export class ApiAccessGuard implements CanActivate {
   ): Observable<boolean> {
     debug('checking API access')
 
-    // TODO: refactor and flatten for readability
-    return this.monzo.hasCode('access_token').pipe(
-      switchMap(hasAccessToken =>
-        iif(
-          () => hasAccessToken,
-
-          // access token exists, pass to (3)
-          this.monzo.getCode('access_token'),
-
+    return from(this.monzo.hasCode('access_token')).pipe(
+      switchMap(hasAccessToken => {
+        if (hasAccessToken) {
+          // access token exists
+          return this.monzo.getCode('access_token')
+        } else {
           // access token does not exist
-          this.monzo.hasCode('refresh_token').pipe(
-            switchMap(hasRefreshToken =>
-              iif(
-                () => hasRefreshToken,
-                this.monzo.getCode('refresh_token').pipe(
-                  // (2) pass new token to verify access (3)
-                  switchMap(token => this.monzo.refreshAccess(token))
-                ),
-                throwError(new Error('token could not be refreshed'))
-              )
-            )
-          )
-        )
-      ),
+          return this.refreshAccess()
+        }
+      }),
 
-      // (3) recieve existing token from (1) or (2)
-      // TODO: wasted verify for case where verify has succeeded
-      switchMap(token => forkJoin(of(token), this.monzo.verifyAccess(token))),
+      // TODO: wasted verify for case where refresh has succeeded
+      switchMap(token => this.monzo.verifyAccess(token)),
 
-      switchMap(([accessToken, accessTokenValid]) => {
+      switchMap(accessTokenValid => {
         debug('access token validity =>', accessTokenValid)
 
-        return this.monzo.hasCode('refresh_token').pipe(
-          switchMap(hasRefreshToken =>
-            defer(() => {
-              if (accessTokenValid) {
-                // new access token is valid
-                return of(true)
-              } else {
-                // access token is invalid (likely expired)
-                return iif(
-                  () => hasRefreshToken,
-                  this.monzo.getCode('refresh_token').pipe(
-                    // attempt refresh
-                    switchMap(refreshToken =>
-                      this.monzo.refreshAccess(refreshToken)
-                    ),
-
-                    // receieve new token and verify
-                    switchMap(accessToken =>
-                      this.monzo.verifyAccess(accessToken)
-                    )
-                  ),
-                  throwError(new Error('token could not be refreshed'))
-                )
-              }
-            })
-          )
-        )
+        if (accessTokenValid) {
+          return of(true)
+        } else {
+          return this.refreshAccess()
+        }
       }),
 
       catchError((err: Error) => {
@@ -92,6 +55,22 @@ export class ApiAccessGuard implements CanActivate {
 
         return of(false)
       })
+    )
+  }
+
+  refreshAccess(): Observable<string> {
+    return from(this.monzo.hasCode('refresh_token')).pipe(
+      switchMap(hasRefreshToken =>
+        defer(() => {
+          if (hasRefreshToken) {
+            return from(this.monzo.getCode('refresh_token')).pipe(
+              switchMap(token => this.monzo.refreshAccess(token))
+            )
+          } else {
+            return throwError(new Error('token could not be refreshed'))
+          }
+        })
+      )
     )
   }
 }

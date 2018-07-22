@@ -1,4 +1,5 @@
 import { Component, Input, ChangeDetectionStrategy } from '@angular/core'
+import { Account } from 'monzolib'
 
 @Component({
   selector: 'm-account',
@@ -7,7 +8,15 @@ import { Component, Input, ChangeDetectionStrategy } from '@angular/core'
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AccountComponent {
-  @Input() readonly holder: string = 'Loading...'
+  @Input() readonly account!: Account
 
-  readonly bank: string = 'monux'
+  get profilePictureUrl(): string {
+    if (this.account) {
+      return `https://api.monzo.com/user-images/profile_picture/${
+        this.account.userId
+      }`
+    } else {
+      return '../app/assets/icons/monzo.png'
+    }
+  }
 }

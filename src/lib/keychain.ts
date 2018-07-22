@@ -14,7 +14,13 @@ export interface KeychainSetOpts extends KeychainOpts {
 
 export const hasPassword = async (opts: KeychainOpts): Promise<boolean> => {
   debug('checking existence of password =>', opts.account, ':', opts.service)
-  return keychain.getPassword(opts.service, opts.account).then(x => !!x)
+
+  try {
+    const pw = await getPassword(opts)
+    return !!pw
+  } catch (err) {
+    return false
+  }
 }
 
 export const getPassword = async (opts: KeychainOpts): Promise<string> => {
