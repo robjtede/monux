@@ -170,10 +170,15 @@
       --positive-color: var(--off-white);
       --local-color: var(--light-gray);
     }
-  }
 
-  & m-amount.rounded {
-    --negative-color: var(--dark-blue);
-    --local-color: var(--dark-gray);
+    &.rounded {
+      --negative-color: var(--dark-blue);
+      --local-color: var(--dark-gray);
+    }
+
+    @nest :host(.selected) &.rounded {
+      --negative-color: var(--teal);
+      --local-color: var(--light-gray);
+    }
   }
 }

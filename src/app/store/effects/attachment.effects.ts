@@ -57,8 +57,9 @@ export class AttachmentEffects {
     switchMap(([tx, file, type, { upload_url, file_url }]) => {
       debug('got attachment upload url', upload_url, file_url)
 
-      const headers = new HttpHeaders()
-      headers.set('Content-Type', type)
+      const headers = new HttpHeaders({
+        'Content-Type': type
+      })
 
       return forkJoin(
         of(tx),
