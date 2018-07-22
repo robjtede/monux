@@ -2,21 +2,18 @@ import keychain = require('keytar')
 import Debug = require('debug')
 
 import { Injectable, isDevMode } from '@angular/core'
-import { Observable, from, of } from 'rxjs'
-import { map, switchMap } from 'rxjs/operators'
 
 const debug = Debug('app:service:keychain')
 
-export interface MonzoSavableCodes {
-  client_id: string
-  client_secret: string
-  access_token: string
-  refresh_token: string
-}
+export type MonzoSavableCodes =
+  | 'client_id'
+  | 'client_secret'
+  | 'access_token'
+  | 'refresh_token'
 
 export interface Keychain {
   accounts?: {
-    monzo?: { [T in keyof MonzoSavableCodes]?: string }
+    monzo?: { [T in MonzoSavableCodes]?: string }
   }
 }
 
@@ -29,28 +26,22 @@ const SERVICE = isDevMode
 
 @Injectable()
 export class KeychainService {
-  hasKeychain(): Observable<boolean> {
+  async keychainExists(): Promise<boolean> {
     debug(`checking existence of ${SERVICE} keychain`)
-    return from(keychain.getPassword(SERVICE, ACCOUNT)).pipe(
-      map(chain => !!chain)
-    )
+    return !!(await keychain.getPassword(SERVICE, ACCOUNT))
   }
 
-  getKeychain(): Observable<Keychain> {
+  async getKeychain(): Promise<Keychain> {
     debug(`getting entire ${SERVICE} keychain`)
-    return from(keychain.getPassword(SERVICE, ACCOUNT)).pipe(
-      switchMap(chain => {
-        if (!chain) {
-          throw new Error('monux keychain does not exist')
-        } else {
-          return of(JSON.parse(chain))
-        }
-      })
-    )
+
+    const chain = await keychain.getPassword(SERVICE, ACCOUNT)
+
+    if (chain) return JSON.parse(chain)
+    else throw new Error('monux keychain does not exist')
   }
 
-  overwriteKeychain(chain: Keychain): Observable<void> {
+  overwriteKeychain(chain: Keychain): Promise<void> {
     debug(`overwriting ${SERVICE} keychain`)
-    return from(keychain.setPassword(SERVICE, ACCOUNT, JSON.stringify(chain)))
+    return keychain.setPassword(SERVICE, ACCOUNT, JSON.stringify(chain))
   }
 }

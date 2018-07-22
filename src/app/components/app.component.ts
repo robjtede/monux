@@ -68,6 +68,7 @@ export class AppComponent implements OnInit, OnDestroy {
     )
 
     this.store$.dispatch({ type: '@monux/init' })
+    // this.store$.dispatch({ type: '[Balance] Get' })
   }
 
   logout(ev?: MouseEvent): void {

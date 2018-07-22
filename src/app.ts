@@ -1,13 +1,8 @@
-import { randomBytes } from 'crypto'
 import Debug = require('debug')
 import { app, EventEmitter, ipcMain } from 'electron'
-import { AppInfo, getAuthRequestUrl, verifyAccess } from 'monzolib'
 import { resolve } from 'path'
-import { parse as parseQueryString } from 'querystring'
-import { parse as parseUrl } from 'url'
 import { install as installExifRotate } from 'electron-exif-rotate'
 
-import { getAccessToken, getSavedCode, saveCode } from './lib/monzo/auth'
 import { WindowManager } from './window-manager'
 
 const debug = Debug('app:app')
@@ -16,6 +11,7 @@ debug(`starting`, app.getName(), 'version', app.getVersion())
 
 export const wm = new WindowManager()
 
+// associate `monux://` urls with app
 if (!app.isDefaultProtocolClient(app.getName().toLowerCase())) {
   app.setAsDefaultProtocolClient(app.getName().toLowerCase())
 }
@@ -44,7 +40,7 @@ app.on('ready', () => {
 
 app.on('open-url', async (_, forwardedUrl) => {
   debug('open-url event')
-  await parseAuthUrl(forwardedUrl)
+  forwardAuthUrl(forwardedUrl)
 })
 
 app.on('window-all-closed', () => {
@@ -60,80 +56,19 @@ app.on('activate', () => {
 
 // ipc events
 
-ipcMain.on('open-auth-window', async (_ev: EventEmitter, bank: string) => {
-  debug('opening auth request window for', bank)
-
-  const appInfo = await getAppInfo()
-  const url = getAuthRequestUrl(appInfo)
+ipcMain.on('open-auth-window', (_ev: EventEmitter, url: string) => {
+  debug('opening auth request window')
   wm.openAuthRequest(url)
 })
 
-ipcMain.on('auth-verify:monzo', async (_ev: EventEmitter, url: string) => {
-  debug('getting acceess token from manually entered code')
-  await parseAuthUrl(url)
+ipcMain.on('auth-success:monzo', () => {
+  wm.closeAuthRequest()
 })
 
 // helpers
 
-const getAppInfo = (() => {
-  const state = new Promise<string>((resolve, reject) => {
-    randomBytes(128, (err, buf) => {
-      if (err) reject(err)
-      resolve(buf.toString('hex'))
-    })
-  })
-
-  return async (): Promise<AppInfo> => {
-    return {
-      client_id: await getSavedCode('client_id'),
-      client_secret: await getSavedCode('client_secret'),
-      redirect_uri: 'https://monux.robjte.de/auth/',
-      response_type: 'code',
-      state: await state
-    }
-  }
-})()
-
-async function parseAuthUrl(forwardedUrl: string) {
-  const appInfo = await getAppInfo()
-  // TODO: swap out for URL construct
-  // TODO: handle no query
-  const query = parseUrl(forwardedUrl).query as string
-  const authResponse = parseQueryString(query)
-
-  if (authResponse.state !== appInfo.state) {
-    debug('App state:', appInfo.state)
-    debug('Auth state:', authResponse.state)
-    console.error('Auth state mismatch')
-    throw new Error('Auth state mismatch')
-  }
-
-  const authCode = authResponse.code
-  debug('authcode =>', authCode)
-
-  try {
-    const { accessToken, refreshToken } = await getAccessToken(
-      appInfo,
-      authCode as string
-    )
-
-    debug('token =>', accessToken)
-    if (await verifyAccess(accessToken)) {
-      await saveCode('access_token', accessToken)
-
-      if (refreshToken) await saveCode('refresh_token', refreshToken)
-      else debug('no refresh token sent')
-
-      wm.mainWindow.webContents.send('auth-verify:monzo', accessToken)
-      wm.closeAuthRequest()
-    } else {
-      console.error('Invalid access token')
-      throw new Error('Invalid access token')
-    }
-  } catch (err) {
-    console.error(err)
-    throw new Error(err)
-  }
+function forwardAuthUrl(forwardedUrl: string) {
+  wm.mainWindow.webContents.send('auth-verify:monzo', forwardedUrl)
 }
 
 // TODO: `makeSingleInstance` deprecated in electron 3
@@ -150,15 +85,10 @@ const isSecondInstance = app.makeSingleInstance(async (argv, _) => {
     })
 
     if (authUrl) {
-      try {
-        await parseAuthUrl(authUrl)
-      } catch (err) {
-        console.error(err)
-        throw new Error(err)
-      }
+      forwardAuthUrl(authUrl)
     } else {
-      console.error('Auth url not found')
-      throw new Error('Auth url not found')
+      console.error('Auth URL not found')
+      throw new Error('Auth URL not found')
     }
   }
 })

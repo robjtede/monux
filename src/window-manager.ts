@@ -1,8 +1,5 @@
 import { resolve } from 'path'
-import {
-  // URL,
-  format
-} from 'url'
+import { format } from 'url'
 import Debug = require('debug')
 
 import { BrowserWindow, Menu } from 'electron'

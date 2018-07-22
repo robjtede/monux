@@ -16,7 +16,7 @@ export class AccountComponent {
         this.account.userId
       }`
     } else {
-      return '../assets/icons/monzo.png'
+      return '../app/assets/icons/monzo.png'
     }
   }
 }
