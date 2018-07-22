@@ -24,6 +24,11 @@ if (!app.isPackaged) {
     .catch(console.error)
 }
 
+const instanceLock = app.requestSingleInstanceLock()
+if (!instanceLock) {
+  app.quit()
+}
+
 // electron events
 
 app.on('ready', () => {
@@ -54,25 +59,7 @@ app.on('activate', () => {
   else wm.goToMonux()
 })
 
-// ipc events
-
-ipcMain.on('open-auth-window', (_ev: EventEmitter, url: string) => {
-  debug('opening auth request window')
-  wm.openAuthRequest(url)
-})
-
-ipcMain.on('auth-success:monzo', () => {
-  wm.closeAuthRequest()
-})
-
-// helpers
-
-function forwardAuthUrl(forwardedUrl: string) {
-  wm.mainWindow.webContents.send('auth-verify:monzo', forwardedUrl)
-}
-
-// TODO: `makeSingleInstance` deprecated in electron 3
-const isSecondInstance = app.makeSingleInstance(async (argv, _) => {
+app.on('second-instance', (_ev, argv, _) => {
   // focus main window if second instance started
   if (wm.hasMainWindow() && wm.mainWindow.isMinimized()) {
     wm.mainWindow.restore()
@@ -93,8 +80,21 @@ const isSecondInstance = app.makeSingleInstance(async (argv, _) => {
   }
 })
 
-if (isSecondInstance) {
-  app.quit()
+// ipc events
+
+ipcMain.on('open-auth-window', (_ev: EventEmitter, url: string) => {
+  debug('opening auth request window')
+  wm.openAuthRequest(url)
+})
+
+ipcMain.on('auth-success:monzo', () => {
+  wm.closeAuthRequest()
+})
+
+// helpers
+
+function forwardAuthUrl(forwardedUrl: string) {
+  wm.mainWindow.webContents.send('auth-verify:monzo', forwardedUrl)
 }
 
 function loadDevtoolExtensions() {
