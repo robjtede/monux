@@ -42,12 +42,22 @@ export class TransactionGroupComponent implements AfterViewInit {
     return getGroupTitle(this.group)
   }
 
-  get groupSize(): number {
-    return this.group.txs.filter(tx => !tx.is.metaAction).length
+  get visibleTxs(): Transaction[] {
+    return this.group.txs.filter(tx => !tx.is.auto_coin_jar)
   }
 
   get groupTotal() {
     return sumGroup(this.group.txs)
+  }
+
+  coinJarTxFor(tx: Transaction): Transaction | undefined {
+    if (!tx.is.rounded) {
+      return undefined
+    } else {
+      return this.group.txs.find(
+        otherTx => otherTx.id === tx.metadata.coin_jar_transaction
+      )
+    }
   }
 
   ngAfterViewInit() {

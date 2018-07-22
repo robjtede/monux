@@ -42,6 +42,7 @@ header {
 
 .card-balance {
   --label-text: 'Account Balance';
+  --negative-color: var(--orange);
   flex: 1;
 
   text-align: left;

@@ -11,7 +11,7 @@ import {
   ViewChild
 } from '@angular/core'
 import { Store } from '@ngrx/store'
-import { Transaction } from 'monzolib'
+import { Transaction, Amount } from 'monzolib'
 import { Observable, of, concat } from 'rxjs'
 import { map } from 'rxjs/operators'
 
@@ -29,6 +29,7 @@ import { AppState } from '../store'
 })
 export class TransactionSummaryComponent implements OnInit {
   @Input() readonly tx!: Transaction
+  @Input() readonly coinJarTx?: Transaction
 
   @Input()
   @HostBinding('class.selected')
@@ -83,6 +84,12 @@ export class TransactionSummaryComponent implements OnInit {
         })
       )
     )
+  }
+
+  get totalAmount(): Amount {
+    return this.coinJarTx
+      ? this.tx.amount.add(this.coinJarTx.amount)
+      : this.tx.amount
   }
 
   get icon$(): Observable<string> {

@@ -38,10 +38,13 @@
 <ng-template #amount>
   <div class="amount-wrap">
     <m-amount
-      [amount]="tx.amount"
+      [amount]="totalAmount"
       sign-mode="onlyPositive"
       currency-mode="local"
     ></m-amount>
+    <ng-container *ngIf="coinJarTx">
+      <fa-icon [icon]="['fas', 'arrow-alt-circle-up']" size="lg"></fa-icon>
+    </ng-container>
   </div>
 </ng-template>
 

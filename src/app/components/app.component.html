@@ -3,7 +3,7 @@
     <m-amount
       *ngIf="balance$ | async"
       [amount]="balance$ | async"
-      sign-mode="never"
+      sign-mode="onlyNegative"
       large-major
     ></m-amount>
   </div>

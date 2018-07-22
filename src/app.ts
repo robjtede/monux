@@ -24,6 +24,7 @@ if (!app.isPackaged) {
     .catch(console.error)
 }
 
+// ensure app is singleton
 const instanceLock = app.requestSingleInstanceLock()
 if (!instanceLock) {
   app.quit()

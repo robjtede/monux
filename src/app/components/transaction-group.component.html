@@ -17,8 +17,9 @@
 
 <div #groupTxs class="group-txs" [style.height]="txsHeight" [style.transform]="txsTransform" [style.opacity]="txsOpacity">
   <m-transaction-summary
-    *ngFor="let tx of group.txs"
+    *ngFor="let tx of visibleTxs"
     [tx]="tx"
+    [coinJarTx]="coinJarTxFor(tx)"
     [selected]="selectedTx?.id === tx.id"
     (select)="selectTx($event)"
   ></m-transaction-summary>
