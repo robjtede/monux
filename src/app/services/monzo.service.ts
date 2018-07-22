@@ -11,7 +11,6 @@ import {
 } from 'monzolib'
 import { stringify } from 'querystring'
 
-
 import {
   Keychain,
   KeychainService,
@@ -156,7 +155,7 @@ export class MonzoService {
         )
       }),
       switchMap(() => {
-        return this.accessToken$
+        return this.getAccessToken()
       })
     )
   }

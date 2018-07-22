@@ -1,21 +1,20 @@
 :host {
-  padding: 0.4em 0.8em;
-
-  background: 5px center no-repeat;
-  background-image: url('../assets/icons/monzo.png');
-  background-size: contain;
-  border: var(--thin-border);
-  border-radius: 8px;
+  display: grid;
+  grid-auto-flow: column;
+  grid-gap: 0.5em;
+  align-items: center;
+  padding-right: 0.5em;
+  overflow: hidden;
 
   color: var(--off-white);
   font-size: 0.9rem;
 
+  border: var(--thin-border);
+  border-radius: 8px;
   cursor: default;
 }
 
-:host::before {
-  content: '';
-  display: inline-block;
-  width: 40px;
-  height: 0;
+.profile-picture {
+  height: 40px;
+  width: auto;
 }

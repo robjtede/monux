@@ -1,4 +1,4 @@
-import { Actions, SET_OFFLINE, SET_ONLINE } from '../actions/ONLINE.actions'
+import { Actions, SET_OFFLINE, SET_ONLINE } from '../actions/online.actions'
 import { OnlineState } from '../states'
 
 export function reducer(state: OnlineState, action: Actions): OnlineState {
