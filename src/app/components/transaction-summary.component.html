@@ -8,6 +8,7 @@
       <ng-container *ngIf="tx.is.pot; then potName else displayName"></ng-container>
     </p>
     <div class="meta">
+      <fa-icon [icon]="['fas', 'arrow-alt-circle-up']" fixedWidth="true" class="meta-rounded" *ngIf="coinJarTx"></fa-icon>
       <fa-icon [icon]="['far', 'clock']" fixedWidth="true" class="meta-pending" *ngIf="tx.pending"></fa-icon>
       <fa-icon [icon]="['fas', 'paperclip']" fixedWidth="true" class="meta-attachments" *ngIf="hasAttachments" [attr.data-attachments]="tx.attachments.length"></fa-icon>
     </div>
@@ -41,10 +42,8 @@
       [amount]="totalAmount"
       sign-mode="onlyPositive"
       currency-mode="local"
+      [class.rounded]="coinJarTx"
     ></m-amount>
-    <ng-container *ngIf="coinJarTx">
-      <fa-icon [icon]="['fas', 'arrow-alt-circle-up']" size="lg"></fa-icon>
-    </ng-container>
   </div>
 </ng-template>
 

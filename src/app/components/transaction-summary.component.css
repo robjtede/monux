@@ -171,4 +171,9 @@
       --local-color: var(--light-gray);
     }
   }
+
+  & m-amount.rounded {
+    --negative-color: var(--dark-blue);
+    --local-color: var(--dark-gray);
+  }
 }

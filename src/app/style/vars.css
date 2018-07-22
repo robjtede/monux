@@ -13,6 +13,8 @@
   --green: hsl(130, 65%, 57%);
   --teal: hsl(199, 94%, 67%);
   --blue: hsl(211, 100%, 50%);
+  /* color-mod(var(--blue) shade(20%)) */
+  --dark-blue: hsl(211, 100%, 40%);
   --purple: hsl(241, 61%, 59%);
   --pink: hsl(349, 100%, 59%);
   --monzo-blue: hsl(218, 48%, 16%);
