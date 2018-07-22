@@ -1,6 +1,6 @@
 :host {
   --bg-color: var(--off-white);
-  --text-color: var(--dark-grey);
+  --text-color: var(--dark-gray);
 
   display: contents;
 }
@@ -11,7 +11,7 @@
 }
 
 :host([secondary]) {
-  /* color(var(--green) shade(10%)) */
+  /* color-mod(var(--green) shade(10%)) */
   --bg-color: hsl(130, 51%, 52%);
   --text-color: var(--off-white);
 }
@@ -27,7 +27,7 @@
 }
 
 :host([dark]) {
-  --bg-color: var(--dark-grey);
+  --bg-color: var(--dark-gray);
   --text-color: var(--off-white);
 }
 

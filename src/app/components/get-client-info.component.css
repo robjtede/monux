@@ -55,7 +55,7 @@ form {
     font-size: 1.2rem;
 
     border-radius: 5px;
-    border: 1px solid var(--label-grey);
+    border: 1px solid var(--label-gray);
   }
 
   & .submit {
@@ -66,7 +66,7 @@ form {
 
     background-color: inherit;
     border-radius: 5px;
-    border: 1px solid var(--label-grey);
+    border: 1px solid var(--label-gray);
 
     &:hover {
       cursor: pointer;

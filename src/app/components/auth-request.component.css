@@ -67,7 +67,7 @@ header {
     font-size: 1rem;
 
     border-radius: 5px;
-    border: 1px solid var(--label-grey);
+    border: 1px solid var(--label-gray);
   }
 }
 
@@ -85,7 +85,7 @@ header {
 
   background-color: inherit;
   border-radius: 5px;
-  border: 1px solid var(--label-grey);
+  border: 1px solid var(--label-gray);
 
   &:hover {
     cursor: pointer;

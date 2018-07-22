@@ -12,21 +12,21 @@ div {
 h1 {
   margin-bottom: 0;
 
-  color: var(--dark-grey);
+  color: var(--dark-gray);
   font-weight: normal;
 }
 
 h2 {
   margin-top: 0;
 
-  color: var(--medium-grey);
+  color: var(--medium-gray);
   font-weight: normal;
 }
 
 h3 {
   margin-top: 0;
 
-  color: var(--label-grey);
+  color: var(--label-gray);
   font-weight: normal;
   font-size: 1.4rem;
 }

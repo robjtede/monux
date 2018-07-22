@@ -22,9 +22,9 @@ img {
   padding-left: 1px;
 
   background: rgb(200, 50, 30);
-  border: 1px solid var(--medium-grey);
+  border: 1px solid var(--medium-gray);
   border-radius: 50%;
-  box-shadow: 1px 1px 2px grey;
+  box-shadow: 1px 1px 2px gray;
   cursor: pointer;
 
   font-size: 0.5rem;

@@ -6,7 +6,20 @@ const CopyWebpackPlugin = require('copy-webpack-plugin')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const { AngularCompilerPlugin } = require('@ngtools/webpack')
 
+const postcssPresetEnv = require('postcss-preset-env')
+const postcssEasingGradients = require('postcss-easing-gradients')
+const postcssColorGray = require('postcss-color-gray')
+
 const { ProgressPlugin, NormalModuleReplacementPlugin } = webpack
+
+const postCssPlugins = () => [
+  postcssPresetEnv({
+    stage: 0,
+    browsers: 'Chrome 66'
+  }),
+  postcssEasingGradients,
+  postcssColorGray
+]
 
 module.exports = (env, options) => {
   const devMode = options.mode !== 'production'
@@ -79,7 +92,11 @@ module.exports = (env, options) => {
             },
             {
               loader: 'postcss-loader',
-              options: { sourceMap: 'inline' }
+              options: {
+                sourceMap: 'inline',
+                ident: 'postcss',
+                plugins: postCssPlugins
+              }
             }
           ]
         },
@@ -96,7 +113,11 @@ module.exports = (env, options) => {
             },
             {
               loader: 'postcss-loader',
-              options: { sourceMap: 'inline' }
+              options: {
+                sourceMap: 'inline',
+                ident: 'postcss',
+                plugins: postCssPlugins
+              }
             }
           ]
         },

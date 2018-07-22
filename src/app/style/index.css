@@ -1,5 +1,3 @@
-@import url('./vars.css');
-
 *,
 *::before,
 *::after {
@@ -20,7 +18,7 @@ body {
   width: 100vw;
   overflow: hidden;
 
-  background-color: var(--white);
+  background-color: white;
 }
 
 router-outlet {

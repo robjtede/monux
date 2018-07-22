@@ -25,7 +25,7 @@ h1 {
   justify-self: end;
 
   cursor: pointer;
-  color: var(--dark-grey);
+  color: var(--dark-gray);
 
   &:hover {
     color: var(--black);
@@ -53,46 +53,46 @@ h1 {
   cursor: pointer;
 
   /* pass in via var() from component */
-  &[data-category=groceries] {
+  &[data-category='groceries'] {
     --category-color: gold;
   }
-  &[data-category=transport] {
+  &[data-category='transport'] {
     --category-color: teal;
   }
-  &[data-category=entertainment] {
+  &[data-category='entertainment'] {
     --category-color: orangered;
   }
-  &[data-category=eating_out] {
+  &[data-category='eating_out'] {
     --category-color: crimson;
   }
-  &[data-category=cash] {
+  &[data-category='cash'] {
     --category-color: olivedrab;
   }
-  &[data-category=mondo] {
+  &[data-category='mondo'] {
     --category-color: olivedrab;
   }
-  &[data-category=monzo] {
+  &[data-category='monzo'] {
     --category-color: olivedrab;
   }
-  &[data-category=general] {
-    --category-color: slategrey;
+  &[data-category='general'] {
+    --category-color: slategray;
   }
-  &[data-category=bills] {
+  &[data-category='bills'] {
     --category-color: cornflowerblue;
   }
-  &[data-category=holidays] {
+  &[data-category='holidays'] {
     --category-color: orchid;
   }
-  &[data-category=shopping] {
+  &[data-category='shopping'] {
     --category-color: coral;
   }
-  &[data-category=expenses] {
+  &[data-category='expenses'] {
     --category-color: darkkhaki;
   }
-  &[data-category=family] {
+  &[data-category='family'] {
     --category-color: var(--red);
   }
-  &[data-category=personal_care] {
+  &[data-category='personal_care'] {
     --category-color: var(--pink);
   }
 

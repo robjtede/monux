@@ -12,7 +12,7 @@ import { Store } from '@ngrx/store'
 import Debug = require('debug')
 import { Account, Amount, extractBalanceAndSpent } from 'monzolib'
 import { Observable, fromEvent } from 'rxjs'
-import { filter, map, tap } from 'rxjs/operators'
+import { filter, map } from 'rxjs/operators'
 
 import { ModalService } from '../services/modal.service'
 import { AppState, DefiniteAccountState, DefiniteBalanceState } from '../store'

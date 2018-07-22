@@ -32,7 +32,7 @@
   }
 
   &([data-category=general]) {
-    --category-color: slategrey;
+    --category-color: slategray;
   }
 
   &([data-category=bills]) {
@@ -167,7 +167,7 @@
   padding: 1em 15px 0;
 
   font-size: 1.2rem;
-  color: color(red saturation(-20%));
+  color: color-mod(red saturation(-20%));
 }
 
 .amount-wrap {
@@ -185,7 +185,7 @@ m-amount {
   --positive-color: green;
 
   @nest :host(.declined) & {
-    --negative-color: color(red saturation(-20%));
+    --negative-color: color-mod(red saturation(-20%));
   }
 }
 
@@ -194,7 +194,7 @@ m-amount {
   content: var(--label-text);
   display: block;
 
-  color: var(--label-grey);
+  color: var(--label-gray);
   font-size: 1rem;
 }
 
@@ -235,7 +235,7 @@ m-amount {
   }
 
   & textarea:hover {
-    border-color: var(--light-grey);
+    border-color: var(--light-gray);
   }
 
   & a {
@@ -254,7 +254,7 @@ m-amount {
     padding-left: 15px;
     padding-right: 15px;
 
-    color: var(--label-grey);
+    color: var(--label-gray);
   }
 
   & .scroll-wrap {
@@ -284,7 +284,7 @@ m-amount {
 
     white-space: normal;
 
-    border: 1px solid var(--label-grey);
+    border: 1px solid var(--label-gray);
     border-radius: 5px;
     cursor: pointer;
 
@@ -293,7 +293,7 @@ m-amount {
     }
 
     &:active {
-      background-color: var(--light-grey);
+      background-color: var(--light-gray);
     }
 
     & > p {
@@ -313,7 +313,7 @@ m-amount {
   padding: 0.8em 15px;
 
   font-size: 0.8rem;
-  color: var(--medium-grey);
+  color: var(--medium-gray);
   white-space: pre-wrap;
 }
 
@@ -321,7 +321,7 @@ m-amount {
   content: var(--label-text);
   display: block;
 
-  color: var(--label-grey);
+  color: var(--label-gray);
 }
 
 .date {

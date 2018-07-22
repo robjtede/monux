@@ -56,7 +56,7 @@
     border-left-color: olivedrab;
   }
   &([data-category=general]) {
-    border-left-color: slategrey;
+    border-left-color: slategray;
   }
   &([data-category=bills]) {
     border-left-color: cornflowerblue;
@@ -127,7 +127,7 @@
 }
 
 .meta {
-  color: var(--label-grey);
+  color: var(--label-gray);
 
   & .meta-attachments::after {
     content: attr(data-attachments);
@@ -139,14 +139,14 @@
   margin-top: 0.2em;
 
   font-size: 0.8rem;
-  color: var(--medium-grey);
+  color: var(--medium-gray);
 
   @nest :host(.declined) & {
     color: red;
   }
 
   @nest :host(.selected) & {
-    color: var(--light-grey);
+    color: var(--light-gray);
   }
 }
 
@@ -164,11 +164,11 @@
     line-height: 1.4;
 
     --positive-color: green;
-    --local-color: var(--dark-grey);
+    --local-color: var(--dark-gray);
 
     @nest :host(.selected) & {
       --positive-color: var(--off-white);
-      --local-color: var(--light-grey);
+      --local-color: var(--light-gray);
     }
   }
 }

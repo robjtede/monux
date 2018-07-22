@@ -1,10 +1,10 @@
-:root {
+:host {
   --white: gray(100%);
   --off-white: gray(97%);
-  --light-grey: gray(80%);
-  --label-grey: gray(65%);
-  --medium-grey: gray(55%);
-  --dark-grey: gray(30%);
+  --light-gray: gray(80%);
+  --label-gray: gray(65%);
+  --medium-gray: gray(55%);
+  --dark-gray: gray(30%);
   --black: gray(0%);
 
   --red: hsl(3, 100%, 59%);
@@ -17,7 +17,7 @@
   --pink: hsl(349, 100%, 59%);
   --monzo-blue: hsl(218, 48%, 16%);
 
-  --thin-border: 1px solid var(--light-grey);
+  --thin-border: 1px solid var(--light-gray);
 
   --header-height: 7.5em;
   --nav-height: 4em;

@@ -4,7 +4,7 @@
   overflow: hidden;
 
   background-color: var(--white);
-  border: 1px solid var(--light-grey);
+  border: 1px solid var(--light-gray);
   border-radius: 5px;
 
   box-shadow: 0 1px 8px hsla(0, 0%, 0%, 0.2);
@@ -101,7 +101,7 @@ hr {
 }
 
 .info > * > :nth-of-type(3) {
-  color: var(--dark-grey);
+  color: var(--dark-gray);
   text-align: right;
 }
 

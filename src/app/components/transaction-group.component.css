@@ -38,7 +38,7 @@
     grid-area: size;
 
     font-size: 0.9rem;
-    color: var(--label-grey);
+    color: var(--label-gray);
   }
 
   & .group-total {
@@ -46,7 +46,7 @@
 
     padding-left: 1em;
 
-    color: var(--medium-grey);
+    color: var(--medium-gray);
     font-size: 1.1rem;
   }
 }
@@ -56,7 +56,8 @@
 
   transform-origin: top;
 
-  transition: height 250ms ease-in-out, transform 250ms ease-in-out, opacity 250ms ease-in-out;
+  transition: height 250ms ease-in-out, transform 250ms ease-in-out,
+    opacity 250ms ease-in-out;
   will-change: height transform opacity;
 }
 

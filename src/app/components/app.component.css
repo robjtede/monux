@@ -1,3 +1,5 @@
+@import url('../style/vars.css');
+
 :host {
   height: 100vh;
   display: grid;
@@ -60,7 +62,7 @@ header {
   margin-top: 0.4em;
   margin-bottom: 0;
 
-  color: var(--label-grey);
+  color: var(--label-gray);
   font-size: 0.8rem;
   letter-spacing: 0.025em;
   text-transform: uppercase;

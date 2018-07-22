@@ -10,7 +10,7 @@
     width: 100%;
     padding-top: 150px;
 
-    color: var(--medium-grey);
+    color: var(--medium-gray);
     text-align: center;
 
     -webkit-user-select: none;
@@ -42,7 +42,7 @@ m-transaction-group {
   width: 100%;
   padding: 2em 0;
 
-  color: var(--dark-grey);
+  color: var(--dark-gray);
   font-size: 1rem;
   text-align: center;
 

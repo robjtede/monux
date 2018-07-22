@@ -305,7 +305,7 @@ export const transactions = {
           foursquare_website: '',
           google_places_icon:
             'https://maps.gstatic.com/mapfiles/place_api/icons/cafe-71.png',
-          google_places_id: 'ChIJAQBseICCeUgREYOnHLLHk8w',
+          google_places_id: 'ChIJAQBseICCeUgrayOnHLLHk8w',
           google_places_name: 'Steam Yard',
           suggested_name: 'Steam Yard Coffee Co',
           suggested_tags: '#food',

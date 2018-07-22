@@ -25,7 +25,7 @@ m-transaction-list {
   width: 100%;
   padding-top: 150px;
 
-  color: var(--medium-grey);
+  color: var(--medium-gray);
   text-align: center;
 
   -webkit-user-select: none;

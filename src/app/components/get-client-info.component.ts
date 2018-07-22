@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core'
 import { Router } from '@angular/router'
+import { from } from 'rxjs'
 import { switchMap } from 'rxjs/operators'
 import Debug = require('debug')
 
@@ -27,8 +28,7 @@ export class GetClientInfoComponent implements OnInit {
     debug('saving client info')
 
     // no parallelism allowed due to get-get-set-set problem
-    this.monzo
-      .saveCode('client_id', clientId)
+    from(this.monzo.saveCode('client_id', clientId))
       .pipe(switchMap(() => this.monzo.saveCode('client_secret', clientSecret)))
       .subscribe(() => {
         debug('saved id and secret')
