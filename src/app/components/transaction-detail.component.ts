@@ -144,6 +144,8 @@ export class TransactionDetailComponent implements OnInit {
     debug(file)
 
     this.store$.dispatch(new UploadAttachmentAction(this.tx, file))
+
+    this.$uploader.nativeElement.value = ''
   }
 
   deregisterAttachment(attachment: Attachment): void {
