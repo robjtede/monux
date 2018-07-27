@@ -4,9 +4,9 @@
   padding: 2em;
   overflow: auto;
 
-  color: var(--monzo-blue);
+  color: hsl(218, 48%, 16%);
 
-  background-color: var(--monzo-blue);
+  background-color: hsl(218, 48%, 16%);
 
   -webkit-app-region: drag;
 }
@@ -23,7 +23,7 @@ header {
 
   text-align: center;
 
-  background: var(--off-white);
+  background: gray(97%);
   border-radius: 5px;
 
   -webkit-app-region: no-drag;
@@ -32,7 +32,7 @@ header {
 .section {
   margin-top: 2em;
   padding: 2em;
-  background: var(--off-white);
+  background: gray(97%);
 
   border-radius: 5px;
 
@@ -67,7 +67,7 @@ header {
     font-size: 1rem;
 
     border-radius: 5px;
-    border: 1px solid var(--label-gray);
+    border: 1px solid gray(65%);
   }
 }
 
@@ -85,7 +85,7 @@ header {
 
   background-color: inherit;
   border-radius: 5px;
-  border: 1px solid var(--label-gray);
+  border: 1px solid gray(65%);
 
   &:hover {
     cursor: pointer;
