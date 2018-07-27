@@ -56,10 +56,8 @@
 
 <dialog
   #modalWrapper
-  class="modal-wrapper"
+  class="modal"
   [class.show]="modalOpen$ | async"
   [open]="modalOpen$ | async"
   (click)="closeModal($event, modalWrapper)"
->
-  <div class="modal"></div>
-</dialog>
+></dialog>

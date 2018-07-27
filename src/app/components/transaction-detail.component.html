@@ -55,6 +55,7 @@
         *ngFor="let attachment of tx.attachments"
         [attachment]="attachment"
         (delete)="deregisterAttachment($event)"
+        (enlarge)="enlargeAttachment($event)"
       ></m-transaction-attachment>
     </div>
   </div>

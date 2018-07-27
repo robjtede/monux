@@ -8,7 +8,11 @@ import {
 import { Store } from '@ngrx/store'
 import { PieChartComponent } from '@swimlane/ngx-charts'
 import { schemeCategory10 as colorScheme } from 'd3'
-import { GroupingStrategy, groupTransactions, Transaction } from 'monzolib'
+import {
+  GroupingStrategy,
+  groupTransactions,
+  Transaction
+} from '../../../../monzolib/dist'
 import { Observable } from 'rxjs'
 import { map } from 'rxjs/operators'
 

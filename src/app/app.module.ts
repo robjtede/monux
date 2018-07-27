@@ -55,6 +55,7 @@ import { TransactionAttachmentComponent } from './components/transaction-attachm
 import { TransactionDetailComponent } from './components/transaction-detail.component'
 import { PotSummaryComponent } from './components/pot-summary.component'
 import { CategoryDialogComponent } from './components/category-dialog.component'
+import { AttachmentLightboxComponent } from './components/attachment-lightbox.component'
 import { BtnComponent } from './components/btn.component'
 
 @NgModule({
@@ -70,6 +71,7 @@ import { BtnComponent } from './components/btn.component'
     TransactionDetailComponent,
     PotSummaryComponent,
     CategoryDialogComponent,
+    AttachmentLightboxComponent,
     BtnComponent,
     // directives
     Autosize,
@@ -115,7 +117,7 @@ import { BtnComponent } from './components/btn.component'
       useClass: HashLocationStrategy
     }
   ],
-  entryComponents: [CategoryDialogComponent],
+  entryComponents: [CategoryDialogComponent, AttachmentLightboxComponent],
   bootstrap: [RootComponent]
 })
 export class AppModule {}

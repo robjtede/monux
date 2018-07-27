@@ -182,3 +182,11 @@
     }
   }
 }
+
+.hider {
+  color: var(--medium-gray);
+
+  &:hover {
+    color: var(--blacko);
+  }
+}

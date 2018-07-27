@@ -14,8 +14,8 @@ import {
   Transaction,
   MonzoTransactionResponse,
   MonzoPotResponse
-} from 'monzolib'
-import { Observable, of, BehaviorSubject, Subject, combineLatest } from 'rxjs'
+} from '../../../../monzolib/dist'
+import { Observable, of, BehaviorSubject, combineLatest } from 'rxjs'
 import { map } from 'rxjs/operators'
 
 import { ModalService } from '../services/modal.service'
@@ -26,6 +26,7 @@ import {
   UploadAttachmentAction
 } from '../store/actions/transactions.actions'
 import { CategoryDialogComponent } from './category-dialog.component'
+import { AttachmentLightboxComponent } from './attachment-lightbox.component'
 
 const debug = Debug('app:component:tx-detail')
 
@@ -146,6 +147,12 @@ export class TransactionDetailComponent implements OnInit {
     this.store$.dispatch(new UploadAttachmentAction(this.tx, file))
 
     this.$uploader.nativeElement.value = ''
+  }
+
+  enlargeAttachment(attachment: Attachment): void {
+    this.modal.open(AttachmentLightboxComponent, {
+      attachment
+    })
   }
 
   deregisterAttachment(attachment: Attachment): void {

@@ -163,20 +163,18 @@ main {
   cursor: pointer;
 }
 
-.modal-wrapper {
+.modal {
   width: 100vw;
   height: 100vh;
   z-index: 10;
   top: 0;
   bottom: 0;
-  overflow-y: auto;
+  left: 0;
+  right: 0;
+  overflow: hidden;
+  padding: 0;
 
-  cursor: pointer;
   border: 0;
   background-color: rgba(0, 0, 0, 0.5);
   backdrop-filter: blur(10px);
-}
-
-.modal {
-  cursor: default;
 }

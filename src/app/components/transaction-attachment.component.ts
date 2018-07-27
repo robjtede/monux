@@ -7,7 +7,7 @@ import {
   Output,
   OnDestroy
 } from '@angular/core'
-import { Attachment } from 'monzolib'
+import { Attachment } from '../../../../monzolib/dist'
 import Debug = require('debug')
 
 const debug = Debug('app:component:attachment')
@@ -22,9 +22,14 @@ export class TransactionAttachmentComponent implements OnInit, OnDestroy {
   @Input() readonly attachment!: Attachment
 
   @Output() delete = new EventEmitter<Attachment>()
+  @Output() enlarge = new EventEmitter<Attachment>()
 
   ngOnInit(): void {
     debug('init')
+  }
+
+  enlargeAttachment(): void {
+    this.enlarge.emit(this.attachment)
   }
 
   deleteAttachment(): void {

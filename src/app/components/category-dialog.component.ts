@@ -42,7 +42,7 @@ export class CategoryDialogComponent implements OnInit, OnDestroy {
   constructor(private store$: Store<AppState>, private modal: ModalService) {}
 
   ngOnInit() {
-    debug('init')
+    debug('init for', this.tx)
   }
 
   closeModal(ev?: MouseEvent) {
