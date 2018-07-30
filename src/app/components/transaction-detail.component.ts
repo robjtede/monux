@@ -14,7 +14,7 @@ import {
   Transaction,
   MonzoTransactionResponse,
   MonzoPotResponse
-} from '../../../../monzolib/dist'
+} from 'monzolib'
 import { Observable, of, BehaviorSubject, combineLatest } from 'rxjs'
 import { map } from 'rxjs/operators'
 

@@ -10,6 +10,7 @@
   [group]="group"
   [selectedTx]="selectedTx"
   (select)="selectTx($event)"
+  (hide)="hideTx($event)"
 ></m-transaction-group>
 
 <button class="load-next-page" href="#" (click)="nextPage($event)">

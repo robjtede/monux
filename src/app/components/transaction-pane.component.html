@@ -2,6 +2,7 @@
   [txs]="txs$ | async"
   [selectedTx]="selectedTx$ | async"
   (select)="selectTx($event)"
+  (hide)="hideTx($event)"
   (loadNextPage)="loadNextPage($event)"
 ></m-transaction-list>
 

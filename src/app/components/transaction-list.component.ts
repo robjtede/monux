@@ -26,6 +26,7 @@ export class TransactionListComponent implements OnChanges {
   @Input() readonly selectedTx?: Transaction
 
   @Output() select = new EventEmitter<string>()
+  @Output() hide = new EventEmitter<Transaction>()
   @Output() loadNextPage = new EventEmitter<Date>()
 
   search?: string
@@ -67,6 +68,10 @@ export class TransactionListComponent implements OnChanges {
 
   selectTx(txId: string): void {
     this.select.emit(txId)
+  }
+
+  hideTx(tx: Transaction): void {
+    this.hide.emit(tx)
   }
 
   nextPage(ev: MouseEvent): void {

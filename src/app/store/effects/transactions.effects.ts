@@ -7,7 +7,8 @@ import {
   Account,
   MonzoTransactionOuterResponse,
   MonzoTransactionsResponse,
-  Transaction
+  Transaction,
+  MonzoTransactionResponse
 } from 'monzolib'
 import { combineLatest, concat, empty, forkJoin, Observable, of } from 'rxjs'
 import {
@@ -38,7 +39,12 @@ import {
   PatchTransactionNotesFailedAction,
   SET_TRANSACTIONS,
   SetTransactionAction,
-  SetTransactionsAction
+  SetTransactionsAction,
+  HIDE_TRANSACTION,
+  HideTransactionAction,
+  HideTransactionFailedAction,
+  ChangeCategoryFailedAction,
+  SET_TRANSACTION
 } from '../actions/transactions.actions'
 
 const debug = Debug('app:effects:transactions')
@@ -133,12 +139,31 @@ export class TransactionsEffects {
     map(({ transaction: tx }) => new SetTransactionAction(tx)),
     catchError(err => {
       console.error(err)
-      return of(new PatchTransactionNotesFailedAction())
+      return of(new ChangeCategoryFailedAction())
+    })
+  )
+
+  @Effect()
+  patchHide$: Observable<Action> = this.actions$.pipe(
+    ofType(HIDE_TRANSACTION),
+    switchMap(({ tx }: HideTransactionAction) =>
+      this.monzo.request<MonzoTransactionOuterResponse>(tx.hideRequest())
+    ),
+    switchMap(({ transaction: tx }) =>
+      // TODO: remove extraneous api call
+      this.monzo.request<MonzoTransactionOuterResponse>(
+        new Transaction(tx).selfRequest()
+      )
+    ),
+    map(({ transaction: tx }) => new SetTransactionAction(tx)),
+    catchError(err => {
+      console.error(err)
+      return of(new HideTransactionFailedAction())
     })
   )
 
   @Effect({ dispatch: false })
-  save$: Observable<any> = this.actions$.pipe(
+  saveAll$: Observable<any> = this.actions$.pipe(
     ofType(SET_TRANSACTIONS),
     switchMap((action: SetTransactionsAction) =>
       combineLatest(this.store$.select('account'), of(action.payload))
@@ -146,6 +171,21 @@ export class TransactionsEffects {
     switchMap(([account, txs]) => {
       if (account) {
         return this.cache.saveTransactions(account.id, txs)
+      } else {
+        throw new Error('cannot save transactions of account that doesnt exist')
+      }
+    })
+  )
+
+  @Effect({ dispatch: false })
+  save$: Observable<any> = this.actions$.pipe(
+    ofType(SET_TRANSACTION),
+    switchMap((action: SetTransactionAction) =>
+      combineLatest(this.store$.select('account'), of(action.tx))
+    ),
+    switchMap(([account, tx]) => {
+      if (account) {
+        return this.cache.saveTransactions(account.id, [tx])
       } else {
         throw new Error('cannot save transaction of account that doesnt exist')
       }
@@ -160,7 +200,9 @@ export class TransactionsEffects {
       const selTxId = action.payload
       if (!selTxId) return
 
-      const tx = store.transactions.find(tx => tx.id === selTxId)
+      const tx = new Transaction(store.transactions.find(
+        tx => tx.id === selTxId
+      ) as MonzoTransactionResponse)
       debug('selected tx =>', tx || 'no tx found')
     })
   )

@@ -25,6 +25,10 @@ hr {
   );
 }
 
+progress {
+  width: 100%;
+}
+
 .header {
   display: grid;
   grid-template-columns: auto auto;

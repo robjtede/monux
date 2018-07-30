@@ -22,5 +22,6 @@
     [coinJarTx]="coinJarTxFor(tx)"
     [selected]="selectedTx?.id === tx.id"
     (select)="selectTx($event)"
+    (hide)="hideTx($event)"
   ></m-transaction-summary>
 </div>

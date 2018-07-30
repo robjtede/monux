@@ -6,7 +6,7 @@ import {
   RouterStateSnapshot
 } from '@angular/router'
 import { defer, Observable, from, of, throwError } from 'rxjs'
-import { catchError, switchMap } from 'rxjs/operators'
+import { catchError, switchMap, map } from 'rxjs/operators'
 import Debug = require('debug')
 
 import { MonzoService } from '../services/monzo.service'
@@ -43,7 +43,7 @@ export class ApiAccessGuard implements CanActivate {
         if (accessTokenValid) {
           return of(true)
         } else {
-          return this.refreshAccess()
+          return this.refreshAccess().pipe(map(x => !!x))
         }
       }),
 

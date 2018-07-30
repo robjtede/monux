@@ -36,6 +36,9 @@ export const UPLOAD_ATTACHMENT_FAILED = `${UPLOAD_ATTACHMENT} ${
   suffixes.failed
 }`
 
+export const HIDE_TRANSACTION = `${actionSinglePrefix} HTTP/Patch Hide`
+export const HIDE_TRANSACTION_FAILED = `${HIDE_TRANSACTION} ${suffixes.failed}`
+
 /*
  * action creators
  */
@@ -80,6 +83,14 @@ export class UploadAttachmentAction implements Action {
 }
 export class UploadAttachmentFailedAction implements Action {
   readonly type = UPLOAD_ATTACHMENT_FAILED
+}
+
+export class HideTransactionAction implements Action {
+  readonly type = HIDE_TRANSACTION
+  constructor(public tx: Transaction) {}
+}
+export class HideTransactionFailedAction implements Action {
+  readonly type = HIDE_TRANSACTION_FAILED
 }
 
 /*

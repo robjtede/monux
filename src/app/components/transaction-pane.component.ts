@@ -8,7 +8,10 @@ import { filter, map } from 'rxjs/operators'
 
 import { AppState } from '../store'
 import { SelectTransactionAction } from '../store/actions/selectedTransaction.actions'
-import { GetTransactionsAction } from '../store/actions/transactions.actions'
+import {
+  GetTransactionsAction,
+  HideTransactionAction
+} from '../store/actions/transactions.actions'
 
 const debug = Debug('app:component:transaction-pane')
 
@@ -50,5 +53,9 @@ export class TransactionPaneComponent implements OnInit {
         since: subMonths(startOfMonth(lastDate), 1)
       })
     )
+  }
+
+  hideTx(tx: Transaction): void {
+    this.store$.dispatch(new HideTransactionAction(tx))
   }
 }

@@ -14,8 +14,11 @@ import { Store } from '@ngrx/store'
 import { Transaction, Amount } from 'monzolib'
 import { Observable, of, concat } from 'rxjs'
 import { map } from 'rxjs/operators'
+import Debug = require('debug')
 
 import { AppState } from '../store'
+
+const debug = Debug('app:component:tx-summary')
 
 @Component({
   selector: 'm-transaction-summary',
@@ -123,11 +126,14 @@ export class TransactionSummaryComponent implements OnInit {
 
   @HostListener('click')
   selectTx(): void {
+    debug('selecting', this.tx.id)
     this.select.emit(this.tx.id)
   }
 
   hideTx(ev: MouseEvent): void {
     ev.stopPropagation()
+
+    debug('hiding', this.tx.id)
     this.hide.emit(this.tx)
   }
 }

@@ -13,7 +13,8 @@ import {
   getGroupTitle,
   sumGroup,
   Transaction,
-  TransactionGroup
+  TransactionGroup,
+  Amount
 } from 'monzolib'
 
 @Component({
@@ -27,6 +28,7 @@ export class TransactionGroupComponent implements AfterViewInit {
   @Input() readonly selectedTx?: Transaction
 
   @Output() select = new EventEmitter<string>()
+  @Output() hide = new EventEmitter<Transaction>()
 
   @ViewChild('groupTxs') $groupTxs!: ElementRef<HTMLDivElement>
 
@@ -43,10 +45,12 @@ export class TransactionGroupComponent implements AfterViewInit {
   }
 
   get visibleTxs(): Transaction[] {
-    return this.group.txs.filter(tx => !tx.is.auto_coin_jar)
+    return this.group.txs
+      .filter(tx => !tx.is.auto_coin_jar)
+      .filter(tx => !tx.hidden)
   }
 
-  get groupTotal() {
+  get groupTotal(): Amount {
     return sumGroup(this.group.txs)
   }
 
@@ -90,5 +94,9 @@ export class TransactionGroupComponent implements AfterViewInit {
 
   selectTx(txId: string): void {
     this.select.emit(txId)
+  }
+
+  hideTx(tx: Transaction): void {
+    this.hide.emit(tx)
   }
 }
