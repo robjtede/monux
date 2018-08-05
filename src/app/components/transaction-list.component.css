@@ -2,6 +2,7 @@
   display: block;
   overflow-x: hidden;
   overflow-y: scroll;
+  overflow-anchor: none;
 
   border-right: var(--thin-border);
 
