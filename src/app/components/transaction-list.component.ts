@@ -22,40 +22,44 @@ import {
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TransactionListComponent implements OnChanges {
-  @Input() readonly txs!: Transaction[]
-  @Input() readonly selectedTx?: Transaction
+  @Input()
+  readonly txs!: Transaction[]
+  @Input()
+  readonly selectedTx?: Transaction
 
-  @Output() select = new EventEmitter<string>()
-  @Output() hide = new EventEmitter<Transaction>()
-  @Output() loadNextPage = new EventEmitter<Date>()
+  @Output()
+  select = new EventEmitter<string>()
+  @Output()
+  hide = new EventEmitter<Transaction>()
+  @Output()
+  loadNextPage = new EventEmitter<Date>()
 
   search?: string
   txGroups: TransactionGroup[] = []
 
-  ngOnChanges(changes: SimpleChanges) {
+  ngOnChanges(changes: SimpleChanges): void {
     if (Object.keys(changes).includes('txs')) this.updateTxGroups()
   }
 
   updateTxGroups(): void {
     if (this.search) {
-      this.txGroups = groupTransactions(
-        this.txs.filter(tx => {
-          const re = new RegExp(`.*${this.search}.*`, 'i')
+      const re = new RegExp(`.*${this.search}.*`, 'i')
 
-          return (
-            re.test(tx.displayName) ||
-            re.test(tx.category.raw) ||
-            re.test(tx.notes.full) ||
-            (tx.merchant && typeof tx.merchant === 'string'
-              ? re.test(tx.merchant)
-              : false) ||
-            (tx.merchant && tx.merchant instanceof Merchant
-              ? re.test(tx.merchant.name)
-              : false)
-          )
-        }),
-        GroupingStrategy.Day
-      )
+      const filteredTxs = this.txs.filter(tx => {
+        return (
+          re.test(tx.displayName) ||
+          re.test(tx.category.raw) ||
+          re.test(tx.notes.full) ||
+          (tx.merchant && typeof tx.merchant === 'string'
+            ? re.test(tx.merchant)
+            : false) ||
+          (tx.merchant && tx.merchant instanceof Merchant
+            ? re.test(tx.merchant.name)
+            : false)
+        )
+      })
+
+      this.txGroups = groupTransactions(filteredTxs, GroupingStrategy.Day)
     } else {
       this.txGroups = groupTransactions(this.txs, GroupingStrategy.Day)
     }

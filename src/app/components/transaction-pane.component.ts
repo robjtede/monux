@@ -48,10 +48,13 @@ export class TransactionPaneComponent implements OnInit {
   loadNextPage(lastDate: Date): void {
     debug('loading month before', lastDate)
     this.store$.dispatch(
-      new GetTransactionsAction({
-        before: lastDate,
-        since: subMonths(startOfMonth(lastDate), 1)
-      })
+      new GetTransactionsAction(
+        {
+          before: lastDate,
+          since: subMonths(startOfMonth(lastDate), 1)
+        },
+        true
+      )
     )
   }
 

@@ -23,6 +23,8 @@ export const SET_TRANSACTIONS = `${actionMultiplePrefix} Set`
 
 export const SET_TRANSACTION = `${actionSinglePrefix} Set`
 
+export const APPEND_TRANSACTION = `${actionSinglePrefix} Append`
+
 export const PATCH_TRANSACTION_NOTES = `${actionSinglePrefix} HTTP/Patch Note`
 export const PATCH_TRANSACTION_NOTES_FAILED = `${PATCH_TRANSACTION_NOTES} ${
   suffixes.failed
@@ -45,15 +47,23 @@ export const HIDE_TRANSACTION_FAILED = `${HIDE_TRANSACTION} ${suffixes.failed}`
 
 export class GetTransactionsAction implements Action {
   readonly type = GET_TRANSACTIONS
-  constructor(public payload: TransactionRequestOpts) {}
+  constructor(
+    public opts: TransactionRequestOpts,
+    public append: boolean = false
+  ) {}
+}
+export class GetTransactionsFailedAction implements Action {
+  readonly type = GET_TRANSACTIONS_FAILED
 }
 
 export class SetTransactionsAction implements Action {
   readonly type = SET_TRANSACTIONS
   constructor(public payload: MonzoTransactionResponse[]) {}
 }
-export class GetTransactionsFailedAction implements Action {
-  readonly type = GET_TRANSACTIONS_FAILED
+
+export class AppendTransactionsAction implements Action {
+  readonly type = APPEND_TRANSACTION
+  constructor(public payload: MonzoTransactionResponse[]) {}
 }
 
 export class SetTransactionAction implements Action {
@@ -99,5 +109,15 @@ export class HideTransactionFailedAction implements Action {
 
 export type Actions =
   | GetTransactionsAction
-  | SetTransactionsAction
   | GetTransactionsFailedAction
+  | SetTransactionsAction
+  | AppendTransactionsAction
+  | SetTransactionAction
+  | PatchTransactionNotesAction
+  | PatchTransactionNotesFailedAction
+  | ChangeCategoryAction
+  | ChangeCategoryFailedAction
+  | UploadAttachmentAction
+  | UploadAttachmentFailedAction
+  | HideTransactionAction
+  | HideTransactionFailedAction

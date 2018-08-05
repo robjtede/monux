@@ -99,7 +99,7 @@ export class CacheService {
     }
 
     if (before) {
-      txCol = txCol.filter(tx => tx.createdAt > before)
+      txCol = txCol.filter(tx => tx.createdAt < before)
     }
 
     if (limit) {

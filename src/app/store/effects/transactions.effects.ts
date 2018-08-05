@@ -10,7 +10,7 @@ import {
   Transaction,
   MonzoTransactionResponse
 } from 'monzolib'
-import { combineLatest, concat, empty, forkJoin, Observable, of } from 'rxjs'
+import { combineLatest, concat, empty, Observable, of } from 'rxjs'
 import {
   catchError,
   filter,
@@ -44,7 +44,8 @@ import {
   HideTransactionAction,
   HideTransactionFailedAction,
   ChangeCategoryFailedAction,
-  SET_TRANSACTION
+  SET_TRANSACTION,
+  AppendTransactionsAction
 } from '../actions/transactions.actions'
 
 const debug = Debug('app:effects:transactions')
@@ -59,10 +60,10 @@ export class TransactionsEffects {
   ) {}
 
   @Effect()
-  getAll$: Observable<Action> = this.actions$.pipe(
+  get$: Observable<Action> = this.actions$.pipe(
     ofType<GetTransactionsAction>(GET_TRANSACTIONS),
     switchMap(action =>
-      forkJoin<GetTransactionsAction, DefiniteAccountState>(
+      combineLatest<GetTransactionsAction, DefiniteAccountState>(
         of(action),
         this.store$.select('account').pipe(
           filter(acc => !!acc),
@@ -71,30 +72,38 @@ export class TransactionsEffects {
       )
     ),
     switchMap(([action, acc]) =>
-      // stream of cached pots then http pots
-      concat(
-        this.cache.loadTransactions(acc.id, action.payload).pipe(
-          tap(txs => {
-            debug(txs.length, 'cache txs:', txs)
-          }),
-          catchError(err => {
-            console.error(err)
-            return empty()
-          })
-        ),
-        this.monzo
-          .request<MonzoTransactionsResponse>(
-            new Account(acc).transactionsRequest(action.payload)
-          )
-          .pipe(
-            map(({ transactions }) => transactions),
+      combineLatest(
+        of(action),
+        // stream of cached pots then http pots
+        concat(
+          this.cache.loadTransactions(acc.id, action.opts).pipe(
             tap(txs => {
-              debug(txs.length, 'http txs:', txs)
+              debug(txs.length, 'cache txs:', txs)
+            }),
+            catchError(err => {
+              console.error(err)
+              return empty()
             })
-          )
+          ),
+          this.monzo
+            .request<MonzoTransactionsResponse>(
+              new Account(acc).transactionsRequest(action.opts)
+            )
+            .pipe(
+              map(({ transactions }) => transactions),
+              tap(txs => {
+                debug(txs.length, 'http txs:', txs)
+              })
+            )
+        )
       )
     ),
-    map(txs => new SetTransactionsAction(txs)),
+    map(
+      ([action, txs]) =>
+        action.append
+          ? new AppendTransactionsAction(txs)
+          : new SetTransactionsAction(txs)
+    ),
     catchError(err => {
       console.error(err)
       return of(new GetTransactionsFailedAction())
@@ -163,7 +172,7 @@ export class TransactionsEffects {
   )
 
   @Effect({ dispatch: false })
-  saveAll$: Observable<any> = this.actions$.pipe(
+  save$: Observable<any> = this.actions$.pipe(
     ofType(SET_TRANSACTIONS),
     switchMap((action: SetTransactionsAction) =>
       combineLatest(this.store$.select('account'), of(action.payload))
@@ -178,7 +187,7 @@ export class TransactionsEffects {
   )
 
   @Effect({ dispatch: false })
-  save$: Observable<any> = this.actions$.pipe(
+  saveSingle$: Observable<any> = this.actions$.pipe(
     ofType(SET_TRANSACTION),
     switchMap((action: SetTransactionAction) =>
       combineLatest(this.store$.select('account'), of(action.tx))
