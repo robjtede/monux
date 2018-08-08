@@ -43,19 +43,20 @@ export class AttachmentEffects {
     switchMap(({ tx, file }: UploadAttachmentAction) => {
       debug('uploading attachment', file)
 
-      const contentType = 'image/jpeg'
+      const contentType = file.type
 
       return forkJoin(
         of(tx),
         of(file),
-        of(contentType),
         this.monzo.request<MonzoAttachmentUploadResponse>(
           tx.attachmentUploadRequest(contentType)
         )
       )
     }),
-    switchMap(([tx, file, type, { upload_url, file_url }]) => {
+    switchMap(([tx, file, { upload_url, file_url }]) => {
       debug('got attachment upload url', upload_url, file_url)
+
+      const type = file.type
 
       const headers = new HttpHeaders({
         'Content-Type': type
