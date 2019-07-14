@@ -107,10 +107,7 @@ function loadDevtoolExtensions() {
 
   import('electron-devtools-installer')
     .then(({ default: installExtension, REDUX_DEVTOOLS }) => {
-      const extensions = [
-        installExtension(REDUX_DEVTOOLS),
-        installExtension('elgalmkoelokbchhkhacckoklkejnhcd')
-      ]
+      const extensions = [installExtension(REDUX_DEVTOOLS)]
 
       return Promise.all(extensions)
         .then(names => debug('Added Extensions:', names.join(', ')))

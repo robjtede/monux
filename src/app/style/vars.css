@@ -1,11 +1,11 @@
 :host {
-  --white: gray(100%);
-  --off-white: gray(97%);
-  --light-gray: gray(80%);
-  --label-gray: gray(65%);
-  --medium-gray: gray(55%);
-  --dark-gray: gray(30%);
-  --black: gray(0%);
+  --white: gray(100);
+  --off-white: gray(97);
+  --light-gray: gray(80);
+  --label-gray: gray(65);
+  --medium-gray: gray(55);
+  --dark-gray: gray(30);
+  --black: gray(0);
 
   --red: hsl(3, 100%, 59%);
   --orange: hsl(35, 100%, 50%);

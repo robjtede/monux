@@ -24,6 +24,6 @@
 }
 
 .local {
-  color: var(--local-color, var(--dark-gray, gray(50%)));
+  color: var(--local-color, var(--dark-gray, gray(50)));
   font-size: var(--local-size, 0.8em);
 }

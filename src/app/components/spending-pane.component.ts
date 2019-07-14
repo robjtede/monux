@@ -28,7 +28,7 @@ import { AppState } from '../store'
   }
 })
 export class SpendingPaneComponent implements OnInit, AfterContentInit {
-  @ViewChild(PieChartComponent) $chart!: PieChartComponent
+  @ViewChild(PieChartComponent, { static: true }) $chart!: PieChartComponent
 
   legendTitle = 'This Month'
   data!: Observable<TooltipData[]>

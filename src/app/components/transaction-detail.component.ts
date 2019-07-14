@@ -54,8 +54,12 @@ export class TransactionDetailComponent implements OnInit {
     return this.tx$.getValue()
   }
 
-  @ViewChild('icon') readonly $icon!: ElementRef<HTMLImageElement>
-  @ViewChild('uploader') readonly $uploader!: ElementRef<HTMLInputElement>
+  @ViewChild('icon', { static: true }) readonly $icon!: ElementRef<
+    HTMLImageElement
+  >
+  @ViewChild('uploader', { static: true }) readonly $uploader!: ElementRef<
+    HTMLInputElement
+  >
 
   pot$!: Observable<MonzoPotResponse | undefined>
   potName$!: Observable<string | undefined>

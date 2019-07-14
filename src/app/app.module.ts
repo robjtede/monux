@@ -54,6 +54,7 @@ import { TransactionSummaryComponent } from './components/transaction-summary.co
 import { TransactionAttachmentComponent } from './components/transaction-attachment.component'
 import { TransactionDetailComponent } from './components/transaction-detail.component'
 import { PotSummaryComponent } from './components/pot-summary.component'
+import { PotTransferComponent } from './containers/pot-transfer.component'
 import { CategoryDialogComponent } from './components/category-dialog.component'
 import { AttachmentLightboxComponent } from './components/attachment-lightbox.component'
 import { BtnComponent } from './components/btn.component'
@@ -70,6 +71,7 @@ import { BtnComponent } from './components/btn.component'
     TransactionAttachmentComponent,
     TransactionDetailComponent,
     PotSummaryComponent,
+    PotTransferComponent,
     CategoryDialogComponent,
     AttachmentLightboxComponent,
     BtnComponent,
@@ -117,7 +119,11 @@ import { BtnComponent } from './components/btn.component'
       useClass: HashLocationStrategy
     }
   ],
-  entryComponents: [CategoryDialogComponent, AttachmentLightboxComponent],
+  entryComponents: [
+    AttachmentLightboxComponent,
+    CategoryDialogComponent,
+    PotTransferComponent
+  ],
   bootstrap: [RootComponent]
 })
 export class AppModule {}

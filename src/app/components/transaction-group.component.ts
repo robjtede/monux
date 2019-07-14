@@ -30,7 +30,9 @@ export class TransactionGroupComponent implements AfterViewInit {
   @Output() select = new EventEmitter<string>()
   @Output() hide = new EventEmitter<Transaction>()
 
-  @ViewChild('groupTxs') $groupTxs!: ElementRef<HTMLDivElement>
+  @ViewChild('groupTxs', { static: true }) $groupTxs!: ElementRef<
+    HTMLDivElement
+  >
 
   collapsed = false
   txsTargetHeight!: string

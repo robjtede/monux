@@ -23,7 +23,7 @@ header {
 
   text-align: center;
 
-  background: gray(97%);
+  background: gray(97);
   border-radius: 5px;
 
   -webkit-app-region: no-drag;
@@ -32,7 +32,7 @@ header {
 form {
   margin-top: 2em;
   padding: 2em;
-  background: gray(97%);
+  background: gray(97);
 
   border-radius: 5px;
 
@@ -55,7 +55,7 @@ form {
     font-size: 1.2rem;
 
     border-radius: 5px;
-    border: 1px solid gray(65%);
+    border: 1px solid gray(65);
   }
 
   & .submit {
@@ -66,11 +66,11 @@ form {
 
     background-color: inherit;
     border-radius: 5px;
-    border: 1px solid gray(65%);
+    border: 1px solid gray(65);
 
     &:hover {
       cursor: pointer;
-      background-color: gray(90%);
+      background-color: gray(90);
       box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2), 0 4px 10px rgba(0, 0, 0, 0.1);
     }
   }

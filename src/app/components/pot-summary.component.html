@@ -17,7 +17,7 @@
 </div>
 
 <ng-template #info>
-  <progress *ngIf="pot.goalAmount > 0" [value]="pot.balance" [max]="pot.goalAmount"></progress>
+  <progress *ngIf="pot.goalAmount && pot.goalAmount > 0" [value]="pot.balance" [max]="pot.goalAmount"></progress>
 
   <div class="info">
     <div *ngIf="pot.goalAmount > 0">

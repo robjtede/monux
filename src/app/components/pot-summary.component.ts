@@ -6,6 +6,10 @@ import {
 } from '@angular/core'
 import { Pot } from 'monzolib'
 
+import Debug = require('debug')
+
+const debug = Debug('app:component:pot-summary')
+
 @Component({
   selector: 'm-pot-summary',
   templateUrl: 'pot-summary.component.html',
@@ -20,6 +24,6 @@ export class PotSummaryComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    // init
+    debug('init')
   }
 }

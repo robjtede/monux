@@ -21,7 +21,11 @@
     "removeComments": false,
     "skipLibCheck": true,
     "strict": true,
-    "target": "es2016"
+    "target": "es2016",
+    "baseUrl": ".",
+    "paths": {
+      "@app/*": ["./src/app/*"]
+    }
   },
   "angularCompilerOptions": {
     "fullTemplateTypeCheck": true,

@@ -63,13 +63,13 @@ export class TransactionsEffects {
   get$: Observable<Action> = this.actions$.pipe(
     ofType<GetTransactionsAction>(GET_TRANSACTIONS),
     switchMap(action =>
-      combineLatest<GetTransactionsAction, DefiniteAccountState>(
+      combineLatest<[GetTransactionsAction, DefiniteAccountState]>([
         of(action),
         this.store$.select('account').pipe(
           filter(acc => !!acc),
           first()
         )
-      )
+      ])
     ),
     switchMap(([action, acc]) =>
       combineLatest(
@@ -98,11 +98,10 @@ export class TransactionsEffects {
         )
       )
     ),
-    map(
-      ([action, txs]) =>
-        action.append
-          ? new AppendTransactionsAction(txs)
-          : new SetTransactionsAction(txs)
+    map(([action, txs]) =>
+      action.append
+        ? new AppendTransactionsAction(txs)
+        : new SetTransactionsAction(txs)
     ),
     catchError(err => {
       console.error(err)
@@ -112,7 +111,7 @@ export class TransactionsEffects {
 
   @Effect()
   patchNote$: Observable<Action> = this.actions$.pipe(
-    ofType(PATCH_TRANSACTION_NOTES),
+    ofType<PatchTransactionNotesAction>(PATCH_TRANSACTION_NOTES),
     switchMap(({ tx, notes }: PatchTransactionNotesAction) =>
       this.monzo.request<MonzoTransactionOuterResponse>(
         tx.setNotesRequest(notes)
@@ -133,7 +132,7 @@ export class TransactionsEffects {
 
   @Effect()
   patchCategory$: Observable<Action> = this.actions$.pipe(
-    ofType(PATCH_CATEGORY),
+    ofType<ChangeCategoryAction>(PATCH_CATEGORY),
     switchMap(({ tx, category }: ChangeCategoryAction) =>
       this.monzo.request<MonzoTransactionOuterResponse>(
         tx.changeCategoryRequest(category)
@@ -154,7 +153,7 @@ export class TransactionsEffects {
 
   @Effect()
   patchHide$: Observable<Action> = this.actions$.pipe(
-    ofType(HIDE_TRANSACTION),
+    ofType<HideTransactionAction>(HIDE_TRANSACTION),
     switchMap(({ tx }: HideTransactionAction) =>
       this.monzo.request<MonzoTransactionOuterResponse>(tx.hideRequest())
     ),
@@ -173,7 +172,7 @@ export class TransactionsEffects {
 
   @Effect({ dispatch: false })
   save$: Observable<any> = this.actions$.pipe(
-    ofType(SET_TRANSACTIONS),
+    ofType<SetTransactionsAction>(SET_TRANSACTIONS),
     switchMap((action: SetTransactionsAction) =>
       combineLatest(this.store$.select('account'), of(action.payload))
     ),
@@ -188,7 +187,7 @@ export class TransactionsEffects {
 
   @Effect({ dispatch: false })
   saveSingle$: Observable<any> = this.actions$.pipe(
-    ofType(SET_TRANSACTION),
+    ofType<SetTransactionAction>(SET_TRANSACTION),
     switchMap((action: SetTransactionAction) =>
       combineLatest(this.store$.select('account'), of(action.tx))
     ),
@@ -203,7 +202,7 @@ export class TransactionsEffects {
 
   @Effect({ dispatch: false })
   logSelected$: Observable<any> = this.actions$.pipe(
-    ofType(SELECT_TRANSACTION),
+    ofType<SelectTransactionAction>(SELECT_TRANSACTION),
     withLatestFrom(this.store$),
     tap(([action, store]: [SelectTransactionAction, AppState]) => {
       const selTxId = action.payload

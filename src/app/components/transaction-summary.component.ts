@@ -41,7 +41,9 @@ export class TransactionSummaryComponent implements OnInit {
   @Output() select = new EventEmitter<string>()
   @Output() hide = new EventEmitter<Transaction>()
 
-  @ViewChild('icon') readonly $icon!: ElementRef<HTMLImageElement>
+  @ViewChild('icon', { static: true }) readonly $icon!: ElementRef<
+    HTMLImageElement
+  >
 
   potName$!: Observable<string | undefined>
   potImage$!: Observable<string | undefined>
