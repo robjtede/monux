@@ -48,7 +48,7 @@
     "d3": "^5.9.7",
     "date-fns": "^2.0.0-alpha.16",
     "debug": "^4.1.1",
-    "dexie": "^2.0.4",
+    "dexie": "^3.2.2",
     "electron-contextmenu-middleware": "^1.0.3",
     "electron-exif-rotate": "^0.2.1",
     "electron-image-menu": "^2.0.0",
