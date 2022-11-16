@@ -87,7 +87,7 @@
     "electron-reload": "^1.4.0",
     "file-loader": "^4.0.0",
     "html-loader": "^0.5.5",
-    "html-webpack-plugin": "^3.2.0",
+    "html-webpack-plugin": "^5.5.0",
     "husky": "^3.0.0",
     "json-types": "^1.0.0",
     "lint-staged": "^9.2.0",
@@ -99,10 +99,10 @@
     "postcss-preset-env": "^6.7.0",
     "prettier": "^1.18.2",
     "style-loader": "^0.23.1",
-    "to-string-loader": "^1.1.5",
+    "to-string-loader": "^1.2.0",
     "tslib": "^1.10.0",
     "typescript": "^3.5.3",
     "webpack": "^4.35.3",
-    "webpack-cli": "^3.3.5"
+    "webpack-cli": "^3.3.12"
   }
 }
