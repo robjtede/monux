@@ -54,7 +54,7 @@
     "electron-image-menu": "^2.0.0",
     "electron-window-state": "^5.0.3",
     "keytar": "^4.11.0",
-    "lodash": "^4.17.14",
+    "lodash": "^4.17.21",
     "monzolib": "^0.1.0",
     "p-iteration": "^1.1.8",
     "reflect-metadata": "^0.1.13",
