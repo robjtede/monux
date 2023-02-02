@@ -63,7 +63,7 @@
     "zone.js": "^0.9.1"
   },
   "devDependencies": {
-    "@angular/cli": "^8.1.1",
+    "@angular/cli": "^15.1.4",
     "@angular/compiler-cli": "^8.1.1",
     "@ngtools/webpack": "^8.1.1",
     "@types/common-tags": "^1.8.0",
