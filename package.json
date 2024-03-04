@@ -82,7 +82,7 @@
     "devtron": "^1.4.0",
     "eclint": "^2.8.1",
     "electron": "^22.3.25",
-    "electron-builder": "^23.6.0",
+    "electron-builder": "^24.13.3",
     "electron-devtools-installer": "^2.2.4",
     "electron-reload": "^1.4.0",
     "file-loader": "^4.0.0",
